@@ -1,7 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://lumi-hanoi.com/</loc><lastmod>2026-08-19</lastmod><changefreq>weekly</changefreq><priority>1.0</priority></url>
-  <url><loc>https://lumi-hanoi.com/tong-quan-lumi-hanoi/</loc><lastmod>2026-08-19</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://lumi-hanoi.com/vi-tri-lumi-hanoi/</loc><lastmod>2026-08-19</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://lumi-hanoi.com/tien-do-lumi-hanoi/</loc><lastmod>2026-08-19</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://lumi-hanoi.com/</loc><lastmod>2026-08-19</lastmod><priority>1.0</priority></url>
+  <url><loc>https://lumi-hanoi.com/cho-thue-lumi-hanoi/</loc><lastmod>2026-08-19</lastmod><priority>0.8</priority></url>
+  <url><loc>https://lumi-hanoi.com/ky-gui-lumi-hanoi/</loc><lastmod>2026-08-19</lastmod><priority>0.8</priority></url>
+  <url><loc>https://lumi-hanoi.com/lumi-elite/</loc><lastmod>2026-08-19</lastmod><priority>0.8</priority></url>
+  <url><loc>https://lumi-hanoi.com/lumi-prestige/</loc><lastmod>2026-08-19</lastmod><priority>0.8</priority></url>
+  <url><loc>https://lumi-hanoi.com/lumi-signature/</loc><lastmod>2026-08-19</lastmod><priority>0.8</priority></url>
+  <url><loc>https://lumi-hanoi.com/mat-bang-lumi-hanoi/</loc><lastmod>2026-08-19</lastmod><priority>0.8</priority></url>
+  <url><loc>https://lumi-hanoi.com/mua-ban-lumi-hanoi/</loc><lastmod>2026-08-19</lastmod><priority>0.9</priority></url>
+  <url><loc>https://lumi-hanoi.com/noi-that-ban-giao-lumi-hanoi/</loc><lastmod>2026-08-19</lastmod><priority>0.8</priority></url>
+  <url><loc>https://lumi-hanoi.com/tien-do-lumi-hanoi/</loc><lastmod>2026-08-19</lastmod><priority>0.9</priority></url>
+  <url><loc>https://lumi-hanoi.com/tien-ich-lumi-hanoi/</loc><lastmod>2026-08-19</lastmod><priority>0.8</priority></url>
+  <url><loc>https://lumi-hanoi.com/tin-tuc/</loc><lastmod>2026-08-19</lastmod><priority>0.8</priority></url>
+  <url><loc>https://lumi-hanoi.com/tin-tuc/cach-doc-mat-bang-lumi-hanoi/</loc><lastmod>2026-08-19</lastmod><priority>0.8</priority></url>
+  <url><loc>https://lumi-hanoi.com/tin-tuc/lumi-hanoi-3-phan-khu-signature-prestige-elite/</loc><lastmod>2026-08-19</lastmod><priority>0.8</priority></url>
+  <url><loc>https://lumi-hanoi.com/tong-quan-lumi-hanoi/</loc><lastmod>2026-08-19</lastmod><priority>0.9</priority></url>
+  <url><loc>https://lumi-hanoi.com/vi-tri-lumi-hanoi/</loc><lastmod>2026-08-19</lastmod><priority>0.8</priority></url>
 </urlset>

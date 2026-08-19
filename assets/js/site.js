@@ -11,6 +11,13 @@
       nav.setAttribute('data-open','false');
       button.setAttribute('aria-expanded','false');
     }));
+    document.addEventListener('keydown',event=>{
+      if(event.key==='Escape'){
+        nav.setAttribute('data-open','false');
+        button.setAttribute('aria-expanded','false');
+        button.focus();
+      }
+    });
   }
   document.querySelectorAll('[data-year]').forEach(el=>{el.textContent=new Date().getFullYear();});
 })();
