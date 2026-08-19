@@ -1,0 +1,51 @@
+name: Fix Lumi media V4 markup
+
+on:
+  push:
+    branches:
+      - codex/extract-and-integrate-lumi-hanoi-media-assets
+    paths:
+      - .github/workflows/fix-media-v4-markup.yml
+
+permissions:
+  contents: write
+
+jobs:
+  fix-markup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout PR branch
+        uses: actions/checkout@v4
+        with:
+          ref: codex/extract-and-integrate-lumi-hanoi-media-assets
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Apply media QA corrections
+        run: python scripts/fix_media_v4_markup.py
+
+      - name: Basic consistency checks
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -q 'width="1600" height="1200" fetchpriority="high"' index.html
+          grep -q 'V4 verified project media is integrated locally' docs/media-map.md
+          grep -q '`5. Ảnh 3D.jpg` · Drive ID `1BaS4oH7XAePOnPiWz58fgVeV5i_sWc7a`' docs/media-map.md
+          git diff --check
+
+      - name: Commit corrections and remove one-shot fixer
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          rm -f scripts/fix_media_v4_markup.py
+          rm -f .github/workflows/fix-media-v4-markup.yml
+          git add -A
+          git commit -m "Polish verified Lumi media markup and source map"
+          git push origin HEAD:codex/extract-and-integrate-lumi-hanoi-media-assets
