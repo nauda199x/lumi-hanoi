@@ -50,3 +50,23 @@ Ngày kiểm kê: 19/08/2026. Toàn bộ `assets/` tại thời điểm kiểm k
 Inline images must include intrinsic `width` and `height`, meaningful Vietnamese `alt`, and `decoding="async"`. Below-the-fold images use `loading="lazy"`; the homepage hero does not. Technical plans link their thumbnail with `data-lightbox`, `data-lightbox-alt`, and an optional `data-lightbox-caption`. Captions use `.figure-caption`; source/date/version uses `.figure-source`. Rendering captions must say “Phối cảnh”.
 
 **Media infrastructure completed; real project assets remain pending.**
+
+## V4 verified media package — integrated 19/08/2026
+
+| Status | Local path | Source Drive ID | Phase | Type | Page placement |
+|---|---|---|---|---|---|
+| INTEGRATED | `assets/media/home/lumi-hanoi-hero.webp` | `1BaS4oH7XAePOnPiWz58fgVeV5i_sWc7a` | Home | rendering | Homepage hero; OG source |
+| INTEGRATED | `assets/media/home/lumi-hanoi-streetscape.webp` | `1vuvV1e0k5cYAciBKyIybWV3eb5U0cdMp` | Home | rendering | Homepage lower editorial feature |
+| INTEGRATED | `assets/media/signature/lumi-signature-landscape.webp` | `1gWmm74dKzFtuQpjBJK44rw9YVo05Fv9g` | Signature | rendering | Signature gallery; amenities grid |
+| INTEGRATED | `assets/media/signature/lumi-signature-water-garden.webp` | `14LEecNbBII5ahMGnVoq9ldGiFCMdEEk7` | Signature | rendering | Signature gallery; amenities grid |
+| INTEGRATED | `assets/media/signature/lumi-signature-pool.webp` | `17_06GIk0BGmRxid4HNFQ6ykXXTkJ8oYq` | Signature | rendering | Signature gallery |
+| INTEGRATED | `assets/media/prestige/lumi-prestige-hero.webp` | `19x4OCPC4ek7Lb_zCZIRcQf9Du6Ohlv5d` | Prestige | rendering | Prestige gallery; amenities grid |
+| INTEGRATED | `assets/media/prestige/lumi-prestige-aurora-pool.webp` | `1CmbdhyMtdSqBGZXb0c7xs-wnsScG3YAM` | Prestige | rendering | Prestige gallery |
+| INTEGRATED | `assets/media/prestige/lumi-prestige-garden.webp` | `1gJENvv6CSpvJE4rn_eZi4W1XEwSLYHhM` | Prestige | rendering | Prestige gallery; amenities grid |
+| INTEGRATED | `assets/media/elite/lumi-elite-facade.webp` | `1CnD6Bi3gXGbqw61iugntsfBonTr3RTem` | Elite | rendering | Elite gallery |
+| INTEGRATED | `assets/media/elite/lumi-elite-aurora-pool.webp` | `1sflufmGS6ZBs1zQ94kwlvWuxzqB90B-n` | Elite | rendering | Elite gallery; amenities grid |
+| INTEGRATED | `assets/media/elite/lumi-elite-lobby-e1.webp` | `1KN4V7DZ6IlO4ZGn-JP4qXuJpmWwpTj8K` | Elite | rendering | Elite gallery; amenities grid |
+| INTEGRATED | `assets/media/masterplan/lumi-hanoi-masterplan.webp` | `1kb6IBIcrmwK_nXqKz8ot9VlV1D2CRdYw` | Project | technical plan | Homepage feature; masterplan lightbox |
+| INTEGRATED | `assets/media/layouts/lumi-prestige-typical-floor.webp` | `1OfZ7AxsOCezGxu7K3kHiUUjt-Au56Nm-` | Prestige | technical plan | Prestige lightbox |
+| INTEGRATED | `assets/media/layouts/lumi-elite-masterplan.webp` | `1fnqn_VoG-7csnJFKtFJzNmBCILJ3ielO` | Elite | technical plan | Elite lightbox |
+| INTEGRATED | `assets/media/og/lumi-hanoi-og.webp` | derived from `1BaS4oH7XAePOnPiWz58fgVeV5i_sWc7a` | Home | rendering derivative | Homepage Open Graph image, 1200 × 630 |
