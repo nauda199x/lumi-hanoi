@@ -11,7 +11,7 @@ This file is an internal audit trail. It is not linked from public navigation. A
 | Lumi Elite | Google Drive folder `1atZNW5JhRQyM9j0LRBac3HePP371KAU7` | Review file-by-file |
 | 360 experience | `https://kuula.co/post/5y19m` | Public external link |
 
-The execution environment could not retrieve the Drive folders on 2026-08-19. File names, page numbers and publication rights therefore remain pending. No Drive image or private sales document was copied into the public site in this batch.
+The owner-provided source package was reviewed on 2026-08-19 and its document-level findings are recorded in `docs/source-package-v1.md`. No Drive image or private sales document was copied into the public site in this batch; image publication rights and local asset integration remain pending.
 
 ## Verified project facts
 
@@ -29,11 +29,11 @@ The execution environment could not retrieve the Drive folders on 2026-08-19. Fi
 
 | Topic | Expected source | Missing evidence | Status / publishing rule |
 |---|---|---|---|
-| Tower names and phase allocation | Master plan / project introduction PDF | Exact file, revision and page | Pending — do not infer |
+| Tower names and phase allocation | Master plans / brochures | Source inventory recorded in `source-package-v1.md` | Verified for S1/S2/S3/S5/S6, P1/P2 and Elite 1/2 |
 | Tower-by-tower floor counts | Tower schedules / typical floor plans | Exact file, revision and legend | Pending — only project-wide range is public |
-| Unit types and areas | Individual layout folders | File index and area convention | Pending — do not publish filters |
-| Handover specifications | Phase handover specifications | Revision, scope and contract relationship | Pending — publish process guidance only |
-| Indoor and outdoor amenities | Phase master plans and facility schedules | Legend, scope and intended users | Pending — do not turn renders into operating claims |
+| Unit types and areas | Project introduction / Elite eBrochure / Prestige training | Examples and NFA/GFA conventions in `source-package-v1.md` | Verified examples may be published with labels |
+| Handover specifications | Project introduction / Prestige training | Expected brands and equivalent caveat in `source-package-v1.md` | Publish only as expected/or equivalent; SPA supersedes |
+| Indoor and outdoor amenities | Elite eBrochure / Prestige training | Selected designed amenities in `source-package-v1.md` | Publish as planned/rendered until operation is verified |
 | Construction status after the prior June 2026 note | Official dated progress release | Dated release and attributable images | Pending — do not present the old note as current |
 | Handover dates | Contract / official customer notice | Applicable official notice | Unverified — never invent |
 | Sale/rental pricing or availability | Verified owner listings / dated transactions | No inventory supplied | Unavailable — never publish numbers |
