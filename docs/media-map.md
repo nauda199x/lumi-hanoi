@@ -1,0 +1,52 @@
+# Lumi Hanoi V3 — media map
+
+## Nguyên tắc kiểm kê
+
+Ngày kiểm kê: 19/08/2026. Toàn bộ `assets/` tại thời điểm kiểm kê chỉ có CSS và JavaScript; **không có ảnh dự án đã được phê duyệt**. Vì vậy, không ảnh kiến trúc, tiện ích, mặt bằng hay tiến độ nào được đưa lên trang. Trạng thái `PENDING` có nghĩa là cần tệp gốc và xác nhận quyền sử dụng; tên tệp bên dưới là đích lưu trữ, không phải bằng chứng về nội dung.
+
+| Page | Section | Recommended image | Filename | Image type | Alt text | Status |
+|---|---|---|---|---|---|---|
+| Homepage | Hero | Phối cảnh tổng thể Lumi Hanoi | `assets/media/home/lumi-hanoi-tong-the.webp` | rendering | Phối cảnh tổng thể dự án Lumi Hanoi | PENDING |
+| Homepage | Three phases | Phối cảnh đúng phân khu Signature | `assets/media/signature/lumi-signature-phoi-canh.webp` | rendering | Phối cảnh phân khu Lumi Signature | PENDING |
+| Homepage | Three phases | Phối cảnh đúng phân khu Prestige | `assets/media/prestige/lumi-prestige-phoi-canh.webp` | rendering | Phối cảnh phân khu Lumi Prestige | PENDING |
+| Homepage | Three phases | Phối cảnh đúng phân khu Elite | `assets/media/elite/lumi-elite-phoi-canh.webp` | rendering | Phối cảnh phân khu Lumi Elite | PENDING |
+| Homepage / Mặt bằng | Masterplan | Quy hoạch tổng thể có chú giải đọc được | `assets/media/masterplan/lumi-hanoi-masterplan.webp` | technical plan | Mặt bằng tổng thể dự án Lumi Hanoi | PENDING |
+| Homepage / Tiện ích | Amenities | Cảnh quan tổng thể theo tài liệu dự án | `assets/media/amenities/lumi-hanoi-canh-quan.webp` | rendering | Phối cảnh cảnh quan Lumi Hanoi | PENDING |
+| Homepage / Tiện ích | Water / pool | Hồ bơi đúng phạm vi dự án | `assets/media/amenities/lumi-hanoi-ho-boi.webp` | rendering | Phối cảnh hồ bơi tại Lumi Hanoi | PENDING |
+| Homepage | Apartment layouts | Layout căn có mã và phiên bản xác minh | `assets/media/layouts/lumi-hanoi-layout-can-ho.webp` | technical plan | Mặt bằng căn hộ Lumi Hanoi theo tài liệu dự án | PENDING |
+| Homepage / Tiến độ | Progress | Ảnh công trường có ngày, nguồn và phạm vi | `assets/media/progress/lumi-hanoi-tien-do.webp` | photograph | Tiến độ xây dựng Lumi Hanoi tại thời điểm chụp | PENDING |
+| Lumi Signature | Hero | Phối cảnh riêng Signature | `assets/media/signature/lumi-signature-phoi-canh.webp` | rendering | Phối cảnh phân khu Lumi Signature | PENDING |
+| Lumi Signature | Typical floor | Tầng điển hình đúng tòa Signature | `assets/media/signature/lumi-signature-tang-dien-hinh.webp` | technical plan | Mặt bằng tầng điển hình Lumi Signature | PENDING |
+| Lumi Signature | Layouts | Layout có mã căn Signature | `assets/media/signature/lumi-signature-layout-can-ho.webp` | technical plan | Mặt bằng căn hộ Lumi Signature | PENDING |
+| Lumi Prestige | Hero | Phối cảnh riêng Prestige | `assets/media/prestige/lumi-prestige-phoi-canh.webp` | rendering | Phối cảnh phân khu Lumi Prestige | PENDING |
+| Lumi Prestige | Typical floor | Tầng điển hình đúng tòa P1/P2 | `assets/media/prestige/lumi-prestige-tang-dien-hinh.webp` | technical plan | Mặt bằng tầng điển hình Lumi Prestige | PENDING |
+| Lumi Prestige | Amenities | Aurora Pool theo tài liệu Prestige | `assets/media/prestige/lumi-prestige-aurora-pool.webp` | rendering | Phối cảnh bể bơi Aurora tại Lumi Prestige | PENDING |
+| Lumi Elite | Hero | Phối cảnh riêng Elite | `assets/media/elite/lumi-elite-phoi-canh.webp` | rendering | Phối cảnh phân khu Lumi Elite | PENDING |
+| Lumi Elite | Typical floor | Tầng điển hình đúng tòa Elite 1/2 | `assets/media/elite/lumi-elite-tang-dien-hinh.webp` | technical plan | Mặt bằng tầng điển hình Lumi Elite | PENDING |
+| Tiện ích | Cảnh quan | Cảnh quan có tên và phạm vi xác minh | `assets/media/amenities/lumi-hanoi-canh-quan.webp` | rendering | Phối cảnh cảnh quan Lumi Hanoi | PENDING |
+| Tiện ích | Thể thao | Khu thể thao theo tài liệu dự án | `assets/media/amenities/lumi-hanoi-the-thao.webp` | rendering | Phối cảnh khu thể thao Lumi Hanoi | PENDING |
+| Tiện ích | Trẻ em & gia đình | Khu trẻ em theo tài liệu dự án | `assets/media/amenities/lumi-hanoi-khu-tre-em.webp` | rendering | Phối cảnh khu vui chơi trẻ em tại Lumi Hanoi | PENDING |
+| Tiện ích | Cộng đồng | Không gian cộng đồng theo tài liệu dự án | `assets/media/amenities/lumi-hanoi-khong-gian-cong-dong.webp` | rendering | Phối cảnh không gian cộng đồng Lumi Hanoi | PENDING |
+| Nội thất bàn giao | Technical detail | Cận cảnh vật liệu/thiết bị đúng danh mục | `assets/media/layouts/lumi-hanoi-vat-lieu-ban-giao.webp` | photograph/rendering | Chi tiết vật liệu bàn giao căn hộ Lumi Hanoi | PENDING |
+| Tin tức | Article cards | Ảnh nguồn phù hợp riêng từng bài | `assets/media/news/lumi-hanoi-{article-slug}.webp` | photograph/rendering/plan | Viết theo nội dung thực tế của ảnh | PENDING |
+| Buy | Open Graph | Typographic or approved project media | `assets/media/og/mua-ban-lumi-hanoi.svg` | typographic | — | PENDING |
+| Rent | Open Graph | Typographic or approved project media | `assets/media/og/cho-thue-lumi-hanoi.svg` | typographic | — | PENDING |
+| Homepage, phases, plans, progress, news | Open Graph | Approved project media or typographic composition | `assets/media/og/{page-slug}.svg` | typographic | — | PENDING |
+
+## Pending asset list and recommended dimensions
+
+- `assets/media/home/lumi-hanoi-tong-the.webp` — **1600×1000 px or larger**, preferably 1.6:1; homepage LCP hero; target 200–500 KB where quality permits.
+- `assets/media/masterplan/lumi-hanoi-masterplan.webp` — **2400 px or larger width**; full-resolution masterplan for viewer. Also provide one legible thumbnail only if the full file is too large for inline use.
+- `assets/media/{signature,prestige,elite}/lumi-*-phoi-canh.webp` — **1600×1000 px or larger**; phase heroes and homepage phase cards.
+- `assets/media/{signature,prestige,elite}/lumi-*-tang-dien-hinh.webp` — **2400 px or larger width**; preserve labels and version/source area.
+- `assets/media/layouts/lumi-hanoi-layout-can-ho.webp` — **1800 px or larger width**; retain text and dimensions without aggressive compression.
+- `assets/media/amenities/*.webp` — **1400×900 px or larger**; editorial grid, with the correct rendering label.
+- `assets/media/progress/lumi-hanoi-tien-do.webp` — **1600×1000 px or larger**; require capture date, phase/tower scope and source.
+- `assets/media/news/*.webp` — **1200×750 px or larger**; article-specific, never a generic filler.
+- `assets/media/og/*.svg` or `.webp` — **1200×630 px**; add `og:image` only after the referenced local file exists.
+
+## Integration contract
+
+Inline images must include intrinsic `width` and `height`, meaningful Vietnamese `alt`, and `decoding="async"`. Below-the-fold images use `loading="lazy"`; the homepage hero does not. Technical plans link their thumbnail with `data-lightbox`, `data-lightbox-alt`, and an optional `data-lightbox-caption`. Captions use `.figure-caption`; source/date/version uses `.figure-source`. Rendering captions must say “Phối cảnh”.
+
+**Media infrastructure completed; real project assets remain pending.**
