@@ -1,0 +1,50 @@
+name: Import verified Lumi media V4
+
+on:
+  push:
+    branches:
+      - media-assets-v4-codex
+    paths:
+      - '.github/workflows/import-lumi-media-v4.yml'
+      - 'scripts/import_lumi_media_v4.py'
+
+permissions:
+  contents: write
+
+jobs:
+  import-media:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout media branch
+        uses: actions/checkout@v4
+        with:
+          ref: media-assets-v4-codex
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Pillow
+        run: python -m pip install --disable-pip-version-check pillow
+
+      - name: Download and optimize verified project media
+        run: python scripts/import_lumi_media_v4.py
+
+      - name: Remove one-shot importer
+        run: |
+          rm -f scripts/import_lumi_media_v4.py
+          rm -f .github/workflows/import-lumi-media-v4.yml
+
+      - name: Commit media assets to branch
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          if git diff --cached --quiet; then
+            echo 'No changes to commit.'
+            exit 0
+          fi
+          git commit -m 'Import verified Lumi Hanoi media assets'
+          git push origin HEAD:media-assets-v4-codex
