@@ -18,3 +18,15 @@
   for = "/*.html"
   [headers.values]
     Cache-Control = "public, max-age=0, must-revalidate"
+
+[[redirects]]
+  from = "http://lumi-hanoi.com/*"
+  to = "https://lumi-hanoi.com/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "https://www.lumi-hanoi.com/*"
+  to = "https://lumi-hanoi.com/:splat"
+  status = 301
+  force = true
