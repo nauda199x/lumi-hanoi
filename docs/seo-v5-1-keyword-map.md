@@ -57,3 +57,14 @@ change or new public page is recommended. Existing titles, descriptions, H1s,
 opening copy, image attributes, Open Graph tags and JSON-LD already align closely
 with the mapped intent; the restrained V5.1 implementation changes only ambiguous
 homepage CTA anchors and adds broader automated safeguards.
+
+## V6 — cụm chuyển nhượng (20/08/2026)
+
+| URL | Từ khóa chính | Ý định | Ranh giới chống cannibalization |
+|---|---|---|---|
+| `/tin-tuc/quy-trinh-chuyen-nhuong-lumi-hanoi/` | quy trình chuyển nhượng Lumi Hanoi | Informational / transactional research | Chỉ sở hữu truy vấn quy trình; `/mua-ban-lumi-hanoi/` giữ vai trò điểm đến thương mại, `/phap-ly-lumi-hanoi/` giữ hồ sơ pháp lý dự án. |
+| `/tin-tuc/mua-chuyen-nhuong-lumi-hanoi-can-kiem-tra-gi/` | mua chuyển nhượng Lumi Hanoi cần kiểm tra gì | Commercial research | Checklist thẩm tra căn và hồ sơ trước cọc, không thay quy trình hay trang pháp lý. |
+| `/tin-tuc/thue-phi-chuyen-nhuong-can-ho-lumi-hanoi/` | thuế phí chuyển nhượng Lumi Hanoi | Informational / transactional | Chỉ giải thích nhóm chi phí và nguồn luật; không báo giá dịch vụ hay tư vấn cá nhân. |
+| `/tin-tuc/so-sanh-signature-prestige-elite-khi-mua-chuyen-nhuong/` | so sánh Lumi Signature Prestige Elite | Commercial research | So sánh ngang để chọn hồ sơ; ba trang phân khu vẫn sở hữu thông tin chuyên sâu từng phân khu. |
+| `/tin-tuc/chon-1pn-2pn-3pn-lumi-hanoi-khi-mua-chuyen-nhuong/` | nên mua 1PN 2PN hay 3PN Lumi Hanoi | Commercial research | Sở hữu truy vấn so sánh; trang 1PN/2PN/3PN sở hữu từng loại sản phẩm. |
+| `/tin-tuc/checklist-dat-coc-mua-chuyen-nhuong-lumi-hanoi/` | đặt cọc chuyển nhượng Lumi Hanoi | High commercial research | Chỉ kiểm tra trước cọc; không cung cấp mẫu hợp đồng hoặc thay thế tư vấn pháp lý. |
