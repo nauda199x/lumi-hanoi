@@ -21,6 +21,13 @@
   }
   document.querySelectorAll('[data-year]').forEach(el=>{el.textContent=new Date().getFullYear();});
 
+  const reveals=[...document.querySelectorAll('[data-reveal]')];
+  if(reveals.length&&'IntersectionObserver' in window&&!matchMedia('(prefers-reduced-motion: reduce)').matches){
+    document.documentElement.classList.add('reveal-ready');
+    const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('is-visible');observer.unobserve(entry.target);}}),{rootMargin:'0px 0px -8%'});
+    reveals.forEach(element=>observer.observe(element));
+  }
+
   const lightboxLinks=[...document.querySelectorAll('[data-lightbox]')];
   if(lightboxLinks.length){
     const dialog=document.createElement('dialog');
