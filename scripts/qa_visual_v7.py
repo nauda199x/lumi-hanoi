@@ -85,6 +85,10 @@ def main() -> int:
         p=ROOT/(slug or ".")/"index.html"
         if not p.is_file(): errors.append(f"important page missing: /{slug}/")
         elif pages[p].h1 != 1: errors.append(f"important page H1 count {pages[p].h1}: /{slug}/")
+    home=(ROOT/"index.html").read_text(encoding="utf-8")
+    for required in ("/vi-tri-lumi-hanoi/", "/tien-do-lumi-hanoi/", "/mua-ban-lumi-hanoi/", "/cho-thue-lumi-hanoi/", "/ky-gui-lumi-hanoi/", "https://kuula.co/post/5y19m"):
+        if required not in home: errors.append(f"homepage V7 module link missing: {required}")
+    if home.count('fetchpriority="high"') != 1: errors.append("homepage must contain exactly one high-priority image")
     sitemap=ET.parse(ROOT/"sitemap.xml")
     for loc in sitemap.findall(".//{*}loc"):
         parsed=urlparse(loc.text or "")
