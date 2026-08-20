@@ -70,3 +70,12 @@ Inline images must include intrinsic `width` and `height`, meaningful Vietnamese
 | INTEGRATED | `assets/media/layouts/lumi-prestige-typical-floor.webp` | `1OfZ7AxsOCezGxu7K3kHiUUjt-Au56Nm-` | Prestige | technical plan | Prestige lightbox |
 | INTEGRATED | `assets/media/layouts/lumi-elite-masterplan.webp` | `1fnqn_VoG-7csnJFKtFJzNmBCILJ3ielO` | Elite | technical plan | Elite lightbox |
 | INTEGRATED | `assets/media/og/lumi-hanoi-og.webp` | derived from `1BaS4oH7XAePOnPiWz58fgVeV5i_sWc7a` | Home | rendering derivative | Homepage Open Graph image, 1200 × 630 |
+
+## V6 media reuse — 20/08/2026
+
+No new media was downloaded. All six transfer-cluster articles reuse the verified
+local `assets/media/og/lumi-hanoi-og.webp` for Open Graph. The Signature / Prestige /
+Elite comparison additionally reuses `assets/media/masterplan/lumi-hanoi-masterplan.webp`
+inline (893 × 649) with Vietnamese alt text, intrinsic dimensions, asynchronous
+decoding and lazy loading. The asset remains a project-level technical plan and is
+not presented as proof of a unit's contractual specification.

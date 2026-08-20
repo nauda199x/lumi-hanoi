@@ -57,3 +57,17 @@ change or new public page is recommended. Existing titles, descriptions, H1s,
 opening copy, image attributes, Open Graph tags and JSON-LD already align closely
 with the mapped intent; the restrained V5.1 implementation changes only ambiguous
 homepage CTA anchors and adds broader automated safeguards.
+# V6 chuyển nhượng cluster — intent boundaries (20/08/2026)
+
+| URL | Primary keyword / intent owner | Cannibalization boundary |
+|---|---|---|
+| `/mua-ban-lumi-hanoi/` | mua bán Lumi Hanoi — commercial transaction pillar | Retains the main commercial intent; links to, but does not duplicate, six guides |
+| `/tin-tuc/quy-trinh-chuyen-nhuong-lumi-hanoi/` | quy trình chuyển nhượng Lumi Hanoi — procedure research | Procedure only; no inventory or broad commercial landing intent |
+| `/tin-tuc/mua-chuyen-nhuong-lumi-hanoi-can-kiem-tra-gi/` | mua chuyển nhượng Lumi Hanoi cần kiểm tra gì — commercial due diligence | Unit/document verification before purchase |
+| `/tin-tuc/thue-phi-chuyen-nhuong-can-ho-lumi-hanoi/` | thuế phí chuyển nhượng Lumi Hanoi — tax/cost research | Owns taxes and cost categories, not the full procedure |
+| `/tin-tuc/so-sanh-signature-prestige-elite-khi-mua-chuyen-nhuong/` | so sánh Lumi Signature Prestige Elite — comparison | Comparison only; individual phase pages retain deep-profile intent |
+| `/tin-tuc/chon-1pn-2pn-3pn-lumi-hanoi-khi-mua-chuyen-nhuong/` | nên mua 1PN 2PN hay 3PN Lumi Hanoi — use-case comparison | Comparison only; bedroom pages retain exact product-type queries |
+| `/tin-tuc/checklist-dat-coc-mua-chuyen-nhuong-lumi-hanoi/` | đặt cọc chuyển nhượng Lumi Hanoi — pre-deposit research | Checklist, not a contract template or full transaction procedure |
+
+No `/chuyen-nhuong-lumi-hanoi/` page exists. Existing V5/V5.1 ownership below is
+unchanged.
