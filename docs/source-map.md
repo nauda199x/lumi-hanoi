@@ -70,8 +70,9 @@ Time-sensitive status wording uses: “Theo hồ sơ dự án chính thức đư
 
 | Claim / use | Authority | Document | Effective date / applicability | Verification date |
 |---|---|---|---|---|
-| PIT on real-estate transfer uses the 2% rate on the transfer price determined under applicable rules; actual tax base, timing and relief depend on the file | National Assembly | **Luật Thuế thu nhập cá nhân 109/2025/QH15** | **01/07/2026; primary current PIT statute on publication date** | 20/08/2026 |
-| Earlier PIT implementation material may be used only to the extent still applicable; it is not presented above the 2025 statute | Ministry of Finance | Thông tư 111/2013/TT-BTC; Thông tư 92/2015/TT-BTC | Subordinate/implementation reference only after 01/07/2026 | 20/08/2026 |
+| PIT on real-estate transfer uses the 2% rate on the transfer price determined under applicable rules; actual tax base, timing, exemptions and filing treatment depend on the file | Quốc hội | **Luật Thuế thu nhập cá nhân 109/2025/QH15** | **01/07/2026; primary current PIT statute on publication date** | 20/08/2026 |
+| Current decree implementing the new PIT regime | Chính phủ | **Nghị định 253/2026/NĐ-CP** | **01/07/2026; current implementing decree** | 20/08/2026 |
+| Current circular implementing the new PIT regime; replaces the prior implementation framework | Bộ Tài chính | **Thông tư 87/2026/TT-BTC** | **01/07/2026; current implementing circular** | 20/08/2026 |
 | For a contract transfer within the statutory regime, the developer facilitates transfer and may not collect contract-transfer-related costs; transaction type must first be established | National Assembly | Luật Kinh doanh bất động sản 29/2023/QH15 | In force; conditional on statutory scope | 20/08/2026 |
 | Forms, dossier and implementation sequence for relevant real-estate-business contract transfers | Government | Nghị định 96/2024/NĐ-CP | Used only for implementation of Law 29/2023/QH15 where applicable | 20/08/2026 |
 | Housing status and rights/conditions can vary with HĐMB, handover, certificate, mortgage and authorization | National Assembly | Luật Nhà ở 27/2023/QH15 | Check against transaction type and current file | 20/08/2026 |
