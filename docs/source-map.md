@@ -50,3 +50,18 @@ Do not publish booking forms, old sales policies, commission materials, price ca
 4. Confirm image publication rights before downloading.
 5. Convert approved photographs to responsive WebP/AVIF variants; preserve readable plan originals.
 6. Update this map before updating public copy.
+
+## SEO Content V5 — official-source claim map (checked 20/08/2026)
+
+| Claim group | Official source | Public pages |
+|---|---|---|
+| 5.6 ha, 9 towers, 29–35 storeys, product spectrum and approx. 4,000 marketing wording | https://www.capitaland.com/vn/vi/development/our-portfolio/residential/lumi-hanoi.html | Overview, unit guides |
+| Exact 3,950 apartments; Phase 1/2 quantities, legal tower codes and estimated construction milestones | https://www.capitaland.com/content/dam/sites/lumihanoi/vn/project-profile/ | Overview, legal |
+| Document 6197/SXD-QLN dated 31/07/2024; 2,375 apartments + 35 commercial/service units | https://www.capitaland.com/content/dam/sites/lumihanoi/vn/project-profile/ | Legal, overview |
+| Official address, Đại lộ Thăng Long, Ring Road 3.5, future Metro 5/6/7 and destination categories | https://www.capitaland.com/sites/lumihanoi/vn/index.html | Location |
+| studioMilou / Jean-François Milou, lumière concept, Tinderbox, SuMisura, EDGE direction and landscape | Main project page and official microsite | Design, overview, amenities |
+| 80+ facilities, 15 sports courts, pools and Signature amenity program | https://www.capitaland.com/sites/lumihanoi/vn/facilities/ | Amenities |
+| Elite/Prestige facilities and selected NFA/GFA unit examples | https://www.capitaland.com/sites/lumihanoi/vn/facilities-elite/ and official brochures | Unit guides, amenities |
+| Prestige 1–4BR phase material | https://www.capitaland.com/sites/lumihanoi/resources/wp-content/uploads/2024/07/LumiPrestige_EBrochure_trang-doi-3.pdf | 1–4BR guides |
+
+Time-sensitive status wording uses: “Theo hồ sơ dự án chính thức được kiểm tra ngày 20/08/2026…”. Estimated finishing milestones are never treated as handover dates. The public official price field was “Cập nhật sau” on the check date; no developer or secondary-market price was inferred.
