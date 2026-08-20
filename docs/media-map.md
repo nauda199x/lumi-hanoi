@@ -70,3 +70,7 @@ Inline images must include intrinsic `width` and `height`, meaningful Vietnamese
 | INTEGRATED | `assets/media/layouts/lumi-prestige-typical-floor.webp` | `1OfZ7AxsOCezGxu7K3kHiUUjt-Au56Nm-` | Prestige | technical plan | Prestige lightbox |
 | INTEGRATED | `assets/media/layouts/lumi-elite-masterplan.webp` | `1fnqn_VoG-7csnJFKtFJzNmBCILJ3ielO` | Elite | technical plan | Elite lightbox |
 | INTEGRATED | `assets/media/og/lumi-hanoi-og.webp` | derived from `1BaS4oH7XAePOnPiWz58fgVeV5i_sWc7a` | Home | rendering derivative | Homepage Open Graph image, 1200 × 630 |
+
+## V6 transfer cluster — reuse audit 20/08/2026
+
+Không thêm hoặc tải media mới. Sáu bài V6 tái sử dụng các tệp `INTEGRATED` đã xác minh: `assets/media/home/lumi-hanoi-streetscape.webp`, `assets/media/masterplan/lumi-hanoi-masterplan.webp`, `assets/media/prestige/lumi-prestige-garden.webp`. Mỗi ảnh có kích thước nội tại, alt tiếng Việt, `decoding="async"`; ảnh dưới nếp gấp có `loading="lazy"`. Hình chỉ minh họa bối cảnh/định vị, không đại diện căn đang bán.

@@ -65,3 +65,16 @@ Do not publish booking forms, old sales policies, commission materials, price ca
 | Prestige 1–4BR phase material | https://www.capitaland.com/sites/lumihanoi/resources/wp-content/uploads/2024/07/LumiPrestige_EBrochure_trang-doi-3.pdf | 1–4BR guides |
 
 Time-sensitive status wording uses: “Theo hồ sơ dự án chính thức được kiểm tra ngày 20/08/2026…”. Estimated finishing milestones are never treated as handover dates. The public official price field was “Cập nhật sau” on the check date; no developer or secondary-market price was inferred.
+
+## V6 — chuyển nhượng / mua lại (kiểm tra 20/08/2026)
+
+| Claim | Cơ quan/nguồn | Văn bản/tài liệu | Ngày kiểm tra |
+|---|---|---|---|
+| Điều kiện và thủ tục chuyển nhượng HĐMB nhà ở hình thành trong tương lai phụ thuộc loại hồ sơ | Quốc hội | Luật Kinh doanh bất động sản số 29/2023/QH15, đặc biệt Điều 50 | 20/08/2026 |
+| Quyền, giao dịch và hồ sơ nhà ở phải đối chiếu theo tình trạng căn | Quốc hội | Luật Nhà ở số 27/2023/QH15 | 20/08/2026 |
+| Thuế TNCN từ chuyển nhượng BĐS: giá chuyển nhượng × thuế suất 2%, kèm quy tắc giá/thời điểm/miễn riêng | Bộ Tài chính | Điều 12 Thông tư 111/2013/TT-BTC, được sửa đổi tại Điều 17 Thông tư 92/2015/TT-BTC | 20/08/2026 |
+| Lệ phí trước bạ gắn với đăng ký quyền, không mặc định là phí của mọi chuyển nhượng HĐMB | Chính phủ / Bộ Tài chính | Nghị định 10/2022/NĐ-CP; Thông tư 13/2022/TT-BTC | 20/08/2026 |
+| Phí công chứng theo loại và giá trị hợp đồng/giao dịch; thù lao khác cần tách | Bộ Tài chính | Thông tư 257/2016/TT-BTC, được sửa đổi bởi Thông tư 111/2017/TT-BTC và Thông tư 74/2022/TT-BTC | 20/08/2026 |
+| Tòa, loại căn, ví dụ NFA/GFA, mặt bằng và thông số giới thiệu phân khu | CapitaLand Development / Lumi Hanoi | Microsite chính thức; Project Introduction; Lumi Prestige eBrochure; tài liệu Elite đã kiểm kê tại `docs/source-package-v1.md` | 20/08/2026 |
+
+Các bài V6 diễn đạt có điều kiện (“cần kiểm tra”, “có thể”, “tùy hồ sơ”), không suy luận điều kiện chuyển nhượng, thời gian xử lý hay phí chủ đầu tư. Văn bản phải được kiểm tra lại về hiệu lực và áp dụng tại ngày giao dịch.
