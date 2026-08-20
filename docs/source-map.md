@@ -65,3 +65,21 @@ Do not publish booking forms, old sales policies, commission materials, price ca
 | Prestige 1–4BR phase material | https://www.capitaland.com/sites/lumihanoi/resources/wp-content/uploads/2024/07/LumiPrestige_EBrochure_trang-doi-3.pdf | 1–4BR guides |
 
 Time-sensitive status wording uses: “Theo hồ sơ dự án chính thức được kiểm tra ngày 20/08/2026…”. Estimated finishing milestones are never treated as handover dates. The public official price field was “Cập nhật sau” on the check date; no developer or secondary-market price was inferred.
+
+## V6 — transfer cluster legal and factual map (checked 20/08/2026)
+
+| Claim / use | Authority | Document | Effective date / applicability | Verification date |
+|---|---|---|---|---|
+| PIT on real-estate transfer uses the 2% rate on the transfer price determined under applicable rules; actual tax base, timing and relief depend on the file | National Assembly | **Luật Thuế thu nhập cá nhân 109/2025/QH15** | **01/07/2026; primary current PIT statute on publication date** | 20/08/2026 |
+| Earlier PIT implementation material may be used only to the extent still applicable; it is not presented above the 2025 statute | Ministry of Finance | Thông tư 111/2013/TT-BTC; Thông tư 92/2015/TT-BTC | Subordinate/implementation reference only after 01/07/2026 | 20/08/2026 |
+| For a contract transfer within the statutory regime, the developer facilitates transfer and may not collect contract-transfer-related costs; transaction type must first be established | National Assembly | Luật Kinh doanh bất động sản 29/2023/QH15 | In force; conditional on statutory scope | 20/08/2026 |
+| Forms, dossier and implementation sequence for relevant real-estate-business contract transfers | Government | Nghị định 96/2024/NĐ-CP | Used only for implementation of Law 29/2023/QH15 where applicable | 20/08/2026 |
+| Housing status and rights/conditions can vary with HĐMB, handover, certificate, mortgage and authorization | National Assembly | Luật Nhà ở 27/2023/QH15 | Check against transaction type and current file | 20/08/2026 |
+| Registration-fee concepts, where the transaction triggers the relevant registration event | Government / Ministry of Finance | Nghị định 10/2022/NĐ-CP; Thông tư 13/2022/TT-BTC | Conditional; not assumed for every HĐMB transfer | 20/08/2026 |
+| Tower grouping, published unit/layout examples, NFA/GFA labels, amenity and specification distinctions | CapitaLand Development / official Lumi Hanoi materials | Official project introduction, Signature materials, Prestige eBrochure, Elite eBrochure; repository source package | Project-specific facts only; HĐMB and appendices control a specific unit | 20/08/2026 |
+
+The public V6 wording separates taxes, notarization, registration/administrative
+items, banking charges, private brokerage/service fees and other legitimate
+separate services. It does not infer fee-free treatment for every Lumi Hanoi
+transaction. Current notarization and administrative amounts must be checked at
+the actual transaction date rather than frozen into the editorial copy.
