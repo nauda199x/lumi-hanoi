@@ -122,12 +122,12 @@ for drive_id, source_name, number, typ, bedrooms, size, nfa, gfa, local, width, 
         fail("missing rendered anchor: " + anchor)
     block = block_match.group(0)
     url = "/" + local
-    if block.count(url) != 2:
-        fail("layout image must link to and render its own local full-resolution file: " + number)
-    if f'width="{width}"' not in block or f'height="{height}"' not in block:
-        fail("missing intrinsic image dimensions for layout " + number)
-    if number != "01" and 'loading="lazy"' not in block:
-        fail("below-fold layout must lazy-load: " + number)
+    if block.count(url) != 1:
+        fail("layout action must link once to its own local full-resolution file: " + number)
+    if "<img " in block:
+        fail("full-resolution drawing must not occupy normal page flow: " + number)
+    if ">Xem bản vẽ " not in block:
+        fail("on-demand drawing action missing for layout " + number)
     for value in (typ, f"{bedrooms}BR"):
         if value not in block:
             fail("rendered catalog mismatch for layout " + number + ": " + value)
