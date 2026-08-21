@@ -271,3 +271,103 @@ h1,h2,h3{font-family:Iowan Old Style,Baskerville,Georgia,"Times New Roman",serif
 .lightbox{box-sizing:border-box;width:min(96vw,1500px);height:min(94dvh,1000px);max-width:none;max-height:none;padding:3.5rem 1rem 3.6rem;border:0;background:#171917;color:#fff}.lightbox::backdrop{background:rgba(12,13,12,.9)}.lightbox-toolbar{position:absolute;z-index:2;top:.65rem;right:.75rem;display:flex;gap:.4rem}.lightbox-toolbar button{min-height:38px;padding:.42rem .7rem;border:1px solid #777;background:#242724;color:#fff;cursor:pointer}.lightbox-stage{display:flex;align-items:center;justify-content:center;width:100%;height:100%;overflow:auto;overscroll-behavior:contain}.lightbox img{display:block;flex:none;max-width:none;max-height:none;min-width:0}.lightbox img.is-fit{width:auto!important;height:auto!important;max-width:100%;max-height:100%;object-fit:contain}.lightbox-caption{position:absolute;left:1rem;right:1rem;bottom:.7rem;overflow:hidden;margin:0;padding:.4rem;color:#ddd;font-size:.78rem;line-height:1.3;text-align:center;white-space:nowrap;text-overflow:ellipsis;background:#171917}
 @media(max-width:700px){.lightbox{width:100vw;height:100dvh;margin:0;padding:4rem .5rem 3.4rem}.lightbox-toolbar{left:.5rem;right:.5rem;justify-content:center}.lightbox-toolbar button{padding:.4rem .55rem;font-size:.75rem}.lightbox-caption{left:.5rem;right:.5rem}}
 .lightbox-stage.is-zoomed{display:block}.lightbox-stage.is-zoomed img{margin:0}.lightbox-toolbar button:disabled{opacity:.45;cursor:wait}
+
+/* V7.1 global responsive editorial layout system */
+:root {
+  --reading: 780px;
+  --editorial: 1080px;
+  --page-gutter: clamp(24px, 4vw, 64px);
+  --space-section: clamp(4rem, 6vw, 5rem);
+}
+.container {
+  width: min(calc(100% - (2 * var(--page-gutter))), var(--max));
+}
+.article-layout {
+  display: grid;
+  width: min(calc(100% - (2 * var(--page-gutter))), var(--max));
+  margin-inline: auto;
+  padding-block: clamp(4rem, 6vw, 5rem);
+}
+.reading-shell.article-layout--centered {
+  grid-template-columns: minmax(0, var(--reading));
+  justify-content: center;
+}
+.article-layout--with-sidebar {
+  grid-template-columns: minmax(0, var(--reading)) minmax(220px, 260px);
+  justify-content: center;
+  gap: clamp(48px, 6vw, 88px);
+}
+.editorial-shell.article-layout--with-sidebar {
+  grid-template-columns: minmax(0, 1fr) minmax(220px, 250px);
+  max-width: var(--max);
+}
+.editorial-wide .article {
+  min-width: 0;
+  max-width: var(--editorial);
+}
+.article-layout--centered .article {
+  width: 100%;
+  max-width: var(--reading);
+  margin-inline: auto;
+}
+.article h2 {
+  max-width: 22ch;
+  margin-top: clamp(4rem, 5vw, 5rem);
+  font-size: clamp(2.25rem, 3vw, 2.75rem);
+}
+.article > p,
+.article li {
+  line-height: 1.78;
+}
+.section {
+  padding-block: var(--space-section);
+}
+.section-head {
+  margin-bottom: clamp(2.5rem, 4vw, 3.75rem);
+}
+@media (max-width: 1024px) {
+  :root { --page-gutter: clamp(24px, 3.5vw, 40px); }
+  .article-layout--with-sidebar,
+  .editorial-shell.article-layout--with-sidebar {
+    grid-template-columns: minmax(0, 1fr) minmax(200px, 230px);
+    gap: clamp(32px, 4vw, 52px);
+  }
+  .article h2 { font-size: clamp(2.1rem, 4vw, 2.55rem); }
+}
+@media (max-width: 760px) {
+  :root {
+    --page-gutter: clamp(20px, 5.5vw, 24px);
+    --space-section: clamp(2.5rem, 11vw, 3.25rem);
+  }
+  html, body { max-width: 100%; overflow-x: clip; }
+  .article-layout,
+  .article-layout--with-sidebar,
+  .editorial-shell.article-layout--with-sidebar {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2.75rem;
+    padding-block: clamp(2.5rem, 10vw, 3.25rem);
+  }
+  .side-nav {
+    position: static;
+    width: 100%;
+  }
+  .article-hero {
+    min-height: min(430px, 72svh);
+    padding-block: 4.5rem 2.75rem;
+  }
+  .article-hero h1 { font-size: clamp(2.35rem, 10.5vw, 3.35rem); }
+  .article-hero .lead { margin-top: 1rem; font-size: 1rem; line-height: 1.55; }
+  .article h2 {
+    max-width: none;
+    margin-top: clamp(2.75rem, 11vw, 3.5rem);
+    padding-top: 1rem;
+    font-size: clamp(1.75rem, 7.5vw, 2.125rem);
+    line-height: 1.16;
+  }
+  .article > p:first-of-type { font-size: 1.08rem; }
+  .article p, .article li { line-height: 1.72; }
+  .section-head { margin-bottom: 2.25rem; }
+  .split { gap: 2rem; }
+  .breadcrumb { overflow-wrap: anywhere; }
+  .article img, .figure, .media-gallery { max-width: 100%; }
+}
