@@ -105,3 +105,7 @@ All eight inline plans have intrinsic dimensions, precise Vietnamese alternative
 lazy loading, asynchronous decoding, a useful caption and a full-resolution lightbox
 link. On narrow screens, the plan viewport scrolls horizontally so labels remain
 inspectable rather than shrinking the 2400-pixel drawing into illegibility.
+
+## V8.1B Prestige unit-layout library — 21/08/2026
+
+All 22 distinct production WebP drawings in `assets/media/prestige/unit-layouts/` render on `/layout-can-ho-lumi-prestige/` at stable anchors `#layout-01` through `#layout-22`. The machine-readable provenance, dimensions and SHA-256 values are recorded in `assets/media/prestige/unit-layouts/manifest.v8.1b.json`. The library links to the authoritative P1/P2 floor-group lookup before users choose a unit layout.

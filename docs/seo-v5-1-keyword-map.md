@@ -71,3 +71,9 @@ homepage CTA anchors and adds broader automated safeguards.
 
 No `/chuyen-nhuong-lumi-hanoi/` page exists. Existing V5/V5.1 ownership below is
 unchanged.
+
+## V8.1B keyword addition
+
+| URL | Title / primary intent | Primary keyword | Secondary keywords | Intent / guardrail |
+|---|---|---|---|---|
+| `/layout-can-ho-lumi-prestige/` | Layout căn hộ Lumi Prestige: 22 bản vẽ NFA/GFA | layout căn hộ Lumi Prestige | mặt bằng căn hộ Prestige; NFA GFA Lumi Prestige | Technical lookup; one indexable library, no thin per-layout URLs; preserves P1/P2 tower-floor intent |

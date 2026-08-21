@@ -52,4 +52,27 @@
     dialog.addEventListener('click',event=>{if(event.target===dialog)closeDialog();});
     dialog.addEventListener('close',()=>{image.removeAttribute('src');opener?.focus();});
   }
+
+  const layoutFilters=[...document.querySelectorAll('[data-layout-filter]')];
+  const layoutCards=[...document.querySelectorAll('[data-layout-card]')];
+  const layoutCount=document.querySelector('[data-layout-count]');
+  if(layoutFilters.length&&layoutCards.length){
+    const active={bedrooms:'all',size:'all'};
+    const apply=()=>{
+      let shown=0;
+      layoutCards.forEach(card=>{
+        const visible=(active.bedrooms==='all'||card.dataset.bedrooms===active.bedrooms)&&(active.size==='all'||card.dataset.size===active.size);
+        card.hidden=!visible;
+        if(visible)shown++;
+      });
+      if(layoutCount)layoutCount.textContent=`Hiển thị ${shown} / ${layoutCards.length} layout`;
+    };
+    layoutFilters.forEach(button=>button.addEventListener('click',()=>{
+      const group=button.dataset.layoutFilter;
+      active[group]=button.dataset.value;
+      layoutFilters.filter(item=>item.dataset.layoutFilter===group).forEach(item=>item.setAttribute('aria-pressed',String(item===button)));
+      apply();
+    }));
+    apply();
+  }
 })();
