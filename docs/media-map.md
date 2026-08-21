@@ -79,3 +79,28 @@ Elite comparison additionally reuses `assets/media/masterplan/lumi-hanoi-masterp
 inline (893 × 649) with Vietnamese alt text, intrinsic dimensions, asynchronous
 decoding and lazy loading. The asset remains a project-level technical plan and is
 not presented as proof of a unit's contractual specification.
+
+## V8.1A Prestige floor-plan library — 21/08/2026
+
+The former generic Prestige typical-floor drawing is not used by the P1/P2 lookup.
+The eight owner-supplied source drawings remain as eight distinct, unmodified local
+WebP files. `assets/media/prestige/manifest.v8.json` is the canonical machine-readable
+record for Drive file ID → local file → tower/floor group → stable page anchor. The
+page keeps one authoritative Prestige URL and exposes floor groups as fragments rather
+than creating thin individual-floor pages.
+
+| Tower / floor group | Local source drawing | Rendered anchor | Display dimensions | Status |
+|---|---|---|---:|---|
+| P1 — Tầng 2–19, 21–22, 24–28 | `assets/media/prestige/floor-plans/p1-t02-19-21-22-24-28.webp` | `/lumi-prestige/#p1-tang-2-19-21-22-24-28` | 2400 × 3200 | INTEGRATED |
+| P1 — Tầng 20 | `assets/media/prestige/floor-plans/p1-t20.webp` | `/lumi-prestige/#p1-tang-20` | 2400 × 3200 | INTEGRATED |
+| P1 — Tầng 23 | `assets/media/prestige/floor-plans/p1-t23.webp` | `/lumi-prestige/#p1-tang-23` | 2400 × 3200 | INTEGRATED |
+| P1 — Tầng 29 | `assets/media/prestige/floor-plans/p1-t29.webp` | `/lumi-prestige/#p1-tang-29` | 2400 × 3200 | INTEGRATED |
+| P2 — Tầng 2–12, 14–19, 21–28 | `assets/media/prestige/floor-plans/p2-t02-12-14-19-21-28.webp` | `/lumi-prestige/#p2-tang-2-12-14-19-21-28` | 2400 × 3201 | INTEGRATED |
+| P2 — Tầng 13 | `assets/media/prestige/floor-plans/p2-t13.webp` | `/lumi-prestige/#p2-tang-13` | 2400 × 3200 | INTEGRATED |
+| P2 — Tầng 20 | `assets/media/prestige/floor-plans/p2-t20.webp` | `/lumi-prestige/#p2-tang-20` | 2400 × 3200 | INTEGRATED |
+| P2 — Tầng 29 | `assets/media/prestige/floor-plans/p2-t29.webp` | `/lumi-prestige/#p2-tang-29` | 2400 × 3200 | INTEGRATED |
+
+All eight inline plans have intrinsic dimensions, precise Vietnamese alternative text,
+lazy loading, asynchronous decoding, a useful caption and a full-resolution lightbox
+link. On narrow screens, the plan viewport scrolls horizontally so labels remain
+inspectable rather than shrinking the 2400-pixel drawing into illegibility.

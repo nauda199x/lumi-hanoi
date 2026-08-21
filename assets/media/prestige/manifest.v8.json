@@ -1,0 +1,112 @@
+{
+  "version": "8.1A",
+  "updated": "2026-08-21",
+  "collection": "Lumi Prestige P1/P2 floor plans",
+  "usage": "One tower page with stable floor-group anchors; original files are linked for full-resolution viewing.",
+  "assets": [
+    {
+      "tower": "P1",
+      "floor_group": "Tầng 2–19, 21–22, 24–28",
+      "anchor": "p1-tang-2-19-21-22-24-28",
+      "local_file": "assets/media/prestige/floor-plans/p1-t02-19-21-22-24-28.webp",
+      "width": 2400,
+      "height": 3200,
+      "source": {
+        "provider": "Google Drive",
+        "drive_file_id": "zndr4MlKU2ql-ZL6BkFgBYUPZnQuveQIH",
+        "provenance": "Owner-trusted source drawing supplied for V8.1A"
+      }
+    },
+    {
+      "tower": "P1",
+      "floor_group": "Tầng 20",
+      "anchor": "p1-tang-20",
+      "local_file": "assets/media/prestige/floor-plans/p1-t20.webp",
+      "width": 2400,
+      "height": 3200,
+      "source": {
+        "provider": "Google Drive",
+        "drive_file_id": "2Qw2YuR1TahE7CplXuyg9fQcMLDSiVC-g",
+        "provenance": "Owner-trusted source drawing supplied for V8.1A"
+      }
+    },
+    {
+      "tower": "P1",
+      "floor_group": "Tầng 23",
+      "anchor": "p1-tang-23",
+      "local_file": "assets/media/prestige/floor-plans/p1-t23.webp",
+      "width": 2400,
+      "height": 3200,
+      "source": {
+        "provider": "Google Drive",
+        "drive_file_id": "LeQ3-fwenLw4RE7fuD7RonryjfJzN0a6o",
+        "provenance": "Owner-trusted source drawing supplied for V8.1A"
+      }
+    },
+    {
+      "tower": "P1",
+      "floor_group": "Tầng 29",
+      "anchor": "p1-tang-29",
+      "local_file": "assets/media/prestige/floor-plans/p1-t29.webp",
+      "width": 2400,
+      "height": 3200,
+      "source": {
+        "provider": "Google Drive",
+        "drive_file_id": "Vg3a2mUztgOXS_sQL3OU5KNPabejPwrw5",
+        "provenance": "Owner-trusted source drawing supplied for V8.1A"
+      }
+    },
+    {
+      "tower": "P2",
+      "floor_group": "Tầng 2–12, 14–19, 21–28",
+      "anchor": "p2-tang-2-12-14-19-21-28",
+      "local_file": "assets/media/prestige/floor-plans/p2-t02-12-14-19-21-28.webp",
+      "width": 2400,
+      "height": 3201,
+      "source": {
+        "provider": "Google Drive",
+        "drive_file_id": "S6FVV1OD3Ygrhb7acvVMPS01UvuCznUyp",
+        "provenance": "Owner-trusted source drawing supplied for V8.1A"
+      }
+    },
+    {
+      "tower": "P2",
+      "floor_group": "Tầng 13",
+      "anchor": "p2-tang-13",
+      "local_file": "assets/media/prestige/floor-plans/p2-t13.webp",
+      "width": 2400,
+      "height": 3200,
+      "source": {
+        "provider": "Google Drive",
+        "drive_file_id": "a4J1m-mAwaeHyVV9FFHYB9V10McaIRuTY",
+        "provenance": "Owner-trusted source drawing supplied for V8.1A"
+      }
+    },
+    {
+      "tower": "P2",
+      "floor_group": "Tầng 20",
+      "anchor": "p2-tang-20",
+      "local_file": "assets/media/prestige/floor-plans/p2-t20.webp",
+      "width": 2400,
+      "height": 3200,
+      "source": {
+        "provider": "Google Drive",
+        "drive_file_id": "R6FNz5Mt2d3c7Xpze_Rk3j4i3tePNIXQ_",
+        "provenance": "Owner-trusted source drawing supplied for V8.1A"
+      }
+    },
+    {
+      "tower": "P2",
+      "floor_group": "Tầng 29",
+      "anchor": "p2-tang-29",
+      "local_file": "assets/media/prestige/floor-plans/p2-t29.webp",
+      "width": 2400,
+      "height": 3200,
+      "source": {
+        "provider": "Google Drive",
+        "drive_file_id": "AzqorhdFBWVkyxw8MoHDKTs4ST-bAa2Ak",
+        "provenance": "Owner-trusted source drawing supplied for V8.1A"
+      }
+    }
+  ]
+}
