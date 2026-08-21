@@ -1,0 +1,34 @@
+{
+  "version": "5.2",
+  "sourcePolicy": "Only locally stored, reviewed floor-plan media can make a tower page indexable.",
+  "phases": [
+    {
+      "name": "Signature",
+      "trustedFolderId": "176CFkgekR1kcRxWGQF3XtkzkAOG_oG9C",
+      "towers": [
+        {"slug":"toa-s1-lumi-hanoi","label":"Signature 1 (S1)","groups":["Tầng 2–12, 14–17","Tầng 13","Tầng 18–19, 21–24","Tầng 25, 27, 29, 31, 33"]},
+        {"slug":"toa-s2-lumi-hanoi","label":"Signature 2 (S2)","groups":["Tầng 2–17","Tầng 18–19, 21–22, 24","Tầng 23","Tầng 25, 27, 29, 31, 33"]},
+        {"slug":"toa-s3-lumi-hanoi","label":"Signature 3 (S3)","groups":["Tầng 2–12, 14–17","Tầng 13","Tầng 18–19, 21–24","Tầng 25, 27, 29, 31, 33"]},
+        {"slug":"toa-s5-lumi-hanoi","label":"Signature 5 (S5)","groups":["Tầng 2–12, 14–17","Tầng 18–19, 21–22, 24–27","Tầng 23","Tầng 28, 30, 32"]},
+        {"slug":"toa-s6-lumi-hanoi","label":"Signature 6 (S6)","groups":["Tài liệu S6 trong thư mục mặt bằng tổng Signature; cần ghép đúng tên tệp và tầng trước khi sử dụng"]}
+      ]
+    },
+    {
+      "name": "Prestige",
+      "trustedFolderId": "1woZm0pruDuANNlPXmoNulP4lbvv-VKHm",
+      "towers": [
+        {"slug":"toa-p1-lumi-hanoi","label":"Prestige 1 (P1)","groups":["Tầng 2–19, 21–22, 24–28","Tầng 20","Tầng 23"],"media":"/assets/media/layouts/lumi-prestige-typical-floor.webp"},
+        {"slug":"toa-p2-lumi-hanoi","label":"Prestige 2 (P2)","groups":["Tầng 2–12, 14–19, 21–28","Tầng 13","Tầng 20"],"media":"/assets/media/layouts/lumi-prestige-typical-floor.webp"}
+      ]
+    },
+    {
+      "name": "Elite",
+      "trustedFolderId": "1atZNW5JhRQyM9j0LRBac3HePP371KAU7",
+      "brochureFileId": "1lHh0HKxvkBdCZ2ojHvlKvStAbpu-s_eg",
+      "towers": [
+        {"slug":"toa-elite-1-lumi-hanoi","label":"Elite 1 (Z29M.1)","groups":["Mặt bằng tòa Elite 1","Layout 1–3PN","Layout 4PN Duplex và Penthouse"]},
+        {"slug":"toa-elite-2-lumi-hanoi","label":"Elite 2 (Z29.1)","groups":["Mặt bằng tòa Elite 2","Layout 1–3PN","Layout 4PN Duplex và Penthouse"]}
+      ]
+    }
+  ]
+}

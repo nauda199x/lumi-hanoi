@@ -2,6 +2,7 @@
 """Static, standard-library V7 visual/SEO safety checks."""
 from __future__ import annotations
 
+import json
 import re
 import subprocess
 import sys
@@ -47,10 +48,12 @@ def local_file(url: str) -> Path | None:
 
 def main() -> int:
     errors=[]; pages={}
+    floor_manifest=json.loads((ROOT/"data/floor-plans.json").read_text(encoding="utf-8"))
+    gated_noindex={ROOT/t["slug"]/"index.html" for phase in floor_manifest["phases"] for t in phase["towers"] if not t.get("media")}
     html_files=sorted(p for p in ROOT.rglob("*.html") if ".git" not in p.parts)
     for path in html_files:
         text=path.read_text(encoding="utf-8"); parser=PageParser(); parser.feed(text); pages[path]=parser
-        if path.name != "404.html" and parser.noindex: errors.append(f"noindex found: {path.relative_to(ROOT)}")
+        if path.name != "404.html" and parser.noindex and path not in gated_noindex: errors.append(f"noindex found: {path.relative_to(ROOT)}")
         if path.name == "404.html": pass
         elif len(parser.canonicals) != 1: errors.append(f"canonical count {len(parser.canonicals)}: {path.relative_to(ROOT)}")
         elif path.name == "index.html":
@@ -96,7 +99,7 @@ def main() -> int:
         target=ROOT/parsed.path.lstrip("/")
         if parsed.path.endswith("/"): target /= "index.html"
         if not target.is_file(): errors.append(f"sitemap URL missing locally: {loc.text}")
-    for script in ("qa_seo_v5.py", "qa_seo_v5_1.py", "qa_seo_v6.py"):
+    for script in ("qa_seo_v5.py", "qa_seo_v5_1.py", "qa_seo_v6.py", "qa_floor_plans_v5_2.py"):
         result=subprocess.run([sys.executable, str(ROOT/"scripts"/script)], cwd=ROOT, capture_output=True, text=True)
         if result.returncode: errors.append(f"existing QA failed: {script}\n{result.stdout}{result.stderr}")
     if errors:
