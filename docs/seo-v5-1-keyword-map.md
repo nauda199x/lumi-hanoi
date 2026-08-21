@@ -71,3 +71,18 @@ homepage CTA anchors and adds broader automated safeguards.
 
 No `/chuyen-nhuong-lumi-hanoi/` page exists. Existing V5/V5.1 ownership below is
 unchanged.
+
+# V5.2 floor-plan knowledge base — intent extension (21/08/2026)
+
+The existing `/mat-bang-lumi-hanoi/` canonical remains the project-wide floor-plan
+pillar. Nine child URLs own exact tower-plan queries and must not target unit-type,
+phase-profile, sales, rental or transfer intent.
+
+| URL group | Primary intent | Boundary |
+|---|---|---|
+| `/mat-bang-lumi-hanoi/` | mặt bằng Lumi Hanoi; browse all nine towers | Cross-project hub and source methodology only |
+| `/mat-bang-lumi-hanoi/signature-{1,2,3,5,6}/` | mặt bằng tòa Signature S1/S2/S3/S5/S6 | Exact tower and evidenced floor groups only |
+| `/mat-bang-lumi-hanoi/prestige-{1,2}/` | mặt bằng tòa Prestige P1/P2 | Exact tower and evidenced floor groups only |
+| `/mat-bang-lumi-hanoi/elite-{1,2}/` | mặt bằng tòa Elite E1/E2 | Exact tower; no floor facts until the trusted source maps them |
+
+All V5/V5.1/V6/V7 URLs and canonicals retain their previous intent ownership.

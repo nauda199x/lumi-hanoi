@@ -250,3 +250,6 @@ h1,h2,h3{font-family:Iowan Old Style,Baskerville,Georgia,"Times New Roman",serif
     grid-column: auto;
   }
 }
+
+/* V5.2 floor-plan knowledge base */
+.plan-filters{display:flex;flex-wrap:wrap;gap:.65rem;margin:1.5rem 0}.filter-chip{border:1px solid var(--line,#c9c2b3);border-radius:999px;background:transparent;color:inherit;padding:.65rem 1rem;cursor:pointer}.filter-chip:hover,.filter-chip:focus-visible,.filter-chip.is-active{background:#18382e;color:#fff;border-color:#18382e}.tower-grid,.plan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem;margin:1.25rem 0 2rem}.tower-card,.plan-card{border:1px solid rgba(39,55,48,.18);border-radius:1rem;padding:1.25rem;background:rgba(255,255,255,.72)}.tower-card h2,.plan-card h2{font-size:clamp(1.25rem,2vw,1.65rem);margin:.35rem 0}.plan-preview{display:block;margin-top:1rem;overflow:hidden;border-radius:.75rem}.plan-preview img{display:block;width:100%;height:auto}.tower-links{display:flex;flex-wrap:wrap;gap:.75rem}.tower-links a{padding:.55rem .8rem;border:1px solid rgba(39,55,48,.18);border-radius:999px}code{overflow-wrap:anywhere}[hidden]{display:none!important}
