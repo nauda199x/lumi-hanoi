@@ -71,3 +71,15 @@ homepage CTA anchors and adds broader automated safeguards.
 
 No `/chuyen-nhuong-lumi-hanoi/` page exists. Existing V5/V5.1 ownership below is
 unchanged.
+
+
+## V5.2 tower URL intent extension — 21/08/2026
+
+| URL family | Primary intent | Indexing rule | Cannibalization boundary |
+|---|---|---|---|
+| `/toa-s1-lumi-hanoi/`, `/toa-s2-lumi-hanoi/`, `/toa-s3-lumi-hanoi/`, `/toa-s5-lumi-hanoi/`, `/toa-s6-lumi-hanoi/` | Exact Signature tower floor plans | Noindex until every floor group has reviewed local media | Tower/group lookup only; Signature phase page retains phase profile intent |
+| `/toa-p1-lumi-hanoi/`, `/toa-p2-lumi-hanoi/` | Exact Prestige tower floor plans | Noindex until every floor group has reviewed local media | Tower/group lookup only; Prestige phase page retains phase profile intent |
+| `/toa-elite-1-lumi-hanoi/`, `/toa-elite-2-lumi-hanoi/` | Exact Elite tower floor plans | Noindex until every floor group has reviewed local media | Tower/group lookup only; Elite phase page retains phase profile intent |
+
+Only complete tower pages enter `sitemap.xml`; incomplete pages remain discoverable
+from the hub for document matching but do not compete in search.
