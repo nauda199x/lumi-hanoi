@@ -122,10 +122,11 @@ for drive_id, source_name, number, typ, bedrooms, size, nfa, gfa, local, width, 
         fail("missing rendered anchor: " + anchor)
     block = block_match.group(0)
     url = "/" + local
-    if block.count(url) != 1:
+    if block.count(f'href="{url}"') != 1:
         fail("layout action must link once to its own local full-resolution file: " + number)
-    if "<img " in block:
-        fail("full-resolution drawing must not occupy normal page flow: " + number)
+    preview = re.search(r'<img [^>]*src="' + re.escape(url) + r'"[^>]*>', block)
+    if preview and 'loading="lazy"' not in preview.group(0):
+        fail("drawing previews must not eagerly load full-resolution files: " + number)
     if ">Xem bản vẽ " not in block:
         fail("on-demand drawing action missing for layout " + number)
     for value in (typ, f"{bedrooms}BR"):
