@@ -1,0 +1,27 @@
+{
+  "version": "5.2",
+  "sourcePolicy": "A tower is complete and indexable only when every listed floor group has its own reviewed local plan asset.",
+  "phases": [
+    {"name":"Signature","trustedFloorPlanFolderId":"176CFkgekR1kcRxWGQF3XtkzkAOG_oG9C","towers":[
+      {"slug":"toa-s1-lumi-hanoi","label":"Signature 1 (S1)","groups":[
+        {"label":"Tầng 2–12, 14–17","sourceFile":"S1,3,5 - T2-12, T14-17, S2 - T2-17.JPG","asset":null},{"label":"Tầng 13","sourceFile":"S1,3 - T13, S2,5 - T23.JPG","asset":null},{"label":"Tầng 18–19, 21–24","sourceFile":"S1,3 - T18, 19, 21-24, S2 - T18,19,21,22,24, S5 - T18,19,21,22,24-27.JPG","asset":null},{"label":"Tầng 25, 27, 29, 31, 33","sourceFile":"S1,2,3 - T25,27,29,31,33, S5 - T28,30,32.JPG","asset":null}]},
+      {"slug":"toa-s2-lumi-hanoi","label":"Signature 2 (S2)","groups":[
+        {"label":"Tầng 2–17","sourceFile":"S1,3,5 - T2-12, T14-17, S2 - T2-17.JPG","asset":null},{"label":"Tầng 18–19, 21–22, 24","sourceFile":"S1,3 - T18, 19, 21-24, S2 - T18,19,21,22,24, S5 - T18,19,21,22,24-27.JPG","asset":null},{"label":"Tầng 23","sourceFile":"S1,3 - T13, S2,5 - T23.JPG","asset":null},{"label":"Tầng 25, 27, 29, 31, 33","sourceFile":"S1,2,3 - T25,27,29,31,33, S5 - T28,30,32.JPG","asset":null}]},
+      {"slug":"toa-s3-lumi-hanoi","label":"Signature 3 (S3)","groups":[
+        {"label":"Tầng 2–12, 14–17","sourceFile":"S1,3,5 - T2-12, T14-17, S2 - T2-17.JPG","asset":null},{"label":"Tầng 13","sourceFile":"S1,3 - T13, S2,5 - T23.JPG","asset":null},{"label":"Tầng 18–19, 21–24","sourceFile":"S1,3 - T18, 19, 21-24, S2 - T18,19,21,22,24, S5 - T18,19,21,22,24-27.JPG","asset":null},{"label":"Tầng 25, 27, 29, 31, 33","sourceFile":"S1,2,3 - T25,27,29,31,33, S5 - T28,30,32.JPG","asset":null}]},
+      {"slug":"toa-s5-lumi-hanoi","label":"Signature 5 (S5)","groups":[
+        {"label":"Tầng 2–12, 14–17","sourceFile":"S1,3,5 - T2-12, T14-17, S2 - T2-17.JPG","asset":null},{"label":"Tầng 18–19, 21–22, 24–27","sourceFile":"S1,3 - T18, 19, 21-24, S2 - T18,19,21,22,24, S5 - T18,19,21,22,24-27.JPG","asset":null},{"label":"Tầng 23","sourceFile":"S1,3 - T13, S2,5 - T23.JPG","asset":null},{"label":"Tầng 28, 30, 32","sourceFile":"S1,2,3 - T25,27,29,31,33, S5 - T28,30,32.JPG","asset":null}]},
+      {"slug":"toa-s6-lumi-hanoi","label":"Signature 6 (S6)","groups":[]}
+    ]},
+    {"name":"Prestige","trustedFloorPlanFolderId":"1woZm0pruDuANNlPXmoNulP4lbvv-VKHm","towers":[
+      {"slug":"toa-p1-lumi-hanoi","label":"Prestige 1 (P1 / L30.1)","groups":[
+        {"label":"Tầng 2–19, 21–22, 24–28","sourceFile":"P1.T2-19, 21-22, 24-28, P2- 2-12, 14-19,21-28.jpg","asset":"/assets/media/layouts/lumi-prestige-typical-floor.webp"},{"label":"Tầng 20","sourceFile":"P1. Tầng 20, P2-Tầng 13.jpg","asset":null},{"label":"Tầng 23","sourceFile":"P1 - Tầng 23, P2 - Tầng 20.jpg","asset":null}]},
+      {"slug":"toa-p2-lumi-hanoi","label":"Prestige 2 (P2 / L30M.1)","groups":[
+        {"label":"Tầng 2–12, 14–19, 21–28","sourceFile":"P1.T2-19, 21-22, 24-28, P2- 2-12, 14-19,21-28.jpg","asset":"/assets/media/layouts/lumi-prestige-typical-floor.webp"},{"label":"Tầng 13","sourceFile":"P1. Tầng 20, P2-Tầng 13.jpg","asset":null},{"label":"Tầng 20","sourceFile":"P1 - Tầng 23, P2 - Tầng 20.jpg","asset":null}]}
+    ]},
+    {"name":"Elite","trustedFloorPlanFolderId":"1atZNW5JhRQyM9j0LRBac3HePP371KAU7","towers":[
+      {"slug":"toa-elite-1-lumi-hanoi","label":"Elite 1 (Z29M.1)","groups":[]},
+      {"slug":"toa-elite-2-lumi-hanoi","label":"Elite 2 (Z29.1)","groups":[]}
+    ]}
+  ]
+}

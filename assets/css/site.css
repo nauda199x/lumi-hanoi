@@ -250,3 +250,8 @@ h1,h2,h3{font-family:Iowan Old Style,Baskerville,Georgia,"Times New Roman",serif
     grid-column: auto;
   }
 }
+
+.floor-directory { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:1rem; margin:1.25rem 0 2rem; }
+.floor-directory section { border:1px solid var(--line); border-radius:var(--radius-sm); padding:1rem; background:var(--paper); }
+.floor-directory h3 { margin-top:0; }
+@media (max-width:720px) { .floor-directory { grid-template-columns:1fr; } }

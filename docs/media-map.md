@@ -79,3 +79,18 @@ Elite comparison additionally reuses `assets/media/masterplan/lumi-hanoi-masterp
 inline (893 × 649) with Vietnamese alt text, intrinsic dimensions, asynchronous
 decoding and lazy loading. The asset remains a project-level technical plan and is
 not presented as proof of a unit's contractual specification.
+
+
+## V5.2 tower floor-plan registry — 21/08/2026
+
+The machine-readable source of truth is `data/floor-plans.json`. Each floor group
+records the trusted source filename and its reviewed local asset independently. A
+tower remains `noindex` and excluded from the sitemap until **every** group has a
+local asset; a project masterplan or a plan for one typical group never completes
+the tower. The currently reviewed Prestige image maps only to the shared P1
+`Tầng 2–19, 21–22, 24–28` / P2 `Tầng 2–12, 14–19, 21–28` source file.
+
+Trusted floor-plan collections: Signature `176CFkgekR1kcRxWGQF3XtkzkAOG_oG9C`;
+Prestige `1woZm0pruDuANNlPXmoNulP4lbvv-VKHm`; Elite
+`1atZNW5JhRQyM9j0LRBac3HePP371KAU7`. Generic phase renderings and the Elite
+masterplan are not floor-group media.
