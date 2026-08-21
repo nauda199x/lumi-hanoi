@@ -2,7 +2,7 @@
   "version": "8.1A",
   "updated": "2026-08-21",
   "collection": "Lumi Prestige P1/P2 floor plans",
-  "usage": "One tower page with stable floor-group anchors; original files are linked for full-resolution viewing.",
+  "usage": "Separate authoritative P1/P2 tower pages with stable floor-group anchors; original-resolution local derivatives are linked for viewing.",
   "assets": [
     {
       "tower": "P1",
@@ -13,9 +13,10 @@
       "height": 3200,
       "source": {
         "provider": "Google Drive",
-        "drive_file_id": "zndr4MlKU2ql-ZL6BkFgBYUPZnQuveQIH",
+        "drive_file_id": "11jadUR3YF3cIZd1MQ5Eg2tm5MQ_45PRF",
         "provenance": "Owner-trusted source drawing supplied for V8.1A"
-      }
+      },
+      "rendered_page": "toa-p1-lumi-hanoi/index.html"
     },
     {
       "tower": "P1",
@@ -26,9 +27,10 @@
       "height": 3200,
       "source": {
         "provider": "Google Drive",
-        "drive_file_id": "2Qw2YuR1TahE7CplXuyg9fQcMLDSiVC-g",
+        "drive_file_id": "1ky6AoU-RKfkQQfPggTiTcfD286hP9c1-",
         "provenance": "Owner-trusted source drawing supplied for V8.1A"
-      }
+      },
+      "rendered_page": "toa-p1-lumi-hanoi/index.html"
     },
     {
       "tower": "P1",
@@ -39,9 +41,10 @@
       "height": 3200,
       "source": {
         "provider": "Google Drive",
-        "drive_file_id": "LeQ3-fwenLw4RE7fuD7RonryjfJzN0a6o",
+        "drive_file_id": "1EriYOtwKs3pD7ETAo_o8BnuNbvZrBaF5",
         "provenance": "Owner-trusted source drawing supplied for V8.1A"
-      }
+      },
+      "rendered_page": "toa-p1-lumi-hanoi/index.html"
     },
     {
       "tower": "P1",
@@ -52,9 +55,10 @@
       "height": 3200,
       "source": {
         "provider": "Google Drive",
-        "drive_file_id": "Vg3a2mUztgOXS_sQL3OU5KNPabejPwrw5",
+        "drive_file_id": "1vHglsZVk2aqp_t6aKvml1xQo17wQN9WR",
         "provenance": "Owner-trusted source drawing supplied for V8.1A"
-      }
+      },
+      "rendered_page": "toa-p1-lumi-hanoi/index.html"
     },
     {
       "tower": "P2",
@@ -65,9 +69,10 @@
       "height": 3201,
       "source": {
         "provider": "Google Drive",
-        "drive_file_id": "S6FVV1OD3Ygrhb7acvVMPS01UvuCznUyp",
+        "drive_file_id": "1k_KbeRS92wbVOTF4_XKh18D1kb-CareO",
         "provenance": "Owner-trusted source drawing supplied for V8.1A"
-      }
+      },
+      "rendered_page": "toa-p2-lumi-hanoi/index.html"
     },
     {
       "tower": "P2",
@@ -78,9 +83,10 @@
       "height": 3200,
       "source": {
         "provider": "Google Drive",
-        "drive_file_id": "a4J1m-mAwaeHyVV9FFHYB9V10McaIRuTY",
+        "drive_file_id": "1DGpCt-vZmqeokHQseBvivHTaOKKkWXRI",
         "provenance": "Owner-trusted source drawing supplied for V8.1A"
-      }
+      },
+      "rendered_page": "toa-p2-lumi-hanoi/index.html"
     },
     {
       "tower": "P2",
@@ -91,9 +97,10 @@
       "height": 3200,
       "source": {
         "provider": "Google Drive",
-        "drive_file_id": "R6FNz5Mt2d3c7Xpze_Rk3j4i3tePNIXQ_",
+        "drive_file_id": "11h2HZD-WUqcgPVdMh0gkxK95wjF9_T49",
         "provenance": "Owner-trusted source drawing supplied for V8.1A"
-      }
+      },
+      "rendered_page": "toa-p2-lumi-hanoi/index.html"
     },
     {
       "tower": "P2",
@@ -104,9 +111,10 @@
       "height": 3200,
       "source": {
         "provider": "Google Drive",
-        "drive_file_id": "AzqorhdFBWVkyxw8MoHDKTs4ST-bAa2Ak",
+        "drive_file_id": "13cMmDd-E23cakiNCzh68Lr8MmK_wRyRy",
         "provenance": "Owner-trusted source drawing supplied for V8.1A"
-      }
+      },
+      "rendered_page": "toa-p2-lumi-hanoi/index.html"
     }
   ]
 }
