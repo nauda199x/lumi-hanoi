@@ -79,3 +79,22 @@ Elite comparison additionally reuses `assets/media/masterplan/lumi-hanoi-masterp
 inline (893 × 649) with Vietnamese alt text, intrinsic dimensions, asynchronous
 decoding and lazy loading. The asset remains a project-level technical plan and is
 not presented as proof of a unit's contractual specification.
+
+## V5.2 floor-plan source audit — 21/08/2026
+
+The machine-readable audit is `assets/data/floor-plans.json`. Network access to
+GitHub issue #15 and Google Drive returned HTTP proxy 403 in this environment.
+Therefore, the implementation uses only the trusted Drive filenames and IDs already
+recorded in `docs/source-package-v1.md`; it does not copy, substitute or fabricate
+an inaccessible image.
+
+- **Locally verified:** Prestige typical-floor derivative, Drive file ID
+  `1OfZ7AxsOCezGxu7K3kHiUUjt-Au56Nm-`, is reused for P1/P2 and opens at its full
+  local resolution.
+- **Inaccessible:** all four named Signature JPG source files in folder
+  `176CFkgekR1kcRxWGQF3XtkzkAOG_oG9C`; all three named Prestige JPG source files
+  in folder `1woZm0pruDuANNlPXmoNulP4lbvv-VKHm` except the locally verified
+  derivative above.
+- **Not sufficiently mapped by the trusted package:** S6, E1 and E2 individual
+  floor-plan source files. No floor, unit, orientation, area or plan claim is made.
+- **Competitor media:** none used.

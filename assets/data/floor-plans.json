@@ -1,0 +1,287 @@
+{
+  "version": "5.2",
+  "updated": "2026-08-21",
+  "policy": "Only records evidenced by the owner-provided Drive inventory are included. A null localAsset means the source could not be accessed; no substitute is permitted.",
+  "towers": [
+    {
+      "slug": "signature-1",
+      "name": "Signature 1",
+      "code": "S1",
+      "phase": "Lumi Signature",
+      "url": "/mat-bang-lumi-hanoi/signature-1/"
+    },
+    {
+      "slug": "signature-2",
+      "name": "Signature 2",
+      "code": "S2",
+      "phase": "Lumi Signature",
+      "url": "/mat-bang-lumi-hanoi/signature-2/"
+    },
+    {
+      "slug": "signature-3",
+      "name": "Signature 3",
+      "code": "S3",
+      "phase": "Lumi Signature",
+      "url": "/mat-bang-lumi-hanoi/signature-3/"
+    },
+    {
+      "slug": "signature-5",
+      "name": "Signature 5",
+      "code": "S5",
+      "phase": "Lumi Signature",
+      "url": "/mat-bang-lumi-hanoi/signature-5/"
+    },
+    {
+      "slug": "signature-6",
+      "name": "Signature 6",
+      "code": "S6",
+      "phase": "Lumi Signature",
+      "url": "/mat-bang-lumi-hanoi/signature-6/"
+    },
+    {
+      "slug": "prestige-1",
+      "name": "Prestige 1",
+      "code": "P1",
+      "phase": "Lumi Prestige",
+      "url": "/mat-bang-lumi-hanoi/prestige-1/"
+    },
+    {
+      "slug": "prestige-2",
+      "name": "Prestige 2",
+      "code": "P2",
+      "phase": "Lumi Prestige",
+      "url": "/mat-bang-lumi-hanoi/prestige-2/"
+    },
+    {
+      "slug": "elite-1",
+      "name": "Elite 1",
+      "code": "E1",
+      "phase": "Lumi Elite",
+      "url": "/mat-bang-lumi-hanoi/elite-1/"
+    },
+    {
+      "slug": "elite-2",
+      "name": "Elite 2",
+      "code": "E2",
+      "phase": "Lumi Elite",
+      "url": "/mat-bang-lumi-hanoi/elite-2/"
+    }
+  ],
+  "floorPlans": [
+    {
+      "tower": "S1",
+      "floors": "25, 27, 29, 31, 33",
+      "sourceFile": "S1,2,3 - T25,27,29,31,33, S5 - T28,30,32.JPG",
+      "sourceFolderId": "176CFkgekR1kcRxWGQF3XtkzkAOG_oG9C",
+      "localAsset": null,
+      "sourceFileId": null,
+      "access": "inaccessible-2026-08-21"
+    },
+    {
+      "tower": "S2",
+      "floors": "25, 27, 29, 31, 33",
+      "sourceFile": "S1,2,3 - T25,27,29,31,33, S5 - T28,30,32.JPG",
+      "sourceFolderId": "176CFkgekR1kcRxWGQF3XtkzkAOG_oG9C",
+      "localAsset": null,
+      "sourceFileId": null,
+      "access": "inaccessible-2026-08-21"
+    },
+    {
+      "tower": "S3",
+      "floors": "25, 27, 29, 31, 33",
+      "sourceFile": "S1,2,3 - T25,27,29,31,33, S5 - T28,30,32.JPG",
+      "sourceFolderId": "176CFkgekR1kcRxWGQF3XtkzkAOG_oG9C",
+      "localAsset": null,
+      "sourceFileId": null,
+      "access": "inaccessible-2026-08-21"
+    },
+    {
+      "tower": "S5",
+      "floors": "28, 30, 32",
+      "sourceFile": "S1,2,3 - T25,27,29,31,33, S5 - T28,30,32.JPG",
+      "sourceFolderId": "176CFkgekR1kcRxWGQF3XtkzkAOG_oG9C",
+      "localAsset": null,
+      "sourceFileId": null,
+      "access": "inaccessible-2026-08-21"
+    },
+    {
+      "tower": "S1",
+      "floors": "18, 19, 21–24",
+      "sourceFile": "S1,3 - T18, 19, 21-24, S2 - T18,19,21,22,24, S5 - T18,19,21,22,24-27.JPG",
+      "sourceFolderId": "176CFkgekR1kcRxWGQF3XtkzkAOG_oG9C",
+      "localAsset": null,
+      "sourceFileId": null,
+      "access": "inaccessible-2026-08-21"
+    },
+    {
+      "tower": "S3",
+      "floors": "18, 19, 21–24",
+      "sourceFile": "S1,3 - T18, 19, 21-24, S2 - T18,19,21,22,24, S5 - T18,19,21,22,24-27.JPG",
+      "sourceFolderId": "176CFkgekR1kcRxWGQF3XtkzkAOG_oG9C",
+      "localAsset": null,
+      "sourceFileId": null,
+      "access": "inaccessible-2026-08-21"
+    },
+    {
+      "tower": "S2",
+      "floors": "18, 19, 21, 22, 24",
+      "sourceFile": "S1,3 - T18, 19, 21-24, S2 - T18,19,21,22,24, S5 - T18,19,21,22,24-27.JPG",
+      "sourceFolderId": "176CFkgekR1kcRxWGQF3XtkzkAOG_oG9C",
+      "localAsset": null,
+      "sourceFileId": null,
+      "access": "inaccessible-2026-08-21"
+    },
+    {
+      "tower": "S5",
+      "floors": "18, 19, 21, 22, 24–27",
+      "sourceFile": "S1,3 - T18, 19, 21-24, S2 - T18,19,21,22,24, S5 - T18,19,21,22,24-27.JPG",
+      "sourceFolderId": "176CFkgekR1kcRxWGQF3XtkzkAOG_oG9C",
+      "localAsset": null,
+      "sourceFileId": null,
+      "access": "inaccessible-2026-08-21"
+    },
+    {
+      "tower": "S1",
+      "floors": "13",
+      "sourceFile": "S1,3 - T13, S2,5 - T23.JPG",
+      "sourceFolderId": "176CFkgekR1kcRxWGQF3XtkzkAOG_oG9C",
+      "localAsset": null,
+      "sourceFileId": null,
+      "access": "inaccessible-2026-08-21"
+    },
+    {
+      "tower": "S3",
+      "floors": "13",
+      "sourceFile": "S1,3 - T13, S2,5 - T23.JPG",
+      "sourceFolderId": "176CFkgekR1kcRxWGQF3XtkzkAOG_oG9C",
+      "localAsset": null,
+      "sourceFileId": null,
+      "access": "inaccessible-2026-08-21"
+    },
+    {
+      "tower": "S2",
+      "floors": "23",
+      "sourceFile": "S1,3 - T13, S2,5 - T23.JPG",
+      "sourceFolderId": "176CFkgekR1kcRxWGQF3XtkzkAOG_oG9C",
+      "localAsset": null,
+      "sourceFileId": null,
+      "access": "inaccessible-2026-08-21"
+    },
+    {
+      "tower": "S5",
+      "floors": "23",
+      "sourceFile": "S1,3 - T13, S2,5 - T23.JPG",
+      "sourceFolderId": "176CFkgekR1kcRxWGQF3XtkzkAOG_oG9C",
+      "localAsset": null,
+      "sourceFileId": null,
+      "access": "inaccessible-2026-08-21"
+    },
+    {
+      "tower": "S1",
+      "floors": "2–12, 14–17",
+      "sourceFile": "S1,3,5 - T2-12, T14-17, S2 - T2-17.JPG",
+      "sourceFolderId": "176CFkgekR1kcRxWGQF3XtkzkAOG_oG9C",
+      "localAsset": null,
+      "sourceFileId": null,
+      "access": "inaccessible-2026-08-21"
+    },
+    {
+      "tower": "S3",
+      "floors": "2–12, 14–17",
+      "sourceFile": "S1,3,5 - T2-12, T14-17, S2 - T2-17.JPG",
+      "sourceFolderId": "176CFkgekR1kcRxWGQF3XtkzkAOG_oG9C",
+      "localAsset": null,
+      "sourceFileId": null,
+      "access": "inaccessible-2026-08-21"
+    },
+    {
+      "tower": "S5",
+      "floors": "2–12, 14–17",
+      "sourceFile": "S1,3,5 - T2-12, T14-17, S2 - T2-17.JPG",
+      "sourceFolderId": "176CFkgekR1kcRxWGQF3XtkzkAOG_oG9C",
+      "localAsset": null,
+      "sourceFileId": null,
+      "access": "inaccessible-2026-08-21"
+    },
+    {
+      "tower": "S2",
+      "floors": "2–17",
+      "sourceFile": "S1,3,5 - T2-12, T14-17, S2 - T2-17.JPG",
+      "sourceFolderId": "176CFkgekR1kcRxWGQF3XtkzkAOG_oG9C",
+      "localAsset": null,
+      "sourceFileId": null,
+      "access": "inaccessible-2026-08-21"
+    },
+    {
+      "tower": "P1",
+      "floors": "2–19, 21–22, 24–28",
+      "sourceFile": "P1.T2-19, 21-22, 24-28, P2- 2-12, 14-19,21-28.jpg",
+      "sourceFolderId": "1woZm0pruDuANNlPXmoNulP4lbvv-VKHm",
+      "localAsset": "/assets/media/layouts/lumi-prestige-typical-floor.webp",
+      "sourceFileId": "1OfZ7AxsOCezGxu7K3kHiUUjt-Au56Nm-",
+      "access": "verified-local"
+    },
+    {
+      "tower": "P2",
+      "floors": "2–12, 14–19, 21–28",
+      "sourceFile": "P1.T2-19, 21-22, 24-28, P2- 2-12, 14-19,21-28.jpg",
+      "sourceFolderId": "1woZm0pruDuANNlPXmoNulP4lbvv-VKHm",
+      "localAsset": "/assets/media/layouts/lumi-prestige-typical-floor.webp",
+      "sourceFileId": "1OfZ7AxsOCezGxu7K3kHiUUjt-Au56Nm-",
+      "access": "verified-local"
+    },
+    {
+      "tower": "P1",
+      "floors": "20",
+      "sourceFile": "P1. Tầng 20, P2-Tầng 13.jpg",
+      "sourceFolderId": "1woZm0pruDuANNlPXmoNulP4lbvv-VKHm",
+      "localAsset": null,
+      "sourceFileId": null,
+      "access": "inaccessible-2026-08-21"
+    },
+    {
+      "tower": "P2",
+      "floors": "13",
+      "sourceFile": "P1. Tầng 20, P2-Tầng 13.jpg",
+      "sourceFolderId": "1woZm0pruDuANNlPXmoNulP4lbvv-VKHm",
+      "localAsset": null,
+      "sourceFileId": null,
+      "access": "inaccessible-2026-08-21"
+    },
+    {
+      "tower": "P1",
+      "floors": "23",
+      "sourceFile": "P1 - Tầng 23, P2 - Tầng 20.jpg",
+      "sourceFolderId": "1woZm0pruDuANNlPXmoNulP4lbvv-VKHm",
+      "localAsset": null,
+      "sourceFileId": null,
+      "access": "inaccessible-2026-08-21"
+    },
+    {
+      "tower": "P2",
+      "floors": "20",
+      "sourceFile": "P1 - Tầng 23, P2 - Tầng 20.jpg",
+      "sourceFolderId": "1woZm0pruDuANNlPXmoNulP4lbvv-VKHm",
+      "localAsset": null,
+      "sourceFileId": null,
+      "access": "inaccessible-2026-08-21"
+    }
+  ],
+  "unavailable": [
+    {
+      "tower": "S6",
+      "reason": "The trusted inventory confirms S6 material but issue-access/source inventory available in this environment does not identify individual floor-plan filenames or file IDs. No floor data published.",
+      "sourceFolderId": "176CFkgekR1kcRxWGQF3XtkzkAOG_oG9C"
+    },
+    {
+      "tower": "E1",
+      "reason": "No tower/floor plan file mapping or Drive file ID is documented in the trusted local source package.",
+      "sourceFolderId": "1atZNW5JhRQyM9j0LRBac3HePP371KAU7"
+    },
+    {
+      "tower": "E2",
+      "reason": "No tower/floor plan file mapping or Drive file ID is documented in the trusted local source package.",
+      "sourceFolderId": "1atZNW5JhRQyM9j0LRBac3HePP371KAU7"
+    }
+  ]
+}
