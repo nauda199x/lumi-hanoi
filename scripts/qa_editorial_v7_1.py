@@ -16,6 +16,7 @@ OVERVIEW = {
     "tien-ich-lumi-hanoi/index.html", "tien-do-lumi-hanoi/index.html",
     "mat-bang-lumi-hanoi/index.html", "layout-can-ho-lumi-prestige/index.html",
 }
+PRESTIGE_CATALOGUE = "layout-can-ho-lumi-prestige/index.html"
 errors: list[str] = []
 
 def require(condition: bool, message: str) -> None:
@@ -31,8 +32,14 @@ for path in HTML:
     has_sidebar = '<aside class="side-nav"' in text
     require(('reading-shell' in text) ^ ('editorial-shell' in text),
             f"{rel}: article layout needs exactly one page-type shell")
-    require(('article-layout--with-sidebar' in text) == has_sidebar,
-            f"{rel}: sidebar modifier does not match actual sidebar markup")
+    if rel == PRESTIGE_CATALOGUE:
+        require('article-layout--with-sidebar' not in text,
+                f"{rel}: full-width catalogue must not use the article/sidebar shell")
+        require('prestige-layout-page' in text,
+                f"{rel}: full-width Prestige catalogue modifier is missing")
+    else:
+        require(('article-layout--with-sidebar' in text) == has_sidebar,
+                f"{rel}: sidebar modifier does not match actual sidebar markup")
     if rel in OVERVIEW:
         require('editorial-shell' in text and 'editorial-wide' in text,
                 f"{rel}: overview/reference page is constrained to reading width")
@@ -74,6 +81,10 @@ for path in HTML:
 # Protect V8.1D catalogue architecture and fit-first lightbox behavior.
 prestige = (ROOT / "layout-can-ho-lumi-prestige/index.html").read_text(encoding="utf-8")
 js = (ROOT / "assets/js/site.js").read_text(encoding="utf-8")
+require('editorial-shell editorial-wide prestige-layout-page' in prestige,
+        "Prestige catalogue is not using its full-width editorial composition")
+require('article-layout--with-sidebar' not in prestige,
+        "Prestige catalogue was converted into a two-column article/sidebar shell")
 for token in ("prestige-layout-page", "layout-card-grid", "layout-preview", "layout-view-action"):
     require(token in prestige, f"Prestige catalogue markup lost {token}")
 for token in ("lightbox-stage", "is-fit", "is-zoomed"):
