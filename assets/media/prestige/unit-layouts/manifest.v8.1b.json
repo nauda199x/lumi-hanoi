@@ -2,9 +2,10 @@
   "version": "8.1B",
   "updated": "2026-08-21",
   "collection": "Lumi Prestige unit layouts",
+  "source_folder_id": "1kRyHJ2hrz7zwC0hTdWgnU6-yheXeA3HH",
   "assets": [
     {
-      "drive_file_id": "ISSUE-24-DRIVE-ID-01",
+      "drive_file_id": "1VKqInYQetfQSYCbA7-hLpDOjl6HsLhbE",
       "source_jpg_filename": "Căn Hộ-01.jpg",
       "layout_number": "01",
       "verified_type": "4BR LARGE",
@@ -19,7 +20,7 @@
       "rendered_anchor": "layout-01"
     },
     {
-      "drive_file_id": "ISSUE-24-DRIVE-ID-02",
+      "drive_file_id": "1A0gF2IVzLFyLtqKViR1rqCQJz5grqlQ1",
       "source_jpg_filename": "Căn Hộ-02.jpg",
       "layout_number": "02",
       "verified_type": "4BR MEDIUM",
@@ -34,14 +35,14 @@
       "rendered_anchor": "layout-02"
     },
     {
-      "drive_file_id": "ISSUE-24-DRIVE-ID-03",
+      "drive_file_id": "1BJhbuCebZX81EhAc_2i5qP4BSTUEUFaL",
       "source_jpg_filename": "Căn Hộ-03.jpg",
       "layout_number": "03",
       "verified_type": "3BR EXTRA LARGE",
       "bedroom_count": 3,
       "size_class": "Extra Large",
-      "nfa_sqm": "126.00",
-      "gfa_sqm": "135.50",
+      "nfa_sqm": "126.0",
+      "gfa_sqm": "135.5",
       "local_webp": "assets/media/prestige/unit-layouts/prestige-layout-03-3br-extra-large.webp",
       "width": 3200,
       "height": 4267,
@@ -49,14 +50,14 @@
       "rendered_anchor": "layout-03"
     },
     {
-      "drive_file_id": "ISSUE-24-DRIVE-ID-04",
+      "drive_file_id": "1Z3a8hTn4FPCArX34JPgx_A290JyCR_CM",
       "source_jpg_filename": "Căn Hộ-04.jpg",
       "layout_number": "04",
       "verified_type": "3BR EXTRA LARGE",
       "bedroom_count": 3,
       "size_class": "Extra Large",
-      "nfa_sqm": "118.30",
-      "gfa_sqm": "128.20",
+      "nfa_sqm": "118.3",
+      "gfa_sqm": "128.2",
       "local_webp": "assets/media/prestige/unit-layouts/prestige-layout-04-3br-extra-large.webp",
       "width": 3200,
       "height": 4267,
@@ -64,14 +65,14 @@
       "rendered_anchor": "layout-04"
     },
     {
-      "drive_file_id": "ISSUE-24-DRIVE-ID-05",
+      "drive_file_id": "1_hiWv4gkfkbuiYlkWiNNv5rTFOD-M0z5",
       "source_jpg_filename": "Căn Hộ-05.jpg",
       "layout_number": "05",
       "verified_type": "3BR EXTRA LARGE",
       "bedroom_count": 3,
       "size_class": "Extra Large",
-      "nfa_sqm": "128.60",
-      "gfa_sqm": "138.90",
+      "nfa_sqm": "128.6",
+      "gfa_sqm": "138.9",
       "local_webp": "assets/media/prestige/unit-layouts/prestige-layout-05-3br-extra-large.webp",
       "width": 3200,
       "height": 4267,
@@ -79,14 +80,14 @@
       "rendered_anchor": "layout-05"
     },
     {
-      "drive_file_id": "ISSUE-24-DRIVE-ID-06",
+      "drive_file_id": "1_RITFlrBKBH_0VyLf-enj87__umK99AW",
       "source_jpg_filename": "Căn Hộ-06.jpg",
       "layout_number": "06",
       "verified_type": "3BR EXTRA LARGE",
       "bedroom_count": 3,
       "size_class": "Extra Large",
-      "nfa_sqm": "137.10",
-      "gfa_sqm": "147.70",
+      "nfa_sqm": "137.1",
+      "gfa_sqm": "147.7",
       "local_webp": "assets/media/prestige/unit-layouts/prestige-layout-06-3br-extra-large.webp",
       "width": 3200,
       "height": 4267,
@@ -94,14 +95,14 @@
       "rendered_anchor": "layout-06"
     },
     {
-      "drive_file_id": "ISSUE-24-DRIVE-ID-07",
+      "drive_file_id": "1q08A8QK1SBa_heSj9Nju5Ser_fNYrK6e",
       "source_jpg_filename": "Căn Hộ-07.jpg",
       "layout_number": "07",
       "verified_type": "3BR MEDIUM",
       "bedroom_count": 3,
       "size_class": "Medium",
-      "nfa_sqm": "86.00",
-      "gfa_sqm": "93.10",
+      "nfa_sqm": "86.0",
+      "gfa_sqm": "93.1",
       "local_webp": "assets/media/prestige/unit-layouts/prestige-layout-07-3br-medium.webp",
       "width": 3200,
       "height": 4267,
@@ -109,14 +110,14 @@
       "rendered_anchor": "layout-07"
     },
     {
-      "drive_file_id": "ISSUE-24-DRIVE-ID-08",
+      "drive_file_id": "1NqgP5QrCeLWNTbSRAVXede7soimD68kU",
       "source_jpg_filename": "Căn Hộ-08.jpg",
       "layout_number": "08",
       "verified_type": "3BR EXTRA LARGE",
       "bedroom_count": 3,
       "size_class": "Extra Large",
-      "nfa_sqm": "117.90",
-      "gfa_sqm": "126.80",
+      "nfa_sqm": "117.9",
+      "gfa_sqm": "126.8",
       "local_webp": "assets/media/prestige/unit-layouts/prestige-layout-08-3br-extra-large.webp",
       "width": 3200,
       "height": 4267,
@@ -124,7 +125,7 @@
       "rendered_anchor": "layout-08"
     },
     {
-      "drive_file_id": "ISSUE-24-DRIVE-ID-09",
+      "drive_file_id": "1XtSNfQEzm2cSkvag3wUU1x7Nx6pzgUxN",
       "source_jpg_filename": "Căn Hộ-09.jpg",
       "layout_number": "09",
       "verified_type": "3BR EXTRA LARGE",
@@ -139,14 +140,14 @@
       "rendered_anchor": "layout-09"
     },
     {
-      "drive_file_id": "ISSUE-24-DRIVE-ID-10",
+      "drive_file_id": "1g8nWchAZjLYFUKV3ozCi8JlK7xMQh5hE",
       "source_jpg_filename": "Căn Hộ-10.jpg",
       "layout_number": "10",
       "verified_type": "3BR LARGE",
       "bedroom_count": 3,
       "size_class": "Large",
-      "nfa_sqm": "107.80",
-      "gfa_sqm": "116.20",
+      "nfa_sqm": "107.8",
+      "gfa_sqm": "116.2",
       "local_webp": "assets/media/prestige/unit-layouts/prestige-layout-10-3br-large.webp",
       "width": 3200,
       "height": 4267,
@@ -154,7 +155,7 @@
       "rendered_anchor": "layout-10"
     },
     {
-      "drive_file_id": "ISSUE-24-DRIVE-ID-11",
+      "drive_file_id": "18xfeUp94-0p_s9zY8e1kA7xWYfQQz77q",
       "source_jpg_filename": "Căn Hộ-11.jpg",
       "layout_number": "11",
       "verified_type": "3BR LARGE",
@@ -169,14 +170,14 @@
       "rendered_anchor": "layout-11"
     },
     {
-      "drive_file_id": "ISSUE-24-DRIVE-ID-12",
+      "drive_file_id": "1U3exnWsMZRIBSbDOJX1xq2euvA73cYO0",
       "source_jpg_filename": "Căn Hộ-12.jpg",
       "layout_number": "12",
       "verified_type": "3BR EXTRA LARGE",
       "bedroom_count": 3,
       "size_class": "Extra Large",
-      "nfa_sqm": "118.20",
-      "gfa_sqm": "129.10",
+      "nfa_sqm": "118.2",
+      "gfa_sqm": "129.1",
       "local_webp": "assets/media/prestige/unit-layouts/prestige-layout-12-3br-extra-large.webp",
       "width": 3200,
       "height": 4267,
@@ -184,7 +185,7 @@
       "rendered_anchor": "layout-12"
     },
     {
-      "drive_file_id": "ISSUE-24-DRIVE-ID-13",
+      "drive_file_id": "13M4zE-hQt7vIZn0tGHkKrsWIli9U76fn",
       "source_jpg_filename": "Căn Hộ-13.jpg",
       "layout_number": "13",
       "verified_type": "2BR EXTRA LARGE",
@@ -199,7 +200,7 @@
       "rendered_anchor": "layout-13"
     },
     {
-      "drive_file_id": "ISSUE-24-DRIVE-ID-14",
+      "drive_file_id": "1eGgG9Ogx8vGYfPi7kvIasQMmnEs5uUSY",
       "source_jpg_filename": "Căn Hộ-14.jpg",
       "layout_number": "14",
       "verified_type": "2BR LARGE",
@@ -214,7 +215,7 @@
       "rendered_anchor": "layout-14"
     },
     {
-      "drive_file_id": "ISSUE-24-DRIVE-ID-15",
+      "drive_file_id": "1GZAY8iK5UuPpGqUhXsJXiqRQHBXUR78R",
       "source_jpg_filename": "Căn Hộ-15.jpg",
       "layout_number": "15",
       "verified_type": "1BR EXTRA LARGE",
@@ -229,7 +230,7 @@
       "rendered_anchor": "layout-15"
     },
     {
-      "drive_file_id": "ISSUE-24-DRIVE-ID-16",
+      "drive_file_id": "1yK3-Il3Q6PTyFmxfygLx3LqjWTPHKEZo",
       "source_jpg_filename": "Căn Hộ-16.jpg",
       "layout_number": "16",
       "verified_type": "1BR EXTRA LARGE",
@@ -244,7 +245,7 @@
       "rendered_anchor": "layout-16"
     },
     {
-      "drive_file_id": "ISSUE-24-DRIVE-ID-17",
+      "drive_file_id": "1ifo6ViRtCPB8dtI5f35iiVpB9Z8zuKAq",
       "source_jpg_filename": "Căn Hộ-17.jpg",
       "layout_number": "17",
       "verified_type": "3BR MEDIUM",
@@ -259,7 +260,7 @@
       "rendered_anchor": "layout-17"
     },
     {
-      "drive_file_id": "ISSUE-24-DRIVE-ID-18",
+      "drive_file_id": "1wCt3VSERbp0_QIwBfUWcwdnF6qNyzhW0",
       "source_jpg_filename": "Căn Hộ-18.jpg",
       "layout_number": "18",
       "verified_type": "2BR MEDIUM",
@@ -274,7 +275,7 @@
       "rendered_anchor": "layout-18"
     },
     {
-      "drive_file_id": "ISSUE-24-DRIVE-ID-19",
+      "drive_file_id": "19vCkzxeAzmllsKnv7tCuopbTLMZpYa-x",
       "source_jpg_filename": "Căn Hộ-19.jpg",
       "layout_number": "19",
       "verified_type": "2BR MEDIUM",
@@ -289,7 +290,7 @@
       "rendered_anchor": "layout-19"
     },
     {
-      "drive_file_id": "ISSUE-24-DRIVE-ID-20",
+      "drive_file_id": "12SO6r4L3vVLOO78pdsP4GQ3gEkMhH2RN",
       "source_jpg_filename": "Căn Hộ-20.jpg",
       "layout_number": "20",
       "verified_type": "2BR LARGE",
@@ -304,7 +305,7 @@
       "rendered_anchor": "layout-20"
     },
     {
-      "drive_file_id": "ISSUE-24-DRIVE-ID-21",
+      "drive_file_id": "1lun5EVu7gOqvhFg14nt_WWBQ-HF5LjK5",
       "source_jpg_filename": "Căn Hộ-21.jpg",
       "layout_number": "21",
       "verified_type": "2BR SMALL",
@@ -319,7 +320,7 @@
       "rendered_anchor": "layout-21"
     },
     {
-      "drive_file_id": "ISSUE-24-DRIVE-ID-22",
+      "drive_file_id": "15WriRHaZNg4CtV2oNTUz86_oilcXAMsy",
       "source_jpg_filename": "Căn Hộ-22.jpg",
       "layout_number": "22",
       "verified_type": "1BR MEDIUM",
