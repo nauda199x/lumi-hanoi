@@ -32,25 +32,29 @@
   if(lightboxLinks.length){
     const dialog=document.createElement('dialog');
     dialog.className='lightbox';
-    dialog.setAttribute('aria-label','Xem ảnh kích thước lớn');
-    dialog.innerHTML='<button class="lightbox-close" type="button" aria-label="Đóng ảnh">Đóng ×</button><div class="lightbox-stage"><img alt=""><p class="lightbox-caption"></p></div>';
+    dialog.setAttribute('aria-label','Xem bản vẽ kích thước lớn');
+    dialog.innerHTML='<div class="lightbox-toolbar" aria-label="Điều khiển bản vẽ"><button type="button" data-zoom-out aria-label="Thu nhỏ">Zoom −</button><button type="button" data-zoom-in aria-label="Phóng to">Zoom +</button><button type="button" data-zoom-fit>Fit / Reset</button><button class="lightbox-close" type="button" aria-label="Đóng bản vẽ">Close ×</button></div><div class="lightbox-stage"><img alt=""></div><p class="lightbox-caption"></p>';
     document.body.append(dialog);
+    const stage=dialog.querySelector('.lightbox-stage');
     const image=dialog.querySelector('img');
     const caption=dialog.querySelector('.lightbox-caption');
     const close=dialog.querySelector('.lightbox-close');
-    let opener;
+    let opener; let zoom=1;
+    const fit=()=>{zoom=1;image.style.width='';image.style.height='';image.classList.add('is-fit');stage.scrollTo(0,0);};
+    const setZoom=next=>{zoom=Math.min(4,Math.max(.5,next));image.classList.remove('is-fit');image.style.width=`${image.naturalWidth*zoom}px`;image.style.height='auto';};
     const closeDialog=()=>dialog.close();
     lightboxLinks.forEach(link=>link.addEventListener('click',event=>{
-      event.preventDefault();
-      opener=link; image.src=link.href;
+      event.preventDefault(); opener=link; image.src=link.href;
       image.alt=link.dataset.lightboxAlt||link.querySelector('img')?.alt||'';
-      caption.textContent=link.dataset.lightboxCaption||'';
-      caption.hidden=!caption.textContent;
-      dialog.showModal(); close.focus();
+      caption.textContent=link.dataset.lightboxCaption||''; caption.hidden=!caption.textContent;
+      fit(); dialog.showModal(); close.focus();
     }));
+    dialog.querySelector('[data-zoom-in]').addEventListener('click',()=>setZoom(zoom+.25));
+    dialog.querySelector('[data-zoom-out]').addEventListener('click',()=>setZoom(zoom-.25));
+    dialog.querySelector('[data-zoom-fit]').addEventListener('click',fit);
     close.addEventListener('click',closeDialog);
     dialog.addEventListener('click',event=>{if(event.target===dialog)closeDialog();});
-    dialog.addEventListener('close',()=>{image.removeAttribute('src');opener?.focus();});
+    dialog.addEventListener('close',()=>{image.removeAttribute('src');fit();opener?.focus();});
   }
 
   const layoutFilters=[...document.querySelectorAll('[data-layout-filter]')];

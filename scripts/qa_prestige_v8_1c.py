@@ -40,8 +40,9 @@ for asset, block in zip(assets, blocks):
     gfa = re.search(r"GFA[^0-9]*([0-9]+(?:\.[0-9]+)?)\s*m²", block)
     if not nfa or not gfa or Decimal(nfa.group(1)) != Decimal(asset["nfa_sqm"]) or Decimal(gfa.group(1)) != Decimal(asset["gfa_sqm"]):
         fail(f"layout {number} has incorrect NFA/GFA")
-    if "<img " in block or "<figure" in block:
-        fail(f"layout {number} puts a full drawing in normal flow")
+    preview = re.search(r'<figure class="layout-preview"><img ([^>]+)>', block)
+    if not preview or 'loading="lazy"' not in preview.group(1):
+        fail(f"layout {number} needs a lazy genuine drawing preview")
     if block.count("data-lightbox") != 3:
         fail(f"layout {number} action must use the existing lightbox metadata")
 if html.count('data-layout-filter="bedrooms"') != 5 or html.count('data-layout-filter="size"') != 5:
@@ -51,9 +52,8 @@ if 'rel="canonical" href="https://lumi-hanoi.com/layout-can-ho-lumi-prestige/"' 
 if re.search(r'href="/[^"]*[?&](?:utm_|[^" ]*chatgpt)', html, re.I):
     fail("tracking parameters found on internal links")
 for rule in (
-    ".layout-card-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))",
-    "@media(max-width:1000px){.layout-card-grid{grid-template-columns:repeat(2,minmax(0,1fr))",
-    "@media(max-width:700px){.layout-card-grid{grid-template-columns:1fr}",
+    ".layout-card-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))",
+    "@media(max-width:760px){.layout-card-grid{grid-template-columns:1fr}",
 ):
     if rule not in css:
         fail("responsive grid rule missing: " + rule)
@@ -62,4 +62,4 @@ for path in ("lumi-prestige/index.html", "toa-p1-lumi-hanoi/index.html", "toa-p2
         fail("clean library link missing from " + path)
 if 'https://lumi-hanoi.com/layout-can-ho-lumi-prestige/' not in (ROOT / "sitemap.xml").read_text(encoding="utf-8"):
     fail("canonical library URL missing from sitemap")
-print("PASS: V8.1C compact 3/2/1-column grid, 22 exact SSR records and on-demand local lightbox drawings")
+print("PASS: V8.1C compact responsive grid, 22 exact SSR records and on-demand local lightbox drawings")
