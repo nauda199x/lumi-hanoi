@@ -2,12 +2,13 @@
 """Static, standard-library V7 visual/SEO safety checks."""
 from __future__ import annotations
 
+import json
 import re
 import subprocess
 import sys
 from html.parser import HTMLParser
 from pathlib import Path
-from urllib.parse import unquote, urlparse
+from urllib.parse import unquote, urlparse, parse_qs
 import xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -20,6 +21,27 @@ IMPORTANT = ["", "tong-quan-lumi-hanoi", "vi-tri-lumi-hanoi", "mat-bang-lumi-han
  "can-ho-4-phong-ngu-lumi-hanoi", "duplex-penthouse-lumi-hanoi", "tin-tuc"]
 COMPETITORS = ("vinhomes.vn", "batdongsan.com.vn", "onehousing.vn")
 PROHIBITED = ("đăng ký ngay", "nhận bảng giá sốc", "chỉ còn ")
+
+
+def trusted_drive_ids() -> set[str]:
+    """Return only Drive IDs explicitly recorded in the V8.2 source manifest."""
+    manifest = ROOT / "assets/data/floor-plans.json"
+    if not manifest.is_file():
+        return set()
+    data = json.loads(manifest.read_text(encoding="utf-8"))
+    ids: set[str] = set()
+    for tower in data.get("towers", {}).values():
+        for plan in tower.get("plans", []):
+            if plan.get("driveId"):
+                ids.add(plan["driveId"])
+    for record in data.get("supplemental", []):
+        if record.get("sourceDriveId"):
+            ids.add(record["sourceDriveId"])
+    return ids
+
+
+TRUSTED_DRIVE_IDS = trusted_drive_ids()
+
 
 class PageParser(HTMLParser):
     def __init__(self) -> None:
@@ -35,15 +57,25 @@ class PageParser(HTMLParser):
         if tag == "script" and a.get("src"): self.assets.append(a["src"])
         if tag == "meta" and a.get("name", "").lower() == "robots" and "noindex" in a.get("content", "").lower(): self.noindex=True
 
+
 def local_file(url: str) -> Path | None:
     parsed=urlparse(url)
     if parsed.scheme in ("http", "https") or url.startswith(("mailto:", "tel:", "javascript:", "#")): return None
     path=unquote(parsed.path)
     if not path: return None
     candidate=ROOT / path.lstrip("/") if path.startswith("/") else None
-    if candidate is None: return None  # relative references are resolved separately by caller
+    if candidate is None: return None
     if path.endswith("/"): candidate /= "index.html"
     return candidate
+
+
+def is_verified_drive_thumbnail(src: str) -> bool:
+    parsed = urlparse(src)
+    if parsed.scheme not in ("http", "https") or parsed.netloc != "drive.google.com" or parsed.path != "/thumbnail":
+        return False
+    file_id = parse_qs(parsed.query).get("id", [""])[0]
+    return bool(file_id and file_id in TRUSTED_DRIVE_IDS)
+
 
 def main() -> int:
     errors=[]; pages={}
@@ -62,10 +94,17 @@ def main() -> int:
         if any(domain in lower for domain in COMPETITORS): errors.append(f"competitor domain: {path.relative_to(ROOT)}")
         if any(term in lower for term in PROHIBITED): errors.append(f"prohibited sales wording: {path.relative_to(ROOT)}")
         for img in parser.images:
-            if "alt" not in img: errors.append(f"image missing alt: {path.relative_to(ROOT)} {img.get('src','')}")
-            if not img.get("width") or not img.get("height"): errors.append(f"image missing dimensions: {path.relative_to(ROOT)} {img.get('src','')}")
-            src=img.get("src", ""); parsed=urlparse(src)
-            if parsed.scheme in ("http", "https"): errors.append(f"external image hotlink: {path.relative_to(ROOT)} {src}")
+            src=img.get("src", "")
+            verified_drive = is_verified_drive_thumbnail(src)
+            if "alt" not in img: errors.append(f"image missing alt: {path.relative_to(ROOT)} {src}")
+            # V8.2 Drive thumbnails are an explicit, manifest-gated temporary delivery
+            # exception. Local media still requires intrinsic dimensions.
+            if (not img.get("width") or not img.get("height")) and not verified_drive:
+                errors.append(f"image missing dimensions: {path.relative_to(ROOT)} {src}")
+            parsed=urlparse(src)
+            if parsed.scheme in ("http", "https"):
+                if not verified_drive:
+                    errors.append(f"external image hotlink: {path.relative_to(ROOT)} {src}")
             elif src:
                 target=ROOT/src.lstrip("/") if src.startswith("/") else path.parent/src
                 try: target.resolve().relative_to((ROOT/"assets/media").resolve())
