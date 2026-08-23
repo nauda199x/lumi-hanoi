@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import re
+import tomllib
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
@@ -74,11 +75,16 @@ def main() -> None:
     hub = read("mat-bang-lumi-hanoi/index.html")
     sitemap_text = read("sitemap.xml")
     ET.fromstring(sitemap_text)
-    netlify = read("netlify.toml")
+    netlify_data = tomllib.loads(read("netlify.toml"))
     renderer = read("assets/js/floor-plan-tower.js")
     assert "/assets/data/floor-plans.json" in renderer
     assert "drive.google.com/thumbnail" in renderer
     assert (ROOT / "assets/css/floor-plan-hub.css").exists()
+
+    redirects = {
+        (entry.get("from"), entry.get("to"), entry.get("status"), entry.get("force"))
+        for entry in netlify_data.get("redirects", [])
+    }
 
     titles: set[str] = set()
     descriptions: set[str] = set()
@@ -124,8 +130,8 @@ def main() -> None:
 
     for old, new in STALE_REDIRECTS.items():
         assert f"{SITE}{old}" not in sitemap_text, f"stale URL in sitemap: {old}"
-        pattern = rf'from\s*=\s*"{re.escape(old)}"[\s\S]*?to\s*=\s*"{re.escape(new)}"[\s\S]*?status\s*=\s*301'
-        assert re.search(pattern, netlify), f"missing 301: {old} -> {new}"
+        expected_redirect = (f"{old}*", f"{new}:splat", 301, True)
+        assert expected_redirect in redirects, f"missing 301: {old} -> {new}"
 
     print("PASS: V8.2 floor-plan hub — 9 towers, 54 images, E2 floor-24 PDF, canonical/sitemap/redirect checks")
 
