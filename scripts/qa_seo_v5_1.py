@@ -30,6 +30,9 @@ REQUIRED_PATHS = {
     "/duplex-penthouse-lumi-hanoi/", "/mua-ban-lumi-hanoi/",
     "/cho-thue-lumi-hanoi/", "/ky-gui-lumi-hanoi/", "/tin-tuc/",
 }
+TOWER_LOOKUP_PATH = re.compile(
+    r"^/toa-(?:signature-(?:1|2|3|5|6)|prestige-(?:1|2)|elite-(?:1|2))-lumi-hanoi/$"
+)
 
 
 class PageParser(HTMLParser):
@@ -170,7 +173,14 @@ def main() -> int:
         elif parsed.path not in pages:
             errors.append(f"sitemap URL is unexpectedly noindexed: {url}")
 
-    fingerprints = Counter(title_fingerprint(parser.title) for parser in pages.values())
+    # V8.2 tower lookup pages deliberately form one named entity cluster. Their
+    # exact titles, descriptions and canonicals are still required to be unique
+    # above, but a shared lookup suffix is not doorway-page evidence by itself.
+    fingerprints = Counter(
+        title_fingerprint(parser.title)
+        for path, parser in pages.items()
+        if not TOWER_LOOKUP_PATH.match(path)
+    )
     for template, count in fingerprints.items():
         if template and count >= 4:
             errors.append(f"obvious title template repeated on {count} pages: {template!r}")
