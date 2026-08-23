@@ -29,9 +29,11 @@ jobs:
           python scripts/qa_prestige_v8_1d.py
           python scripts/qa_floorplans_v8_2.py
           python scripts/qa_handover_v8_6.py
+          python scripts/qa_visual_library_v8_7.py
       - name: Validate data and JavaScript syntax
         run: |
           python -m json.tool assets/data/floor-plans.json >/dev/null
+          python -m json.tool assets/data/visual-library-v8.7.json >/dev/null
           python - <<'PY'
           import xml.etree.ElementTree as ET
           ET.parse('sitemap.xml')
