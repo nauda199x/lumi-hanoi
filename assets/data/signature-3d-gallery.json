@@ -1,0 +1,152 @@
+{
+  "version": "8.3",
+  "updated": "2026-08-23",
+  "phase": "signature",
+  "sourceFolderId": "1z8YTwXaNOIJg-NRtonPU4Pj6bd7IxNit",
+  "sourceFolderName": "5. PHỐI CẢNH 3D / Outdoor Facilities",
+  "items": [
+    {
+      "id": "water-courtyard",
+      "driveId": "1eTobqjMt9vqhXON--FnqWYnkcZApTW0h",
+      "source": "1. ảnh 3D.jpg",
+      "title": "Vườn nước và cảnh quan nội khu",
+      "alt": "Phối cảnh 3D vườn nước và cảnh quan nội khu Lumi Signature",
+      "width": 2560,
+      "height": 1602,
+      "category": "landscape",
+      "featured": true
+    },
+    {
+      "id": "retail-street",
+      "driveId": "1WxuZMzcxvONNP7i7EhIfdW1T2FxN_dx4",
+      "source": "2. Ảnh 3D.jpg",
+      "title": "Tuyến phố thương mại dưới khối đế",
+      "alt": "Phối cảnh 3D tuyến phố thương mại dưới khối đế Lumi Signature",
+      "width": 2560,
+      "height": 1707,
+      "category": "retail",
+      "featured": true
+    },
+    {
+      "id": "green-boulevard",
+      "driveId": "13kGCEM_Hbmx2MmBuFnsmgHWOO8-LrLgu",
+      "source": "3. Ảnh 3D.jpg",
+      "title": "Đại lộ xanh và lối đi bộ",
+      "alt": "Phối cảnh 3D đại lộ xanh và lối đi bộ Lumi Signature",
+      "width": 2560,
+      "height": 1707,
+      "category": "landscape",
+      "featured": true
+    },
+    {
+      "id": "sole-gate",
+      "driveId": "1QVmVAjIGLTHWrvuXOLIgAMJZQXmYNkUF",
+      "source": "Cổng Sole.JPG",
+      "title": "Cổng Sole",
+      "alt": "Phối cảnh 3D cổng Sole tại Lumi Signature",
+      "width": 1500,
+      "height": 844,
+      "category": "arrival",
+      "featured": true
+    },
+    {
+      "id": "pet-park",
+      "driveId": "1JlzxBJ2NdR70ihqXdPbhfUt2JZdKIab8",
+      "source": "Công viên thú cưng.JPG",
+      "title": "Công viên thú cưng",
+      "alt": "Phối cảnh 3D công viên thú cưng tại Lumi Signature",
+      "width": 1500,
+      "height": 844,
+      "category": "family",
+      "featured": false
+    },
+    {
+      "id": "multi-sport",
+      "driveId": "1pc7-ixiCyiAXR7u9tgWOqZIW-J8kkpig",
+      "source": "Sân thể thao đa năng.JPG",
+      "title": "Sân thể thao đa năng",
+      "alt": "Phối cảnh 3D sân thể thao đa năng tại Lumi Signature",
+      "width": 1500,
+      "height": 844,
+      "category": "sport",
+      "featured": false
+    },
+    {
+      "id": "waterplay",
+      "driveId": "1kt1o3NMGN0_45S8h6IlvRlLi--NzKJ0p",
+      "source": "Sân chơi nước phiêu lưu.JPG",
+      "title": "Sân chơi nước phiêu lưu",
+      "alt": "Phối cảnh 3D sân chơi nước phiêu lưu cho trẻ em tại Lumi Signature",
+      "width": 1500,
+      "height": 844,
+      "category": "family",
+      "featured": true
+    },
+    {
+      "id": "luna-pool",
+      "driveId": "1BX0CfPlr2pOpcjlZGJOVt0ZEf4W8204Z",
+      "source": "Bể bơi Spa Luna.JPG",
+      "title": "Bể bơi Spa Luna",
+      "alt": "Phối cảnh 3D bể bơi Spa Luna tại Lumi Signature",
+      "width": 1500,
+      "height": 844,
+      "category": "wellness",
+      "featured": true
+    },
+    {
+      "id": "sole-resort-pool",
+      "driveId": "17_06GIk0BGmRxid4HNFQ6ykXXTkJ8oYq",
+      "source": "Bể bơi resort Sole.JPG",
+      "title": "Bể bơi resort Sole",
+      "alt": "Phối cảnh 3D bể bơi resort Sole tại Lumi Signature",
+      "width": 1500,
+      "height": 844,
+      "category": "wellness",
+      "featured": true
+    },
+    {
+      "id": "sole-bbq",
+      "driveId": "1nUQ6R15_O0t7TZ1gHW7ZwZze3pHN2uL2",
+      "source": "Vườn BBQ Sole.JPG",
+      "title": "Vườn BBQ Sole",
+      "alt": "Phối cảnh 3D vườn BBQ Sole tại Lumi Signature",
+      "width": 1500,
+      "height": 844,
+      "category": "community",
+      "featured": false
+    },
+    {
+      "id": "green-lawn",
+      "driveId": "1RSecZ6mSWlcUXR2D6K59BylF1Bt7vH3D",
+      "source": "Sân vườn.JPG",
+      "title": "Sân vườn và thảm cỏ",
+      "alt": "Phối cảnh 3D sân vườn và thảm cỏ Lumi Signature",
+      "width": 1500,
+      "height": 844,
+      "category": "landscape",
+      "featured": false
+    },
+    {
+      "id": "skywalk",
+      "driveId": "1J7GC8zkoD3tlwWaBfyDNQ7RMW2Tg1hDk",
+      "source": "Đường dạo trên không.jpg",
+      "title": "Đường dạo trên không",
+      "alt": "Phối cảnh 3D đường dạo trên không tại Lumi Signature",
+      "width": 2560,
+      "height": 1441,
+      "category": "landscape",
+      "featured": true
+    },
+    {
+      "id": "parking",
+      "driveId": "1R-1Y3YOHGSvL5bZsNd1ywRo1VRGsXgKW",
+      "source": "9. Hầm gửi xe.jpg",
+      "title": "Không gian hầm gửi xe",
+      "alt": "Phối cảnh 3D không gian hầm gửi xe tại Lumi Signature",
+      "width": 1360,
+      "height": 657,
+      "category": "mobility",
+      "featured": false
+    }
+  ]
+}
