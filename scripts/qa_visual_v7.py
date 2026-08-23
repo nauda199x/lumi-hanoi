@@ -24,19 +24,27 @@ PROHIBITED = ("đăng ký ngay", "nhận bảng giá sốc", "chỉ còn ")
 
 
 def trusted_drive_ids() -> set[str]:
-    """Return only Drive IDs explicitly recorded in the V8.2 source manifest."""
-    manifest = ROOT / "assets/data/floor-plans.json"
-    if not manifest.is_file():
-        return set()
-    data = json.loads(manifest.read_text(encoding="utf-8"))
+    """Return only Drive IDs explicitly recorded in verified source manifests."""
     ids: set[str] = set()
-    for tower in data.get("towers", {}).values():
-        for plan in tower.get("plans", []):
-            if plan.get("driveId"):
-                ids.add(plan["driveId"])
-    for record in data.get("supplemental", []):
-        if record.get("sourceDriveId"):
-            ids.add(record["sourceDriveId"])
+
+    floor_manifest = ROOT / "assets/data/floor-plans.json"
+    if floor_manifest.is_file():
+        data = json.loads(floor_manifest.read_text(encoding="utf-8"))
+        for tower in data.get("towers", {}).values():
+            for plan in tower.get("plans", []):
+                if plan.get("driveId"):
+                    ids.add(plan["driveId"])
+        for record in data.get("supplemental", []):
+            if record.get("sourceDriveId"):
+                ids.add(record["sourceDriveId"])
+
+    gallery_manifest = ROOT / "assets/data/signature-3d-gallery.json"
+    if gallery_manifest.is_file():
+        data = json.loads(gallery_manifest.read_text(encoding="utf-8"))
+        for item in data.get("items", []):
+            if item.get("driveId"):
+                ids.add(item["driveId"])
+
     return ids
 
 
@@ -97,8 +105,8 @@ def main() -> int:
             src=img.get("src", "")
             verified_drive = is_verified_drive_thumbnail(src)
             if "alt" not in img: errors.append(f"image missing alt: {path.relative_to(ROOT)} {src}")
-            # V8.2 Drive thumbnails are an explicit, manifest-gated temporary delivery
-            # exception. Local media still requires intrinsic dimensions.
+            # Verified Drive thumbnails are manifest-gated delivery exceptions.
+            # Local media still requires intrinsic dimensions.
             if (not img.get("width") or not img.get("height")) and not verified_drive:
                 errors.append(f"image missing dimensions: {path.relative_to(ROOT)} {src}")
             parsed=urlparse(src)
