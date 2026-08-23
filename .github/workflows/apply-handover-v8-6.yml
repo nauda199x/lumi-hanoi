@@ -1,0 +1,35 @@
+name: Apply handover V8.6
+
+on:
+  push:
+    branches:
+      - feat/handover-source-upgrade-v8-6
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/handover-source-upgrade-v8-6
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Apply phase handover enrichment
+        run: python scripts/apply_handover_v8_6.py
+      - name: Commit generated phase changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add lumi-signature/index.html lumi-prestige/index.html lumi-elite/index.html
+          if git diff --cached --quiet; then
+            echo "No generated changes"
+            exit 0
+          fi
+          git commit -m "V8.6: enrich phase handover sections"
+          git push origin HEAD:feat/handover-source-upgrade-v8-6
