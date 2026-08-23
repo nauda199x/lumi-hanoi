@@ -1,0 +1,40 @@
+name: Repository QA
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  static-qa:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Run SEO and visual regression suites
+        run: |
+          python scripts/qa_seo_v5.py
+          python scripts/qa_seo_v5_1.py
+          python scripts/qa_seo_v6.py
+          python scripts/qa_visual_v7.py
+          python scripts/qa_editorial_v7_1.py
+          python scripts/qa_prestige_v8_1a.py
+          python scripts/qa_prestige_v8_1b.py
+          python scripts/qa_prestige_v8_1c.py
+          python scripts/qa_prestige_v8_1d.py
+          python scripts/qa_floorplans_v8_2.py
+      - name: Validate data and JavaScript syntax
+        run: |
+          python -m json.tool assets/data/floor-plans.json >/dev/null
+          python - <<'PY'
+          import xml.etree.ElementTree as ET
+          ET.parse('sitemap.xml')
+          print('sitemap.xml: OK')
+          PY
+          node --check assets/js/site.js
+          node --check assets/js/floor-plan-tower.js
