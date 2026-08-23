@@ -1,0 +1,47 @@
+{
+  "version": "8.4",
+  "updated": "2026-08-23",
+  "sourceFolderId": "16qpFZoiiUnQ-2dcqTFEwaaXwmUETBj3Z",
+  "sourceFolderName": "1. LAYOUT PENtHOUSE SIGNATURE",
+  "notes": "Verified Signature penthouse PDF sources converted to local WebP for website delivery. The original PDFs remain the source documents.",
+  "towers": {
+    "S1": {
+      "floorLabel": "Tầng 35",
+      "sourceDriveId": "1E8bquyIGKfjJmzw1DMFz7QhauYp_M91K",
+      "sourceFileName": "Signature 1 _ Floor 35.pdf",
+      "sourceUrl": "https://drive.google.com/file/d/1E8bquyIGKfjJmzw1DMFz7QhauYp_M91K/view",
+      "images": [{"label": "Mặt bằng Penthouse S1 tầng 35", "asset": "/assets/media/signature/penthouse/s1-floor-35.webp", "width": 1980, "height": 1456}]
+    },
+    "S2": {
+      "floorLabel": "Tầng 35",
+      "sourceDriveId": "11Jj-zHsk1Tk84aFhuzcUDkZiKSZXYqHn",
+      "sourceFileName": "Signature 2 _ Floor 35.pdf",
+      "sourceUrl": "https://drive.google.com/file/d/11Jj-zHsk1Tk84aFhuzcUDkZiKSZXYqHn/view",
+      "images": [{"label": "Mặt bằng Penthouse S2 tầng 35", "asset": "/assets/media/signature/penthouse/s2-floor-35.webp", "width": 1980, "height": 1456}]
+    },
+    "S3": {
+      "floorLabel": "Tầng 35",
+      "sourceDriveId": "1vMyv4hj7SYKgTlzge7-2opnkCbHU0FFo",
+      "sourceFileName": "Signature 3 _ Floor 35.pdf",
+      "sourceUrl": "https://drive.google.com/file/d/1vMyv4hj7SYKgTlzge7-2opnkCbHU0FFo/view",
+      "images": [{"label": "Mặt bằng Penthouse S3 tầng 35", "asset": "/assets/media/signature/penthouse/s3-floor-35.webp", "width": 1980, "height": 1456}]
+    },
+    "S5": {
+      "floorLabel": "Tầng 34",
+      "sourceDriveId": "1bTusfxZrbE9ZAuDLUvF4tDIXUWfpbgUJ",
+      "sourceFileName": "Signature 5 _ Floor 34.pdf",
+      "sourceUrl": "https://drive.google.com/file/d/1bTusfxZrbE9ZAuDLUvF4tDIXUWfpbgUJ/view",
+      "images": [{"label": "Mặt bằng Penthouse S5 tầng 34", "asset": "/assets/media/signature/penthouse/s5-floor-34.webp", "width": 1980, "height": 1457}]
+    },
+    "S6": {
+      "floorLabel": "Tầng 34–35",
+      "sourceDriveId": "1GbYNZe3MJtbe497rrxwmeEv6HfLCHL4i",
+      "sourceFileName": "Signature 6 _ Floor 34-35.pdf",
+      "sourceUrl": "https://drive.google.com/file/d/1GbYNZe3MJtbe497rrxwmeEv6HfLCHL4i/view",
+      "images": [
+        {"label": "Mặt bằng Penthouse S6 tầng 34", "asset": "/assets/media/signature/penthouse/s6-floor-34.webp", "width": 1980, "height": 1457},
+        {"label": "Mặt bằng Penthouse S6 tầng 35", "asset": "/assets/media/signature/penthouse/s6-floor-35.webp", "width": 1980, "height": 1457}
+      ]
+    }
+  }
+}
