@@ -53,5 +53,5 @@ for drive_id,(tower,group,local,page,anchor,width,height) in EXPECTED.items():
  if not ''.join(section['h2']).strip() or not ''.join(section['caption']).strip():fail(f'H2/caption missing for {drive_id}')
 overview=(ROOT/'lumi-prestige/index.html').read_text()
 if 'floor-plan-section' in overview or 'lumi-prestige-typical-floor.webp' in overview:fail('Prestige overview must not own tower floor-plan sections or render the old generic plan')
-if not all(f'/toa-{x}-lumi-hanoi/' in overview for x in ('p1','p2')):fail('Prestige overview must link both tower pages')
+if not all(f'/toa-prestige-{x}-lumi-hanoi/' in overview for x in ('1','2')):fail('Prestige overview must link both canonical tower pages')
 print('PASS: exact 8 Drive IDs → exact towers/groups/files → exact P1/P2 pages and rendered sections')
