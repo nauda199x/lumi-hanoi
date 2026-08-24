@@ -21,6 +21,20 @@
   }
   document.querySelectorAll('[data-year]').forEach(el=>{el.textContent=new Date().getFullYear();});
 
+  // Keep technical/source provenance in the repository, but do not expose
+  // attribution labels underneath images on the public website.
+  const removeFigureSources=root=>{
+    if(root?.nodeType===1&&root.matches?.('.figure-source'))root.remove();
+    root?.querySelectorAll?.('.figure-source').forEach(el=>el.remove());
+  };
+  removeFigureSources(document);
+  if('MutationObserver' in window){
+    const sourceObserver=new MutationObserver(mutations=>{
+      mutations.forEach(mutation=>mutation.addedNodes.forEach(node=>removeFigureSources(node)));
+    });
+    sourceObserver.observe(document.documentElement,{childList:true,subtree:true});
+  }
+
   const reveals=[...document.querySelectorAll('[data-reveal]')];
   if(reveals.length&&'IntersectionObserver' in window&&!matchMedia('(prefers-reduced-motion: reduce)').matches){
     document.documentElement.classList.add('reveal-ready');
