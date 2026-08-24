@@ -1,0 +1,66 @@
+name: Fetch CapitaLand media V10
+
+on:
+  push:
+    branches: [seo/v10-capitaland-authority]
+    paths:
+      - '.github/workflows/fetch-capitaland-media-v10.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  fetch-media:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: seo/v10-capitaland-authority
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install Pillow
+        run: pip install pillow
+      - name: Download official CapitaLand project images
+        run: |
+          set -euo pipefail
+          mkdir -p assets/media/capitaland-vietnam/raw assets/media/capitaland-vietnam
+          ua='Mozilla/5.0 (compatible; LumiHanoiMediaBot/1.0)'
+          curl -L --fail --retry 3 -A "$ua" 'https://www.capitaland.com/en/about-capitaland/newsroom/news-releases/vietnam/2013/may/the-vista-capitaland-s-first-residential-development-in-vietnam-has-been-granted-pink-books/_jcr_content/root/container/container/container/image.coreimg.jpeg/content/dam/capitaland-newsroom/vietnam/the-vista-capitaland-s-first-residential-development-in-vietnam-has-been-granted-pink-books/vista.jpg' -o assets/media/capitaland-vietnam/raw/the-vista.jpg
+          curl -L --fail --retry 3 -A "$ua" 'https://www.capitaland.com/en/find-a-property/global-property-listing/residential/vista-verde/_jcr_content/root/container/container/entitydetails.coreimg.jpeg/content/dam/capitaland-media-library/residential/Vietnam/Ho%20Chi%20Minh%20City/Beau%20Rivage/Vista%20Verde_Perspective.jpg' -o assets/media/capitaland-vietnam/raw/vista-verde.jpg
+          curl -L --fail --retry 3 -A "$ua" 'https://www.capitaland.com/content/dam/capitaland-media-library/residential/Vietnam/ho-chi-minh-city/feliz-en-vista/FEV-02.jpg.transform/cld-lowres/image.jpg' -o assets/media/capitaland-vietnam/raw/feliz-en-vista.jpg
+          curl -L --fail --retry 3 -A "$ua" 'https://www.capitaland.com/content/dam/capitaland-media-library/residential/Vietnam/ho-chi-minh-city/Dimension/D1M-02.jpg.transform/cld-lowres/image.jpg' -o assets/media/capitaland-vietnam/raw/d1mension.jpg
+          curl -L --fail --retry 3 -A "$ua" 'https://www.capitaland.com/content/dam/capitaland-media-library/residential/Vietnam/Ho%20Chi%20Minh%20City/define/DEF-01.jpg.transform/cld-midres/image.jpg' -o assets/media/capitaland-vietnam/raw/define.jpg
+          curl -L --fail --retry 3 -A "$ua" 'https://www.capitaland.com/content/dam/capitaland-media-library/residential/Vietnam/ho-chi-minh-city/de-la-sol/DLS-02.jpg.transform/cld-lowres/image.jpg' -o assets/media/capitaland-vietnam/raw/de-la-sol.jpg
+          curl -L --fail --retry 3 -A "$ua" 'https://www.capitaland.com/content/dam/capitaland-media-library/residential/Vietnam/Hanoi/heritage-west-lake/Heritage%20Tiffany-Westlake%20And%20City%20View-Night%20View_FA.jpg.transform/cld-midres/image.jpg' -o assets/media/capitaland-vietnam/raw/heritage-west-lake.jpg
+      - name: Convert to optimized WebP
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from PIL import Image, ImageOps
+          src = Path('assets/media/capitaland-vietnam/raw')
+          out = Path('assets/media/capitaland-vietnam')
+          for path in src.glob('*.jpg'):
+              im = Image.open(path).convert('RGB')
+              im = ImageOps.exif_transpose(im)
+              maxw = 1600
+              if im.width > maxw:
+                  h = round(im.height * maxw / im.width)
+                  im = im.resize((maxw, h), Image.Resampling.LANCZOS)
+              target = out / f'{path.stem}.webp'
+              im.save(target, 'WEBP', quality=84, method=6)
+              print(target, im.size)
+          PY
+          rm -rf assets/media/capitaland-vietnam/raw
+      - name: Commit local project media
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add assets/media/capitaland-vietnam
+          if git diff --cached --quiet; then
+            echo 'No media changes'
+          else
+            git commit -m 'V10: add official CapitaLand Vietnam project media'
+            git push origin HEAD:seo/v10-capitaland-authority
+          fi
