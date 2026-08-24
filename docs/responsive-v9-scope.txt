@@ -1,0 +1,1 @@
+mobile section-head collapse; heading wrap guard; grid stacking; article width; responsive QA
