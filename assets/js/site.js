@@ -1,4 +1,15 @@
 (()=>{
+  // Load the final responsive cascade after the legacy/site stylesheet on every page.
+  // Keeping this in site.js avoids touching dozens of static HTML files while the
+  // CSS remains a normal local asset that browsers can cache.
+  if(!document.querySelector('link[data-responsive-v9]')){
+    const responsiveStyles=document.createElement('link');
+    responsiveStyles.rel='stylesheet';
+    responsiveStyles.href='/assets/css/responsive-v9.css?v=20260824';
+    responsiveStyles.dataset.responsiveV9='true';
+    document.head.append(responsiveStyles);
+  }
+
   const button=document.querySelector('[data-nav-toggle]');
   const nav=document.querySelector('[data-nav-links]');
   if(button&&nav){
