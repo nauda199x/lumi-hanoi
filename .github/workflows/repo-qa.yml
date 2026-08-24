@@ -31,6 +31,7 @@ jobs:
           python scripts/qa_handover_v8_6.py
           python scripts/qa_visual_library_v8_7.py
           python scripts/qa_amenity_scope_v8_8.py
+          python scripts/qa_responsive_v9.py
       - name: Validate data and JavaScript syntax
         run: |
           python -m json.tool assets/data/floor-plans.json >/dev/null
