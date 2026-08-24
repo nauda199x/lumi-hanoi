@@ -64,13 +64,10 @@ def description(html: str) -> str:
 def main() -> None:
     data = json.loads(read("assets/data/floor-plans.json"))
     assert set(data["towers"]) == set(EXPECTED), "tower inventory must be exactly 9 towers"
-    assert sum(len(v["plans"]) for v in data["towers"].values()) == 54, "expected 54 image plan records"
+    assert sum(len(v["plans"]) for v in data["towers"].values()) == 65, "expected 65 image plan records after PDF conversion"
 
     supplemental = data.get("supplemental", [])
-    assert len(supplemental) == 1, "expected exactly one supplemental record"
-    e2_pdf = supplemental[0]
-    assert e2_pdf.get("tower") == "E2" and e2_pdf.get("floorLabel") == "Tầng 24"
-    assert e2_pdf.get("sourceDriveId") == "1zqhh1L1f4Nbo4I-ecD1YbgO3y26_fdgU"
+    assert not supplemental, "PDF-only floor plans must be converted to normal image records"
 
     hub = read("mat-bang-lumi-hanoi/index.html")
     sitemap_text = read("sitemap.xml")
@@ -112,10 +109,11 @@ def main() -> None:
         for plan in meta["plans"]:
             for key in ("label", "anchor", "driveId", "source"):
                 assert plan.get(key), f"{tower}: plan missing {key}"
-            if phase == "prestige":
-                asset = plan.get("asset")
-                assert asset, f"{tower}: Prestige plan missing local asset"
+            asset = plan.get("asset")
+            if asset:
                 assert (ROOT / asset.lstrip("/")).exists(), f"{tower}: missing {asset}"
+            if phase == "prestige":
+                assert asset, f"{tower}: Prestige plan missing local asset"
 
         if phase in {"signature", "prestige"}:
             assert "data-floor-plan-app" in html and f'data-tower="{tower}"' in html
@@ -125,15 +123,16 @@ def main() -> None:
                 assert plan["driveId"] in html, f"{tower}: source ID not rendered"
 
     e2 = read("toa-elite-2-lumi-hanoi/index.html")
-    assert e2_pdf["sourceDriveId"] in e2, "E2 floor-24 PDF missing from page"
-    assert "5 nguồn mặt bằng" in e2, "E2 source-count copy is inconsistent"
+    assert "/assets/media/elite/floor-plans/e2-t24.webp" in e2, "E2 floor-24 WebP missing from page"
+    assert "/assets/media/elite/floor-plans/e2-t29.webp" in e2, "E2 floor-29 WebP missing from page"
+    assert "6 nhóm mặt bằng" in e2, "E2 floor-group copy is inconsistent"
 
     for old, new in STALE_REDIRECTS.items():
         assert f"{SITE}{old}" not in sitemap_text, f"stale URL in sitemap: {old}"
         expected_redirect = (f"{old}*", f"{new}:splat", 301, True)
         assert expected_redirect in redirects, f"missing 301: {old} -> {new}"
 
-    print("PASS: V8.2 floor-plan hub — 9 towers, 54 images, E2 floor-24 PDF, canonical/sitemap/redirect checks")
+    print("PASS: V8.3 floor-plan hub — 9 towers, 65 images including converted PDF floors, canonical/sitemap/redirect checks")
 
 
 if __name__ == "__main__":
