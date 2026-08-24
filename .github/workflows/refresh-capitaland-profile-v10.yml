@@ -1,4 +1,5 @@
 name: Refresh CapitaLand profile V10
+# One-time current-profile refresh; remove before merge.
 on:
   push:
     branches: [seo/v10-capitaland-authority]
@@ -33,5 +34,9 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add chu-dau-tu-capitaland/index.html
-          git commit -m 'V10: refresh CapitaLand Vietnam portfolio figures' || exit 0
-          git push origin HEAD:seo/v10-capitaland-authority
+          if git diff --cached --quiet; then
+            echo 'No changes'
+          else
+            git commit -m 'V10: refresh CapitaLand Vietnam portfolio figures'
+            git push origin HEAD:seo/v10-capitaland-authority
+          fi
