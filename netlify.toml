@@ -21,43 +21,110 @@
 
 [[redirects]]
   from = "/toa-s1-lumi-hanoi/*"
-  to = "/toa-signature-1-lumi-hanoi/:splat"
+  to = "/mat-bang-lumi-hanoi/lumi-signature/s1/:splat"
   status = 301
   force = true
 
 [[redirects]]
   from = "/toa-s2-lumi-hanoi/*"
-  to = "/toa-signature-2-lumi-hanoi/:splat"
+  to = "/mat-bang-lumi-hanoi/lumi-signature/s2/:splat"
   status = 301
   force = true
 
 [[redirects]]
   from = "/toa-s3-lumi-hanoi/*"
-  to = "/toa-signature-3-lumi-hanoi/:splat"
+  to = "/mat-bang-lumi-hanoi/lumi-signature/s3/:splat"
   status = 301
   force = true
 
 [[redirects]]
   from = "/toa-s5-lumi-hanoi/*"
-  to = "/toa-signature-5-lumi-hanoi/:splat"
+  to = "/mat-bang-lumi-hanoi/lumi-signature/s5/:splat"
   status = 301
   force = true
 
 [[redirects]]
   from = "/toa-s6-lumi-hanoi/*"
-  to = "/toa-signature-6-lumi-hanoi/:splat"
+  to = "/mat-bang-lumi-hanoi/lumi-signature/s6/:splat"
   status = 301
   force = true
 
 [[redirects]]
   from = "/toa-p1-lumi-hanoi/*"
-  to = "/toa-prestige-1-lumi-hanoi/:splat"
+  to = "/mat-bang-lumi-hanoi/lumi-prestige/p1/:splat"
   status = 301
   force = true
 
 [[redirects]]
   from = "/toa-p2-lumi-hanoi/*"
-  to = "/toa-prestige-2-lumi-hanoi/:splat"
+  to = "/mat-bang-lumi-hanoi/lumi-prestige/p2/:splat"
+  status = 301
+  force = true
+
+
+[[redirects]]
+  from = "/toa-signature-1-lumi-hanoi/*"
+  to = "/mat-bang-lumi-hanoi/lumi-signature/s1/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/toa-signature-2-lumi-hanoi/*"
+  to = "/mat-bang-lumi-hanoi/lumi-signature/s2/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/toa-signature-3-lumi-hanoi/*"
+  to = "/mat-bang-lumi-hanoi/lumi-signature/s3/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/toa-signature-5-lumi-hanoi/*"
+  to = "/mat-bang-lumi-hanoi/lumi-signature/s5/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/toa-signature-6-lumi-hanoi/*"
+  to = "/mat-bang-lumi-hanoi/lumi-signature/s6/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/toa-prestige-1-lumi-hanoi/*"
+  to = "/mat-bang-lumi-hanoi/lumi-prestige/p1/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/toa-prestige-2-lumi-hanoi/*"
+  to = "/mat-bang-lumi-hanoi/lumi-prestige/p2/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/toa-elite-1-lumi-hanoi/*"
+  to = "/mat-bang-lumi-hanoi/lumi-elite/e1/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/toa-elite-2-lumi-hanoi/*"
+  to = "/mat-bang-lumi-hanoi/lumi-elite/e2/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/toa-e1-lumi-hanoi/*"
+  to = "/mat-bang-lumi-hanoi/lumi-elite/e1/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/toa-e2-lumi-hanoi/*"
+  to = "/mat-bang-lumi-hanoi/lumi-elite/e2/:splat"
   status = 301
   force = true
 
