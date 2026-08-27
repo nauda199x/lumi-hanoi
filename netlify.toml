@@ -129,6 +129,18 @@
   force = true
 
 [[redirects]]
+  from = "/vi-tri/*"
+  to = "/vi-tri-lumi-hanoi/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/giai-doan-2/*"
+  to = "/lumi-prestige/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
   from = "http://lumi-hanoi.com/*"
   to = "https://lumi-hanoi.com/:splat"
   status = 301
