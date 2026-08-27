@@ -48,6 +48,7 @@ for name, html, marker, modified in (
 assert '/toa-p1-lumi-hanoi/' not in prestige, 'Prestige still links legacy P1 URL'
 assert '/toa-p2-lumi-hanoi/' not in prestige, 'Prestige still links legacy P2 URL'
 assert '/mat-bang-lumi-hanoi/lumi-prestige/p1/' in prestige
-assert '/mat-bang-lumi-hanoi/lumi-prestige/p2/' in prestige\nassert '/toa-prestige-' not in prestige, 'Prestige still links legacy tower aliases'
+assert '/mat-bang-lumi-hanoi/lumi-prestige/p2/' in prestige
+assert '/toa-prestige-' not in prestige, 'Prestige still links legacy tower aliases'
 
 print('PASS: V8.6 handover source coverage and phase enrichment')
