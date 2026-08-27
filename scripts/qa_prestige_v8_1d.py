@@ -34,7 +34,7 @@ if '.lightbox-stage.is-zoomed{display:block}' not in css or '.lightbox-stage{dis
 if html.count('data-layout-filter="bedrooms"')!=5 or html.count('data-layout-filter="size"')!=5 or 'data-layout-count' not in html: fail('filters/count changed')
 if 'rel="canonical" href="https://lumi-hanoi.com/layout-can-ho-lumi-prestige/"' not in html: fail('canonical changed')
 if re.search(r'href="/[^"]*[?&](?:utm_|[^" ]*chatgpt)',html,re.I): fail('tracked internal link found')
-for path in ('lumi-prestige/index.html','toa-p1-lumi-hanoi/index.html','toa-p2-lumi-hanoi/index.html'):
+for path in ('lumi-prestige/index.html','mat-bang-lumi-hanoi/lumi-prestige/p1/index.html','mat-bang-lumi-hanoi/lumi-prestige/p2/index.html'):
     if '/layout-can-ho-lumi-prestige/' not in (ROOT/path).read_text(): fail('library internal link missing from '+path)
 if 'https://lumi-hanoi.com/layout-can-ho-lumi-prestige/' not in (ROOT/'sitemap.xml').read_text(): fail('sitemap entry missing')
 print('PASS: V8.1D premium 22-card catalogue, lazy genuine previews, filters and fit-first zoomable lightbox')

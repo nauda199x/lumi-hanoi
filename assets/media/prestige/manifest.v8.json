@@ -1,6 +1,6 @@
 {
   "version": "8.1A",
-  "updated": "2026-08-21",
+  "updated": "2026-08-27",
   "collection": "Lumi Prestige P1/P2 floor plans",
   "usage": "Separate authoritative P1/P2 tower pages with stable floor-group anchors; original-resolution local derivatives are linked for viewing.",
   "assets": [
@@ -16,7 +16,7 @@
         "drive_file_id": "11jadUR3YF3cIZd1MQ5Eg2tm5MQ_45PRF",
         "provenance": "Owner-trusted source drawing supplied for V8.1A"
       },
-      "rendered_page": "toa-p1-lumi-hanoi/index.html"
+      "rendered_page": "mat-bang-lumi-hanoi/lumi-prestige/p1/index.html"
     },
     {
       "tower": "P1",
@@ -30,7 +30,7 @@
         "drive_file_id": "1ky6AoU-RKfkQQfPggTiTcfD286hP9c1-",
         "provenance": "Owner-trusted source drawing supplied for V8.1A"
       },
-      "rendered_page": "toa-p1-lumi-hanoi/index.html"
+      "rendered_page": "mat-bang-lumi-hanoi/lumi-prestige/p1/index.html"
     },
     {
       "tower": "P1",
@@ -44,7 +44,7 @@
         "drive_file_id": "1EriYOtwKs3pD7ETAo_o8BnuNbvZrBaF5",
         "provenance": "Owner-trusted source drawing supplied for V8.1A"
       },
-      "rendered_page": "toa-p1-lumi-hanoi/index.html"
+      "rendered_page": "mat-bang-lumi-hanoi/lumi-prestige/p1/index.html"
     },
     {
       "tower": "P1",
@@ -58,7 +58,7 @@
         "drive_file_id": "1vHglsZVk2aqp_t6aKvml1xQo17wQN9WR",
         "provenance": "Owner-trusted source drawing supplied for V8.1A"
       },
-      "rendered_page": "toa-p1-lumi-hanoi/index.html"
+      "rendered_page": "mat-bang-lumi-hanoi/lumi-prestige/p1/index.html"
     },
     {
       "tower": "P2",
@@ -72,7 +72,7 @@
         "drive_file_id": "1k_KbeRS92wbVOTF4_XKh18D1kb-CareO",
         "provenance": "Owner-trusted source drawing supplied for V8.1A"
       },
-      "rendered_page": "toa-p2-lumi-hanoi/index.html"
+      "rendered_page": "mat-bang-lumi-hanoi/lumi-prestige/p2/index.html"
     },
     {
       "tower": "P2",
@@ -86,7 +86,7 @@
         "drive_file_id": "1DGpCt-vZmqeokHQseBvivHTaOKKkWXRI",
         "provenance": "Owner-trusted source drawing supplied for V8.1A"
       },
-      "rendered_page": "toa-p2-lumi-hanoi/index.html"
+      "rendered_page": "mat-bang-lumi-hanoi/lumi-prestige/p2/index.html"
     },
     {
       "tower": "P2",
@@ -100,7 +100,7 @@
         "drive_file_id": "11h2HZD-WUqcgPVdMh0gkxK95wjF9_T49",
         "provenance": "Owner-trusted source drawing supplied for V8.1A"
       },
-      "rendered_page": "toa-p2-lumi-hanoi/index.html"
+      "rendered_page": "mat-bang-lumi-hanoi/lumi-prestige/p2/index.html"
     },
     {
       "tower": "P2",
@@ -114,7 +114,7 @@
         "drive_file_id": "13cMmDd-E23cakiNCzh68Lr8MmK_wRyRy",
         "provenance": "Owner-trusted source drawing supplied for V8.1A"
       },
-      "rendered_page": "toa-p2-lumi-hanoi/index.html"
+      "rendered_page": "mat-bang-lumi-hanoi/lumi-prestige/p2/index.html"
     }
   ]
 }

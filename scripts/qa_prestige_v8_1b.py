@@ -157,7 +157,7 @@ for code in FORBIDDEN_CODES:
     if code in public_blob:
         fail("unverified unit code published: " + code)
 
-for path in ("lumi-prestige/index.html", "toa-p1-lumi-hanoi/index.html", "toa-p2-lumi-hanoi/index.html"):
+for path in ("lumi-prestige/index.html", "mat-bang-lumi-hanoi/lumi-prestige/p1/index.html", "mat-bang-lumi-hanoi/lumi-prestige/p2/index.html"):
     if "/layout-can-ho-lumi-prestige/" not in (ROOT / path).read_text(encoding="utf-8"):
         fail("internal link missing: " + path)
 
