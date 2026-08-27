@@ -21,19 +21,30 @@ EXPECTED = {
     "E1": ("elite", "toa-elite-1-lumi-hanoi"),
     "E2": ("elite", "toa-elite-2-lumi-hanoi"),
 }
+PAGE_PATH = {
+    "S1": "mat-bang-lumi-hanoi/lumi-signature/s1",
+    "S2": "mat-bang-lumi-hanoi/lumi-signature/s2",
+    "S3": "mat-bang-lumi-hanoi/lumi-signature/s3",
+    "S5": "mat-bang-lumi-hanoi/lumi-signature/s5",
+    "S6": "mat-bang-lumi-hanoi/lumi-signature/s6",
+    "P1": "mat-bang-lumi-hanoi/lumi-prestige/p1",
+    "P2": "mat-bang-lumi-hanoi/lumi-prestige/p2",
+    "E1": "mat-bang-lumi-hanoi/lumi-elite/e1",
+    "E2": "mat-bang-lumi-hanoi/lumi-elite/e2",
+}
 PHASE_URL = {
-    "signature": "/lumi-signature/",
-    "prestige": "/lumi-prestige/",
-    "elite": "/lumi-elite/",
+    "signature": "/mat-bang-lumi-hanoi/lumi-signature/",
+    "prestige": "/mat-bang-lumi-hanoi/lumi-prestige/",
+    "elite": "/mat-bang-lumi-hanoi/lumi-elite/",
 }
 STALE_REDIRECTS = {
-    "/toa-s1-lumi-hanoi/": "/toa-signature-1-lumi-hanoi/",
-    "/toa-s2-lumi-hanoi/": "/toa-signature-2-lumi-hanoi/",
-    "/toa-s3-lumi-hanoi/": "/toa-signature-3-lumi-hanoi/",
-    "/toa-s5-lumi-hanoi/": "/toa-signature-5-lumi-hanoi/",
-    "/toa-s6-lumi-hanoi/": "/toa-signature-6-lumi-hanoi/",
-    "/toa-p1-lumi-hanoi/": "/toa-prestige-1-lumi-hanoi/",
-    "/toa-p2-lumi-hanoi/": "/toa-prestige-2-lumi-hanoi/",
+    "/toa-s1-lumi-hanoi/": "/mat-bang-lumi-hanoi/lumi-signature/s1/",
+    "/toa-s2-lumi-hanoi/": "/mat-bang-lumi-hanoi/lumi-signature/s2/",
+    "/toa-s3-lumi-hanoi/": "/mat-bang-lumi-hanoi/lumi-signature/s3/",
+    "/toa-s5-lumi-hanoi/": "/mat-bang-lumi-hanoi/lumi-signature/s5/",
+    "/toa-s6-lumi-hanoi/": "/mat-bang-lumi-hanoi/lumi-signature/s6/",
+    "/toa-p1-lumi-hanoi/": "/mat-bang-lumi-hanoi/lumi-prestige/p1/",
+    "/toa-p2-lumi-hanoi/": "/mat-bang-lumi-hanoi/lumi-prestige/p2/",
 }
 
 
@@ -89,10 +100,11 @@ def main() -> None:
         meta = data["towers"][tower]
         assert meta["phase"] == phase, f"{tower}: wrong phase"
         assert meta["slug"] == slug, f"{tower}: wrong slug"
-        assert f"/{slug}/" in hub, f"hub missing {tower}"
+        page_path = PAGE_PATH[tower]
+        assert f"/{page_path}/" in hub, f"hub missing {tower}"
 
-        html = read(f"{slug}/index.html")
-        expected_canonical = f"{SITE}/{slug}/"
+        html = read(f"{page_path}/index.html")
+        expected_canonical = f"{SITE}/{page_path}/"
         assert canonical(html) == expected_canonical, f"{tower}: wrong canonical"
         assert len(re.findall(r"<h1\b", html, re.I)) == 1, f"{tower}: expected one H1"
         assert "/mat-bang-lumi-hanoi/" in html, f"{tower}: missing hub backlink"
@@ -122,7 +134,7 @@ def main() -> None:
             for plan in meta["plans"]:
                 assert plan["driveId"] in html, f"{tower}: source ID not rendered"
 
-    e2 = read("toa-elite-2-lumi-hanoi/index.html")
+    e2 = read("mat-bang-lumi-hanoi/lumi-elite/e2/index.html")
     assert "/assets/media/elite/floor-plans/e2-t24.webp" in e2, "E2 floor-24 WebP missing from page"
     assert "/assets/media/elite/floor-plans/e2-t29.webp" in e2, "E2 floor-29 WebP missing from page"
     assert "6 nhóm mặt bằng" in e2, "E2 floor-group copy is inconsistent"
