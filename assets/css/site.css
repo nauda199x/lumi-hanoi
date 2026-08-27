@@ -371,3 +371,18 @@ h1,h2,h3{font-family:Iowan Old Style,Baskerville,Georgia,"Times New Roman",serif
   .breadcrumb { overflow-wrap: anywhere; }
   .article img, .figure, .media-gallery { max-width: 100%; }
 }
+
+
+/* V10.1 unified favicon brand mark */
+.brand-mark{
+  width:40px;
+  height:40px;
+  flex:0 0 40px;
+  border:0;
+  border-radius:0;
+  background:url("/favicon.svg") center/40px 40px no-repeat;
+  color:transparent;
+  font-size:0;
+  line-height:0;
+  overflow:hidden;
+}
