@@ -44,7 +44,7 @@ for name, html, marker, modified in (
 ):
     assert marker in html, f'{name}: missing source-backed handover section'
     assert '/noi-that-ban-giao-lumi-hanoi/' in html, f'{name}: missing handover internal link'
-    assert f'\"dateModified\":\"{modified}\"' in html, f'{name}: dateModified not bumped'\n
+    assert f'\"dateModified\":\"{modified}\"' in html, f'{name}: dateModified not bumped'
 assert '/toa-p1-lumi-hanoi/' not in prestige, 'Prestige still links legacy P1 URL'
 assert '/toa-p2-lumi-hanoi/' not in prestige, 'Prestige still links legacy P2 URL'
 assert '/mat-bang-lumi-hanoi/lumi-prestige/p1/' in prestige
