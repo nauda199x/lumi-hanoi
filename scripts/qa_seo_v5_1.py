@@ -45,12 +45,15 @@ class PageParser(HTMLParser):
         self.links: list[str] = []
         self.json_ld: list[str] = []
         self.noindex = False
+        self.legacy_redirect = False
         self._capture: str | None = None
         self._buffer: list[str] = []
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
         values = dict(attrs)
-        if tag == "h1":
+        if tag == "body" and "data-legacy-redirect" in values:
+            self.legacy_redirect = True
+        elif tag == "h1":
             self.h1_count += 1
         elif tag == "title":
             self._capture, self._buffer = "title", []
@@ -110,7 +113,7 @@ def main() -> int:
         parser = PageParser()
         parser.feed(html_file.read_text(encoding="utf-8"))
         path = public_path(html_file)
-        if parser.noindex:  # 404 and any deliberately excluded utility pages
+        if parser.noindex or parser.legacy_redirect:  # 404 and dedicated redirect documents
             continue
         pages[path] = parser
         expected = CANONICAL_ORIGIN + path
