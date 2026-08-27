@@ -24,12 +24,12 @@ for asset in ASSETS:
 pages = {
     'signature-gallery': (ROOT / 'phoi-canh-lumi-signature/index.html').read_text(encoding='utf-8'),
     'signature': (ROOT / 'lumi-signature/index.html').read_text(encoding='utf-8'),
-    's1': (ROOT / 'toa-signature-1-lumi-hanoi/index.html').read_text(encoding='utf-8'),
-    's2': (ROOT / 'toa-signature-2-lumi-hanoi/index.html').read_text(encoding='utf-8'),
-    's3': (ROOT / 'toa-signature-3-lumi-hanoi/index.html').read_text(encoding='utf-8'),
+    's1': (ROOT / 'mat-bang-lumi-hanoi/lumi-signature/s1/index.html').read_text(encoding='utf-8'),
+    's2': (ROOT / 'mat-bang-lumi-hanoi/lumi-signature/s2/index.html').read_text(encoding='utf-8'),
+    's3': (ROOT / 'mat-bang-lumi-hanoi/lumi-signature/s3/index.html').read_text(encoding='utf-8'),
     'elite': (ROOT / 'lumi-elite/index.html').read_text(encoding='utf-8'),
-    'e1': (ROOT / 'toa-elite-1-lumi-hanoi/index.html').read_text(encoding='utf-8'),
-    'e2': (ROOT / 'toa-elite-2-lumi-hanoi/index.html').read_text(encoding='utf-8'),
+    'e1': (ROOT / 'mat-bang-lumi-hanoi/lumi-elite/e1/index.html').read_text(encoding='utf-8'),
+    'e2': (ROOT / 'mat-bang-lumi-hanoi/lumi-elite/e2/index.html').read_text(encoding='utf-8'),
 }
 
 assert 'Phối cảnh 3D Lumi Signature: 21 hình' in pages['signature-gallery']

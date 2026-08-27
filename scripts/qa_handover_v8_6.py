@@ -37,18 +37,18 @@ for required in (
 ):
     assert required in handover, f'missing handover detail: {required}'
 
-for name, html, marker in (
-    ('Signature', signature, 'signature-handover-source'),
-    ('Prestige', prestige, 'prestige-handover-source'),
-    ('Elite', elite, 'elite-handover-source'),
+for name, html, marker, modified in (
+    ('Signature', signature, 'signature-handover-source', '2026-08-23'),
+    ('Prestige', prestige, 'prestige-handover-source', '2026-08-27'),
+    ('Elite', elite, 'elite-handover-source', '2026-08-23'),
 ):
     assert marker in html, f'{name}: missing source-backed handover section'
     assert '/noi-that-ban-giao-lumi-hanoi/' in html, f'{name}: missing handover internal link'
-    assert '"dateModified":"2026-08-23"' in html, f'{name}: dateModified not bumped'
-
+    assert f'\"dateModified\":\"{modified}\"' in html, f'{name}: dateModified not bumped'
 assert '/toa-p1-lumi-hanoi/' not in prestige, 'Prestige still links legacy P1 URL'
 assert '/toa-p2-lumi-hanoi/' not in prestige, 'Prestige still links legacy P2 URL'
-assert '/toa-prestige-1-lumi-hanoi/' in prestige
-assert '/toa-prestige-2-lumi-hanoi/' in prestige
+assert '/mat-bang-lumi-hanoi/lumi-prestige/p1/' in prestige
+assert '/mat-bang-lumi-hanoi/lumi-prestige/p2/' in prestige
+assert '/toa-prestige-' not in prestige, 'Prestige still links legacy tower aliases'
 
 print('PASS: V8.6 handover source coverage and phase enrichment')

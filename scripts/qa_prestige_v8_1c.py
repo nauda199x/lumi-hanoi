@@ -57,7 +57,7 @@ for rule in (
 ):
     if rule not in css:
         fail("responsive grid rule missing: " + rule)
-for path in ("lumi-prestige/index.html", "toa-p1-lumi-hanoi/index.html", "toa-p2-lumi-hanoi/index.html"):
+for path in ("lumi-prestige/index.html", "mat-bang-lumi-hanoi/lumi-prestige/p1/index.html", "mat-bang-lumi-hanoi/lumi-prestige/p2/index.html"):
     if '/layout-can-ho-lumi-prestige/' not in (ROOT / path).read_text(encoding="utf-8"):
         fail("clean library link missing from " + path)
 if 'https://lumi-hanoi.com/layout-can-ho-lumi-prestige/' not in (ROOT / "sitemap.xml").read_text(encoding="utf-8"):

@@ -53,9 +53,10 @@ TRUSTED_DRIVE_IDS = trusted_drive_ids()
 
 class PageParser(HTMLParser):
     def __init__(self) -> None:
-        super().__init__(convert_charrefs=True); self.h1=0; self.ids=[]; self.links=[]; self.images=[]; self.assets=[]; self.canonicals=[]; self.noindex=False
+        super().__init__(convert_charrefs=True); self.h1=0; self.ids=[]; self.links=[]; self.images=[]; self.assets=[]; self.canonicals=[]; self.noindex=False; self.legacy_redirect=False
     def handle_starttag(self, tag, attrs):
         a=dict(attrs)
+        if tag == "body" and "data-legacy-redirect" in a: self.legacy_redirect=True
         if tag == "h1": self.h1 += 1
         if "id" in a: self.ids.append(a["id"])
         if tag == "a" and "href" in a: self.links.append((a["href"], a.get("target"), a.get("rel", "")))
@@ -91,6 +92,7 @@ def main() -> int:
     for path in html_files:
         text=path.read_text(encoding="utf-8"); parser=PageParser(); parser.feed(text); pages[path]=parser
         if path.name != "404.html" and parser.noindex: errors.append(f"noindex found: {path.relative_to(ROOT)}")
+        if parser.legacy_redirect: continue
         if path.name == "404.html": pass
         elif len(parser.canonicals) != 1: errors.append(f"canonical count {len(parser.canonicals)}: {path.relative_to(ROOT)}")
         elif path.name == "index.html":
