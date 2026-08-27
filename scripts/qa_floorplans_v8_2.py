@@ -87,6 +87,7 @@ def main() -> None:
     renderer = read("assets/js/floor-plan-tower.js")
     assert "/assets/data/floor-plans.json" in renderer
     assert "drive.google.com/thumbnail" in renderer
+    assert "data-floor-plan-static-index" in renderer, "renderer fallback must preserve the pre-rendered floor index"
     assert (ROOT / "assets/css/floor-plan-hub.css").exists()
 
     redirects = {
@@ -110,6 +111,12 @@ def main() -> None:
         assert "/mat-bang-lumi-hanoi/" in html, f"{tower}: missing hub backlink"
         assert PHASE_URL[phase] in html, f"{tower}: missing phase backlink"
 
+        header_match = re.search(r'<header class="site-header">[\s\S]*?</header>', html, re.I)
+        assert header_match, f"{tower}: missing site header"
+        site_header = header_match.group(0)
+        for token in ("data-nav-toggle", "data-nav-links", 'data-open="false"', 'aria-controls="primary-nav"'):
+            assert token in site_header, f"{tower}: mobile navigation missing {token}"
+
         page_title = title(html)
         page_desc = description(html)
         assert page_title not in titles, f"duplicate tower title: {page_title}"
@@ -126,9 +133,12 @@ def main() -> None:
                 assert (ROOT / asset.lstrip("/")).exists(), f"{tower}: missing {asset}"
             if phase == "prestige":
                 assert asset, f"{tower}: Prestige plan missing local asset"
+            assert plan["label"] in html, f"{tower}: floor label not pre-rendered: {plan['label']}"
+            assert f'href="#{plan["anchor"]}"' in html, f"{tower}: floor anchor not pre-rendered: {plan['anchor']}"
 
         if phase in {"signature", "prestige"}:
             assert "data-floor-plan-app" in html and f'data-tower="{tower}"' in html
+            assert "data-floor-plan-static-index" in html, f"{tower}: missing pre-rendered floor index"
             assert "/assets/js/floor-plan-tower.js" in html
         else:
             for plan in meta["plans"]:
