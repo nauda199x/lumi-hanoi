@@ -34,7 +34,7 @@ The owner-provided source package was reviewed on 2026-08-19 and its document-le
 | Unit types and areas | Project introduction / Elite eBrochure / Prestige training | Examples and NFA/GFA conventions in `source-package-v1.md` | Verified examples may be published with labels |
 | Handover specifications | Project introduction / Prestige training | Expected brands and equivalent caveat in `source-package-v1.md` | Publish only as expected/or equivalent; SPA supersedes |
 | Indoor and outdoor amenities | Elite eBrochure / Prestige training | Selected designed amenities in `source-package-v1.md` | Publish as planned/rendered until operation is verified |
-| Construction status after the prior June 2026 note | Official dated progress release | Dated release and attributable images | Pending — do not present the old note as current |
+| Construction status through July 2026 | CapitaLand official Lumi Hanoi progress page | July 2026 article and five attributable progress images | Verified 28/08/2026 — public page updated; do not infer a unit-level handover date |
 | Handover dates | Contract / official customer notice | Applicable official notice | Unverified — never invent |
 | Sale/rental pricing or availability | Verified owner listings / dated transactions | No inventory supplied | Unavailable — never publish numbers |
 

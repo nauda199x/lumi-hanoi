@@ -109,3 +109,15 @@ inspectable rather than shrinking the 2400-pixel drawing into illegibility.
 ## V8.1B Prestige unit-layout library — 21/08/2026
 
 All 22 distinct production WebP drawings in `assets/media/prestige/unit-layouts/` render on `/layout-can-ho-lumi-prestige/` at stable anchors `#layout-01` through `#layout-22`. The machine-readable provenance, dimensions and SHA-256 values are recorded in `assets/media/prestige/unit-layouts/manifest.v8.1b.json`. The library links to the authoritative P1/P2 floor-group lookup before users choose a unit layout.
+
+## Construction progress media — July 2026 (integrated 28/08/2026)
+
+All five photographs below were downloaded from CapitaLand Development's public Lumi Hanoi progress page, converted to local WebP derivatives and used only on `/tien-do-lumi-hanoi/`. They are labelled as actual July 2026 progress photographs and are not presented as proof of handover or acceptance for a specific apartment.
+
+| Local path | Official source URL | Subject | Dimensions |
+|---|---|---|---:|
+| `assets/media/progress/lumi-hanoi-tien-do-thang-07-2026-tong-the.webp` | `https://www.capitaland.com/sites/lumihanoi/resources/wp-content/uploads/2026/07/Overview.jpeg` | Project overview from Đại lộ Thăng Long | 1600 × 1200 |
+| `assets/media/progress/lumi-hanoi-canh-quan-thang-07-2026.webp` | `https://www.capitaland.com/sites/lumihanoi/resources/wp-content/uploads/2026/07/New.jpeg` | Outdoor landscape and amenities | 1280 × 960 |
+| `assets/media/progress/lumi-hanoi-duong-dao-tren-khong-thang-07-2026.webp` | `https://www.capitaland.com/sites/lumihanoi/resources/wp-content/uploads/2026/07/Treetop%20Promenade.jpeg` | Treetop Promenade | 1280 × 960 |
+| `assets/media/progress/lumi-hanoi-be-boi-cau-vong-thang-07-2026.webp` | `https://www.capitaland.com/sites/lumihanoi/resources/wp-content/uploads/2026/07/New%202.jpeg` | Rainbow Pool and play area | 1280 × 960 |
+| `assets/media/progress/lumi-hanoi-nha-de-xe-noi-thang-07-2026.webp` | `https://www.capitaland.com/sites/lumihanoi/resources/wp-content/uploads/2026/07/1.jpeg` | Above-ground parking building | 1280 × 960 |
