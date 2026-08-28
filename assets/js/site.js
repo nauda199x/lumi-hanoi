@@ -127,3 +127,4 @@
     apply();
   }
 })();
+if(document.querySelector('.tower-floor-index')||document.querySelector('[data-floor-plan-app]')){const floorPickerScript=document.createElement('script');floorPickerScript.src='/assets/js/floor-plan-mobile.js';document.head.append(floorPickerScript)}
