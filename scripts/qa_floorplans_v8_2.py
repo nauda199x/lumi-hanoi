@@ -142,7 +142,11 @@ def main() -> None:
             assert "/assets/js/floor-plan-tower.js" in html
         else:
             for plan in meta["plans"]:
-                assert plan["driveId"] in html, f"{tower}: source ID not rendered"
+                rendered_asset = plan.get("asset")
+                if rendered_asset:
+                    assert rendered_asset in html, f"{tower}: local plan asset not rendered"
+                else:
+                    assert plan["driveId"] in html, f"{tower}: remote plan image not rendered"
 
     e2 = read("mat-bang-lumi-hanoi/lumi-elite/e2/index.html")
     assert "/assets/media/elite/floor-plans/e2-t24.webp" in e2, "E2 floor-24 WebP missing from page"

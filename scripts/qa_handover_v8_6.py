@@ -7,6 +7,7 @@ handover = (ROOT / 'noi-that-ban-giao-lumi-hanoi/index.html').read_text(encoding
 signature = (ROOT / 'lumi-signature/index.html').read_text(encoding='utf-8')
 prestige = (ROOT / 'lumi-prestige/index.html').read_text(encoding='utf-8')
 elite = (ROOT / 'lumi-elite/index.html').read_text(encoding='utf-8')
+source_notes = (ROOT / 'docs/handover-v8.6-source-notes.md').read_text(encoding='utf-8')
 
 assert '<title>Nội thất bàn giao Lumi Hanoi: Signature, Prestige, Elite</title>' in handover
 assert 'https://lumi-hanoi.com/noi-that-ban-giao-lumi-hanoi/' in handover
@@ -24,7 +25,8 @@ for source_id in (
     '16HRdnxCRM0d4n_aL6cEB34NOqri4-c7O',
     '1EoDDTFSabQopO_v1NRsOXeJH-F5ubQya',
 ):
-    assert source_id in handover, f'missing verified Drive source {source_id}'
+    assert source_id in source_notes, f'missing internal verification record {source_id}'
+    assert source_id not in handover, f'public handover page exposes source ID {source_id}'
 
 for required in (
     'Signature Duplex',
@@ -51,4 +53,4 @@ assert '/mat-bang-lumi-hanoi/lumi-prestige/p1/' in prestige
 assert '/mat-bang-lumi-hanoi/lumi-prestige/p2/' in prestige
 assert '/toa-prestige-' not in prestige, 'Prestige still links legacy tower aliases'
 
-print('PASS: V8.6 handover source coverage and phase enrichment')
+print('PASS: V8.6 handover coverage, private verification records and phase enrichment')

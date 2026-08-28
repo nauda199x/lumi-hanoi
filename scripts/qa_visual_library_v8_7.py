@@ -48,7 +48,6 @@ elite_assets = [a for a in ASSETS if a['phase'] == 'elite']
 for asset in signature_assets:
     local = '/' + asset['localFile']
     assert local in pages['signature-gallery'], f"Signature gallery missing {local}"
-    assert asset['driveId'] in pages['signature-gallery'], f"Signature source missing {asset['driveId']}"
 
 for asset in [a for a in signature_assets if a['scope'] == 'indoor']:
     assert '/' + asset['localFile'] in pages['signature']
@@ -56,17 +55,19 @@ for asset in [a for a in signature_assets if a['scope'] == 'indoor']:
 for tower, page_key in [('S1','s1'),('S2','s2'),('S3','s3')]:
     asset = next(a for a in signature_assets if a.get('tower') == tower)
     assert '/' + asset['localFile'] in pages[page_key]
-    assert asset['driveId'] in pages[page_key]
 
 for asset in elite_assets:
     local = '/' + asset['localFile']
     assert local in pages['elite'], f"Elite overview missing {local}"
-    assert asset['driveId'] in pages['elite'], f"Elite source missing {asset['driveId']}"
 
 for asset in [a for a in elite_assets if a.get('tower') == 'E1']:
     assert '/' + asset['localFile'] in pages['e1']
 for asset in [a for a in elite_assets if a.get('tower') == 'E2']:
     assert '/' + asset['localFile'] in pages['e2']
+
+for asset in ASSETS:
+    for page_name, html in pages.items():
+        assert asset['driveId'] not in html, f"{page_name}: public page exposes Drive ID"
 
 # Every newly localized image reference must carry intrinsic dimensions and lazy/async loading.
 for key, html in pages.items():
@@ -77,4 +78,4 @@ for key, html in pages.items():
         assert 'loading="lazy"' in tag and 'decoding="async"' in tag, f'{key}: loading attrs missing on {match.group(1)}'
         assert re.search(r'alt="[^"]{8,}"', tag), f'{key}: weak/missing alt on {match.group(1)}'
 
-print('PASS: V8.7 visual library — 16 verified local WebPs across Signature and Elite')
+print('PASS: V8.7 visual library — 16 verified local WebPs with private source IDs')

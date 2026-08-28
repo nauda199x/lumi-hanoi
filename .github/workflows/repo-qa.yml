@@ -34,6 +34,7 @@ jobs:
           python scripts/qa_responsive_v9.py
           python scripts/qa_brand_meta_v10_1.py
           python scripts/qa_legacy_redirects_v10_2.py
+          python scripts/qa_public_source_cleanup.py
       - name: Validate data and JavaScript syntax
         run: |
           python -m json.tool assets/data/floor-plans.json >/dev/null

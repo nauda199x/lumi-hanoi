@@ -2,6 +2,8 @@
 
 This file is an internal audit trail. It is not linked from public navigation. A `verified` status means the fact has been matched to the named official source; it does **not** mean every document in a Drive folder is approved for publication.
 
+Public attribution cleanup (28/08/2026): source/date panels, image-credit labels and direct source-file links were removed from public HTML. Verification details remain here and in the internal media manifests so factual checks can continue without displaying provenance blocks to visitors.
+
 ## Source repositories
 
 | Collection | Owner-provided location | Public-use default |
