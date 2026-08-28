@@ -35,8 +35,9 @@
   // Keep technical/source provenance in the repository, but do not expose
   // attribution labels underneath images on the public website.
   const removeFigureSources=root=>{
-    if(root?.nodeType===1&&root.matches?.('.figure-source'))root.remove();
-    root?.querySelectorAll?.('.figure-source').forEach(el=>el.remove());
+    const publicSourceSelector='.figure-source,.source-mini[href*="drive.google.com"]';
+    if(root?.nodeType===1&&root.matches?.(publicSourceSelector))root.remove();
+    root?.querySelectorAll?.(publicSourceSelector).forEach(el=>el.remove());
   };
   removeFigureSources(document);
   if('MutationObserver' in window){
