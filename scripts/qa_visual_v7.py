@@ -128,7 +128,8 @@ def main() -> int:
             if parsed.path.endswith("/"): target_path /= "index.html"
             if parsed.path and not target_path.is_file(): errors.append(f"broken internal link: {path.relative_to(ROOT)} {href}")
         for asset in parser.assets:
-            target_path=ROOT/asset.lstrip("/") if asset.startswith("/") else path.parent/asset
+            asset_path=unquote(urlparse(asset).path)
+            target_path=ROOT/asset_path.lstrip("/") if asset_path.startswith("/") else path.parent/asset_path
             if not target_path.is_file(): errors.append(f"missing CSS/JS: {path.relative_to(ROOT)} {asset}")
     for slug in IMPORTANT:
         p=ROOT/(slug or ".")/"index.html"

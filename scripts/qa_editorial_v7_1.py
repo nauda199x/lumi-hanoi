@@ -67,7 +67,7 @@ require(re.search(r"\.article h2\s*\{[^}]*font-size:\s*clamp\(2\.25rem,\s*3vw,\s
 for path in HTML:
     rel = path.relative_to(ROOT).as_posix()
     text = path.read_text(encoding="utf-8")
-    for href in re.findall(r'href="([^"]+)"', text):
+    for href in re.findall(r'<a\b[^>]*\bhref="([^"]+)"', text):
         require(not (href.startswith('/') and '?' in href), f"{rel}: query parameter on internal link: {href}")
     try:
         base = subprocess.run(["git", "show", f"HEAD:{rel}"], cwd=ROOT, text=True,
