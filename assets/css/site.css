@@ -383,16 +383,38 @@ h1,h2,h3{font-family:Iowan Old Style,Baskerville,Georgia,"Times New Roman",serif
 }
 
 
-/* V10.1 unified favicon brand mark */
+/* Official Lumi Hanoi logo supplied by the site owner. */
 .brand-mark{
-  width:40px;
-  height:40px;
-  flex:0 0 40px;
+  width:126px;
+  height:58px;
+  flex:0 0 126px;
   border:0;
   border-radius:0;
-  background:url("/favicon.svg") center/40px 40px no-repeat;
+  background:url("/assets/brand/lumi-hanoi-logo.png?v=20260828") center/contain no-repeat;
   color:transparent;
   font-size:0;
   line-height:0;
   overflow:hidden;
+}
+.brand-mark + span{
+  position:absolute;
+  width:1px;
+  height:1px;
+  padding:0;
+  margin:-1px;
+  overflow:hidden;
+  clip:rect(0,0,0,0);
+  white-space:nowrap;
+  border:0;
+}
+.site-footer .brand-mark{
+  filter:brightness(0) invert(1);
+  opacity:.94;
+}
+@media(max-width:700px){
+  .brand-mark{
+    width:106px;
+    height:50px;
+    flex-basis:106px;
+  }
 }

@@ -79,7 +79,7 @@ h1,h2,h3,
   .site-header{backdrop-filter:blur(10px)}
   .nav{min-height:68px;gap:12px}
   .brand{gap:10px;font-size:.78rem;letter-spacing:.13em}
-  .brand-mark{width:40px;height:40px;flex:0 0 40px}
+  .brand-mark{width:106px;height:50px;flex:0 0 106px}
   .nav-toggle{min-width:64px;min-height:44px;padding:8px 12px;color:var(--ink)}
   .nav-links{top:68px;left:12px;right:12px}
 

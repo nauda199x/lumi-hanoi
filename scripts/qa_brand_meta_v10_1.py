@@ -23,18 +23,31 @@ if not favicon.exists():
     errors.append("missing favicon.svg")
 else:
     svg = favicon.read_text(encoding="utf-8")
-    for token in ('viewBox="0 0 64 64"', '#171a18', '#9c7951'):
+    for token in ('viewBox="0 0 64 64"', '#fbf9f3', '#0d221e'):
         if token not in svg:
             errors.append(f"favicon.svg missing expected token: {token}")
 
 site_css = (ROOT / "assets/css/site.css").read_text(encoding="utf-8")
-if "/* V10.1 unified favicon brand mark */" not in site_css:
-    errors.append("missing V10.1 brand mark CSS")
-if 'background:url("/favicon.svg")' not in site_css:
-    errors.append("header brand mark is not sourced from /favicon.svg")
+if "/* Official Lumi Hanoi logo supplied by the site owner. */" not in site_css:
+    errors.append("missing official logo CSS")
+if 'background:url("/assets/brand/lumi-hanoi-logo.png?v=20260828")' not in site_css:
+    errors.append("header brand mark is not sourced from the official logo")
+
+for asset in (
+    ROOT / "assets/brand/lumi-hanoi-logo.png",
+    ROOT / "favicon-32x32.png",
+    ROOT / "apple-touch-icon.png",
+    ROOT / "favicon.ico",
+    ROOT / "site.webmanifest",
+):
+    if not asset.exists():
+        errors.append(f"missing brand asset: {asset.relative_to(ROOT)}")
 
 required_meta = [
-    '<link rel="icon" href="/favicon.svg" type="image/svg+xml">',
+    '<link rel="icon" href="/favicon.svg?v=20260828" type="image/svg+xml">',
+    '<link rel="icon" href="/favicon-32x32.png?v=20260828" sizes="32x32" type="image/png">',
+    '<link rel="apple-touch-icon" href="/apple-touch-icon.png?v=20260828">',
+    '<link rel="manifest" href="/site.webmanifest">',
     '<meta name="theme-color" content="#171a18">',
     'property="og:description"',
     'property="og:image"',
