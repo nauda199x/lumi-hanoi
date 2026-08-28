@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Lumi Hanoi">
-  <rect width="64" height="64" rx="10" fill="#171a18"/>
-  <path d="M16 15v32h15" fill="none" stroke="#d2b488" stroke-width="5.5" stroke-linecap="square" stroke-linejoin="miter"/>
-  <path d="M37 15v32M37 31h13M50 15v32" fill="none" stroke="#f6f0e4" stroke-width="5.5" stroke-linecap="square"/>
-  <path d="M12 53h40" fill="none" stroke="#9c7951" stroke-width="2"/>
+  <rect width="64" height="64" rx="12" fill="#fbf9f3"/>
+  <rect x="17" y="16" width="9" height="36" fill="#0d221e"/>
+  <rect x="31" y="10" width="8" height="42" fill="#0d221e"/>
+  <rect x="44" y="24" width="5" height="28" fill="#0d221e"/>
 </svg>
