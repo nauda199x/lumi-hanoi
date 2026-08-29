@@ -265,6 +265,13 @@ def render_page(listing: dict) -> str:
         "Tin đăng được người đăng cung cấp và đã qua bước duyệt hiển thị. "
         "Người xem cần tự kiểm tra danh tính, quyền giao dịch, hiện trạng căn và hồ sơ trước khi đặt cọc."
     )
+    schema_json = json.dumps(prune(schema), ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
+    related_html = "".join(related)
+    description_html = esc(listing.get("description")).replace("\n", "<br>")
+    zalo_html = (
+        f'<a class="btn" href="https://zalo.me/{esc(zalo_number)}" target="_blank" rel="noopener">Nhắn Zalo</a>'
+        if zalo_number else ""
+    )
     return f"""<!doctype html>
 <html lang="vi">
 <head>
@@ -285,7 +292,7 @@ def render_page(listing: dict) -> str:
   <meta name="twitter:card" content="summary_large_image">
   <link rel="stylesheet" href="/assets/css/site.css?v=20260829-type">
   <link rel="stylesheet" href="/assets/css/marketplace.css?v=20260829-seo">
-  <script type="application/ld+json">{json.dumps(prune(schema), ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")}</script>
+  <script type="application/ld+json">{schema_json}</script>
 </head>
 <body>
   <a class="skip-link" href="#main">Bỏ qua điều hướng</a>
@@ -300,9 +307,9 @@ def render_page(listing: dict) -> str:
           <h1>{esc(title)}</h1>
           <div class="marketplace-live-note" data-live-status hidden></div>
           <h2>Thông tin căn hộ</h2>
-          <p>{esc(listing.get('description')).replace(chr(10), '<br>')}</p>
+          <p>{description_html}</p>
           <h2>Tham khảo thêm</h2>
-          <nav class="detail-related" aria-label="Liên kết liên quan">{"".join(related)}</nav>
+          <nav class="detail-related" aria-label="Liên kết liên quan">{related_html}</nav>
           <p class="notice"><strong>Lưu ý:</strong> {esc(legal_note)}</p>
         </div>
       </article>
@@ -319,7 +326,7 @@ def render_page(listing: dict) -> str:
         </dl>
         <div class="detail-contact">
           <a class="btn btn-primary" href="tel:{esc(phone_href)}">{esc(phone) or 'Gọi người đăng'}</a>
-          {f'<a class="btn" href="https://zalo.me/{esc(zalo_number)}" target="_blank" rel="noopener">Nhắn Zalo</a>' if zalo_number else ''}
+          {zalo_html}
         </div>
         <p class="detail-note">Không chuyển tiền chỉ dựa trên nội dung tin đăng hoặc trao đổi qua điện thoại.</p>
       </div></aside>
