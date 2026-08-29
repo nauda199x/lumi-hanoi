@@ -13,11 +13,23 @@
     const gallery=root.querySelector("[data-detail-gallery]");
     const images=[...(listing.listing_images||[])].sort((a,b)=>Number(a.sort_order)-Number(b.sort_order));
     if(!images.length){const placeholder=document.createElement("div");placeholder.className="marketplace-state";placeholder.innerHTML='<span class="marketplace-state-mark">LH</span><div><h3>Tin chưa có ảnh</h3><p>Liên hệ người đăng để kiểm tra hình ảnh và hiện trạng căn trước khi giao dịch.</p></div>';gallery.replaceWith(placeholder);return;}
-    const track=document.createElement("div");track.className="detail-gallery-track";
+    const track=document.createElement("div");track.className="detail-gallery-track";track.tabIndex=0;track.setAttribute("aria-label","Thư viện ảnh căn hộ");
     images.forEach((item,index)=>{const figure=document.createElement("figure");const image=document.createElement("img");image.src=api.imageUrl(item.storage_path);image.alt=item.alt_text||`${listing.title} — ảnh ${index+1}`;image.loading=index?"lazy":"eager";image.decoding="async";figure.append(image);track.append(figure);});
     const counter=document.createElement("span");counter.className="detail-gallery-counter";counter.textContent=`1/${images.length}`;
+    const prev=document.createElement("button");prev.type="button";prev.className="detail-gallery-nav detail-gallery-nav--prev";prev.setAttribute("aria-label","Ảnh trước");prev.textContent="‹";
+    const next=document.createElement("button");next.type="button";next.className="detail-gallery-nav detail-gallery-nav--next";next.setAttribute("aria-label","Ảnh tiếp theo");next.textContent="›";
+    const slides=[...track.children];
+    const currentIndex=()=>Math.min(slides.length-1,Math.max(0,Math.round(track.scrollLeft/(track.clientWidth||1))));
+    const update=()=>{const index=currentIndex();counter.textContent=`${index+1}/${images.length}`;prev.disabled=index===0;next.disabled=index===images.length-1;};
+    const go=index=>{const target=Math.min(images.length-1,Math.max(0,index));track.scrollTo({left:target*track.clientWidth,behavior:"smooth"});};
+    prev.addEventListener("click",()=>go(currentIndex()-1));
+    next.addEventListener("click",()=>go(currentIndex()+1));
+    track.addEventListener("keydown",event=>{if(event.key==="ArrowLeft"){event.preventDefault();go(currentIndex()-1);}if(event.key==="ArrowRight"){event.preventDefault();go(currentIndex()+1);}});
+    let ticking=false;track.addEventListener("scroll",()=>{if(ticking)return;ticking=true;requestAnimationFrame(()=>{ticking=false;update();});},{passive:true});
+    window.addEventListener("resize",update,{passive:true});
     gallery.replaceChildren(track,counter);
-    let ticking=false;track.addEventListener("scroll",()=>{if(ticking)return;ticking=true;requestAnimationFrame(()=>{const width=track.clientWidth||1;const index=Math.min(images.length-1,Math.max(0,Math.round(track.scrollLeft/width)));counter.textContent=`${index+1}/${images.length}`;ticking=false;});},{passive:true});
+    if(images.length>1)gallery.append(prev,next);
+    update();
   };
   const render=listing=>{
     document.title=`${listing.title} | Lumi Hanoi`;
