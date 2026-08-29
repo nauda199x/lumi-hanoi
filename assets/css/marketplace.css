@@ -186,7 +186,7 @@
 .marketplace-section{background:#f3efe6}
 .marketplace-heading{margin-bottom:22px}
 .marketplace-heading h2{letter-spacing:-.035em}
-.marketplace-toolbar{position:sticky;top:78px;z-index:25;grid-template-columns:minmax(230px,1.6fr) minmax(165px,.9fr) minmax(145px,.78fr) minmax(165px,.9fr) minmax(155px,.84fr) minmax(155px,.84fr) minmax(145px,.78fr) auto;gap:10px;margin-bottom:22px;padding:12px;border:1px solid #d9d1c4;border-radius:14px;background:rgba(251,249,244,.97);box-shadow:0 10px 32px rgba(33,31,26,.08);backdrop-filter:blur(14px)}
+.marketplace-toolbar{position:sticky;top:78px;z-index:25;grid-template-columns:minmax(250px,1.75fr) minmax(170px,.92fr) minmax(145px,.78fr) minmax(170px,.92fr) minmax(155px,.84fr) minmax(155px,.84fr) auto;gap:10px;margin-bottom:22px;padding:12px;border:1px solid #d9d1c4;border-radius:14px;background:rgba(251,249,244,.97);box-shadow:0 10px 32px rgba(33,31,26,.08);backdrop-filter:blur(14px)}
 .marketplace-toolbar .field{min-width:0;gap:5px}.marketplace-toolbar .field label{padding-left:2px;font-size:.67rem}.marketplace-toolbar .field input,.marketplace-toolbar .field select{min-width:0;min-height:46px;padding-left:12px;padding-right:34px;border-color:#d8d0c4;border-radius:9px;background:#fff;font-size:.88rem;white-space:nowrap}.marketplace-toolbar>.btn{min-width:110px;min-height:46px;border-radius:9px}
 .marketplace-mobile-controls,.marketplace-filter-sheet-head,.marketplace-filter-apply,.marketplace-filter-backdrop{display:none}
 
@@ -246,13 +246,12 @@
   .marketplace-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:14px}
   .marketplace-heading>div{min-width:0}.marketplace-heading .eyebrow{font-size:.66rem}.marketplace-heading h2{font-size:clamp(1.85rem,8.5vw,2.45rem);line-height:1}
   .marketplace-actions{display:flex;flex:0 0 auto;margin-top:0}.marketplace-actions .marketplace-count{display:none}.marketplace-actions .btn{min-height:42px;padding:8px 11px;font-size:.78rem}
-  .marketplace-mobile-controls{position:sticky;top:70px;z-index:38;display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 14px;padding:8px;border:1px solid #ddd5c9;border-radius:12px;background:rgba(251,249,244,.97);box-shadow:0 8px 24px rgba(33,31,26,.08);backdrop-filter:blur(12px)}
-  .marketplace-mobile-filter,.marketplace-mobile-sort{min-height:44px;width:100%;padding:8px 11px;border:1px solid #d7cfc3;border-radius:9px;background:#fff;color:#272925;font:800 .85rem/1 Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+  .marketplace-mobile-controls{position:sticky;top:70px;z-index:38;display:grid;grid-template-columns:1fr;gap:8px;margin:0 0 14px;padding:8px;border:1px solid #ddd5c9;border-radius:12px;background:rgba(251,249,244,.97);box-shadow:0 8px 24px rgba(33,31,26,.08);backdrop-filter:blur(12px)}
+  .marketplace-mobile-filter{min-height:44px;width:100%;padding:8px 11px;border:1px solid #d7cfc3;border-radius:9px;background:#fff;color:#272925;font:800 .85rem/1 Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
   .marketplace-mobile-filter{text-align:left}
   .marketplace-toolbar{position:fixed;left:0;right:0;bottom:0;top:auto;z-index:100;display:grid;grid-template-columns:1fr;gap:11px;max-height:84dvh;margin:0;padding:16px 16px calc(18px + env(safe-area-inset-bottom));overflow:auto;border:0;border-radius:20px 20px 0 0;background:#fbfaf7;box-shadow:0 -18px 50px rgba(0,0,0,.2);transform:translateY(105%);transition:transform .24s ease}
   .marketplace-toolbar.is-mobile-open{transform:none}
   .marketplace-toolbar .field{display:grid;grid-row:auto!important}.marketplace-toolbar .field label{font-size:.72rem}.marketplace-toolbar .field input,.marketplace-toolbar .field select{min-height:50px;font-size:16px}
-  .marketplace-toolbar .field--sort{display:none}
   .marketplace-toolbar>.btn[type="reset"]{width:100%;min-height:48px}
   .marketplace-filter-sheet-head{position:sticky;top:-16px;z-index:2;display:flex;align-items:center;justify-content:space-between;margin:-16px -16px 4px;padding:16px;border-bottom:1px solid #e4ded5;background:#fbfaf7}.marketplace-filter-sheet-head strong{font-size:1.05rem}
   .marketplace-filter-close{display:grid;width:38px;height:38px;place-items:center;border:1px solid #d8d0c5;border-radius:50%;background:#fff;font-size:1.5rem;line-height:1}
