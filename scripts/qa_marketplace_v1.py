@@ -28,6 +28,10 @@ detail = (ROOT / "tin-dang-lumi-hanoi/index.html").read_text(encoding="utf-8")
 schema = (ROOT / "supabase/marketplace-schema.sql").read_text(encoding="utf-8")
 config = (ROOT / "assets/js/marketplace-config.js").read_text(encoding="utf-8")
 api = (ROOT / "assets/js/marketplace-api.js").read_text(encoding="utf-8")
+form_js = (ROOT / "assets/js/marketplace-form.js").read_text(encoding="utf-8")
+detail_js = (ROOT / "assets/js/marketplace-detail.js").read_text(encoding="utf-8")
+admin_js = (ROOT / "assets/js/marketplace-admin.js").read_text(encoding="utf-8")
+market_css = (ROOT / "assets/css/marketplace.css").read_text(encoding="utf-8")
 home = (ROOT / "index.html").read_text(encoding="utf-8")
 transaction_hub = (ROOT / "giao-dich-lumi-hanoi/index.html").read_text(encoding="utf-8")
 site_js = (ROOT / "assets/js/site.js").read_text(encoding="utf-8")
@@ -36,8 +40,17 @@ assert 'data-listing-type="sale"' in sale and 'marketplace-list.js' in sale
 assert 'data-listing-type="rent"' in rent and 'marketplace-list.js' in rent
 assert 'data-marketplace-submit' in submit and 'name="contact_public"' in submit
 assert 'name="website"' in submit, "Submission form needs a honeypot"
+assert all('Shop chân đế' in page for page in (submit, sale, rent, admin)), "Shop listings must work in form, filters and admin"
+assert all(f'<option>{floor}</option>' in submit for floor in ("Thấp", "Trung", "Cao")), "Floor must use three privacy-safe bands"
+for removed_name in ("unit_code", "direction", "view_text", "poster_type", "contact_zalo", "contact_email"):
+    assert f'name="{removed_name}"' not in submit, f"Submission form must not collect {removed_name}"
+    assert f'value("{removed_name}")' not in form_js, f"Submission payload must not send {removed_name}"
+assert 'Số điện thoại (Zalo) *' in submit
+assert 'data-legal-field' in submit and '.field[hidden]{display:none}' in market_css, "Rental legal status must really stay hidden"
 assert 'data-marketplace-admin' in admin and 'noindex,nofollow' in admin
 assert 'data-listing-detail' in detail and 'noindex,follow' in detail
+assert 'data-detail-direction' not in detail and 'data-detail-poster' not in detail
+assert 'listing.contact_zalo' not in detail_js, "Public Zalo link must reuse the contact phone"
 assert "enable row level security" in schema.lower()
 assert "listings_anon_submit_pending" in schema and "listings_admin_manage" in schema
 assert "can_upload_pending_image" in schema, "Storage uploads must belong to a pending listing"
@@ -48,7 +61,15 @@ assert "grant all on public.admin_users" not in schema, "Authenticated access mu
 assert "alter table public.listings set schema archive" in schema, "Existing empty scaffold must be preserved, not deleted"
 assert "drop table" not in schema.lower(), "Marketplace setup must not destructively drop project tables"
 assert "notify pgrst, 'reload schema'" in schema
+assert "'Shop chân đế'" in schema and "listings_unit_type_check" in schema
+assert "floor_label in ('Thấp','Trung','Cao')" in schema
+assert "alter column poster_type drop not null" in schema
+anon_insert_grant = schema.split("grant insert (", 1)[1].split(") on public.listings to anon;", 1)[0]
+for removed_column in ("unit_code", "direction", "view_text", "poster_type", "contact_zalo", "contact_email"):
+    assert removed_column not in anon_insert_grant, f"Anonymous insert grant must not include {removed_column}"
 assert 'select:"id,slug,listing_code,listing_type,title,description' in api, "Public detail must use an explicit safe column list"
+assert "deleteListing" in api and 'body:{prefixes:imagePaths}' in api, "Admin deletion must clean Storage objects first"
+assert "Xóa vĩnh viễn" in admin_js and "deleteAndReload" in admin_js, "Admin UI needs a confirmed permanent-delete action"
 assert "service-role" in config.lower() and "supabasePublishableKey" in config
 assert "service_role" not in config
 assert home.index('href="/tong-quan-lumi-hanoi/">Tổng quan</a>') < home.index("<summary>Giao dịch</summary>") < home.index('href="/mat-bang-lumi-hanoi/">Mặt bằng</a>')

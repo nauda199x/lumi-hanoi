@@ -72,7 +72,7 @@
 
   const listPublic=async(type,filters={})=>{
     const params={
-      select:"id,slug,listing_code,listing_type,title,phase,tower,bedroom_count,unit_type,area_sqm,price_vnd,furnishing,floor_label,direction,view_text,available_from,is_featured,approved_at,expires_at,listing_images(id,storage_path,sort_order,alt_text)",
+      select:"id,slug,listing_code,listing_type,title,phase,tower,bedroom_count,unit_type,area_sqm,price_vnd,furnishing,floor_label,available_from,is_featured,approved_at,expires_at,listing_images(id,storage_path,sort_order,alt_text)",
       listing_type:`eq.${type}`,
       status:"eq.approved",
       order:"is_featured.desc,sort_priority.desc,approved_at.desc",
@@ -85,13 +85,13 @@
     if(filters.maxPrice)params.price_vnd=`lte.${Number(filters.maxPrice)}`;
     const rows=await request(restPath("listings",params));
     const keyword=cleanText(filters.keyword,80).toLocaleLowerCase("vi");
-    return keyword?rows.filter(row=>[row.title,row.phase,row.tower,row.unit_type,row.view_text].some(value=>String(value||"").toLocaleLowerCase("vi").includes(keyword))):rows;
+    return keyword?rows.filter(row=>[row.title,row.phase,row.tower,row.unit_type].some(value=>String(value||"").toLocaleLowerCase("vi").includes(keyword))):rows;
   };
 
   const getPublicListing=async identifier=>{
     const key=/^[0-9a-f-]{36}$/i.test(identifier)?"id":"slug";
     const rows=await request(restPath("listings",{
-      select:"id,slug,listing_code,listing_type,title,description,phase,tower,bedroom_count,unit_type,area_sqm,price_vnd,furnishing,floor_label,direction,view_text,available_from,legal_status,poster_type,contact_phone,contact_zalo,is_featured,approved_at,expires_at,listing_images(id,storage_path,sort_order,alt_text)",
+      select:"id,slug,listing_code,listing_type,title,description,phase,tower,bedroom_count,unit_type,area_sqm,price_vnd,furnishing,floor_label,available_from,contact_phone,is_featured,approved_at,expires_at,listing_images(id,storage_path,sort_order,alt_text)",
       [key]:`eq.${identifier}`,
       status:"eq.approved",
       limit:"1"

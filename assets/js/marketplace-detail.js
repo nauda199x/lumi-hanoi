@@ -27,9 +27,9 @@
   const render=listing=>{
     document.title=`${listing.title} | Lumi Hanoi`;
     text("[data-detail-code]",listing.listing_code);text("[data-detail-title]",listing.title);text("[data-detail-price]",api.formatCurrency(listing.price_vnd,listing.listing_type));
-    text("[data-detail-type]",listing.listing_type==="rent"?"Cho thuê":"Mua bán");text("[data-detail-phase]",listing.phase);text("[data-detail-tower]",listing.tower);text("[data-detail-unit]",listing.unit_type);text("[data-detail-area]",listing.area_sqm?`${Number(listing.area_sqm).toLocaleString("vi-VN")} m²`:"Liên hệ");text("[data-detail-floor]",listing.floor_label||"Liên hệ");text("[data-detail-direction]",listing.direction||"Liên hệ");text("[data-detail-furnishing]",listing.furnishing||"Liên hệ");text("[data-detail-description]",listing.description||"Người đăng chưa bổ sung mô tả.");text("[data-detail-poster]",listing.poster_type==="owner"?"Chủ nhà":"Môi giới");
+    text("[data-detail-type]",listing.listing_type==="rent"?"Cho thuê":"Mua bán");text("[data-detail-phase]",listing.phase);text("[data-detail-tower]",listing.tower);text("[data-detail-unit]",listing.unit_type);text("[data-detail-area]",listing.area_sqm?`${Number(listing.area_sqm).toLocaleString("vi-VN")} m²`:"Liên hệ");text("[data-detail-floor]",listing.floor_label||"Liên hệ");text("[data-detail-furnishing]",listing.furnishing||"Liên hệ");text("[data-detail-description]",listing.description||"Người đăng chưa bổ sung mô tả.");
     const phone=root.querySelector("[data-detail-phone]");if(phone){phone.textContent=listing.contact_phone;phone.href=`tel:${String(listing.contact_phone||"").replace(/[^+\d]/g,"")}`;}
-    const zalo=root.querySelector("[data-detail-zalo]");if(zalo){const number=String(listing.contact_zalo||listing.contact_phone||"").replace(/\D/g,"");zalo.href=number?`https://zalo.me/${number}`:"#";zalo.hidden=!number;}
+    const zalo=root.querySelector("[data-detail-zalo]");if(zalo){const number=String(listing.contact_phone||"").replace(/\D/g,"");zalo.href=number?`https://zalo.me/${number}`:"#";zalo.hidden=!number;}
     galleryFor(listing);root.dataset.listingId=listing.id;loading.hidden=true;missing.hidden=true;content.hidden=false;
   };
   const reportForm=root.querySelector("[data-report-form]");
