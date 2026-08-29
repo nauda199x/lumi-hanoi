@@ -16,7 +16,7 @@
     <meta property="og:url" content="https://lumi-hanoi.com/cho-thue-lumi-hanoi/">
     <meta name="twitter:card" content="summary">
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><link rel="stylesheet" href="/assets/css/site.css?v=20260829-type">
-    <link rel="stylesheet" href="/assets/css/marketplace.css?v=20260829">
+    <link rel="stylesheet" href="/assets/css/marketplace.css?v=20260829-ux">
     <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Trang chủ","item":"https://lumi-hanoi.com/"},{"@type":"ListItem","position":2,"name":"Cho thuê Lumi Hanoi","item":"https://lumi-hanoi.com/cho-thue-lumi-hanoi/"}]},{"@type":"WebPage","headline":"Cho thuê Lumi Hanoi","dateModified":"2026-08-29","inLanguage":"vi-VN","mainEntityOfPage":"https://lumi-hanoi.com/cho-thue-lumi-hanoi/","publisher":{"@type":"Organization","name":"Lumi Hanoi","url":"https://lumi-hanoi.com/"}}]}</script>
   </head>
   <body>
@@ -56,7 +56,7 @@
       <div class="container breadcrumb">
         <a href="/">Trang chủ</a>
         <span aria-hidden="true">/</span>Cho thuê Lumi Hanoi</div>
-          <header class="article-hero"><img class="article-hero-media" src="/assets/media/prestige/lumi-prestige-hero.webp" width="985" height="633" alt="" decoding="async">
+          <header class="article-hero marketplace-hero"><img class="article-hero-media" src="/assets/media/prestige/lumi-prestige-hero.webp" width="985" height="633" alt="" decoding="async">
             <div class="container">
               <p class="eyebrow">Giao dịch Lumi Hanoi</p>
               <h1>Cho thuê Lumi Hanoi</h1>
@@ -68,7 +68,7 @@
             <div class="container">
               <div class="marketplace-heading">
                 <div><p class="eyebrow">Quỹ căn cho thuê</p><h2 id="rent-listing-title">Căn hộ đang cho thuê</h2></div>
-                <div class="marketplace-actions"><span class="marketplace-count" data-listing-count aria-label="Số tin đang hiển thị">0 tin đăng</span><a class="btn" href="/dang-tin-lumi-hanoi/#cho-thue">+ Đăng tin</a></div>
+                <div class="marketplace-actions"><span class="marketplace-count" data-listing-count aria-label="Số tin đang hiển thị">Đang tải…</span><a class="btn btn-primary" href="/dang-tin-lumi-hanoi/#cho-thue">+ Đăng tin</a></div>
               </div>
               <form class="marketplace-toolbar" data-listing-filters aria-label="Lọc căn hộ cho thuê">
                 <div class="field"><label for="rent-keyword">Tìm nhanh</label><input id="rent-keyword" name="keyword" type="search" placeholder="Tên tin, phân khu hoặc tòa"></div>
@@ -81,8 +81,13 @@
               <div class="marketplace-skeleton" data-listing-skeleton hidden aria-label="Đang tải tin đăng"><span class="skeleton-card"></span><span class="skeleton-card"></span><span class="skeleton-card"></span></div>
               <div class="listing-grid" data-listing-grid hidden></div>
               <div class="marketplace-state" data-listing-state role="status">
-                <span class="marketplace-state-mark" data-state-mark aria-hidden="true">0</span>
-                <div><h3 data-state-title>Chưa có tin đăng cho thuê</h3><p data-state-copy>Các tin được gửi từ chủ nhà và môi giới sẽ xuất hiện sau khi quản trị viên duyệt.</p><div class="hero-actions"><a class="btn" href="/dang-tin-lumi-hanoi/#cho-thue">Đăng tin đầu tiên</a></div></div>
+                <span class="marketplace-state-mark" data-state-mark aria-hidden="true">LH</span>
+                <div>
+                  <h3 data-state-title>Đang tải quỹ căn cho thuê</h3>
+                  <p data-state-copy>Hệ thống đang kiểm tra các tin đã được duyệt.</p>
+                  <div class="marketplace-state-benefits" data-empty-benefits hidden><span>Miễn phí đăng tin</span><span>Duyệt trước khi công khai</span><span>Khách liên hệ trực tiếp người đăng</span></div>
+                  <div class="hero-actions"><a class="btn btn-primary" href="/dang-tin-lumi-hanoi/#cho-thue">Đăng tin đầu tiên</a></div>
+                </div>
               </div>
             </div>
           </section>
@@ -170,6 +175,6 @@
             </script>
             <script src="/assets/js/marketplace-config.js"></script>
             <script src="/assets/js/marketplace-api.js?v=20260829-poster"></script>
-            <script src="/assets/js/marketplace-list.js?v=20260829-poster" defer></script>
+            <script src="/assets/js/marketplace-list.js?v=20260829-ux" defer></script>
           </body>
         </html>
