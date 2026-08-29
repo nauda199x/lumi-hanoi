@@ -96,7 +96,7 @@
   const getPublicListing=async identifier=>{
     const key=/^[0-9a-f-]{36}$/i.test(identifier)?"id":"slug";
     const rows=await request(restPath("listings",{
-      select:"id,slug,listing_code,listing_type,title,description,phase,tower,bedroom_count,unit_type,area_sqm,price_vnd,furnishing,floor_label,available_from,contact_phone,is_featured,approved_at,expires_at,listing_images(id,storage_path,sort_order,alt_text)",
+      select:"id,slug,listing_code,listing_type,title,description,poster_name,phase,tower,bedroom_count,unit_type,area_sqm,price_vnd,furnishing,floor_label,available_from,contact_phone,is_featured,approved_at,expires_at,listing_images(id,storage_path,sort_order,alt_text)",
       [key]:`eq.${identifier}`,
       status:"eq.approved",
       limit:"1"
