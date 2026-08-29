@@ -183,7 +183,14 @@ def render_gallery(listing: dict) -> str:
         figures.append(
             f'<figure><img src="{esc(src)}" alt="{esc(alt)}" width="1200" height="900" loading="{loading}" decoding="async"></figure>'
         )
-    return '<div class="detail-gallery">' + "".join(figures) + "</div>"
+    return (
+        '<div class="detail-gallery">'
+        '<div class="detail-gallery-track">'
+        + "".join(figures)
+        + '</div><span class="detail-gallery-counter" data-static-gallery-counter>1/'
+        + str(len(images))
+        + "</span></div>"
+    )
 
 
 def render_page(listing: dict) -> str:
@@ -271,11 +278,18 @@ def render_page(listing: dict) -> str:
     zalo_number = re.sub(r"\\D", "", phone)
     zalo_href = f"https://zalo.me/{zalo_number}" if zalo_number else "#"
     zalo_hidden = "" if zalo_number else " hidden"
+    price_per_sqm = ""
+    if listing.get("listing_type") == "sale" and listing.get("price_vnd") and listing.get("area_sqm"):
+        try:
+            ppm = float(listing.get("price_vnd")) / float(listing.get("area_sqm")) / 1_000_000
+            price_per_sqm = f"~{ppm:,.1f}".replace(",", "X").replace(".", ",").replace("X", ".") + " tr/m²"
+        except (TypeError, ValueError, ZeroDivisionError):
+            price_per_sqm = ""
     return f"""<!doctype html>
 <html lang="vi">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <title>{esc(title)} | Lumi Hanoi</title>
   <meta name="description" content="{esc(description)}">
   <meta name="robots" content="{robots}">
@@ -290,23 +304,38 @@ def render_page(listing: dict) -> str:
   <meta property="og:image" content="{esc(hero_image)}">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="stylesheet" href="/assets/css/site.css?v=20260829-type">
-  <link rel="stylesheet" href="/assets/css/marketplace.css?v=20260829-poster">
+  <link rel="stylesheet" href="/assets/css/marketplace.css?v=20260829-detail3">
   <script type="application/ld+json">{schema_json}</script>
 </head>
-<body>
+<body class="listing-detail-page">
   <a class="skip-link" href="#main">Bỏ qua điều hướng</a>
   <header class="site-header"><div class="container nav"><a class="brand" href="/" aria-label="Lumi Hanoi – Trang chủ"><span class="brand-mark" aria-hidden="true">LH</span><span>LUMI HANOI</span></a><button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="primary-nav">Menu</button><nav id="primary-nav" class="nav-links" data-nav-links data-open="false" aria-label="Điều hướng chính"><a href="/tong-quan-lumi-hanoi/">Tổng quan</a><a href="/mat-bang-lumi-hanoi/">Mặt bằng</a><details class="nav-dropdown"><summary>Phân khu</summary><div class="nav-dropdown-menu"><a href="/lumi-signature/">Lumi Signature</a><a href="/lumi-prestige/">Lumi Prestige</a><a href="/lumi-elite/">Lumi Elite</a></div></details><a href="/tien-do-lumi-hanoi/">Tiến độ</a><a href="/tin-tuc/">Tin tức</a><details class="nav-dropdown"><summary>Giao dịch</summary><div class="nav-dropdown-menu nav-dropdown-menu--right"><a href="/mua-ban-lumi-hanoi/">Mua bán</a><a href="/cho-thue-lumi-hanoi/">Cho thuê</a><a href="/dang-tin-lumi-hanoi/">Đăng tin</a></div></details></nav></div></header>
   <main id="main" data-static-listing data-listing-slug="{esc(listing.get('slug'))}">
     <div class="container breadcrumb"><a href="/">Trang chủ</a><span aria-hidden="true">/</span><a href="/{segment}/">{action} Lumi Hanoi</a><span aria-hidden="true">/</span>{esc(listing.get('listing_code'))}</div>
-    <div class="container detail-shell">
-      <article>
-        {render_gallery(listing)}
+    <div class="container detail-shell detail-shell--portal">
+      <article class="detail-main">
+        <div class="detail-gallery-wrap">{render_gallery(listing)}</div>
+        <div class="detail-mobile-summary">
+          <div class="detail-mobile-price"><strong>{esc(price)}</strong><span>{esc(price_per_sqm)}</span></div>
+          <div class="detail-quickfacts"><span><b>{esc(listing.get('unit_type'))}</b></span><span><b>{esc(area)} m²</b></span><span>Tầng <b>{esc(listing.get('floor_label') or 'Liên hệ')}</b></span></div>
+        </div>
         <div class="detail-copy">
           <p class="eyebrow">{esc(listing.get('listing_code'))} · {action}</p>
           <h1>{esc(title)}</h1>
+          <div class="detail-location"><strong>Lumi Hanoi</strong><span>Đại lộ Thăng Long, Tây Mỗ, Hà Nội</span></div>
           <div class="marketplace-live-note" data-live-status hidden></div>
-          <h2>Thông tin căn hộ</h2>
-          <p>{description_html}</p>
+          <h2>Mô tả</h2>
+          <p class="detail-description">{description_html}</p>
+          <h2>Đặc điểm bất động sản</h2>
+          <dl class="detail-feature-list">
+            <div><dt>Mức giá</dt><dd>{esc(price)}</dd></div>
+            <div><dt>Diện tích</dt><dd>{esc(area)} m²</dd></div>
+            <div><dt>Loại căn</dt><dd>{esc(listing.get('unit_type'))}</dd></div>
+            <div><dt>Tầng</dt><dd>{esc(listing.get('floor_label') or 'Liên hệ')}</dd></div>
+            <div><dt>Phân khu</dt><dd>{esc(listing.get('phase'))}</dd></div>
+            <div><dt>Tòa</dt><dd>{esc(listing.get('tower'))}</dd></div>
+            <div><dt>Nội thất</dt><dd>{esc(listing.get('furnishing') or 'Liên hệ')}</dd></div>
+          </dl>
           <h2>Tham khảo thêm</h2>
           <nav class="detail-related" aria-label="Liên kết liên quan">{related_html}</nav>
           <p class="notice"><strong>Lưu ý:</strong> {esc(legal_note)}</p>
@@ -331,12 +360,16 @@ def render_page(listing: dict) -> str:
         <p class="detail-note">Không chuyển tiền chỉ dựa trên nội dung tin đăng hoặc trao đổi qua điện thoại.</p>
       </div></aside>
     </div>
+    <div class="detail-mobile-contact">
+      <a class="detail-zalo-fab" data-static-zalo href="{esc(zalo_href)}" target="_blank" rel="noopener"{zalo_hidden} aria-label="Nhắn Zalo">Zalo</a>
+      <a class="detail-call-bar" data-static-phone href="tel:{esc(phone_href)}">{esc(phone) or "Gọi người đăng"}</a>
+    </div>
   </main>
   <footer class="site-footer"><div class="container footer-grid"><div><a class="brand" href="/"><span class="brand-mark" aria-hidden="true">LH</span><span>LUMI HANOI</span></a><p>Cổng thông tin dự án &amp; thị trường căn hộ.</p></div><div><nav class="footer-links" aria-label="Điều hướng cuối trang"><a href="/mua-ban-lumi-hanoi/">Mua bán</a><a href="/cho-thue-lumi-hanoi/">Cho thuê</a><a href="/dang-tin-lumi-hanoi/">Đăng tin</a><a href="/tin-tuc/">Tin tức</a></nav><p class="disclaimer">Website thông tin và giao dịch độc lập, không phải website chính thức của CapitaLand Development.</p></div></div></footer>
   <script src="/assets/js/site.js" defer></script>
   <script src="/assets/js/marketplace-config.js"></script>
   <script src="/assets/js/marketplace-api.js?v=20260829-poster"></script>
-  <script src="/assets/js/marketplace-static-status.js?v=20260829-poster" defer></script>
+  <script src="/assets/js/marketplace-static-status.js?v=20260829-detail3" defer></script>
 </body>
 </html>
 """
