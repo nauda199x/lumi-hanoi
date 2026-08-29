@@ -340,7 +340,7 @@
   });
   phoneInput?.addEventListener("input",updatePhoneHelp);
   form.addEventListener("input",event=>{
-    event.target?.removeAttribute?.("aria-invalid");
+    if(event.target!==priceInput&&event.target!==phoneInput)event.target?.removeAttribute?.("aria-invalid");
     scheduleDraft();
   });
   form.addEventListener("change",event=>{
