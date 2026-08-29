@@ -95,3 +95,76 @@
   .form-submit .btn{min-height:52px}.form-status{line-height:1.55}
 }
 @media(prefers-reduced-motion:reduce){.form-progress-track span,.mobile-submit-bar{transition:none}}
+
+
+/* DETAIL PORTAL UX 2026-08-29 */
+.listing-detail-page{background:#fbfaf6}
+.listing-detail-page .breadcrumb{padding-top:18px;padding-bottom:18px}
+.detail-shell--portal{grid-template-columns:minmax(0,1fr) 360px;gap:42px;align-items:start;padding-top:24px}
+.detail-main{min-width:0}
+.detail-gallery-wrap{position:relative;overflow:hidden;background:#eee9df}
+.detail-gallery{position:relative;display:block;overflow:hidden;background:#eee9df}
+.detail-gallery-track{display:flex;width:100%;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.detail-gallery-track::-webkit-scrollbar{display:none}
+.detail-gallery-track figure{flex:0 0 100%;width:100%;margin:0;aspect-ratio:16/9;scroll-snap-align:start;scroll-snap-stop:always;background:#eee9df}
+.detail-gallery-track img{display:block;width:100%;height:100%;object-fit:contain;background:#f3efe7}
+.detail-gallery-counter{position:absolute;right:14px;bottom:14px;z-index:2;display:inline-flex;min-width:54px;min-height:34px;align-items:center;justify-content:center;padding:4px 10px;border-radius:999px;background:rgba(20,22,20,.78);color:#fff;font:750 .82rem/1 Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.03em}
+.detail-mobile-summary{display:none}
+.detail-copy{margin-top:28px;padding-bottom:24px}
+.detail-copy>.eyebrow{margin-bottom:11px}
+.detail-copy h1{max-width:16ch;margin:0 0 18px;font-size:clamp(2.6rem,5vw,4.8rem);line-height:.98;letter-spacing:-.035em}
+.detail-location{display:flex;flex-wrap:wrap;gap:5px 12px;margin:0 0 30px;color:var(--muted);font-size:.98rem}
+.detail-location strong{color:var(--ink)}
+.detail-copy h2{margin:34px 0 14px;font-size:clamp(1.65rem,2.7vw,2.35rem)}
+.detail-description{white-space:pre-line;line-height:1.75}
+.detail-feature-list{margin:0;border-top:1px solid var(--line)}
+.detail-feature-list>div{display:grid;grid-template-columns:minmax(160px,.7fr) minmax(0,1fr);gap:20px;padding:15px 0;border-bottom:1px solid var(--line)}
+.detail-feature-list dt{color:var(--muted);font-size:.84rem;font-weight:700}
+.detail-feature-list dd{margin:0;font-weight:800;text-align:right}
+.detail-panel{top:96px;border-color:#d9d0c1;box-shadow:0 12px 34px rgba(28,28,24,.05)}
+.detail-panel .detail-price{font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-variant-numeric:tabular-nums}
+.detail-poster{display:grid;gap:3px;margin:18px 0 12px}.detail-poster span{color:var(--muted);font-size:.72rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase}.detail-poster strong{font-size:1rem}
+.detail-mobile-contact{display:none}
+
+@media(max-width:760px){
+  .listing-detail-page{padding-bottom:92px;background:#fff}
+  .listing-detail-page .site-header{position:sticky;top:0;z-index:50;background:rgba(251,250,246,.96);backdrop-filter:blur(10px)}
+  .listing-detail-page .site-header .nav{min-height:70px}
+  .listing-detail-page .breadcrumb{display:none}
+  .detail-shell--portal{display:block;width:100%;max-width:none;padding:0}
+  .detail-shell--portal>aside{display:none}
+  .detail-gallery-wrap{width:100%}
+  .detail-gallery-track figure{aspect-ratio:4/3}
+  .detail-gallery-track img{object-fit:contain;background:#f3efe7}
+  .detail-gallery-counter{right:12px;bottom:12px;min-width:52px;min-height:32px;font-size:.78rem}
+  .detail-mobile-summary{display:block;padding:18px 20px 15px;border-bottom:1px solid #e5dfd5;background:#f4f5f7}
+  .detail-mobile-price{display:flex;align-items:baseline;flex-wrap:wrap;gap:8px 12px}
+  .detail-mobile-price strong{color:#875f32;font:850 1.55rem/1.1 Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-variant-numeric:tabular-nums}
+  .detail-mobile-price span{color:#70706b;font-size:.96rem}
+  .detail-quickfacts{display:flex;gap:0;margin-top:14px;color:#5e625f;font-size:.95rem}
+  .detail-quickfacts span{display:inline-flex;align-items:center;padding:0 12px;border-right:1px solid #cfcfc9}
+  .detail-quickfacts span:first-child{padding-left:0}.detail-quickfacts span:last-child{border-right:0}
+  .detail-copy{margin:0;padding:22px 20px 34px}
+  .detail-copy>.eyebrow{margin-bottom:10px;font-size:.72rem}
+  .detail-copy h1{max-width:none;margin-bottom:16px;font-size:clamp(2rem,9vw,2.75rem);line-height:1.02}
+  .detail-location{display:grid;gap:3px;margin-bottom:28px;font-size:.95rem;line-height:1.5}
+  .detail-copy h2{margin:30px 0 12px;font-size:1.65rem}
+  .detail-description{font-size:1rem;line-height:1.72;color:#30312e}
+  .detail-feature-list>div{grid-template-columns:1fr auto;gap:16px;padding:15px 0}
+  .detail-feature-list dt{font-size:.94rem}.detail-feature-list dd{font-size:.96rem}
+  .detail-copy .notice{margin-top:26px;padding:16px;font-size:.86rem}
+  .detail-mobile-contact{position:fixed;left:0;right:0;bottom:0;z-index:70;display:grid;grid-template-columns:58px minmax(0,1fr);gap:10px;padding:10px max(14px,env(safe-area-inset-left)) calc(10px + env(safe-area-inset-bottom));border-top:1px solid #ded8ce;background:rgba(255,255,255,.97);box-shadow:0 -10px 28px rgba(0,0,0,.09)}
+  .detail-mobile-contact[hidden]{display:none}
+  .detail-zalo-fab,.detail-call-bar{min-height:54px;text-decoration:none}
+  .detail-zalo-fab{display:grid;place-items:center;border:1px solid #9aa0a6;border-radius:50%;color:#1467d8;font-size:.7rem;font-weight:850}
+  .detail-call-bar{display:flex;align-items:center;justify-content:center;border-radius:999px;background:#171a18;color:#fff;font-weight:850;font-size:1rem;letter-spacing:.01em}
+  .listing-detail-page .site-footer{margin-bottom:0}
+}
+
+/* Static SEO listing pages share the same portal shell and swipe track. */
+@media(max-width:760px){
+  [data-static-listing] .detail-shell{display:block;width:100%;max-width:none;padding-top:0}
+  [data-static-listing] .breadcrumb{display:none}
+  [data-static-listing] .detail-shell>aside{display:none}
+  [data-static-listing] .detail-copy{padding:22px 20px 36px}
+}
