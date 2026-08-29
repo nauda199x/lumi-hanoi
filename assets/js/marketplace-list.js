@@ -58,8 +58,7 @@
     }else media.append(el("span","listing-card-placeholder",`${listing.unit_type||"Căn hộ"}\n${listing.tower||"Lumi Hanoi"}`));
     const badges=el("div","listing-badges");
     if(listing.is_featured)badges.append(el("span","listing-badge listing-badge--featured","Tin nổi bật"));
-    badges.append(el("span","listing-badge listing-badge--approved","Đã duyệt"));
-    media.append(badges);
+    if(listing.is_featured)media.append(badges);
 
     const body=el("div","listing-card-body");
     const meta=el("div","listing-card-meta");
