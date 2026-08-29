@@ -35,6 +35,7 @@ jobs:
           python scripts/qa_brand_meta_v10_1.py
           python scripts/qa_legacy_redirects_v10_2.py
           python scripts/qa_public_source_cleanup.py
+          python scripts/qa_marketplace_v1.py
       - name: Validate data and JavaScript syntax
         run: |
           python -m json.tool assets/data/floor-plans.json >/dev/null
@@ -46,3 +47,8 @@ jobs:
           PY
           node --check assets/js/site.js
           node --check assets/js/floor-plan-tower.js
+          node --check assets/js/marketplace-api.js
+          node --check assets/js/marketplace-list.js
+          node --check assets/js/marketplace-form.js
+          node --check assets/js/marketplace-detail.js
+          node --check assets/js/marketplace-admin.js

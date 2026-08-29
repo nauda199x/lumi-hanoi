@@ -16,7 +16,8 @@
     <meta property="og:url" content="https://lumi-hanoi.com/cho-thue-lumi-hanoi/">
     <meta name="twitter:card" content="summary">
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><link rel="stylesheet" href="/assets/css/site.css?v=20260829-type">
-    <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Trang chủ","item":"https://lumi-hanoi.com/"},{"@type":"ListItem","position":2,"name":"Cho thuê Lumi Hanoi","item":"https://lumi-hanoi.com/cho-thue-lumi-hanoi/"}]},{"@type":"WebPage","headline":"Cho thuê Lumi Hanoi","dateModified":"2026-08-19","inLanguage":"vi-VN","mainEntityOfPage":"https://lumi-hanoi.com/cho-thue-lumi-hanoi/","publisher":{"@type":"Organization","name":"Lumi Hanoi","url":"https://lumi-hanoi.com/"}}]}</script>
+    <link rel="stylesheet" href="/assets/css/marketplace.css?v=20260829">
+    <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Trang chủ","item":"https://lumi-hanoi.com/"},{"@type":"ListItem","position":2,"name":"Cho thuê Lumi Hanoi","item":"https://lumi-hanoi.com/cho-thue-lumi-hanoi/"}]},{"@type":"WebPage","headline":"Cho thuê Lumi Hanoi","dateModified":"2026-08-29","inLanguage":"vi-VN","mainEntityOfPage":"https://lumi-hanoi.com/cho-thue-lumi-hanoi/","publisher":{"@type":"Organization","name":"Lumi Hanoi","url":"https://lumi-hanoi.com/"}}]}</script>
   </head>
   <body>
     <a class="skip-link" href="#main">Bỏ qua điều hướng</a>
@@ -45,6 +46,7 @@
             <div class="nav-dropdown-menu nav-dropdown-menu--right">
               <a href="/mua-ban-lumi-hanoi/">Mua bán</a>
               <a href="/cho-thue-lumi-hanoi/" aria-current="page">Cho thuê</a>
+              <a href="/dang-tin-lumi-hanoi/">Đăng tin</a>
             </div>
           </details>
         </nav>
@@ -58,18 +60,29 @@
             <div class="container">
               <p class="eyebrow">Giao dịch Lumi Hanoi</p>
               <h1>Cho thuê Lumi Hanoi</h1>
-              <p class="lead">Trang dành cho các tin cho thuê căn hộ Lumi Hanoi. Hiện chưa có tin đăng; hệ thống nhận và duyệt dữ liệu từ người đăng sẽ được xây dựng ở giai đoạn sau.</p>
+              <p class="lead">Tìm căn cho thuê theo phân khu, tòa, loại căn, nội thất và ngân sách. Mỗi tin chỉ được công khai sau khi quản trị viên duyệt.</p>
+              <div class="hero-actions"><a class="btn btn-primary" href="/dang-tin-lumi-hanoi/#cho-thue">Đăng tin cho thuê</a></div>
             </div>
           </header>
-          <section class="listing-section" aria-labelledby="rent-listing-title">
+          <section class="marketplace-section" aria-labelledby="rent-listing-title" data-marketplace-list data-listing-type="rent">
             <div class="container">
-              <div class="listing-heading">
+              <div class="marketplace-heading">
                 <div><p class="eyebrow">Quỹ căn cho thuê</p><h2 id="rent-listing-title">Căn hộ đang cho thuê</h2></div>
-                <span class="listing-count" aria-label="Số tin đang hiển thị">0 tin đăng</span>
+                <div class="marketplace-actions"><span class="marketplace-count" data-listing-count aria-label="Số tin đang hiển thị">0 tin đăng</span><a class="btn" href="/dang-tin-lumi-hanoi/#cho-thue">+ Đăng tin</a></div>
               </div>
-              <div class="listing-empty" role="status">
-                <span class="listing-empty-mark" aria-hidden="true">0</span>
-                <div><h3>Chưa có tin đăng cho thuê</h3><p>Khu vực này sẽ hiển thị dữ liệu do chủ nhà, môi giới và người dùng gửi lên sau khi hệ thống đăng tin được hoàn thiện.</p></div>
+              <form class="marketplace-toolbar" data-listing-filters aria-label="Lọc căn hộ cho thuê">
+                <div class="field"><label for="rent-keyword">Tìm nhanh</label><input id="rent-keyword" name="keyword" type="search" placeholder="Tên tin, tòa hoặc hướng view"></div>
+                <div class="field"><label for="rent-phase">Phân khu</label><select id="rent-phase" name="phase"><option value="">Tất cả phân khu</option><option>Signature</option><option>Prestige</option><option>Elite</option></select></div>
+                <div class="field"><label for="rent-tower">Tòa</label><select id="rent-tower" name="tower"><option value="">Tất cả tòa</option></select></div>
+                <div class="field"><label for="rent-unit">Loại căn</label><select id="rent-unit" name="bedroom"><option value="">Tất cả loại căn</option><option>1PN</option><option>2PN</option><option>3PN</option><option>4PN</option><option>Duplex</option><option>Penthouse</option></select></div>
+                <div class="field"><label for="rent-price">Giá tối đa</label><select id="rent-price" name="max_price"><option value="">Không giới hạn</option><option value="10000000">Đến 10 triệu</option><option value="15000000">Đến 15 triệu</option><option value="20000000">Đến 20 triệu</option><option value="30000000">Đến 30 triệu</option><option value="50000000">Đến 50 triệu</option></select></div>
+                <button class="btn" type="reset">Xóa lọc</button>
+              </form>
+              <div class="marketplace-skeleton" data-listing-skeleton hidden aria-label="Đang tải tin đăng"><span class="skeleton-card"></span><span class="skeleton-card"></span><span class="skeleton-card"></span></div>
+              <div class="listing-grid" data-listing-grid hidden></div>
+              <div class="marketplace-state" data-listing-state role="status">
+                <span class="marketplace-state-mark" data-state-mark aria-hidden="true">0</span>
+                <div><h3 data-state-title>Chưa có tin đăng cho thuê</h3><p data-state-copy>Các tin được gửi từ chủ nhà và môi giới sẽ xuất hiện sau khi quản trị viên duyệt.</p><div class="hero-actions"><a class="btn" href="/dang-tin-lumi-hanoi/#cho-thue">Đăng tin đầu tiên</a></div></div>
               </div>
             </div>
           </section>
@@ -155,5 +168,8 @@
             </footer>
             <script src="/assets/js/site.js" defer>
             </script>
+            <script src="/assets/js/marketplace-config.js"></script>
+            <script src="/assets/js/marketplace-api.js"></script>
+            <script src="/assets/js/marketplace-list.js" defer></script>
           </body>
         </html>

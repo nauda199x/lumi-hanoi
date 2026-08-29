@@ -21,6 +21,7 @@ IMPORTANT = ["", "tong-quan-lumi-hanoi", "vi-tri-lumi-hanoi", "mat-bang-lumi-han
  "can-ho-4-phong-ngu-lumi-hanoi", "duplex-penthouse-lumi-hanoi", "tin-tuc"]
 COMPETITORS = ("vinhomes.vn", "batdongsan.com.vn", "onehousing.vn")
 PROHIBITED = ("đăng ký ngay", "nhận bảng giá sốc", "chỉ còn ")
+INTENTIONAL_NOINDEX = {Path("admin/index.html"), Path("tin-dang-lumi-hanoi/index.html")}
 
 
 def trusted_drive_ids() -> set[str]:
@@ -91,9 +92,12 @@ def main() -> int:
     html_files=sorted(p for p in ROOT.rglob("*.html") if ".git" not in p.parts)
     for path in html_files:
         text=path.read_text(encoding="utf-8"); parser=PageParser(); parser.feed(text); pages[path]=parser
-        if path.name != "404.html" and parser.noindex: errors.append(f"noindex found: {path.relative_to(ROOT)}")
+        relative=path.relative_to(ROOT)
+        intentional_noindex=relative in INTENTIONAL_NOINDEX
+        if path.name != "404.html" and parser.noindex and not intentional_noindex: errors.append(f"noindex found: {relative}")
+        if intentional_noindex and not parser.noindex: errors.append(f"expected noindex missing: {relative}")
         if parser.legacy_redirect: continue
-        if path.name == "404.html": pass
+        if path.name == "404.html" or intentional_noindex: pass
         elif len(parser.canonicals) != 1: errors.append(f"canonical count {len(parser.canonicals)}: {path.relative_to(ROOT)}")
         elif path.name == "index.html":
             rel=path.parent.relative_to(ROOT).as_posix(); expected=f"https://{HOST}/" + (f"{rel}/" if rel != "." else "")
