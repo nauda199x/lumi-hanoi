@@ -5,6 +5,8 @@
   if(!slug)return;
   const note=root.querySelector("[data-live-status]");
   const contactButtons=[...root.querySelectorAll(".detail-contact a")];
+  const phoneLink=root.querySelector("[data-static-phone]");
+  const zaloLink=root.querySelector("[data-static-zalo]");
 
   const markUnavailable=()=>{
     let robots=document.querySelector('meta[name="robots"]');
@@ -26,7 +28,21 @@
     });
   };
 
+  const hydrateContact=listing=>{
+    const phone=String(listing?.contact_phone||"").trim();
+    const tel=phone.replace(/[^+\d]/g,"");
+    const zalo=phone.replace(/\D/g,"");
+    if(phoneLink){
+      if(tel){phoneLink.href=`tel:${tel}`;phoneLink.textContent=phone;}
+      else{phoneLink.hidden=true;}
+    }
+    if(zaloLink){
+      if(zalo){zaloLink.href=`https://zalo.me/${zalo}`;zaloLink.hidden=false;}
+      else{zaloLink.hidden=true;}
+    }
+  };
+
   window.LumiMarketplace.getPublicListing(slug)
-    .then(listing=>{if(!listing)markUnavailable();})
+    .then(listing=>{if(!listing)markUnavailable();else hydrateContact(listing);})
     .catch(()=>{});
 })();
