@@ -47,13 +47,20 @@
   };
   const liveDetailUrl=listing=>{
     const slug=api.cleanText(listing?.slug,120);
-    return slug?`/tin-dang-lumi-hanoi/?slug=${encodeURIComponent(slug)}`:"/tin-dang-lumi-hanoi/";
+    const route="/tin-dang-lumi-hanoi/";
+    return slug?`${route}?slug=${encodeURIComponent(slug)}`:route;
   };
   const cardFor=listing=>{
     const article=el("article","listing-card");
     const media=el("a","listing-card-media");
-    media.href=liveDetailUrl(listing);
+    media.href=api.listingUrl(listing);
     media.setAttribute("aria-label",`Xem ${listing.title}`);
+    const openLive=event=>{
+      if(event.defaultPrevented||event.button&&event.button!==0||event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;
+      event.preventDefault();
+      location.assign(liveDetailUrl(listing));
+    };
+    media.addEventListener("click",openLive);
     const image=imageFor(listing);
     if(image){
       const img=document.createElement("img");
@@ -74,7 +81,9 @@
     [listing.tower,listing.unit_type,listing.area_sqm?`${Number(listing.area_sqm).toLocaleString("vi-VN")} m²`:null,listing.floor_label].filter(Boolean).forEach(value=>meta.append(el("span","",value)));
     const title=el("h3");
     const link=el("a","",listing.title);
-    link.href=media.href;title.append(link);
+    link.href=media.href;
+    link.addEventListener("click",openLive);
+    title.append(link);
     body.append(price,meta,title);article.append(media,body);
     return article;
   };
