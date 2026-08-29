@@ -107,7 +107,7 @@
 .detail-gallery-track{display:flex;width:100%;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch}
 .detail-gallery-track::-webkit-scrollbar{display:none}
 .detail-gallery-track figure{flex:0 0 100%;width:100%;margin:0;aspect-ratio:16/9;scroll-snap-align:start;scroll-snap-stop:always;background:#eee9df}
-.detail-gallery-track img{display:block;width:100%;height:100%;object-fit:cover}
+.detail-gallery-track img{display:block;width:100%;height:100%;object-fit:contain;background:#f3efe7}
 .detail-gallery-counter{position:absolute;right:14px;bottom:14px;z-index:2;display:inline-flex;min-width:54px;min-height:34px;align-items:center;justify-content:center;padding:4px 10px;border-radius:999px;background:rgba(20,22,20,.78);color:#fff;font:750 .82rem/1 Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.03em}
 .detail-mobile-summary{display:none}
 .detail-copy{margin-top:28px;padding-bottom:24px}
@@ -135,7 +135,7 @@
   .detail-shell--portal>aside{display:none}
   .detail-gallery-wrap{width:100%}
   .detail-gallery-track figure{aspect-ratio:4/3}
-  .detail-gallery-track img{object-fit:cover}
+  .detail-gallery-track img{object-fit:contain;background:#f3efe7}
   .detail-gallery-counter{right:12px;bottom:12px;min-width:52px;min-height:32px;font-size:.78rem}
   .detail-mobile-summary{display:block;padding:18px 20px 15px;border-bottom:1px solid #e5dfd5;background:#f4f5f7}
   .detail-mobile-price{display:flex;align-items:baseline;flex-wrap:wrap;gap:8px 12px}
@@ -170,6 +170,6 @@
   [data-static-listing] .detail-gallery::-webkit-scrollbar{display:none}
   [data-static-listing] .detail-gallery figure{flex:0 0 100%;width:100%;margin:0;aspect-ratio:4/3;scroll-snap-align:start}
   [data-static-listing] .detail-gallery figure:first-child{grid-column:auto;aspect-ratio:4/3}
-  [data-static-listing] .detail-gallery img{width:100%;height:100%;object-fit:cover}
+  [data-static-listing] .detail-gallery img{width:100%;height:100%;object-fit:contain;background:#f3efe7}
   [data-static-listing] .detail-copy{padding:22px 20px 36px}
 }
