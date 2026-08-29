@@ -87,6 +87,16 @@ def is_verified_drive_thumbnail(src: str) -> bool:
     return bool(file_id and file_id in TRUSTED_DRIVE_IDS)
 
 
+def is_marketplace_storage_image(src: str) -> bool:
+    """Allow only the project's public listing-images bucket as first-party media."""
+    parsed = urlparse(src)
+    return (
+        parsed.scheme == "https"
+        and parsed.netloc == "salsyqatlzapnzbcnnsr.supabase.co"
+        and parsed.path.startswith("/storage/v1/object/public/listing-images/")
+    )
+
+
 def main() -> int:
     errors=[]; pages={}
     html_files=sorted(p for p in ROOT.rglob("*.html") if ".git" not in p.parts)
@@ -110,6 +120,7 @@ def main() -> int:
         for img in parser.images:
             src=img.get("src", "")
             verified_drive = is_verified_drive_thumbnail(src)
+            marketplace_storage = is_marketplace_storage_image(src)
             if "alt" not in img: errors.append(f"image missing alt: {path.relative_to(ROOT)} {src}")
             # Verified Drive thumbnails are manifest-gated delivery exceptions.
             # Local media still requires intrinsic dimensions.
@@ -117,7 +128,7 @@ def main() -> int:
                 errors.append(f"image missing dimensions: {path.relative_to(ROOT)} {src}")
             parsed=urlparse(src)
             if parsed.scheme in ("http", "https"):
-                if not verified_drive:
+                if not verified_drive and not marketplace_storage:
                     errors.append(f"external image hotlink: {path.relative_to(ROOT)} {src}")
             elif src:
                 target=ROOT/src.lstrip("/") if src.startswith("/") else path.parent/src
