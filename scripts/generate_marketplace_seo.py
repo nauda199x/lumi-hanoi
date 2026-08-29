@@ -181,7 +181,7 @@ def render_gallery(listing: dict) -> str:
         alt = item.get("alt_text") or f"{listing.get('title')} — ảnh {index + 1}"
         loading = "eager" if index == 0 else "lazy"
         figures.append(
-            f'<figure><img src="{esc(src)}" alt="{esc(alt)}" loading="{loading}" decoding="async"></figure>'
+            f'<figure><img src="{esc(src)}" alt="{esc(alt)}" width="1200" height="900" loading="{loading}" decoding="async"></figure>'
         )
     return '<div class="detail-gallery">' + "".join(figures) + "</div>"
 
