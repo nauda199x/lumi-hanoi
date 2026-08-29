@@ -27,6 +27,7 @@ detail = (ROOT / "tin-dang-lumi-hanoi/index.html").read_text(encoding="utf-8")
 schema = (ROOT / "supabase/marketplace-schema.sql").read_text(encoding="utf-8")
 config = (ROOT / "assets/js/marketplace-config.js").read_text(encoding="utf-8")
 api = (ROOT / "assets/js/marketplace-api.js").read_text(encoding="utf-8")
+admin_js = (ROOT / "assets/js/marketplace-admin.js").read_text(encoding="utf-8")
 
 assert 'data-listing-type="sale"' in sale and 'marketplace-list.js' in sale
 assert 'data-listing-type="rent"' in rent and 'marketplace-list.js' in rent
@@ -44,7 +45,10 @@ assert "grant all on public.admin_users" not in schema, "Authenticated access mu
 assert "alter table public.listings set schema archive" in schema, "Existing empty scaffold must be preserved, not deleted"
 assert "drop table" not in schema.lower(), "Marketplace setup must not destructively drop project tables"
 assert "notify pgrst, 'reload schema'" in schema
+assert "grant select,update,delete on public.listings to authenticated" in schema, "Only authenticated admins may receive table-level DELETE"
 assert 'select:"id,slug,listing_code,listing_type,title,description' in api, "Public detail must use an explicit safe column list"
+assert "deleteListing" in api and 'body:{prefixes:imagePaths}' in api, "Admin deletion must clean Storage objects first"
+assert "Xóa vĩnh viễn" in admin_js and "deleteAndReload" in admin_js, "Admin UI needs a confirmed permanent-delete action"
 assert "service-role" in config.lower() and "supabasePublishableKey" in config
 assert "service_role" not in config
 

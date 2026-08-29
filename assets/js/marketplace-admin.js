@@ -26,6 +26,23 @@
     try{await api.updateListing(id,patch);showDashboardStatus(message);await load();}
     catch(error){showDashboardStatus(`Không cập nhật được: ${error.message}`,true);}
   };
+  const deleteAndReload=async(row,button)=>{
+    const code=row.listing_code||"này";
+    const imageCount=row.listing_images?.length||0;
+    const warning=`Xóa vĩnh viễn tin ${code}?${imageCount?` ${imageCount} ảnh đính kèm cũng sẽ bị xóa.`:""} Hành động này không thể hoàn tác.`;
+    if(!confirm(warning))return;
+    button.disabled=true;
+    showDashboardStatus(`Đang xóa tin ${code}…`);
+    try{
+      const result=await api.deleteListing(row);
+      rows=rows.filter(item=>item.id!==row.id);
+      render();
+      showDashboardStatus(`Đã xóa vĩnh viễn tin ${code}${result.deletedImageCount?` và ${result.deletedImageCount} ảnh`:""}.`);
+    }catch(error){
+      button.disabled=false;
+      showDashboardStatus(`Không xóa được tin: ${error.message}`,true);
+    }
+  };
 
   const itemFor=row=>{
     const currentStatus=effectiveStatus(row);
@@ -47,6 +64,9 @@
     if(currentStatus==="approved")actions.append(action(row.is_featured?"Bỏ ghim":"Ghim đầu", "admin-action--feature",()=>patchAndReload(row.id,{is_featured:!row.is_featured,sort_priority:row.is_featured?0:100},row.is_featured?"Đã bỏ ghim tin.":"Tin đã được ghim ưu tiên.")));
     if(currentStatus==="approved")actions.append(action(row.listing_type==="rent"?"Đã thuê":"Đã bán","",()=>patchAndReload(row.id,{status:row.listing_type==="rent"?"rented":"sold"},"Đã cập nhật trạng thái giao dịch.")));
     if(currentStatus==="approved"){const preview=el("a","admin-action","Mở tin");preview.href=`/tin-dang-lumi-hanoi/?slug=${encodeURIComponent(row.slug)}`;preview.target="_blank";preview.rel="noopener";actions.append(preview);}
+    const deleteButton=action("Xóa vĩnh viễn","admin-action--delete",()=>deleteAndReload(row,deleteButton));
+    deleteButton.setAttribute("aria-label",`Xóa vĩnh viễn tin ${row.listing_code||row.title}`);
+    actions.append(deleteButton);
     article.append(actions);return article;
   };
   const filtered=()=>{

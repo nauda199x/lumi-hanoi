@@ -262,7 +262,7 @@ grant select (id,listing_id,storage_path,sort_order,alt_text,created_at) on publ
 grant insert (listing_id,storage_path,sort_order,alt_text) on public.listing_images to anon;
 grant insert (listing_id,reason,details) on public.listing_reports to anon;
 grant select (user_id,created_at) on public.admin_users to authenticated;
-grant select,update on public.listings to authenticated;
+grant select,update,delete on public.listings to authenticated;
 grant select,update,delete on public.listing_images to authenticated;
 grant select,update on public.listing_reports to authenticated;
 grant usage,select on sequence public.listing_images_id_seq,public.listing_reports_id_seq to anon;
