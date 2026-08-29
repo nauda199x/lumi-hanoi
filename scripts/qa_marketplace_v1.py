@@ -77,6 +77,10 @@ assert '<a class="btn" href="/giao-dich-lumi-hanoi/">Giao dịch</a>' in home
 assert 'href="/mua-ban-lumi-hanoi/"' in transaction_hub
 assert 'href="/cho-thue-lumi-hanoi/"' in transaction_hub
 assert 'href="/dang-tin-lumi-hanoi/"' in transaction_hub
+assert '<h2><a class="transaction-path-link" href="/mua-ban-lumi-hanoi/">Tìm căn để mua</a></h2>' in transaction_hub
+assert '<h2><a class="transaction-path-link" href="/cho-thue-lumi-hanoi/">Tìm căn để thuê</a></h2>' in transaction_hub
+assert "Anh/chị đang muốn mua hay thuê?" in transaction_hub and "Anh đang muốn mua hay thuê?" not in transaction_hub
+assert "hoặc anh/chị không có quyền xóa" in api and "hoặc anh không có quyền xóa" not in api
 assert "Cẩm nang giao dịch" not in home
 assert "overviewLink.after(transactionDropdown)" in site_js, "Every legacy page must prioritize the transaction dropdown after Overview"
 
