@@ -48,6 +48,8 @@ seo_workflow = (ROOT / ".github/workflows/sync-marketplace-seo.yml").read_text(e
 
 assert 'data-listing-type="sale"' in sale and 'marketplace-list.js' in sale
 assert 'data-listing-type="rent"' in rent and 'marketplace-list.js' in rent
+assert 'Đang tải…' in sale and 'Đang tải…' in rent, "Hub HTML must not claim zero listings before client data loads"
+assert 'data-empty-benefits' in sale and 'data-empty-benefits' in rent, "Empty states should explain the real posting benefits"
 assert 'data-marketplace-submit' in submit and 'name="contact_public"' in submit
 assert 'name="website"' in submit, "Submission form needs a honeypot"
 assert all('Shop chân đế' in page for page in (submit, sale, rent, admin)), "Shop listings must work in form, filters and admin"
@@ -56,6 +58,12 @@ for removed_name in ("unit_code", "direction", "view_text", "poster_type", "cont
     assert f'name="{removed_name}"' not in submit, f"Submission form must not collect {removed_name}"
     assert f'value("{removed_name}")' not in form_js, f"Submission payload must not send {removed_name}"
 assert 'Số điện thoại (Zalo) *' in submit
+assert 'data-form-progress' in submit and submit.count('data-form-step=') == 4, "Submission form needs a four-step progress indicator"
+assert 'data-mobile-submit' in submit, "Submission form needs a mobile sticky submit action"
+assert 'data-phone-help' in submit, "Phone input needs realtime validation help"
+assert 'lumi-marketplace-draft-v2' in form_js and 'localStorage.setItem' in form_js and 'restoreDraft' in form_js, "Submission form must autosave and restore a local draft"
+assert 'visualViewport' in form_js and 'is-keyboard' in form_js, "Mobile sticky CTA must avoid the on-screen keyboard"
+assert 'Đang tối ưu ảnh' in form_js and 'isSubmitting' in form_js, "Submission needs visible upload progress and duplicate-submit protection"
 assert 'data-legal-field' in submit and '.field[hidden]{display:none}' in market_css, "Rental legal status must really stay hidden"
 assert 'data-marketplace-admin' in admin and 'noindex,nofollow' in admin
 assert 'data-listing-detail' in detail and 'noindex,follow' in detail
