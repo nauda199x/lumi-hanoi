@@ -55,6 +55,8 @@ assert 'listing.contact_zalo' not in detail_js, "Public Zalo link must reuse the
 assert "enable row level security" in schema.lower()
 assert "listings_anon_submit_pending" in schema and "listings_admin_manage" in schema
 assert "can_upload_pending_image" in schema, "Storage uploads must belong to a pending listing"
+assert "create or replace function private.is_public_listing" in schema, "Public image RLS needs a private visibility helper"
+assert "using (private.is_public_listing(listing_id))" in schema, "Image reads must not require broad listings table access"
 assert "revoke all on public.admin_users,public.listings" in schema
 assert "create or replace function private.is_admin" in schema
 assert "create or replace function public.is_admin" not in schema, "SECURITY DEFINER helpers must not live in an exposed schema"
