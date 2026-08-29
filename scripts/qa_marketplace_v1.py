@@ -59,7 +59,8 @@ assert 'Số điện thoại (Zalo) *' in submit
 assert 'data-legal-field' in submit and '.field[hidden]{display:none}' in market_css, "Rental legal status must really stay hidden"
 assert 'data-marketplace-admin' in admin and 'noindex,nofollow' in admin
 assert 'data-listing-detail' in detail and 'noindex,follow' in detail
-assert 'data-detail-direction' not in detail and 'data-detail-poster' not in detail
+assert 'data-detail-direction' not in detail
+assert 'data-detail-poster' in detail and 'poster_name' in detail_js, "Approved listing detail must show the poster name entered in the form"
 assert 'listing.contact_zalo' not in detail_js, "Public Zalo link must reuse the contact phone"
 assert "enable row level security" in schema.lower()
 assert "listings_anon_submit_pending" in schema and "listings_admin_manage" in schema
