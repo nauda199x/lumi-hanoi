@@ -48,7 +48,7 @@ seo_workflow = (ROOT / ".github/workflows/sync-marketplace-seo.yml").read_text(e
 
 assert 'data-listing-type="sale"' in sale and 'marketplace-list.js' in sale
 assert 'data-listing-type="rent"' in rent and 'marketplace-list.js' in rent
-assert 'Đang tải…' in sale and 'Đang tải…' in rent, "Hub HTML must not claim zero listings before client data loads"
+assert all(('Đang tải…' in page) or ('MARKETPLACE-STATIC-LISTINGS:START' in page) for page in (sale, rent)), "Hub HTML must show loading copy or prerendered listing data"
 assert 'data-empty-benefits' in sale and 'data-empty-benefits' in rent, "Empty states should explain the real posting benefits"
 assert 'data-marketplace-submit' in submit and 'name="contact_public"' in submit
 assert 'name="website"' in submit, "Submission form needs a honeypot"
