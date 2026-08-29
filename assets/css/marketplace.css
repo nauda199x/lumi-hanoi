@@ -180,3 +180,105 @@
 .detail-gallery-track:focus-visible{outline:2px solid var(--bronze-dark);outline-offset:-2px}
 @media(max-width:760px){.detail-gallery-nav{display:none}}
 @media(prefers-reduced-motion:reduce){.detail-gallery-track{scroll-behavior:auto}.detail-gallery-nav{transition:none}}
+
+
+/* MARKETPLACE LIST SUPER UX 2026-08-29 */
+.marketplace-section{background:#f3efe6}
+.marketplace-heading{margin-bottom:22px}
+.marketplace-heading h2{letter-spacing:-.035em}
+.marketplace-toolbar{position:sticky;top:78px;z-index:25;grid-template-columns:minmax(190px,1.45fr) repeat(6,minmax(112px,.72fr)) auto;gap:9px;margin-bottom:22px;padding:12px;border:1px solid #d9d1c4;border-radius:14px;background:rgba(251,249,244,.97);box-shadow:0 10px 32px rgba(33,31,26,.08);backdrop-filter:blur(14px)}
+.marketplace-toolbar .field{gap:5px}.marketplace-toolbar .field label{padding-left:2px;font-size:.67rem}.marketplace-toolbar .field input,.marketplace-toolbar .field select{min-height:46px;border-color:#d8d0c4;border-radius:9px;background:#fff;font-size:.9rem}.marketplace-toolbar>.btn{min-height:46px;border-radius:9px}
+.marketplace-mobile-controls,.marketplace-filter-sheet-head,.marketplace-filter-apply,.marketplace-filter-backdrop{display:none}
+
+.listing-grid{display:grid;grid-template-columns:1fr;gap:18px}
+.listing-card--marketplace{display:grid;grid-template-columns:minmax(360px,.96fr) minmax(0,1.22fr);min-height:320px;overflow:hidden;border:1px solid #ded7cc;border-radius:18px;background:#fff;box-shadow:0 9px 30px rgba(31,31,27,.055);transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease}
+.listing-card--marketplace:hover{transform:translateY(-2px);border-color:#c9bcaa;box-shadow:0 18px 44px rgba(31,31,27,.095)}
+.listing-card--marketplace.is-featured{border-color:#c8ac84;box-shadow:0 14px 38px rgba(126,91,49,.10)}
+.listing-card--marketplace .listing-card-media{position:relative;min-height:320px;aspect-ratio:auto;overflow:hidden;background:#e7e0d4}
+.listing-card-gallery-track{display:grid;width:100%;height:100%;grid-template-columns:minmax(0,2fr) minmax(118px,1fr);grid-template-rows:1fr 1fr;gap:2px;background:#fff}
+.listing-card-slide{position:relative;display:block;min-width:0;min-height:0;overflow:hidden;background:#e6ded1}
+.listing-card-slide:first-child{grid-row:1/3}
+.listing-card-slide:nth-child(n+4){display:none}
+.listing-card-slide:only-child{grid-column:1/-1;grid-row:1/3}
+.listing-card-gallery-track:has(.listing-card-slide:nth-child(2):last-child) .listing-card-slide:nth-child(2){grid-row:1/3}
+.listing-card-slide img{display:block;width:100%;height:100%;object-fit:cover;transition:transform .38s ease}
+.listing-card--marketplace:hover .listing-card-slide:first-child img{transform:scale(1.018)}
+.listing-card-image-count{position:absolute;right:12px;bottom:12px;z-index:4;padding:6px 9px;border-radius:999px;background:rgba(21,23,21,.78);color:#fff;font:750 .72rem/1 Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;backdrop-filter:blur(5px)}
+.listing-card--marketplace .listing-badges{top:12px;left:12px;right:auto}
+.listing-card--marketplace .listing-badge{border-radius:999px;padding:5px 9px;background:#a87a46;box-shadow:0 5px 14px rgba(0,0,0,.12)}
+
+.listing-card--marketplace .listing-card-body{display:flex;min-width:0;flex-direction:column;padding:0}
+.listing-card-content{padding:24px 26px 18px}
+.listing-card--marketplace h3{min-height:0;margin:0 0 15px;font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:clamp(1.18rem,1.7vw,1.5rem);font-weight:820;line-height:1.34;letter-spacing:-.018em}
+.listing-card--marketplace h3 a{text-decoration:none}
+.listing-card--marketplace h3 a:hover{text-decoration:underline;text-underline-offset:3px}
+.listing-card-facts{display:flex;align-items:center;flex-wrap:wrap;gap:7px 0;margin-bottom:14px;color:#575a56;font:700 .9rem/1.3 Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-variant-numeric:tabular-nums}
+.listing-card-facts>*{display:inline-flex;align-items:center}
+.listing-card-facts>*+*:before{content:"·";margin:0 9px;color:#b0aaa1;font-weight:500}
+.listing-card-fact-price{color:#8b6134;font-size:1.18rem;font-weight:850}
+.listing-card-location{display:flex;align-items:center;gap:7px;margin-bottom:13px;color:#676a65;font-size:.87rem;font-weight:650}
+.listing-card-location-mark{font-size:1.05rem;color:#8b6134}
+.listing-card-description{display:-webkit-box;overflow:hidden;margin:0;color:#676863;font-size:.91rem;line-height:1.62;-webkit-line-clamp:3;-webkit-box-orient:vertical}
+.listing-card-footer{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-top:auto;padding:15px 20px 16px 26px;border-top:1px solid #ece7df;background:#fdfcf9}
+.listing-card-poster{display:flex;min-width:0;align-items:center;gap:10px}
+.listing-card-avatar{display:grid;flex:0 0 38px;width:38px;height:38px;place-items:center;border-radius:50%;background:#eee4d6;color:#735737;font:800 .72rem/1 Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.listing-card-poster-text{display:grid;min-width:0;gap:2px}.listing-card-poster-text strong{overflow:hidden;font-size:.84rem;white-space:nowrap;text-overflow:ellipsis}.listing-card-poster-text small{color:#8a8a85;font-size:.75rem}
+.listing-card-actions{display:flex;align-items:center;justify-content:flex-end;gap:7px}
+.listing-card-action{display:inline-flex;min-height:38px;align-items:center;justify-content:center;padding:7px 12px;border:1px solid #d8d0c5;border-radius:9px;background:#fff;color:#292b28;font-size:.78rem;font-weight:800;text-decoration:none;white-space:nowrap;transition:transform .16s ease,background .16s ease,border-color .16s ease}
+.listing-card-action:hover{transform:translateY(-1px);border-color:#a89478}
+.listing-card-action--call{border-color:#183a35;background:#183a35;color:#fff}
+.listing-card-action--zalo{border-color:#b8c9cf;color:#1966a7}
+.listing-card-action--view{background:#f3ede3}
+.marketplace-skeleton{grid-template-columns:1fr;gap:18px}.skeleton-card{height:320px;border-radius:18px}
+.marketplace-load-more{display:flex;align-items:center;justify-content:center;gap:16px;margin-top:24px;padding-top:18px;border-top:1px solid #ddd5c9}
+.marketplace-load-more[hidden]{display:none}.marketplace-load-more-status{color:#777770;font-size:.82rem}.marketplace-load-more .btn{min-width:180px;border-radius:999px}
+
+@media(max-width:1120px) and (min-width:701px){
+  .marketplace-toolbar{grid-template-columns:minmax(180px,1.3fr) repeat(3,minmax(125px,1fr));top:74px}
+  .marketplace-toolbar .field:nth-of-type(n+5),.marketplace-toolbar>.btn{grid-row:2}
+  .listing-card--marketplace{grid-template-columns:minmax(310px,.9fr) minmax(0,1.1fr)}
+  .listing-card-actions .listing-card-action--view{display:none}
+}
+
+@media(max-width:700px){
+  body.marketplace-filter-open{overflow:hidden}
+  .marketplace-section{padding:1.9rem 0 3.2rem;background:#f4f1ea}
+  .marketplace-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:14px}
+  .marketplace-heading>div{min-width:0}.marketplace-heading .eyebrow{font-size:.66rem}.marketplace-heading h2{font-size:clamp(1.85rem,8.5vw,2.45rem);line-height:1}
+  .marketplace-actions{display:flex;flex:0 0 auto;margin-top:0}.marketplace-actions .marketplace-count{display:none}.marketplace-actions .btn{min-height:42px;padding:8px 11px;font-size:.78rem}
+  .marketplace-mobile-controls{position:sticky;top:70px;z-index:38;display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 14px;padding:8px;border:1px solid #ddd5c9;border-radius:12px;background:rgba(251,249,244,.97);box-shadow:0 8px 24px rgba(33,31,26,.08);backdrop-filter:blur(12px)}
+  .marketplace-mobile-filter,.marketplace-mobile-sort{min-height:44px;width:100%;padding:8px 11px;border:1px solid #d7cfc3;border-radius:9px;background:#fff;color:#272925;font:800 .85rem/1 Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+  .marketplace-mobile-filter{text-align:left}
+  .marketplace-toolbar{position:fixed;left:0;right:0;bottom:0;top:auto;z-index:100;display:grid;grid-template-columns:1fr;gap:11px;max-height:84dvh;margin:0;padding:16px 16px calc(18px + env(safe-area-inset-bottom));overflow:auto;border:0;border-radius:20px 20px 0 0;background:#fbfaf7;box-shadow:0 -18px 50px rgba(0,0,0,.2);transform:translateY(105%);transition:transform .24s ease}
+  .marketplace-toolbar.is-mobile-open{transform:none}
+  .marketplace-toolbar .field{display:grid;grid-row:auto!important}.marketplace-toolbar .field label{font-size:.72rem}.marketplace-toolbar .field input,.marketplace-toolbar .field select{min-height:50px;font-size:16px}
+  .marketplace-toolbar .field--sort{display:none}
+  .marketplace-toolbar>.btn[type="reset"]{width:100%;min-height:48px}
+  .marketplace-filter-sheet-head{position:sticky;top:-16px;z-index:2;display:flex;align-items:center;justify-content:space-between;margin:-16px -16px 4px;padding:16px;border-bottom:1px solid #e4ded5;background:#fbfaf7}.marketplace-filter-sheet-head strong{font-size:1.05rem}
+  .marketplace-filter-close{display:grid;width:38px;height:38px;place-items:center;border:1px solid #d8d0c5;border-radius:50%;background:#fff;font-size:1.5rem;line-height:1}
+  .marketplace-filter-apply{display:flex;width:100%;min-height:52px;align-items:center;justify-content:center;border-radius:999px}
+  .marketplace-filter-backdrop{position:fixed;inset:0;z-index:90;display:block;border:0;background:rgba(0,0,0,.38);opacity:0;pointer-events:none;transition:opacity .2s ease}.marketplace-filter-backdrop.is-visible{opacity:1;pointer-events:auto}
+
+  .listing-grid{grid-template-columns:1fr;gap:15px}
+  .listing-card--marketplace{display:block;min-height:0;border-radius:16px;box-shadow:0 7px 24px rgba(31,31,27,.07)}
+  .listing-card--marketplace:hover{transform:none}
+  .listing-card--marketplace .listing-card-media{min-height:0;aspect-ratio:4/3}
+  .listing-card-gallery-track{display:flex;width:100%;height:100%;gap:0;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .listing-card-gallery-track::-webkit-scrollbar{display:none}
+  .listing-card-slide,.listing-card-slide:first-child,.listing-card-slide:nth-child(n+4),.listing-card-gallery-track:has(.listing-card-slide:nth-child(2):last-child) .listing-card-slide:nth-child(2){display:block;flex:0 0 100%;width:100%;height:100%;grid-row:auto;scroll-snap-align:start;scroll-snap-stop:always}
+  .listing-card-slide img{object-fit:cover}
+  .listing-card-image-count{right:10px;bottom:10px;font-size:.68rem}
+  .listing-card--marketplace .listing-badge{font-size:.65rem}
+  .listing-card-content{padding:16px 16px 13px}
+  .listing-card--marketplace h3{margin-bottom:11px;font-size:1.08rem;line-height:1.38}
+  .listing-card-facts{gap:5px 0;margin-bottom:11px;font-size:.82rem}.listing-card-facts>*+*:before{margin:0 7px}.listing-card-fact-price{font-size:1.08rem}
+  .listing-card-location{margin-bottom:10px;font-size:.79rem}
+  .listing-card-description{font-size:.85rem;line-height:1.55;-webkit-line-clamp:2}
+  .listing-card-footer{display:grid;grid-template-columns:1fr;gap:11px;padding:12px 14px 14px}
+  .listing-card-avatar{flex-basis:34px;width:34px;height:34px}.listing-card-poster-text strong{font-size:.8rem}.listing-card-poster-text small{font-size:.72rem}
+  .listing-card-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+  .listing-card-action{min-height:42px;padding:7px 8px;border-radius:10px;font-size:.76rem}
+  .marketplace-skeleton{grid-template-columns:1fr}.skeleton-card{height:430px;border-radius:16px}
+  .marketplace-load-more{display:grid;justify-items:center;gap:10px;margin-top:18px}.marketplace-load-more .btn{width:100%;min-height:48px}
+}
+@media(prefers-reduced-motion:reduce){.marketplace-toolbar,.marketplace-filter-backdrop,.listing-card--marketplace,.listing-card-action,.listing-card-slide img{transition:none}}
