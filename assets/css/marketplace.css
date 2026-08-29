@@ -168,3 +168,15 @@
   [data-static-listing] .detail-shell>aside{display:none}
   [data-static-listing] .detail-copy{padding:22px 20px 36px}
 }
+
+
+/* DESKTOP GALLERY NAV 2026-08-29 */
+.detail-gallery-track{scroll-behavior:smooth}
+.detail-gallery-nav{position:absolute;top:50%;z-index:4;display:grid;width:48px;height:48px;place-items:center;transform:translateY(-50%);border:1px solid rgba(255,255,255,.7);border-radius:50%;background:rgba(20,22,20,.72);color:#fff;font:500 2.2rem/1 Georgia,"Times New Roman",serif;cursor:pointer;box-shadow:0 8px 24px rgba(0,0,0,.16);transition:background .18s ease,opacity .18s ease,transform .18s ease}
+.detail-gallery-nav:hover{background:rgba(20,22,20,.9);transform:translateY(-50%) scale(1.04)}
+.detail-gallery-nav:focus-visible{outline:3px solid #fff;outline-offset:3px}
+.detail-gallery-nav--prev{left:14px}.detail-gallery-nav--next{right:14px}
+.detail-gallery-nav:disabled{opacity:.28;cursor:default;pointer-events:none}
+.detail-gallery-track:focus-visible{outline:2px solid var(--bronze-dark);outline-offset:-2px}
+@media(max-width:760px){.detail-gallery-nav{display:none}}
+@media(prefers-reduced-motion:reduce){.detail-gallery-track{scroll-behavior:auto}.detail-gallery-nav{transition:none}}
