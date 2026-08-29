@@ -1,7 +1,44 @@
 -- Lumi Hanoi Marketplace V1
 -- Run in a dedicated Supabase project. This schema never exposes pending posts.
 
+begin;
+
 create extension if not exists pgcrypto;
+
+-- Preserve the empty Auth/listings scaffold created during initial project setup.
+-- Moving it to a non-exposed schema avoids destructive deletion and frees the
+-- public.listings name for the marketplace contract used by the website.
+create schema if not exists archive;
+revoke all on schema archive from public;
+
+do $$
+begin
+  if to_regclass('public.listings') is not null
+    and exists (
+      select 1
+      from information_schema.columns
+      where table_schema = 'public'
+        and table_name = 'listings'
+        and column_name = 'moderation'
+    )
+    and not exists (
+      select 1
+      from information_schema.columns
+      where table_schema = 'public'
+        and table_name = 'listings'
+        and column_name = 'listing_code'
+    )
+  then
+    if to_regclass('archive.listings_auth_scaffold') is not null then
+      raise exception 'archive.listings_auth_scaffold already exists';
+    end if;
+    alter table public.listings set schema archive;
+    alter table archive.listings rename to listings_auth_scaffold;
+  end if;
+end;
+$$;
+
+drop function if exists public.admin_update_listing(uuid,text,text);
 
 create schema if not exists private;
 revoke all on schema private from public;
@@ -236,6 +273,12 @@ on conflict (id) do update set public = excluded.public,file_size_limit = exclud
 
 drop policy if exists listing_images_storage_public_read on storage.objects;
 
+-- Remove policies belonging to the preserved Auth scaffold. The marketplace
+-- uses anonymous pending uploads plus admin-only moderation instead.
+drop policy if exists listing_images_insert_own_folder on storage.objects;
+drop policy if exists listing_images_update_own_folder on storage.objects;
+drop policy if exists listing_images_delete_own_or_admin on storage.objects;
+
 drop policy if exists listing_images_storage_anon_upload on storage.objects;
 create policy listing_images_storage_anon_upload on storage.objects for insert to anon
 with check (
@@ -254,6 +297,10 @@ drop function if exists public.is_admin();
 drop function if exists public.can_attach_pending(uuid);
 drop function if exists public.can_upload_pending_image(text);
 drop function if exists public.set_updated_at();
+
+notify pgrst, 'reload schema';
+
+commit;
 
 -- After creating the admin in Authentication, grant access with:
 -- insert into public.admin_users(user_id)
