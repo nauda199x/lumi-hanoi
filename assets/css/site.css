@@ -500,3 +500,31 @@ h3{font-weight:600;line-height:1.2;letter-spacing:-.02em}
   .news-hub>h2{font-size:clamp(2rem,9vw,2.6rem)}
   .news-hub .card h3{font-size:1.5rem}
 }
+
+/* V12 progress archive: crawlable month-by-month construction timeline. */
+.progress-month-nav{margin:3rem 0 4rem;padding:1.15rem 0;border-block:1px solid var(--line)}
+.progress-month-nav>strong{display:block;margin-bottom:.8rem;font-size:.8rem;letter-spacing:.08em;text-transform:uppercase}
+.progress-month-nav>div{display:flex;flex-wrap:wrap;gap:.55rem}
+.article .progress-month-nav a{padding:.5rem .8rem;border:1px solid var(--line);background:var(--paper);font-size:.82rem;font-weight:700;text-decoration:none}
+.article .progress-month-nav a:hover{border-color:var(--bronze-dark);color:var(--bronze-dark)}
+.progress-entry{scroll-margin-top:105px;margin:0;border-top:1px solid var(--line);background:var(--paper)}
+.progress-entry:last-of-type{border-bottom:1px solid var(--line)}
+.progress-entry summary{position:relative;display:grid;grid-template-columns:100px minmax(0,1fr);gap:1.25rem;align-items:start;padding:1.35rem 3rem 1.35rem 0;cursor:pointer;list-style:none}
+.progress-entry summary::-webkit-details-marker{display:none}
+.progress-entry summary:after{content:"+";position:absolute;top:1.1rem;right:.4rem;color:var(--bronze-dark);font:500 1.8rem/1 var(--font-display)}
+.progress-entry[open] summary:after{content:"−"}
+.progress-entry summary>span:last-child{display:grid;gap:.25rem}
+.progress-entry summary strong{font-size:1.05rem;line-height:1.45}
+.progress-entry summary small{color:var(--muted);font-size:.82rem;line-height:1.5}
+.progress-date{padding-top:.14rem;color:var(--bronze-dark);font-size:.76rem;font-weight:800;letter-spacing:.1em}
+.progress-entry-body{padding:0 0 2rem 121px}
+.progress-entry-body>p:first-child{margin-top:.25rem}
+.progress-entry-body .media-gallery{margin-bottom:.5rem}
+.progress-entry-body table{margin-bottom:.5rem}
+@media(max-width:700px){
+  .progress-month-nav{margin-block:2.25rem 3rem}
+  .progress-entry summary{grid-template-columns:72px minmax(0,1fr);gap:.75rem;padding-right:2.25rem}
+  .progress-entry summary:after{right:.1rem}
+  .progress-entry-body{padding:0 0 1.6rem}
+  .progress-entry-body>p:first-child{margin-top:0}
+}
