@@ -183,7 +183,7 @@
     const deleted=await request(restPath("listings",{id:`eq.${id}`}),{
       method:"DELETE",token:session.access_token,headers:{Prefer:"return=representation"}
     });
-    if(!Array.isArray(deleted)||deleted.length!==1)throw new MarketplaceError("Tin không còn tồn tại hoặc anh không có quyền xóa.",404);
+    if(!Array.isArray(deleted)||deleted.length!==1)throw new MarketplaceError("Tin không còn tồn tại hoặc anh/chị không có quyền xóa.",404);
     return {id,deletedImageCount:imagePaths.length};
   };
 
