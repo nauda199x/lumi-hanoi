@@ -103,7 +103,7 @@ def main() -> int:
     for path in html_files:
         text=path.read_text(encoding="utf-8"); parser=PageParser(); parser.feed(text); pages[path]=parser
         relative=path.relative_to(ROOT)
-        intentional_noindex=relative in INTENTIONAL_NOINDEX
+        intentional_noindex=relative in INTENTIONAL_NOINDEX or (path.parent / ".marketplace-generated").is_file()
         if path.name != "404.html" and parser.noindex and not intentional_noindex: errors.append(f"noindex found: {relative}")
         if intentional_noindex and not parser.noindex: errors.append(f"expected noindex missing: {relative}")
         if parser.legacy_redirect: continue
