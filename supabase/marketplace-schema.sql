@@ -178,6 +178,30 @@ $$;
 revoke all on function private.can_attach_pending(uuid) from public, anon, authenticated;
 grant execute on function private.can_attach_pending(uuid) to anon, authenticated;
 
+-- Keep private listing columns unavailable to anonymous visitors while still
+-- allowing image RLS to verify that its parent listing is public. A direct
+-- subquery from the image policy would require table-level SELECT on listings,
+-- which would defeat the column-level grants below.
+create or replace function private.is_public_listing(target_listing_id uuid)
+returns boolean
+language sql
+stable
+security definer
+set search_path = ''
+as $$
+  select exists(
+    select 1
+    from public.listings
+    where id = target_listing_id
+      and status = 'approved'
+      and contact_public
+      and (expires_at is null or expires_at > now())
+  );
+$$;
+
+revoke all on function private.is_public_listing(uuid) from public, anon, authenticated;
+grant execute on function private.is_public_listing(uuid) to anon;
+
 create or replace function private.can_upload_pending_image(object_name text)
 returns boolean
 language plpgsql
@@ -236,7 +260,7 @@ with check ((select private.is_admin()));
 
 drop policy if exists listing_images_public_read on public.listing_images;
 create policy listing_images_public_read on public.listing_images for select to anon
-using (exists(select 1 from public.listings l where l.id = listing_id and l.status = 'approved' and l.contact_public and (l.expires_at is null or l.expires_at > now())));
+using (private.is_public_listing(listing_id));
 
 drop policy if exists listing_images_anon_insert on public.listing_images;
 create policy listing_images_anon_insert on public.listing_images for insert to anon
