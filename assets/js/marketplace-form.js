@@ -9,6 +9,8 @@
   const phase=form.querySelector('[name="phase"]');
   const tower=form.querySelector('[name="tower"]');
   const priceLabel=form.querySelector("[data-price-label]");
+  const priceInput=form.querySelector("[data-price-input]");
+  const priceHelp=form.querySelector("[data-price-help]");
   const availableField=form.querySelector("[data-available-field]");
   const availableLabel=form.querySelector("[data-available-label]");
   const availableInput=form.elements.available_from;
@@ -27,7 +29,9 @@
   const listingType=()=>form.querySelector('[name="listing_type"]:checked')?.value||"sale";
   const refreshType=()=>{
     const rent=listingType()==="rent";
-    if(priceLabel)priceLabel.textContent=rent?"Giá thuê mỗi tháng (đồng)":"Giá bán mong muốn (đồng)";
+    if(priceLabel)priceLabel.textContent=rent?"Giá cho thuê (triệu/tháng) *":"Giá bán mong muốn (tỷ) *";
+    if(priceInput){priceInput.placeholder=rent?"Ví dụ: 10 triệu/tháng":"Ví dụ: 3,5 tỷ";priceInput.value="";}
+    if(priceHelp)priceHelp.textContent=rent?"Nhập theo triệu đồng/tháng, ví dụ 10 hoặc 10,5.":"Nhập theo tỷ đồng, ví dụ 3,5 hoặc 6,8.";
     if(availableLabel)availableLabel.textContent="Ngày có thể vào ở";
     if(availableField)availableField.hidden=!rent;
     if(availableInput)availableInput.disabled=!rent;
@@ -129,6 +133,13 @@
     return form.querySelector(`label[for="${CSS.escape(element.id)}"]`)?.textContent?.replace(/\s*\*\s*$/,"").trim()||"thông tin bắt buộc";
   };
   const validateFormFields=()=>{
+    const parsedPrice=priceVnd();
+    if(!parsedPrice){
+      showStatus(listingType()==="rent"?"Vui lòng nhập giá thuê theo triệu/tháng, ví dụ 10 hoặc 10,5.":"Vui lòng nhập giá bán theo tỷ, ví dụ 3,5 hoặc 6,8.","error");
+      try{priceInput?.focus({preventScroll:true});}catch{}
+      priceInput?.scrollIntoView({behavior:"smooth",block:"center"});
+      return false;
+    }
     const invalid=[...form.elements].find(element=>!element.disabled&&element!==filesInput&&typeof element.checkValidity==="function"&&!element.checkValidity());
     if(!invalid)return true;
     showStatus(`Vui lòng kiểm tra lại mục “${fieldLabel(invalid)}”.`,"error");
@@ -137,9 +148,23 @@
     return false;
   };
   const value=name=>api.cleanText(form.elements[name]?.value||"",name==="description"?3000:300);
+  const parseLocalizedNumber=raw=>{
+    const normalized=String(raw||"").trim().toLowerCase()
+      .replace(/tỷ|ty|triệu|trieu|\/tháng|\/thang|tháng|thang|đồng|dong|vnđ|vnd|đ/g,"")
+      .replace(/\s+/g,"")
+      .replace(",",".");
+    if(!/^\d+(?:\.\d+)?$/.test(normalized))return null;
+    const parsed=Number(normalized);
+    return Number.isFinite(parsed)&&parsed>0?parsed:null;
+  };
   const numeric=name=>{
     const parsed=Number(form.elements[name]?.value||0);
     return Number.isFinite(parsed)&&parsed>0?parsed:null;
+  };
+  const priceVnd=()=>{
+    const amount=parseLocalizedNumber(form.elements.price_vnd?.value);
+    if(!amount)return null;
+    return Math.round(amount*(listingType()==="rent"?1_000_000:1_000_000_000));
   };
   const payload=()=>{
     const unitType=value("unit_type");
@@ -147,12 +172,17 @@
     return {
       listing_type:listingType(),poster_name:value("poster_name"),contact_phone:value("contact_phone"),
       phase:value("phase"),tower:value("tower"),unit_type:unitType,bedroom_count:bedroomMatch?Number(bedroomMatch[1]):null,area_sqm:numeric("area_sqm"),floor_label:value("floor_label")||null,
-      price_vnd:numeric("price_vnd"),furnishing:value("furnishing")||null,available_from:listingType()==="rent"?(value("available_from")||null):null,legal_status:listingType()==="sale"?(value("legal_status")||null):null,
+      price_vnd:priceVnd(),furnishing:value("furnishing")||null,available_from:listingType()==="rent"?(value("available_from")||null):null,legal_status:listingType()==="sale"?(value("legal_status")||null):null,
       title:value("title"),description:value("description"),contact_public:Boolean(form.elements.contact_public?.checked)
     };
   };
 
-  form.addEventListener("change",event=>{
+  priceInput?.addEventListener("input",()=>{
+    const raw=priceInput.value;
+    const cleaned=raw.replace(/[^0-9,.\sA-Za-zÀ-ỹ/]/g,"");
+    if(cleaned!==raw)priceInput.value=cleaned;
+  });
+    form.addEventListener("change",event=>{
     if(event.target.name==="listing_type")refreshType();
     if(event.target===phase)refreshTowers();
     if(event.target===filesInput)renderPreviews();
