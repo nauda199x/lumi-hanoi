@@ -5,6 +5,7 @@
   if(!slug)return;
   const note=root.querySelector("[data-live-status]");
   const contactButtons=[...root.querySelectorAll(".detail-contact a")];
+  const posterNode=root.querySelector("[data-static-poster] strong");
   const phoneLink=root.querySelector("[data-static-phone]");
   const zaloLink=root.querySelector("[data-static-zalo]");
 
@@ -29,6 +30,8 @@
   };
 
   const hydrateContact=listing=>{
+    const poster=String(listing?.poster_name||"").trim();
+    if(posterNode&&poster)posterNode.textContent=poster;
     const phone=String(listing?.contact_phone||"").trim();
     const tel=phone.replace(/[^+\d]/g,"");
     const zalo=phone.replace(/\D/g,"");
