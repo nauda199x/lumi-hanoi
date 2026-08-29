@@ -41,6 +41,9 @@ assert "revoke all on public.admin_users,public.listings" in schema
 assert "create or replace function private.is_admin" in schema
 assert "create or replace function public.is_admin" not in schema, "SECURITY DEFINER helpers must not live in an exposed schema"
 assert "grant all on public.admin_users" not in schema, "Authenticated access must use least privilege"
+assert "alter table public.listings set schema archive" in schema, "Existing empty scaffold must be preserved, not deleted"
+assert "drop table" not in schema.lower(), "Marketplace setup must not destructively drop project tables"
+assert "notify pgrst, 'reload schema'" in schema
 assert 'select:"id,slug,listing_code,listing_type,title,description' in api, "Public detail must use an explicit safe column list"
 assert "service-role" in config.lower() and "supabasePublishableKey" in config
 assert "service_role" not in config
