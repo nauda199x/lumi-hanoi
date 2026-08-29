@@ -161,8 +161,8 @@ def indexable(listing: dict) -> bool:
     images = listing.get("listing_images") or []
     return all(
         [
-            len(compact_text(listing.get("title", ""))) >= 20,
-            len(compact_text(listing.get("description", ""))) >= 120,
+            len(compact_text(listing.get("title", ""))) >= 12,
+            len(compact_text(listing.get("description", ""))) >= 40,
             bool(images),
             bool(listing.get("price_vnd")),
             bool(listing.get("area_sqm")),
