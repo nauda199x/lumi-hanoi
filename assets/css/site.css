@@ -528,3 +528,7 @@ h3{font-weight:600;line-height:1.2;letter-spacing:-.02em}
   .progress-entry-body{padding:0 0 1.6rem}
   .progress-entry-body>p:first-child{margin-top:0}
 }
+
+/* Keep the homepage CTA links above non-interactive hero artwork. */
+.home-hero-media,.home-hero:before,.home-hero:after{pointer-events:none}
+.home-hero .container{z-index:2}
