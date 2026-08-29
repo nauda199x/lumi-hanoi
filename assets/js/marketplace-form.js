@@ -9,8 +9,11 @@
   const phase=form.querySelector('[name="phase"]');
   const tower=form.querySelector('[name="tower"]');
   const priceLabel=form.querySelector("[data-price-label]");
+  const availableField=form.querySelector("[data-available-field]");
   const availableLabel=form.querySelector("[data-available-label]");
+  const availableInput=form.elements.available_from;
   const legalField=form.querySelector("[data-legal-field]");
+  const legalInput=form.elements.legal_status;
   const towerMap={Signature:["S1","S2","S3","S5","S6"],Prestige:["P1","P2"],Elite:["E1","E2"]};
   let previewUrls=[];
 
@@ -23,8 +26,11 @@
   const refreshType=()=>{
     const rent=listingType()==="rent";
     if(priceLabel)priceLabel.textContent=rent?"Giá thuê mỗi tháng (đồng)":"Giá bán mong muốn (đồng)";
-    if(availableLabel)availableLabel.textContent=rent?"Ngày có thể vào ở":"Thời điểm có thể giao dịch";
+    if(availableLabel)availableLabel.textContent="Ngày có thể vào ở";
+    if(availableField)availableField.hidden=!rent;
+    if(availableInput)availableInput.disabled=!rent;
     if(legalField)legalField.hidden=rent;
+    if(legalInput)legalInput.disabled=rent;
   };
   const refreshTowers=()=>{
     const selected=tower.value;
@@ -65,7 +71,7 @@
     return {
       listing_type:listingType(),poster_name:value("poster_name"),contact_phone:value("contact_phone"),
       phase:value("phase"),tower:value("tower"),unit_type:unitType,bedroom_count:bedroomMatch?Number(bedroomMatch[1]):null,area_sqm:numeric("area_sqm"),floor_label:value("floor_label")||null,
-      price_vnd:numeric("price_vnd"),furnishing:value("furnishing")||null,available_from:value("available_from")||null,legal_status:listingType()==="sale"?(value("legal_status")||null):null,
+      price_vnd:numeric("price_vnd"),furnishing:value("furnishing")||null,available_from:listingType()==="rent"?(value("available_from")||null):null,legal_status:listingType()==="sale"?(value("legal_status")||null):null,
       title:value("title"),description:value("description"),contact_public:Boolean(form.elements.contact_public?.checked)
     };
   };
