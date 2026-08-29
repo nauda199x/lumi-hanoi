@@ -49,7 +49,7 @@ def fetch_approved() -> list[dict]:
     base, key, _ = read_public_config()
     params = {
         "select": (
-            "id,slug,listing_code,listing_type,title,description,phase,tower,"
+            "id,slug,listing_code,listing_type,title,description,poster_name,phase,tower,"
             "bedroom_count,unit_type,area_sqm,floor_label,price_vnd,furnishing,"
             "available_from,contact_phone,is_featured,approved_at,expires_at,created_at,"
             "listing_images(id,storage_path,sort_order,alt_text)"
@@ -195,9 +195,6 @@ def render_page(listing: dict) -> str:
     robots = "index,follow,max-image-preview:large" if indexable(listing) else "noindex,follow"
     images = sorted(listing.get("listing_images") or [], key=lambda item: int(item.get("sort_order") or 0))
     hero_image = storage_url(images[0]["storage_path"]) if images else SITE + "/assets/media/og/lumi-hanoi-og.webp"
-    phone = clean(listing.get("contact_phone"))
-    phone_href = re.sub(r"[^+\d]", "", phone)
-    zalo_number = re.sub(r"\D", "", phone)
     area = format_area(listing.get("area_sqm"))
     price = format_price(listing)
     posted = date_only(listing.get("approved_at") or listing.get("created_at"))
@@ -268,6 +265,7 @@ def render_page(listing: dict) -> str:
     schema_json = json.dumps(prune(schema), ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
     related_html = "".join(related)
     description_html = esc(listing.get("description")).replace("\n", "<br>")
+    poster_name = clean(listing.get("poster_name")) or "Người đăng"
     return f"""<!doctype html>
 <html lang="vi">
 <head>
@@ -287,7 +285,7 @@ def render_page(listing: dict) -> str:
   <meta property="og:image" content="{esc(hero_image)}">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="stylesheet" href="/assets/css/site.css?v=20260829-type">
-  <link rel="stylesheet" href="/assets/css/marketplace.css?v=20260829-seo">
+  <link rel="stylesheet" href="/assets/css/marketplace.css?v=20260829-poster">
   <script type="application/ld+json">{schema_json}</script>
 </head>
 <body>
@@ -320,6 +318,7 @@ def render_page(listing: dict) -> str:
           <div><dt>Tầng</dt><dd>{esc(listing.get('floor_label') or 'Liên hệ')}</dd></div>
           <div><dt>Nội thất</dt><dd>{esc(listing.get('furnishing') or 'Liên hệ')}</dd></div>
         </dl>
+        <div class="detail-poster" data-static-poster><span>Người đăng</span><strong>{esc(poster_name)}</strong></div>
         <div class="detail-contact">
           <a class="btn btn-primary" data-static-phone href="#">Xem số liên hệ</a>
           <a class="btn" data-static-zalo href="#" target="_blank" rel="noopener" hidden>Nhắn Zalo</a>
@@ -331,8 +330,8 @@ def render_page(listing: dict) -> str:
   <footer class="site-footer"><div class="container footer-grid"><div><a class="brand" href="/"><span class="brand-mark" aria-hidden="true">LH</span><span>LUMI HANOI</span></a><p>Cổng thông tin dự án &amp; thị trường căn hộ.</p></div><div><nav class="footer-links" aria-label="Điều hướng cuối trang"><a href="/mua-ban-lumi-hanoi/">Mua bán</a><a href="/cho-thue-lumi-hanoi/">Cho thuê</a><a href="/dang-tin-lumi-hanoi/">Đăng tin</a><a href="/tin-tuc/">Tin tức</a></nav><p class="disclaimer">Website thông tin và giao dịch độc lập, không phải website chính thức của CapitaLand Development.</p></div></div></footer>
   <script src="/assets/js/site.js" defer></script>
   <script src="/assets/js/marketplace-config.js"></script>
-  <script src="/assets/js/marketplace-api.js?v=20260829-seo"></script>
-  <script src="/assets/js/marketplace-static-status.js?v=20260829-seo" defer></script>
+  <script src="/assets/js/marketplace-api.js?v=20260829-poster"></script>
+  <script src="/assets/js/marketplace-static-status.js?v=20260829-poster" defer></script>
 </body>
 </html>
 """
