@@ -41,7 +41,7 @@
         if(location.pathname==='/mua-ban-lumi-hanoi/')transactionLink.setAttribute('aria-current','page');
         if(location.pathname==='/cho-thue-lumi-hanoi/')rentLink.setAttribute('aria-current','page');
         transactionLink.after(rentLink);
-        makeDropdown('Giao dịch',[transactionLink,rentLink],true);
+        makeDropdown('Giao dịch',[transactionLink,rentLink]);
       }
     }
     const transactionDropdown=[...nav.querySelectorAll('.nav-dropdown')].find(item=>item.querySelector('summary')?.textContent.trim()==='Giao dịch');
@@ -51,6 +51,11 @@
       submitLink.textContent='Đăng tin';
       if(location.pathname==='/dang-tin-lumi-hanoi/')submitLink.setAttribute('aria-current','page');
       transactionDropdown.querySelector('.nav-dropdown-menu')?.append(submitLink);
+    }
+    const overviewLink=topLevelLink('/tong-quan-lumi-hanoi/');
+    if(transactionDropdown&&overviewLink){
+      overviewLink.after(transactionDropdown);
+      transactionDropdown.querySelector('.nav-dropdown-menu')?.classList.remove('nav-dropdown-menu--right');
     }
     const dropdowns=[...nav.querySelectorAll('.nav-dropdown')];
     dropdowns.forEach(dropdown=>dropdown.addEventListener('toggle',()=>{
