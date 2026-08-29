@@ -304,7 +304,7 @@ def render_page(listing: dict) -> str:
   <meta property="og:image" content="{esc(hero_image)}">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="stylesheet" href="/assets/css/site.css?v=20260829-type">
-  <link rel="stylesheet" href="/assets/css/marketplace.css?v=20260829-detail3">
+  <link rel="stylesheet" href="/assets/css/marketplace.css?v=20260829-detail4">
   <script type="application/ld+json">{schema_json}</script>
 </head>
 <body class="listing-detail-page">
@@ -369,7 +369,7 @@ def render_page(listing: dict) -> str:
   <script src="/assets/js/site.js" defer></script>
   <script src="/assets/js/marketplace-config.js"></script>
   <script src="/assets/js/marketplace-api.js?v=20260829-poster"></script>
-  <script src="/assets/js/marketplace-static-status.js?v=20260829-detail3" defer></script>
+  <script src="/assets/js/marketplace-static-status.js?v=20260829-detail4" defer></script>
 </body>
 </html>
 """
