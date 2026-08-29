@@ -11,7 +11,9 @@
         if (!match) return;
         const slug = match[2];
         if (!/-lh-[a-z0-9]{8}$/i.test(slug)) return;
-        location.replace(`/tin-dang-lumi-hanoi/?slug=${encodeURIComponent(slug)}`);
+        document.documentElement.style.visibility = "hidden";
+        const route = "/tin-dang-lumi-hanoi/";
+        location.replace(`${route}?slug=${encodeURIComponent(slug)}`);
       })();
     </script>
     <link rel="icon" href="/favicon.svg?v=20260828" type="image/svg+xml"><link rel="icon" href="/favicon-32x32.png?v=20260828" sizes="32x32" type="image/png"><link rel="apple-touch-icon" href="/apple-touch-icon.png?v=20260828"><link rel="manifest" href="/site.webmanifest">
