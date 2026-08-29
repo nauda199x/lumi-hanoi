@@ -46,7 +46,7 @@
   const cardFor=listing=>{
     const article=el("article","listing-card");
     const media=el("a","listing-card-media");
-    media.href=`/tin-dang-lumi-hanoi/?slug=${encodeURIComponent(listing.slug)}`;
+    media.href=api.listingUrl(listing);
     media.setAttribute("aria-label",`Xem ${listing.title}`);
     const image=imageFor(listing);
     if(image){

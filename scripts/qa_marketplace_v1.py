@@ -11,11 +11,15 @@ required_files = [
     "assets/js/marketplace-form.js",
     "assets/js/marketplace-detail.js",
     "assets/js/marketplace-admin.js",
+    "assets/js/marketplace-static-status.js",
     "giao-dich-lumi-hanoi/index.html",
     "dang-tin-lumi-hanoi/index.html",
     "tin-dang-lumi-hanoi/index.html",
     "admin/index.html",
     "supabase/marketplace-schema.sql",
+    "scripts/generate_marketplace_seo.py",
+    ".github/workflows/sync-marketplace-seo.yml",
+    "sitemap-tin-dang.xml",
 ]
 for relative in required_files:
     assert (ROOT / relative).is_file(), f"Missing {relative}"
@@ -28,6 +32,7 @@ detail = (ROOT / "tin-dang-lumi-hanoi/index.html").read_text(encoding="utf-8")
 schema = (ROOT / "supabase/marketplace-schema.sql").read_text(encoding="utf-8")
 config = (ROOT / "assets/js/marketplace-config.js").read_text(encoding="utf-8")
 api = (ROOT / "assets/js/marketplace-api.js").read_text(encoding="utf-8")
+list_js = (ROOT / "assets/js/marketplace-list.js").read_text(encoding="utf-8")
 form_js = (ROOT / "assets/js/marketplace-form.js").read_text(encoding="utf-8")
 detail_js = (ROOT / "assets/js/marketplace-detail.js").read_text(encoding="utf-8")
 admin_js = (ROOT / "assets/js/marketplace-admin.js").read_text(encoding="utf-8")
@@ -36,6 +41,10 @@ site_css = (ROOT / "assets/css/site.css").read_text(encoding="utf-8")
 home = (ROOT / "index.html").read_text(encoding="utf-8")
 transaction_hub = (ROOT / "giao-dich-lumi-hanoi/index.html").read_text(encoding="utf-8")
 site_js = (ROOT / "assets/js/site.js").read_text(encoding="utf-8")
+robots = (ROOT / "robots.txt").read_text(encoding="utf-8")
+marketplace_sitemap = (ROOT / "sitemap-tin-dang.xml").read_text(encoding="utf-8")
+seo_generator = (ROOT / "scripts/generate_marketplace_seo.py").read_text(encoding="utf-8")
+seo_workflow = (ROOT / ".github/workflows/sync-marketplace-seo.yml").read_text(encoding="utf-8")
 
 assert 'data-listing-type="sale"' in sale and 'marketplace-list.js' in sale
 assert 'data-listing-type="rent"' in rent and 'marketplace-list.js' in rent
@@ -71,6 +80,14 @@ anon_insert_grant = schema.split("grant insert (", 1)[1].split(") on public.list
 for removed_column in ("unit_code", "direction", "view_text", "poster_type", "contact_zalo", "contact_email"):
     assert removed_column not in anon_insert_grant, f"Anonymous insert grant must not include {removed_column}"
 assert 'select:"id,slug,listing_code,listing_type,title,description' in api, "Public detail must use an explicit safe column list"
+assert "const listingUrl=listing=>" in api, "Marketplace API must expose clean listing URLs"
+assert "media.href=api.listingUrl(listing)" in list_js, "Listing cards must link to clean static SEO URLs"
+assert "/tin-dang-lumi-hanoi/?slug=" not in list_js, "Public listing cards must not use query-string detail URLs"
+assert "sitemap-tin-dang.xml" in robots, "robots.txt must advertise marketplace sitemap"
+assert "indexable(listing)" in seo_generator and "noindex,follow" in seo_generator, "Thin approved listings must be generated but excluded from index"
+assert "schedule:" in seo_workflow and "*/15 * * * *" in seo_workflow, "Marketplace SEO sync must refresh regularly"
+assert "generate_marketplace_seo.py" in seo_workflow and "git push origin HEAD:main" in seo_workflow
+assert "<urlset" in marketplace_sitemap, "Marketplace sitemap must be a valid URL set"
 assert "deleteListing" in api and 'body:{prefixes:imagePaths}' in api, "Admin deletion must clean Storage objects first"
 assert "Xóa vĩnh viễn" in admin_js and "deleteAndReload" in admin_js, "Admin UI needs a confirmed permanent-delete action"
 assert "service-role" in config.lower() and "supabasePublishableKey" in config

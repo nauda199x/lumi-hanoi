@@ -40,6 +40,7 @@ jobs:
         run: |
           python -m json.tool assets/data/floor-plans.json >/dev/null
           python -m json.tool assets/data/visual-library-v8.7.json >/dev/null
+          python -m py_compile scripts/generate_marketplace_seo.py
           python - <<'PY'
           import xml.etree.ElementTree as ET
           ET.parse('sitemap.xml')
@@ -52,3 +53,4 @@ jobs:
           node --check assets/js/marketplace-form.js
           node --check assets/js/marketplace-detail.js
           node --check assets/js/marketplace-admin.js
+          node --check assets/js/marketplace-static-status.js

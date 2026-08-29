@@ -46,6 +46,11 @@
     return `${new Intl.NumberFormat("vi-VN").format(amount)} đ`;
   };
   const imageUrl=path=>path?`${base}/storage/v1/object/public/${encodeURIComponent(config.storageBucket||"listing-images")}/${String(path).split("/").map(encodeURIComponent).join("/")}`:"";
+  const listingUrl=listing=>{
+    const segment=listing?.listing_type==="rent"?"cho-thue-lumi-hanoi":"mua-ban-lumi-hanoi";
+    const slug=cleanText(listing?.slug,120);
+    return slug?`/${segment}/${encodeURIComponent(slug)}/`:"/tin-dang-lumi-hanoi/";
+  };
 
   const getSession=()=>{
     try{return JSON.parse(sessionStorage.getItem(sessionKey)||"null");}catch{return null;}
@@ -188,7 +193,7 @@
   };
 
   window.LumiMarketplace={
-    config,configured,MarketplaceError,cleanText,slugify,formatCurrency,imageUrl,
+    config,configured,MarketplaceError,cleanText,slugify,formatCurrency,imageUrl,listingUrl,
     listPublic,getPublicListing,createListing,uploadImage,addListingImage,createReport,
     signIn,signOut,requireAdmin,listAdmin,updateListing,deleteListing
   };

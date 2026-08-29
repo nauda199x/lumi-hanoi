@@ -1,0 +1,37 @@
+name: Sync Marketplace SEO Pages
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: marketplace-seo-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Generate approved listing pages
+        run: python scripts/generate_marketplace_seo.py
+      - name: Commit generated SEO pages
+        run: |
+          if git diff --quiet -- mua-ban-lumi-hanoi cho-thue-lumi-hanoi sitemap-tin-dang.xml; then
+            echo "Marketplace SEO pages are already current."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add mua-ban-lumi-hanoi cho-thue-lumi-hanoi sitemap-tin-dang.xml
+          git commit -m "Sync approved marketplace SEO pages"
+          git push origin HEAD:main

@@ -3,3 +3,4 @@ Allow: /
 Disallow: /admin/
 
 Sitemap: https://lumi-hanoi.com/sitemap.xml
+Sitemap: https://lumi-hanoi.com/sitemap-tin-dang.xml
