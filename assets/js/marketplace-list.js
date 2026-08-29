@@ -14,7 +14,6 @@
   const form=root.querySelector("[data-listing-filters]");
   const phase=form?.querySelector('[name="phase"]');
   const tower=form?.querySelector('[name="tower"]');
-  const sortField=form?.querySelector('[name="sort"]');
   const towerMap={Signature:["S1","S2","S3","S5","S6"],Prestige:["P1","P2"],Elite:["E1","E2"]};
   const mobileQuery=window.matchMedia("(max-width:700px)");
   const pageSize=()=>mobileQuery.matches?8:10;
@@ -175,7 +174,7 @@
 
   const filterValues=()=>{
     const values=Object.fromEntries(new FormData(form||document.createElement("form")).entries());
-    return {keyword:values.keyword||"",phase:values.phase||"",tower:values.tower||"",bedroom:values.bedroom||"",maxPrice:values.max_price||"",area:values.area||"",sort:values.sort||"newest"};
+    return {keyword:values.keyword||"",phase:values.phase||"",tower:values.tower||"",bedroom:values.bedroom||"",maxPrice:values.max_price||"",area:values.area||""};
   };
   const activeFilterCount=values=>["keyword","phase","tower","bedroom","maxPrice","area"].filter(key=>String(values[key]||"").trim()).length;
   const applyClientFilters=(rows,filters)=>{
@@ -187,11 +186,6 @@
         return area>=Number(min||0)&&(!max||area<=max);
       });
     }
-    const featured=(a,b)=>Number(Boolean(b.is_featured))-Number(Boolean(a.is_featured));
-    if(filters.sort==="price_asc")next.sort((a,b)=>featured(a,b)||Number(a.price_vnd||0)-Number(b.price_vnd||0));
-    else if(filters.sort==="price_desc")next.sort((a,b)=>featured(a,b)||Number(b.price_vnd||0)-Number(a.price_vnd||0));
-    else if(filters.sort==="area_desc")next.sort((a,b)=>featured(a,b)||Number(b.area_sqm||0)-Number(a.area_sqm||0));
-    else next.sort((a,b)=>featured(a,b)||new Date(b.approved_at||b.created_at||0)-new Date(a.approved_at||a.created_at||0));
     return next;
   };
 
@@ -213,11 +207,7 @@
   const mobileControls=el("div","marketplace-mobile-controls");
   const mobileFilterButton=el("button","marketplace-mobile-filter","Bộ lọc");
   mobileFilterButton.type="button";
-  const mobileSort=document.createElement("select");
-  mobileSort.className="marketplace-mobile-sort";
-  mobileSort.setAttribute("aria-label","Sắp xếp tin đăng");
-  [...(sortField?.options||[])].forEach(option=>mobileSort.append(new Option(option.textContent,option.value)));
-  mobileControls.append(mobileFilterButton,mobileSort);
+  mobileControls.append(mobileFilterButton);
   form.insertAdjacentElement("beforebegin",mobileControls);
 
   const sheetHead=el("div","marketplace-filter-sheet-head");
@@ -234,13 +224,11 @@
   applyFilters.addEventListener("click",closeFilterSheet);
   backdrop.addEventListener("click",closeFilterSheet);
   window.addEventListener("keydown",event=>{if(event.key==="Escape")closeFilterSheet();});
-  mobileSort.addEventListener("change",()=>{if(sortField){sortField.value=mobileSort.value;sortField.dispatchEvent(new Event("change",{bubbles:true}));}});
 
   const syncMobileControls=()=>{
     const values=filterValues();
     const n=activeFilterCount(values);
     mobileFilterButton.textContent=n?`Bộ lọc (${n})`:"Bộ lọc";
-    if(sortField&&mobileSort.value!==sortField.value)mobileSort.value=sortField.value;
   };
 
   const showRows=()=>{
@@ -281,10 +269,10 @@
   form?.addEventListener("change",event=>{
     if(event.target===phase)refreshTowers();
     syncMobileControls();
-    if(event.target.name==="sort"||event.target.name==="area"){showRows();return;}
+    if(event.target.name==="area"){showRows();return;}
     scheduleLoad(30);
   });
-  form?.addEventListener("reset",()=>setTimeout(()=>{refreshTowers();if(sortField)sortField.value="newest";syncMobileControls();load();},0));
+  form?.addEventListener("reset",()=>setTimeout(()=>{refreshTowers();syncMobileControls();load();},0));
   mobileQuery.addEventListener?.("change",()=>{if(filteredRows.length)renderMore(true);});
   refreshTowers();syncMobileControls();load();
 })();
