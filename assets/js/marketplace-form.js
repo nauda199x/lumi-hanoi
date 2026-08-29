@@ -179,7 +179,6 @@
         }catch(error){console.warn("Image upload failed",error);}
       }
       const imageNote=files.length&&uploaded<files.length?` Đã tải ${uploaded}/${files.length} ảnh; quản trị viên sẽ liên hệ nếu cần bổ sung.`:"";
-      try{await api.notifyListingEmail(listing.id);}catch(error){console.warn("Listing email notification failed",error);}
       showStatus(`Đã nhận tin ${listing.listing_code}. Tin đang chờ quản trị viên duyệt và chưa hiển thị công khai.${imageNote}`,"success");
       form.reset();clearPreviews();refreshType();refreshTowers();
     }catch(error){
