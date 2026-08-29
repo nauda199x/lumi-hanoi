@@ -25,12 +25,14 @@
       links.forEach(link=>menu.append(link));
       return details;
     };
-    if(!nav.querySelector('.nav-dropdown')){
-      const topLevelLinks=[...nav.children].filter(item=>item.matches('a'));
-      const byHref=href=>topLevelLinks.find(link=>link.getAttribute('href')===href);
-      const phaseLinks=['/lumi-signature/','/lumi-prestige/','/lumi-elite/'].map(byHref).filter(Boolean);
+    const dropdownByLabel=label=>[...nav.querySelectorAll('.nav-dropdown')].find(item=>item.querySelector('summary')?.textContent.trim()===label);
+    const topLevelLink=href=>[...nav.children].find(item=>item.matches?.(`a[href="${href}"]`));
+    if(!dropdownByLabel('Phân khu')){
+      const phaseLinks=['/lumi-signature/','/lumi-prestige/','/lumi-elite/'].map(topLevelLink).filter(Boolean);
       if(phaseLinks.length===3)makeDropdown('Phân khu',phaseLinks);
-      const transactionLink=byHref('/mua-ban-lumi-hanoi/');
+    }
+    if(!dropdownByLabel('Giao dịch')){
+      const transactionLink=topLevelLink('/mua-ban-lumi-hanoi/');
       if(transactionLink){
         transactionLink.textContent='Mua bán';
         const rentLink=document.createElement('a');
@@ -41,6 +43,14 @@
         transactionLink.after(rentLink);
         makeDropdown('Giao dịch',[transactionLink,rentLink],true);
       }
+    }
+    const transactionDropdown=[...nav.querySelectorAll('.nav-dropdown')].find(item=>item.querySelector('summary')?.textContent.trim()==='Giao dịch');
+    if(transactionDropdown&&!transactionDropdown.querySelector('a[href="/dang-tin-lumi-hanoi/"]')){
+      const submitLink=document.createElement('a');
+      submitLink.href='/dang-tin-lumi-hanoi/';
+      submitLink.textContent='Đăng tin';
+      if(location.pathname==='/dang-tin-lumi-hanoi/')submitLink.setAttribute('aria-current','page');
+      transactionDropdown.querySelector('.nav-dropdown-menu')?.append(submitLink);
     }
     const dropdowns=[...nav.querySelectorAll('.nav-dropdown')];
     dropdowns.forEach(dropdown=>dropdown.addEventListener('toggle',()=>{
