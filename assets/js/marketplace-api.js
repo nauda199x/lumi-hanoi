@@ -169,10 +169,27 @@
     if(!session)throw new MarketplaceError("Phiên quản trị đã hết hạn.",401);
     return request(restPath("listings",{id:`eq.${id}`}),{method:"PATCH",body:patch,token:session.access_token,headers:{Prefer:"return=minimal"}});
   };
+  const deleteListing=async listing=>{
+    const session=await requireAdmin();
+    if(!session)throw new MarketplaceError("Phiên quản trị đã hết hạn.",401);
+    const id=cleanText(listing?.id,50);
+    if(!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(id))throw new MarketplaceError("Không xác định được tin cần xóa.",400);
+    const imagePaths=[...new Set((listing?.listing_images||[]).map(image=>cleanText(image?.storage_path,500)).filter(Boolean))];
+    if(imagePaths.length){
+      await request(`/storage/v1/object/${encodeURIComponent(config.storageBucket||"listing-images")}`,{
+        method:"DELETE",body:{prefixes:imagePaths},token:session.access_token
+      });
+    }
+    const deleted=await request(restPath("listings",{id:`eq.${id}`}),{
+      method:"DELETE",token:session.access_token,headers:{Prefer:"return=representation"}
+    });
+    if(!Array.isArray(deleted)||deleted.length!==1)throw new MarketplaceError("Tin không còn tồn tại hoặc anh không có quyền xóa.",404);
+    return {id,deletedImageCount:imagePaths.length};
+  };
 
   window.LumiMarketplace={
     config,configured,MarketplaceError,cleanText,slugify,formatCurrency,imageUrl,
     listPublic,getPublicListing,createListing,uploadImage,addListingImage,createReport,
-    signIn,signOut,requireAdmin,listAdmin,updateListing
+    signIn,signOut,requireAdmin,listAdmin,updateListing,deleteListing
   };
 })();

@@ -15,7 +15,8 @@ Never put the service-role key, database password or admin password in this repo
 
 - Anonymous visitors can insert only `pending` listings.
 - Pending/rejected listings cannot be selected by public visitors.
-- Only users listed in `admin_users` can approve, edit, feature or close listings.
+- Only users listed in `admin_users` can approve, edit, feature, close or permanently delete listings.
+- Permanent deletion removes attached files through the Storage API before deleting the listing row.
 - Public visitors can read only approved, unexpired listings whose contact disclosure was accepted.
 - Images are limited by the bucket to JPG/PNG/WebP and 5 MB per object.
 
