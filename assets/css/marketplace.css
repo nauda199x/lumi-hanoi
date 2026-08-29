@@ -161,15 +161,10 @@
   .listing-detail-page .site-footer{margin-bottom:0}
 }
 
-/* Static SEO listing pages use the same swipe-first gallery on small screens. */
+/* Static SEO listing pages share the same portal shell and swipe track. */
 @media(max-width:760px){
   [data-static-listing] .detail-shell{display:block;width:100%;max-width:none;padding-top:0}
   [data-static-listing] .breadcrumb{display:none}
   [data-static-listing] .detail-shell>aside{display:none}
-  [data-static-listing] .detail-gallery{display:flex;width:100%;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch}
-  [data-static-listing] .detail-gallery::-webkit-scrollbar{display:none}
-  [data-static-listing] .detail-gallery figure{flex:0 0 100%;width:100%;margin:0;aspect-ratio:4/3;scroll-snap-align:start}
-  [data-static-listing] .detail-gallery figure:first-child{grid-column:auto;aspect-ratio:4/3}
-  [data-static-listing] .detail-gallery img{width:100%;height:100%;object-fit:contain;background:#f3efe7}
   [data-static-listing] .detail-copy{padding:22px 20px 36px}
 }
