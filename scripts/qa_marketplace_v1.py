@@ -86,7 +86,7 @@ assert "media.href=api.listingUrl(listing)" in list_js, "Listing cards must link
 assert "/tin-dang-lumi-hanoi/?slug=" not in list_js, "Public listing cards must not use query-string detail URLs"
 assert "sitemap-tin-dang.xml" in robots, "robots.txt must advertise marketplace sitemap"
 assert "indexable(listing)" in seo_generator and "noindex,follow" in seo_generator, "Thin approved listings must be generated but excluded from index"
-assert "schedule:" in seo_workflow and "*/15 * * * *" in seo_workflow, "Marketplace SEO sync must refresh regularly"
+assert "schedule:" in seo_workflow and "*/5 * * * *" in seo_workflow, "Marketplace SEO sync must refresh every 5 minutes"
 assert "generate_marketplace_seo.py" in seo_workflow and "git push origin HEAD:main" in seo_workflow
 assert "<urlset" in marketplace_sitemap, "Marketplace sitemap must be a valid URL set"
 assert "deleteListing" in api and 'body:{prefixes:imagePaths}' in api, "Admin deletion must clean Storage objects first"
