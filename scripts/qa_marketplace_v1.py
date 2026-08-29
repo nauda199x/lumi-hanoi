@@ -73,6 +73,12 @@ assert 'detail-gallery-track' in detail_js and 'detail-gallery-counter' in detai
 assert 'DETAIL PORTAL UX 2026-08-29' in market_css and 'scroll-snap-type:x mandatory' in market_css, "Marketplace detail CSS must keep swipe-first gallery behavior"
 assert 'detail-shell detail-shell--portal' in seo_generator and 'detail-mobile-contact' in seo_generator, "Generated SEO listing pages must share the same portal layout"
 assert 'detail-gallery-track' in seo_generator and 'data-static-gallery-counter' in seo_generator, "Generated listing pages must include swipe gallery markup"
+assert 'detail-shell--portal' in detail and 'detail-mobile-contact' in detail, "Dynamic listing detail must use the portal layout and mobile CTA"
+assert 'data-detail-price-per-sqm' in detail, "Sale detail should expose price per sqm when available"
+assert 'detail-gallery-track' in detail_js and 'detail-gallery-counter' in detail_js, "Dynamic detail gallery must support horizontal swiping with a counter"
+assert 'DETAIL PORTAL UX 2026-08-29' in market_css and 'scroll-snap-type:x mandatory' in market_css, "Marketplace detail CSS must keep swipe-first gallery behavior"
+assert 'detail-shell detail-shell--portal' in seo_generator and 'detail-mobile-contact' in seo_generator, "Generated SEO listing pages must share the same portal layout"
+assert 'detail-gallery-track' in seo_generator and 'data-static-gallery-counter' in seo_generator, "Generated listing pages must include swipe gallery markup"
 assert 'data-detail-direction' not in detail
 assert 'data-detail-poster' in detail and 'poster_name' in detail_js, "Approved listing detail must show the poster name entered in the form"
 assert 'listing.contact_zalo' not in detail_js, "Public Zalo link must reuse the contact phone"
