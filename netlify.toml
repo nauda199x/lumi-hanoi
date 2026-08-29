@@ -152,6 +152,36 @@
   force = true
 
 [[redirects]]
+  from = "/tien-do/*"
+  to = "/tien-do-lumi-hanoi/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/giai-doan-1/*"
+  to = "/lumi-signature/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/giai-doan-3/*"
+  to = "/lumi-elite/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/chu-dau-tu/*"
+  to = "/chu-dau-tu-capitaland/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/lien-he/*"
+  to = "/giao-dich-lumi-hanoi/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
   from = "http://lumi-hanoi.com/*"
   to = "https://lumi-hanoi.com/:splat"
   status = 301

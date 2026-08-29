@@ -27,7 +27,12 @@ REDIRECTS = {
     "toa-elite-1-lumi-hanoi/index.html": "/mat-bang-lumi-hanoi/lumi-elite/e1/",
     "toa-elite-2-lumi-hanoi/index.html": "/mat-bang-lumi-hanoi/lumi-elite/e2/",
     "vi-tri/index.html": "/vi-tri-lumi-hanoi/",
-    "giai-doan-2/index.html": "/lumi-prestige/"
+    "giai-doan-2/index.html": "/lumi-prestige/",
+    "tien-do/index.html": "/tien-do-lumi-hanoi/",
+    "giai-doan-1/index.html": "/lumi-signature/",
+    "giai-doan-3/index.html": "/lumi-elite/",
+    "chu-dau-tu/index.html": "/chu-dau-tu-capitaland/",
+    "lien-he/index.html": "/giao-dich-lumi-hanoi/"
 }
 
 errors = []
@@ -56,6 +61,11 @@ rules = {(r.get("from"), r.get("to"), r.get("status"), r.get("force")) for r in 
 for old, new in {
     "/vi-tri/*": "/vi-tri-lumi-hanoi/:splat",
     "/giai-doan-2/*": "/lumi-prestige/:splat",
+    "/tien-do/*": "/tien-do-lumi-hanoi/:splat",
+    "/giai-doan-1/*": "/lumi-signature/:splat",
+    "/giai-doan-3/*": "/lumi-elite/:splat",
+    "/chu-dau-tu/*": "/chu-dau-tu-capitaland/:splat",
+    "/lien-he/*": "/giao-dich-lumi-hanoi/:splat",
 }.items():
     if (old, new, 301, True) not in rules:
         errors.append(f"netlify.toml missing 301: {old} -> {new}")
