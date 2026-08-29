@@ -14,6 +14,8 @@ Never put the service-role key, database password or admin password in this repo
 ## Security model
 
 - Anonymous visitors can insert only `pending` listings.
+- The public form stores only the poster's name and phone/Zalo contact; role, email, separate Zalo, unit code, direction and view are not collected.
+- Floor values are normalized to `Thấp`, `Trung` or `Cao`; listing types also support `Shop chân đế`.
 - Pending/rejected listings cannot be selected by public visitors.
 - Only users listed in `admin_users` can approve, edit, feature, close or permanently delete listings.
 - Permanent deletion removes attached files through the Storage API before deleting the listing row.

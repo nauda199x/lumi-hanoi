@@ -63,9 +63,9 @@
     const unitType=value("unit_type");
     const bedroomMatch=unitType.match(/^(\d)/);
     return {
-      listing_type:listingType(),poster_type:value("poster_type"),poster_name:value("poster_name"),contact_phone:value("contact_phone"),contact_email:value("contact_email")||null,contact_zalo:value("contact_zalo")||null,
-      phase:value("phase"),tower:value("tower"),unit_type:unitType,bedroom_count:bedroomMatch?Number(bedroomMatch[1]):null,area_sqm:numeric("area_sqm"),floor_label:value("floor_label")||null,unit_code:value("unit_code")||null,
-      price_vnd:numeric("price_vnd"),furnishing:value("furnishing")||null,direction:value("direction")||null,view_text:value("view_text")||null,available_from:value("available_from")||null,legal_status:listingType()==="sale"?(value("legal_status")||null):null,
+      listing_type:listingType(),poster_name:value("poster_name"),contact_phone:value("contact_phone"),
+      phase:value("phase"),tower:value("tower"),unit_type:unitType,bedroom_count:bedroomMatch?Number(bedroomMatch[1]):null,area_sqm:numeric("area_sqm"),floor_label:value("floor_label")||null,
+      price_vnd:numeric("price_vnd"),furnishing:value("furnishing")||null,available_from:value("available_from")||null,legal_status:listingType()==="sale"?(value("legal_status")||null):null,
       title:value("title"),description:value("description"),contact_public:Boolean(form.elements.contact_public?.checked)
     };
   };
