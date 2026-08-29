@@ -77,7 +77,7 @@
 
   const listPublic=async(type,filters={})=>{
     const params={
-      select:"id,slug,listing_code,listing_type,title,phase,tower,bedroom_count,unit_type,area_sqm,price_vnd,furnishing,floor_label,available_from,is_featured,approved_at,expires_at,listing_images(id,storage_path,sort_order,alt_text)",
+      select:"id,slug,listing_code,listing_type,title,description,poster_name,contact_phone,phase,tower,bedroom_count,unit_type,area_sqm,price_vnd,furnishing,floor_label,available_from,is_featured,approved_at,expires_at,created_at,listing_images(id,storage_path,sort_order,alt_text)",
       listing_type:`eq.${type}`,
       status:"eq.approved",
       order:"is_featured.desc,sort_priority.desc,approved_at.desc",
