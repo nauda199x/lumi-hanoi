@@ -38,8 +38,11 @@ assert "enable row level security" in schema.lower()
 assert "listings_anon_submit_pending" in schema and "listings_admin_manage" in schema
 assert "can_upload_pending_image" in schema, "Storage uploads must belong to a pending listing"
 assert "revoke all on public.admin_users,public.listings" in schema
+assert "create or replace function private.is_admin" in schema
+assert "create or replace function public.is_admin" not in schema, "SECURITY DEFINER helpers must not live in an exposed schema"
+assert "grant all on public.admin_users" not in schema, "Authenticated access must use least privilege"
 assert 'select:"id,slug,listing_code,listing_type,title,description' in api, "Public detail must use an explicit safe column list"
-assert "service-role" in config.lower() and "supabaseAnonKey" in config
+assert "service-role" in config.lower() and "supabasePublishableKey" in config
 assert "service_role" not in config
 
 print("Marketplace V1 QA passed: public lists, submission, detail, admin and RLS schema verified.")

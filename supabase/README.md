@@ -7,7 +7,7 @@ This directory contains the production schema for public submissions, admin mode
 1. Apply `marketplace-schema.sql` to a dedicated Supabase project.
 2. Create one admin in Supabase Authentication.
 3. Insert that user's id into `public.admin_users` using the statement at the end of the schema.
-4. Put only the project URL and **anon/publishable** key in `assets/js/marketplace-config.js`.
+4. Put only the project URL and **publishable** key in `assets/js/marketplace-config.js`.
 
 Never put the service-role key, database password or admin password in this repository.
 
@@ -19,4 +19,4 @@ Never put the service-role key, database password or admin password in this repo
 - Public visitors can read only approved, unexpired listings whose contact disclosure was accepted.
 - Images are limited by the bucket to JPG/PNG/WebP and 5 MB per object.
 
-The browser configuration is intentionally public; authorization is enforced by PostgreSQL Row Level Security, not by hiding the anon key.
+The browser configuration is intentionally public; authorization is enforced by PostgreSQL Row Level Security, not by hiding the publishable key.
