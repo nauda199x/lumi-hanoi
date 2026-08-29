@@ -45,10 +45,14 @@
     if(text!==undefined)node.textContent=text;
     return node;
   };
+  const liveDetailUrl=listing=>{
+    const slug=api.cleanText(listing?.slug,120);
+    return slug?`/tin-dang-lumi-hanoi/?slug=${encodeURIComponent(slug)}`:"/tin-dang-lumi-hanoi/";
+  };
   const cardFor=listing=>{
     const article=el("article","listing-card");
     const media=el("a","listing-card-media");
-    media.href=api.listingUrl(listing);
+    media.href=liveDetailUrl(listing);
     media.setAttribute("aria-label",`Xem ${listing.title}`);
     const image=imageFor(listing);
     if(image){
