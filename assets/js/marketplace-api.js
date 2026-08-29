@@ -129,6 +129,10 @@
     headers:{Prefer:"return=minimal"}
   });
 
+  const notifyListingEmail=async listingId=>request("/functions/v1/listing-email-notify",{
+    method:"POST",body:{listing_id:cleanText(listingId,60)}
+  });
+
   const createReport=async(listingId,reason,details)=>request(restPath("listing_reports"),{
     method:"POST",
     body:{listing_id:listingId,reason:cleanText(reason,40),details:cleanText(details,600)},
@@ -194,7 +198,7 @@
 
   window.LumiMarketplace={
     config,configured,MarketplaceError,cleanText,slugify,formatCurrency,imageUrl,listingUrl,
-    listPublic,getPublicListing,createListing,uploadImage,addListingImage,createReport,
+    listPublic,getPublicListing,createListing,uploadImage,addListingImage,notifyListingEmail,createReport,
     signIn,signOut,requireAdmin,listAdmin,updateListing,deleteListing
   };
 })();
