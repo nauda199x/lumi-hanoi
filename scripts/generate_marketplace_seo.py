@@ -210,7 +210,7 @@ def render_static_card(listing: dict) -> str:
         alt = images[0].get("alt_text") or listing.get("title") or "Tin đăng Lumi Hanoi"
         image_html = (
             f'<a class="listing-card-slide" href="{esc(listing_url(listing))}" aria-label="Xem {esc(listing.get("title"))}">'
-            f'<img src="{esc(src)}" alt="{esc(alt)}" loading="lazy" decoding="async"></a>'
+            f'<img src="{esc(src)}" alt="{esc(alt)}" width="1200" height="900" loading="lazy" decoding="async"></a>'
         )
     else:
         image_html = (
