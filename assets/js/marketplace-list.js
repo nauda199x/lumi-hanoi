@@ -8,6 +8,7 @@
   const stateMark=state?.querySelector("[data-state-mark]");
   const stateTitle=state?.querySelector("[data-state-title]");
   const stateCopy=state?.querySelector("[data-state-copy]");
+  const emptyBenefits=state?.querySelector("[data-empty-benefits]");
   const skeleton=root.querySelector("[data-listing-skeleton]");
   const count=root.querySelector("[data-listing-count]");
   const form=root.querySelector("[data-listing-filters]");
@@ -15,10 +16,11 @@
   const tower=form?.querySelector('[name="tower"]');
   const towerMap={Signature:["S1","S2","S3","S5","S6"],Prestige:["P1","P2"],Elite:["E1","E2"]};
 
-  const setState=(title,copy,mark="0")=>{
+  const setState=(title,copy,mark="0",showBenefits=false)=>{
     if(stateMark)stateMark.textContent=mark;
     if(stateTitle)stateTitle.textContent=title;
     if(stateCopy)stateCopy.textContent=copy;
+    if(emptyBenefits)emptyBenefits.hidden=!showBenefits;
     if(state)state.hidden=false;
     if(grid)grid.hidden=true;
   };
@@ -61,44 +63,62 @@
     if(listing.is_featured)media.append(badges);
 
     const body=el("div","listing-card-body");
+    const price=el("div","listing-card-price");
+    price.append(el("strong","",api.formatCurrency(listing.price_vnd,listing.listing_type)));
+    price.append(el("span","",listing.listing_code||""));
     const meta=el("div","listing-card-meta");
-    [listing.phase,listing.tower,listing.unit_type,listing.area_sqm?`${Number(listing.area_sqm).toLocaleString("vi-VN")} m²`:null].filter(Boolean).forEach(value=>meta.append(el("span","",value)));
+    [listing.tower,listing.unit_type,listing.area_sqm?`${Number(listing.area_sqm).toLocaleString("vi-VN")} m²`:null,listing.floor_label].filter(Boolean).forEach(value=>meta.append(el("span","",value)));
     const title=el("h3");
     const link=el("a","",listing.title);
     link.href=media.href;title.append(link);
-    const footer=el("div","listing-card-price");
-    footer.append(el("strong","",api.formatCurrency(listing.price_vnd,listing.listing_type)));
-    footer.append(el("span","",listing.listing_code||""));
-    body.append(meta,title,footer);article.append(media,body);
+    body.append(price,meta,title);article.append(media,body);
     return article;
   };
   const filterValues=()=>{
     const values=Object.fromEntries(new FormData(form||document.createElement("form")).entries());
     return {keyword:values.keyword||"",phase:values.phase||"",tower:values.tower||"",bedroom:values.bedroom||"",maxPrice:values.max_price||""};
   };
+  const hasFilters=values=>Object.values(values).some(value=>String(value||"").trim());
   const load=async()=>{
     if(!api.configured()){
-      if(count)count.textContent="0 tin đăng";
-      setState(`Chưa có tin đăng ${type==="rent"?"cho thuê":"mua bán"}`,"Hệ thống tiếp nhận và duyệt tin đang được kết nối. Các tin chỉ xuất hiện sau khi quản trị viên phê duyệt.","0");
+      if(count)count.textContent="Đang kết nối";
+      setState("Quỹ căn đang được kết nối","Hệ thống đang kết nối dữ liệu giao dịch. Vui lòng thử lại sau ít phút.","LH",false);
       return;
     }
     setLoading(true);
     try{
-      const listings=await api.listPublic(type,filterValues());
+      const filters=filterValues();
+      const listings=await api.listPublic(type,filters);
       grid.replaceChildren(...listings.map(cardFor));
       if(count)count.textContent=`${listings.length} tin đăng`;
-      if(listings.length){grid.hidden=false;if(state)state.hidden=true;}
-      else setState("Không tìm thấy căn phù hợp","Thử bỏ bớt điều kiện lọc hoặc quay lại sau khi có tin mới.","0");
+      if(listings.length){
+        grid.hidden=false;
+        if(state)state.hidden=true;
+      }else if(hasFilters(filters)){
+        setState("Không tìm thấy căn phù hợp","Thử bỏ bớt điều kiện lọc hoặc quay lại sau khi có tin mới.","0",false);
+      }else{
+        setState(
+          `Chưa có tin đăng ${type==="rent"?"cho thuê":"mua bán"}`,
+          "Anh/chị có căn cần giao dịch có thể đăng miễn phí. Tin chỉ xuất hiện sau khi quản trị viên duyệt.",
+          "0",
+          true
+        );
+      }
     }catch(error){
       if(count)count.textContent="Chưa tải được dữ liệu";
-      setState("Không thể tải danh sách căn",error.status===0?"Vui lòng kiểm tra kết nối mạng và thử lại.":"Dữ liệu tạm thời chưa sẵn sàng. Vui lòng thử lại sau.","!");
+      setState("Không thể tải danh sách căn",error.status===0?"Vui lòng kiểm tra kết nối mạng và thử lại.":"Dữ liệu tạm thời chưa sẵn sàng. Vui lòng thử lại sau.","!",false);
     }finally{setLoading(false);}
   };
 
   let timer;
+  const scheduleLoad=delay=>{clearTimeout(timer);timer=setTimeout(load,delay);};
   form?.addEventListener("input",event=>{
     if(event.target===phase)refreshTowers();
-    clearTimeout(timer);timer=setTimeout(load,event.target.name==="keyword"?320:40);
+    scheduleLoad(event.target.name==="keyword"?320:40);
+  });
+  form?.addEventListener("change",event=>{
+    if(event.target===phase)refreshTowers();
+    scheduleLoad(30);
   });
   form?.addEventListener("reset",()=>setTimeout(()=>{refreshTowers();load();},0));
   refreshTowers();load();

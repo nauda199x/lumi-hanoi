@@ -2,7 +2,7 @@
   const form=document.querySelector("[data-marketplace-submit]");
   if(!form||!window.LumiMarketplace)return;
   const api=window.LumiMarketplace;
-  const submit=form.querySelector('[type="submit"]');
+  const submitButtons=[...form.querySelectorAll('[type="submit"]')];
   const status=form.querySelector("[data-form-status]");
   const filesInput=form.querySelector('[name="images"]');
   const previews=form.querySelector("[data-image-previews]");
@@ -11,38 +11,207 @@
   const priceLabel=form.querySelector("[data-price-label]");
   const priceInput=form.querySelector("[data-price-input]");
   const priceHelp=form.querySelector("[data-price-help]");
+  const phoneInput=form.querySelector('[name="contact_phone"]');
+  const phoneHelp=form.querySelector("[data-phone-help]");
   const availableField=form.querySelector("[data-available-field]");
   const availableLabel=form.querySelector("[data-available-label]");
   const availableInput=form.elements.available_from;
   const legalField=form.querySelector("[data-legal-field]");
   const legalInput=form.elements.legal_status;
+  const progressCurrent=form.querySelector("[data-progress-current]");
+  const progressBar=form.querySelector("[data-progress-bar]");
+  const progressSteps=[...form.querySelectorAll("[data-progress-step]")];
+  const sections=[...form.querySelectorAll("[data-form-step]")];
+  const draftStatus=form.querySelector("[data-draft-status]");
+  const mobileSubmitBar=form.querySelector("[data-mobile-submit]");
   const towerMap={Signature:["S1","S2","S3","S5","S6"],Prestige:["P1","P2"],Elite:["E1","E2"]};
   const directImageTypes=new Set(["image/jpeg","image/png","image/webp"]);
   const iphoneImageTypes=new Set(["image/heic","image/heif"]);
+  const draftKey="lumi-marketplace-draft-v2";
+  const draftMaxAge=7*24*60*60*1000;
   let previewUrls=[];
+  let draftTimer=0;
+  let progressFrame=0;
+  let isSubmitting=false;
 
-  const showStatus=(message,type="")=>{
-    status.hidden=false;status.textContent=message;status.className=`form-status${type?` is-${type}`:""}`;
-    status.scrollIntoView({behavior:"smooth",block:"nearest"});
+  const setSubmitState=(label,disabled=isSubmitting)=>{
+    submitButtons.forEach(button=>{button.disabled=disabled;button.textContent=label;});
   };
-  const clearStatus=()=>{status.hidden=true;status.textContent="";};
+  const showStatus=(message,type="",scroll=true)=>{
+    if(!status)return;
+    status.hidden=false;
+    status.textContent=message;
+    status.className=`form-status${type?` is-${type}`:""}`;
+    if(scroll)status.scrollIntoView({behavior:"smooth",block:"nearest"});
+  };
+  const clearStatus=()=>{
+    if(!status)return;
+    status.hidden=true;
+    status.textContent="";
+    status.className="form-status";
+  };
   const listingType=()=>form.querySelector('[name="listing_type"]:checked')?.value||"sale";
-  const refreshType=()=>{
+  const formatNumber=value=>new Intl.NumberFormat("vi-VN",{maximumFractionDigits:2}).format(value);
+  const parseLocalizedNumber=raw=>{
+    const normalized=String(raw||"").trim().toLowerCase()
+      .replace(/tỷ|ty|triệu|trieu|\/tháng|\/thang|tháng|thang|đồng|dong|vnđ|vnd|đ/g,"")
+      .replace(/\s+/g,"")
+      .replace(",",".");
+    if(!/^\d+(?:\.\d+)?$/.test(normalized))return null;
+    const parsed=Number(normalized);
+    return Number.isFinite(parsed)&&parsed>0?parsed:null;
+  };
+  const priceAmount=()=>parseLocalizedNumber(priceInput?.value);
+  const priceVnd=()=>{
+    const amount=priceAmount();
+    if(!amount)return null;
+    return Math.round(amount*(listingType()==="rent"?1_000_000:1_000_000_000));
+  };
+  const updatePriceHelp=()=>{
+    if(!priceInput||!priceHelp)return;
+    const amount=priceAmount();
+    const rent=listingType()==="rent";
+    const hasValue=Boolean(priceInput.value.trim());
+    priceInput.setCustomValidity(hasValue&&!amount?"Giá chưa đúng định dạng.":"");
+    priceInput.setAttribute("aria-invalid",hasValue&&!amount?"true":"false");
+    priceHelp.classList.toggle("field-error",hasValue&&!amount);
+    if(amount){
+      priceHelp.textContent=rent
+        ?`Hệ thống sẽ ghi nhận ${formatNumber(amount)} triệu/tháng.`
+        :`Hệ thống sẽ ghi nhận ${formatNumber(amount)} tỷ đồng.`;
+    }else{
+      priceHelp.textContent=rent
+        ?"Nhập theo triệu đồng/tháng, ví dụ 10 hoặc 10,5."
+        :"Nhập theo tỷ đồng, ví dụ 3,5 hoặc 6,8.";
+    }
+  };
+  const updatePhoneHelp=()=>{
+    if(!phoneInput||!phoneHelp)return true;
+    const digits=phoneInput.value.replace(/\D/g,"");
+    const hasValue=Boolean(phoneInput.value.trim());
+    const valid=!hasValue||(digits.length>=9&&digits.length<=15);
+    phoneInput.setCustomValidity(valid?"":"Số điện thoại cần có từ 9 đến 15 chữ số.");
+    phoneInput.setAttribute("aria-invalid",valid?"false":"true");
+    phoneHelp.classList.toggle("field-error",!valid);
+    phoneHelp.textContent=!hasValue
+      ?"Dùng số điện thoại có thể nhận cuộc gọi hoặc Zalo."
+      :valid
+        ?"Số liên hệ hợp lệ; khách sẽ thấy số này khi tin được duyệt."
+        :"Vui lòng kiểm tra lại số điện thoại (9–15 chữ số).";
+    return valid;
+  };
+  const refreshType=(clearPrice=false)=>{
     const rent=listingType()==="rent";
     if(priceLabel)priceLabel.textContent=rent?"Giá cho thuê (triệu/tháng) *":"Giá bán mong muốn (tỷ) *";
-    if(priceInput){priceInput.placeholder=rent?"Ví dụ: 10 triệu/tháng":"Ví dụ: 3,5 tỷ";priceInput.value="";}
-    if(priceHelp)priceHelp.textContent=rent?"Nhập theo triệu đồng/tháng, ví dụ 10 hoặc 10,5.":"Nhập theo tỷ đồng, ví dụ 3,5 hoặc 6,8.";
+    if(priceInput){
+      priceInput.placeholder=rent?"Ví dụ: 10 triệu/tháng":"Ví dụ: 3,5 tỷ";
+      if(clearPrice)priceInput.value="";
+    }
     if(availableLabel)availableLabel.textContent="Ngày có thể vào ở";
     if(availableField)availableField.hidden=!rent;
     if(availableInput)availableInput.disabled=!rent;
     if(legalField)legalField.hidden=rent;
     if(legalInput)legalInput.disabled=rent;
+    updatePriceHelp();
   };
   const refreshTowers=()=>{
+    if(!tower||!phase)return;
     const selected=tower.value;
     const options=towerMap[phase.value]||[];
     tower.replaceChildren(new Option("Chọn tòa",""),...options.map(value=>new Option(value,value)));
     if(options.includes(selected))tower.value=selected;
+  };
+
+  const setProgress=step=>{
+    const next=Math.min(Math.max(Number(step)||1,1),4);
+    if(progressCurrent)progressCurrent.textContent=`Bước ${next}/4`;
+    if(progressBar)progressBar.style.width=`${next*25}%`;
+    progressSteps.forEach((item,index)=>{
+      const itemStep=index+1;
+      item.classList.toggle("is-active",itemStep===next);
+      item.classList.toggle("is-complete",itemStep<next);
+      if(itemStep===next)item.setAttribute("aria-current","step");
+      else item.removeAttribute("aria-current");
+    });
+  };
+  const progressFromScroll=()=>{
+    progressFrame=0;
+    const anchor=Math.min(window.innerHeight*.3,240);
+    let current=1;
+    sections.forEach(section=>{
+      if(section.getBoundingClientRect().top<=anchor)current=Number(section.dataset.formStep)||current;
+    });
+    setProgress(current);
+  };
+  const scheduleProgress=()=>{
+    if(progressFrame)return;
+    progressFrame=requestAnimationFrame(progressFromScroll);
+  };
+  progressSteps.forEach((item,index)=>{
+    item.addEventListener("click",()=>{
+      const target=sections[index];
+      if(target)target.scrollIntoView({behavior:"smooth",block:"start"});
+    });
+  });
+  sections.forEach(section=>section.addEventListener("focusin",()=>setProgress(section.dataset.formStep)));
+
+  const draftElements=()=>[...form.elements].filter(element=>
+    element.name&&element!==filesInput&&element.name!=="website"&&element.type!=="submit"
+  );
+  const saveDraft=()=>{
+    draftTimer=0;
+    if(isSubmitting)return;
+    try{
+      const values={};
+      draftElements().forEach(element=>{
+        if(element.type==="radio"){
+          if(element.checked)values[element.name]=element.value;
+        }else if(element.type==="checkbox"){
+          values[element.name]=Boolean(element.checked);
+        }else{
+          values[element.name]=element.value;
+        }
+      });
+      localStorage.setItem(draftKey,JSON.stringify({savedAt:Date.now(),values}));
+      if(draftStatus)draftStatus.textContent="Đã lưu bản nháp";
+    }catch{}
+  };
+  const scheduleDraft=()=>{
+    clearTimeout(draftTimer);
+    draftTimer=setTimeout(saveDraft,280);
+  };
+  const clearDraft=()=>{
+    try{localStorage.removeItem(draftKey);}catch{}
+    if(draftStatus)draftStatus.textContent="";
+  };
+  const restoreDraft=()=>{
+    try{
+      const raw=localStorage.getItem(draftKey);
+      if(!raw)return false;
+      const draft=JSON.parse(raw);
+      if(!draft?.values||Date.now()-Number(draft.savedAt||0)>draftMaxAge){
+        localStorage.removeItem(draftKey);
+        return false;
+      }
+      const savedTower=draft.values.tower||"";
+      draftElements().forEach(element=>{
+        if(element.name==="tower")return;
+        if(!(element.name in draft.values))return;
+        const saved=draft.values[element.name];
+        if(element.type==="radio")element.checked=saved===element.value;
+        else if(element.type==="checkbox")element.checked=Boolean(saved);
+        else element.value=saved??"";
+      });
+      refreshType(false);
+      refreshTowers();
+      if(savedTower&&[...tower.options].some(option=>option.value===savedTower))tower.value=savedTower;
+      updatePhoneHelp();
+      updatePriceHelp();
+      if(draftStatus)draftStatus.textContent="Đã khôi phục bản nháp · ảnh cần chọn lại";
+      return true;
+    }catch{
+      return false;
+    }
   };
 
   const fileKind=file=>{
@@ -103,10 +272,12 @@
       URL.revokeObjectURL(loaded.url);
     }
   };
-  const prepareFiles=async files=>{
+  const prepareFiles=async(files,onProgress)=>{
     const maxBytes=Number(api.config.maxImageBytes||5*1024*1024);
     const prepared=[];
-    for(const file of files){
+    for(let index=0;index<files.length;index++){
+      onProgress?.(index+1,files.length);
+      const file=files[index];
       const kind=fileKind(file);
       if(kind==="direct"&&file.size<=maxBytes){prepared.push(file);continue;}
       prepared.push(await convertToJpeg(file,maxBytes));
@@ -114,18 +285,18 @@
     return prepared;
   };
 
-  const clearPreviews=()=>{previewUrls.forEach(URL.revokeObjectURL);previewUrls=[];previews.replaceChildren();};
+  const clearPreviews=()=>{previewUrls.forEach(URL.revokeObjectURL);previewUrls=[];previews?.replaceChildren();};
   const renderPreviews=()=>{
     clearPreviews();
-    const files=[...(filesInput.files||[])];
-    try{validateFileSelection(files);clearStatus();}catch(error){showStatus(error.message,"error");return;}
+    const files=[...(filesInput?.files||[])];
+    try{validateFileSelection(files);clearStatus();}catch(error){showStatus(error.message,"error",false);return;}
     files.forEach((file,index)=>{
       const figure=document.createElement("figure");figure.className="image-preview";
       const image=document.createElement("img");const url=URL.createObjectURL(file);previewUrls.push(url);
       image.src=url;image.alt=`Ảnh xem trước ${index+1}`;
       image.addEventListener("error",()=>{image.alt=`Đã chọn ảnh ${index+1}: ${file.name}`;});
       const label=document.createElement("span");label.textContent=index===0?"Ảnh đại diện":String(index+1);
-      figure.append(image,label);previews.append(figure);
+      figure.append(image,label);previews?.append(figure);
     });
   };
   const fieldLabel=element=>{
@@ -133,38 +304,22 @@
     return form.querySelector(`label[for="${CSS.escape(element.id)}"]`)?.textContent?.replace(/\s*\*\s*$/,"").trim()||"thông tin bắt buộc";
   };
   const validateFormFields=()=>{
-    const parsedPrice=priceVnd();
-    if(!parsedPrice){
-      showStatus(listingType()==="rent"?"Vui lòng nhập giá thuê theo triệu/tháng, ví dụ 10 hoặc 10,5.":"Vui lòng nhập giá bán theo tỷ, ví dụ 3,5 hoặc 6,8.","error");
-      try{priceInput?.focus({preventScroll:true});}catch{}
-      priceInput?.scrollIntoView({behavior:"smooth",block:"center"});
-      return false;
-    }
-    const invalid=[...form.elements].find(element=>!element.disabled&&element!==filesInput&&typeof element.checkValidity==="function"&&!element.checkValidity());
+    updatePriceHelp();
+    updatePhoneHelp();
+    const invalid=[...form.elements].find(element=>
+      !element.disabled&&element!==filesInput&&typeof element.checkValidity==="function"&&!element.checkValidity()
+    );
     if(!invalid)return true;
+    invalid.setAttribute?.("aria-invalid","true");
     showStatus(`Vui lòng kiểm tra lại mục “${fieldLabel(invalid)}”.`,"error");
     try{invalid.focus({preventScroll:true});}catch{}
     invalid.scrollIntoView({behavior:"smooth",block:"center"});
     return false;
   };
   const value=name=>api.cleanText(form.elements[name]?.value||"",name==="description"?3000:300);
-  const parseLocalizedNumber=raw=>{
-    const normalized=String(raw||"").trim().toLowerCase()
-      .replace(/tỷ|ty|triệu|trieu|\/tháng|\/thang|tháng|thang|đồng|dong|vnđ|vnd|đ/g,"")
-      .replace(/\s+/g,"")
-      .replace(",",".");
-    if(!/^\d+(?:\.\d+)?$/.test(normalized))return null;
-    const parsed=Number(normalized);
-    return Number.isFinite(parsed)&&parsed>0?parsed:null;
-  };
   const numeric=name=>{
     const parsed=Number(form.elements[name]?.value||0);
     return Number.isFinite(parsed)&&parsed>0?parsed:null;
-  };
-  const priceVnd=()=>{
-    const amount=parseLocalizedNumber(form.elements.price_vnd?.value);
-    if(!amount)return null;
-    return Math.round(amount*(listingType()==="rent"?1_000_000:1_000_000_000));
   };
   const payload=()=>{
     const unitType=value("unit_type");
@@ -181,42 +336,91 @@
     const raw=priceInput.value;
     const cleaned=raw.replace(/[^0-9,.\sA-Za-zÀ-ỹ/]/g,"");
     if(cleaned!==raw)priceInput.value=cleaned;
+    updatePriceHelp();
   });
-    form.addEventListener("change",event=>{
-    if(event.target.name==="listing_type")refreshType();
+  phoneInput?.addEventListener("input",updatePhoneHelp);
+  form.addEventListener("input",event=>{
+    event.target?.removeAttribute?.("aria-invalid");
+    scheduleDraft();
+  });
+  form.addEventListener("change",event=>{
+    if(event.target.name==="listing_type")refreshType(true);
     if(event.target===phase)refreshTowers();
     if(event.target===filesInput)renderPreviews();
+    if(event.target!==filesInput)scheduleDraft();
   });
   form.addEventListener("submit",async event=>{
-    event.preventDefault();clearStatus();
+    event.preventDefault();
+    if(isSubmitting)return;
+    clearStatus();
     if(form.elements.website?.value){showStatus("Tin của anh/chị đã được tiếp nhận.","success");return;}
     if(!validateFormFields())return;
     if(!api.configured()){showStatus("Hệ thống dữ liệu đang được kết nối. Vui lòng quay lại sau ít phút.","error");return;}
-    const selectedFiles=[...(filesInput.files||[])];
+    const selectedFiles=[...(filesInput?.files||[])];
     try{validateFileSelection(selectedFiles);}catch(error){showStatus(error.message,"error");return;}
-    submit.disabled=true;submit.textContent="Đang tối ưu ảnh…";
+
+    isSubmitting=true;
+    setSubmitState("Đang chuẩn bị ảnh…",true);
     try{
-      const files=await prepareFiles(selectedFiles);
-      submit.textContent="Đang gửi tin…";
+      const files=await prepareFiles(selectedFiles,(current,total)=>setSubmitState(`Đang tối ưu ảnh ${current}/${total}…`,true));
+      setSubmitState("Đang tạo tin…",true);
       const listing=await api.createListing(payload());
       let uploaded=0;
       for(let index=0;index<files.length;index++){
         try{
-          submit.textContent=`Đang tải ảnh ${index+1}/${files.length}…`;
+          setSubmitState(`Đang tải ảnh ${index+1}/${files.length}…`,true);
           const path=await api.uploadImage(listing.id,files[index],index);
           await api.addListingImage(listing.id,path,index,`${listing.title} — ảnh ${index+1}`);
           uploaded++;
         }catch(error){console.warn("Image upload failed",error);}
       }
       const imageNote=files.length&&uploaded<files.length?` Đã tải ${uploaded}/${files.length} ảnh; quản trị viên sẽ liên hệ nếu cần bổ sung.`:"";
+      clearDraft();
       showStatus(`Đã nhận tin ${listing.listing_code}. Tin đang chờ quản trị viên duyệt và chưa hiển thị công khai.${imageNote}`,"success");
-      form.reset();clearPreviews();refreshType();refreshTowers();
+      form.reset();
+      clearPreviews();
+      refreshType(false);
+      refreshTowers();
+      updatePhoneHelp();
+      setProgress(1);
     }catch(error){
       showStatus(error.status===429?"Anh/chị gửi quá nhanh. Vui lòng chờ rồi thử lại.":`Chưa gửi được tin: ${error.message}`,"error");
-    }finally{submit.disabled=false;submit.textContent="Gửi tin chờ duyệt";}
+    }finally{
+      isSubmitting=false;
+      setSubmitState("Gửi tin chờ duyệt",false);
+    }
   });
+
+  window.addEventListener("scroll",scheduleProgress,{passive:true});
+  window.addEventListener("resize",scheduleProgress,{passive:true});
+  if(mobileSubmitBar&&"IntersectionObserver" in window){
+    const observer=new IntersectionObserver(entries=>{
+      const visible=entries.some(entry=>entry.isIntersecting);
+      mobileSubmitBar.classList.toggle("is-visible",visible);
+    },{threshold:0});
+    observer.observe(form);
+  }else if(mobileSubmitBar){
+    mobileSubmitBar.classList.add("is-visible");
+  }
+  if(mobileSubmitBar&&window.visualViewport){
+    const updateKeyboardState=()=>{
+      const keyboardOpen=window.visualViewport.height<window.innerHeight*.72;
+      mobileSubmitBar.classList.toggle("is-keyboard",keyboardOpen);
+    };
+    window.visualViewport.addEventListener("resize",updateKeyboardState);
+    updateKeyboardState();
+  }
+
+  restoreDraft();
   const preset=location.hash.replace(/^#/,"");
+  const beforePreset=listingType();
   if(preset==="cho-thue")form.querySelector('[name="listing_type"][value="rent"]').checked=true;
   if(preset==="mua-ban")form.querySelector('[name="listing_type"][value="sale"]').checked=true;
-  refreshType();refreshTowers();
+  if(beforePreset!==listingType()&&priceInput)priceInput.value="";
+  refreshType(false);
+  refreshTowers();
+  updatePhoneHelp();
+  updatePriceHelp();
+  setProgress(1);
+  scheduleProgress();
 })();

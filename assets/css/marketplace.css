@@ -68,3 +68,30 @@
 .detail-related a{color:var(--bronze-dark);text-decoration:underline;text-underline-offset:3px}
 
 .detail-poster{display:grid;gap:3px;margin:4px 0 12px}.detail-poster span{color:var(--muted);font-size:.72rem;font-weight:750;letter-spacing:.06em;text-transform:uppercase}.detail-poster strong{font-size:1rem;font-weight:800}
+
+
+/* Marketplace UX refinement — 2026-08-29 */
+.form-progress{position:sticky;top:94px;z-index:9;margin-bottom:14px;padding:14px 16px 12px;border:1px solid var(--line);background:rgba(251,249,243,.96);backdrop-filter:blur(12px);box-shadow:0 10px 28px rgba(23,25,22,.06)}
+.form-progress-top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:9px}.form-progress-top strong{font-size:.8rem;letter-spacing:.06em;text-transform:uppercase}.form-progress-top span{color:var(--muted);font-size:.75rem}
+.form-progress-track{height:3px;overflow:hidden;background:#e3dbcf}.form-progress-track span{display:block;width:25%;height:100%;background:var(--bronze-dark);transition:width .22s ease}
+.form-progress ol{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;margin:10px 0 0;padding:0;list-style:none}.form-progress button{width:100%;min-height:34px;padding:4px;border:0;background:transparent;color:var(--muted);font-size:.73rem;cursor:pointer}.form-progress button.is-active{color:var(--ink);font-weight:800}.form-progress button.is-complete{color:var(--bronze-dark)}
+.field input[aria-invalid="true"],.field select[aria-invalid="true"],.field textarea[aria-invalid="true"]{border-color:var(--market-danger);outline-color:rgba(139,61,54,.18)}.field small.field-error{color:var(--market-danger);font-weight:700}
+.marketplace-state-benefits{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}.marketplace-state-benefits[hidden]{display:none}.marketplace-state-benefits span{padding:7px 10px;border:1px solid var(--line);background:var(--ivory);color:#4f504b;font-size:.78rem;font-weight:700}
+.listing-card-price{margin-bottom:12px;padding:0 0 13px;border-top:0;border-bottom:1px solid var(--line)}.listing-card-price strong{font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-weight:850;font-variant-numeric:tabular-nums;letter-spacing:-.02em}.listing-card-meta{margin-bottom:9px}.listing-card h3{min-height:0;margin-bottom:0}
+.detail-price{font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-weight:850;font-variant-numeric:tabular-nums;letter-spacing:-.035em}
+.marketplace-hero .btn-primary{border-color:#fff;background:#fff;color:var(--night)}
+.mobile-submit-bar{display:none}
+@media(max-width:700px){
+  .marketplace-page{padding:2.2rem 0 3.6rem}.marketplace-page-head{gap:18px;margin-bottom:2rem}.marketplace-page-head h1{font-size:clamp(2.25rem,11vw,3.35rem)}.marketplace-heading h2{font-size:clamp(1.8rem,9vw,2.45rem)}
+  .marketplace-hero{min-height:390px;padding-bottom:2.5rem}.marketplace-hero h1{font-size:clamp(2.35rem,11vw,3.5rem)}.marketplace-hero .lead{line-height:1.65}
+  .form-progress{top:70px;margin-inline:-1px;padding:10px 11px 9px}.form-progress-top{margin-bottom:6px}.form-progress ol{margin-top:7px}.form-progress button{min-height:32px;font-size:.68rem}
+  .marketplace-form{padding-bottom:88px}.form-section{margin-bottom:12px;padding:20px 15px}.form-section-head{margin-bottom:20px;padding-bottom:13px}.form-section-head h2{font-size:1.6rem}
+  .marketplace-form .choice-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.marketplace-form .choice-card label{min-height:60px;padding:10px;text-align:center}.marketplace-form .choice-card label strong{font-size:1rem}.marketplace-form .choice-card label span{display:none}
+  .field{gap:7px;margin-bottom:14px}.field label,.field-label{font-size:.82rem}.field input,.field select,.field textarea{min-height:50px;font-size:16px}.field textarea{min-height:145px}.field small,.form-hint{font-size:.84rem;line-height:1.55}
+  .marketplace-toolbar{padding:14px}.listing-card-body{padding:16px}.listing-card-price strong{font-size:1.42rem}.listing-card-meta{gap:6px 10px;font-size:.76rem}
+  .marketplace-state{padding:24px 18px}.marketplace-state-benefits{display:grid;grid-template-columns:1fr;gap:6px}.marketplace-state-benefits[hidden]{display:none}.marketplace-state-benefits span{padding:8px 10px}
+  .mobile-submit-bar{position:fixed;z-index:45;left:0;right:0;bottom:0;display:flex;padding:10px max(12px,env(safe-area-inset-left)) calc(10px + env(safe-area-inset-bottom));background:rgba(251,249,243,.97);border-top:1px solid var(--line);box-shadow:0 -12px 30px rgba(23,25,22,.12);opacity:0;transform:translateY(110%);pointer-events:none;transition:opacity .18s ease,transform .18s ease}
+  .mobile-submit-bar.is-visible{opacity:1;transform:none;pointer-events:auto}.mobile-submit-bar.is-keyboard{opacity:0;transform:translateY(110%);pointer-events:none}.mobile-submit-bar .btn{width:min(100%,560px);min-height:52px;margin:auto}
+  .form-submit .btn{min-height:52px}.form-status{line-height:1.55}
+}
+@media(prefers-reduced-motion:reduce){.form-progress-track span,.mobile-submit-bar{transition:none}}
