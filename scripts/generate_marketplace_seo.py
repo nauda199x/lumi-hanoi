@@ -268,10 +268,6 @@ def render_page(listing: dict) -> str:
     schema_json = json.dumps(prune(schema), ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
     related_html = "".join(related)
     description_html = esc(listing.get("description")).replace("\n", "<br>")
-    zalo_html = (
-        f'<a class="btn" href="https://zalo.me/{esc(zalo_number)}" target="_blank" rel="noopener">Nhắn Zalo</a>'
-        if zalo_number else ""
-    )
     return f"""<!doctype html>
 <html lang="vi">
 <head>
@@ -325,8 +321,8 @@ def render_page(listing: dict) -> str:
           <div><dt>Nội thất</dt><dd>{esc(listing.get('furnishing') or 'Liên hệ')}</dd></div>
         </dl>
         <div class="detail-contact">
-          <a class="btn btn-primary" href="tel:{esc(phone_href)}">{esc(phone) or 'Gọi người đăng'}</a>
-          {zalo_html}
+          <a class="btn btn-primary" data-static-phone href="#">Xem số liên hệ</a>
+          <a class="btn" data-static-zalo href="#" target="_blank" rel="noopener" hidden>Nhắn Zalo</a>
         </div>
         <p class="detail-note">Không chuyển tiền chỉ dựa trên nội dung tin đăng hoặc trao đổi qua điện thoại.</p>
       </div></aside>
