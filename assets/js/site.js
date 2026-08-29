@@ -13,20 +13,58 @@
   const button=document.querySelector('[data-nav-toggle]');
   const nav=document.querySelector('[data-nav-links]');
   if(button&&nav){
+    const makeDropdown=(label,links,rightAligned=false)=>{
+      const details=document.createElement('details');
+      details.className='nav-dropdown';
+      const summary=document.createElement('summary');
+      summary.textContent=label;
+      const menu=document.createElement('div');
+      menu.className=`nav-dropdown-menu${rightAligned?' nav-dropdown-menu--right':''}`;
+      details.append(summary,menu);
+      links[0].before(details);
+      links.forEach(link=>menu.append(link));
+      return details;
+    };
+    if(!nav.querySelector('.nav-dropdown')){
+      const topLevelLinks=[...nav.children].filter(item=>item.matches('a'));
+      const byHref=href=>topLevelLinks.find(link=>link.getAttribute('href')===href);
+      const phaseLinks=['/lumi-signature/','/lumi-prestige/','/lumi-elite/'].map(byHref).filter(Boolean);
+      if(phaseLinks.length===3)makeDropdown('Phân khu',phaseLinks);
+      const transactionLink=byHref('/mua-ban-lumi-hanoi/');
+      if(transactionLink){
+        transactionLink.textContent='Mua bán';
+        const rentLink=document.createElement('a');
+        rentLink.href='/cho-thue-lumi-hanoi/';
+        rentLink.textContent='Cho thuê';
+        if(location.pathname==='/mua-ban-lumi-hanoi/')transactionLink.setAttribute('aria-current','page');
+        if(location.pathname==='/cho-thue-lumi-hanoi/')rentLink.setAttribute('aria-current','page');
+        transactionLink.after(rentLink);
+        makeDropdown('Giao dịch',[transactionLink,rentLink],true);
+      }
+    }
+    const dropdowns=[...nav.querySelectorAll('.nav-dropdown')];
+    dropdowns.forEach(dropdown=>dropdown.addEventListener('toggle',()=>{
+      if(dropdown.open)dropdowns.filter(item=>item!==dropdown).forEach(item=>{item.open=false;});
+    }));
+    document.addEventListener('click',event=>{
+      if(!nav.contains(event.target))dropdowns.forEach(item=>{item.open=false;});
+    });
     button.addEventListener('click',()=>{
       const open=nav.getAttribute('data-open')==='true';
       nav.setAttribute('data-open',String(!open));
       button.setAttribute('aria-expanded',String(!open));
     });
     nav.querySelectorAll('a').forEach(link=>link.addEventListener('click',()=>{
+      dropdowns.forEach(item=>{item.open=false;});
       nav.setAttribute('data-open','false');
       button.setAttribute('aria-expanded','false');
     }));
     document.addEventListener('keydown',event=>{
       if(event.key==='Escape'){
+        dropdowns.forEach(item=>{item.open=false;});
         nav.setAttribute('data-open','false');
         button.setAttribute('aria-expanded','false');
-        button.focus();
+        if(getComputedStyle(button).display!=='none')button.focus();
       }
     });
   }
