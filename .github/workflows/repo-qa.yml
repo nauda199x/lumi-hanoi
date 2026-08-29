@@ -43,8 +43,31 @@ jobs:
           python -m py_compile scripts/generate_marketplace_seo.py
           python - <<'PY'
           import xml.etree.ElementTree as ET
+          from pathlib import Path
+          from urllib.parse import urlparse, unquote
+
           ET.parse('sitemap.xml')
           print('sitemap.xml: OK')
+
+          ns = {
+              'sm': 'http://www.sitemaps.org/schemas/sitemap/0.9',
+              'image': 'http://www.google.com/schemas/sitemap-image/1.1',
+          }
+          root = ET.parse('sitemap-images.xml').getroot()
+          image_locs = [node.text for node in root.findall('.//image:loc', ns) if node.text]
+          if not image_locs:
+              raise SystemExit('sitemap-images.xml has no image entries')
+          for image_url in image_locs:
+              parsed = urlparse(image_url)
+              if parsed.scheme != 'https' or parsed.netloc != 'lumi-hanoi.com':
+                  raise SystemExit(f'invalid image URL: {image_url}')
+              local = Path(unquote(parsed.path.lstrip('/')))
+              if not local.is_file():
+                  raise SystemExit(f'image sitemap points to missing file: {local}')
+          robots = Path('robots.txt').read_text(encoding='utf-8')
+          if 'Sitemap: https://lumi-hanoi.com/sitemap-images.xml' not in robots:
+              raise SystemExit('robots.txt is missing sitemap-images.xml')
+          print(f'sitemap-images.xml: OK ({len(image_locs)} image entries)')
           PY
           node --check assets/js/site.js
           node --check assets/js/floor-plan-tower.js
