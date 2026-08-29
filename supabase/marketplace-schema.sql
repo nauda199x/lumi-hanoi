@@ -287,7 +287,7 @@ revoke all on public.admin_users,public.listings,public.listing_images,public.li
 grant usage on schema public to anon, authenticated;
 grant select (
   id,listing_code,slug,listing_type,status,title,description,phase,tower,unit_type,bedroom_count,
-  area_sqm,floor_label,price_vnd,furnishing,available_from,contact_phone,is_featured,sort_priority,
+  area_sqm,floor_label,price_vnd,furnishing,available_from,poster_name,contact_phone,is_featured,sort_priority,
   approved_at,expires_at,created_at,updated_at
 ) on public.listings to anon;
 grant insert (
