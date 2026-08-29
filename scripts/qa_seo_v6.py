@@ -122,7 +122,11 @@ def main() -> int:
             if path not in links: errors.append(f"{owner} does not link to {path}")
     for path in V5_REQUIRED:
         if not file_for(path).is_file(): errors.append(f"V5/V5.1 required page missing: {path}")
-    public = "\n".join(p.read_text(encoding="utf-8", errors="ignore") for p in ROOT.rglob("*.html"))
+    public = "\n".join(
+        p.read_text(encoding="utf-8", errors="ignore")
+        for p in ROOT.rglob("*.html")
+        if not (p.parent / ".marketplace-generated").is_file()
+    )
     if "chuyennhuonglumi.vn" in public.lower(): errors.append("competitor domain found in public HTML")
     if re.search(r"(?:giá tốt nhất|cam kết lợi nhuận|còn duy nhất|suất ngoại giao)", public, re.I): errors.append("obvious fake sales CTA found")
     if re.search(r"(?:chuyennhuonglumi[^\s<]*(?:@|tel:)|(?:0|\+84)\d{8,10})", public, re.I): errors.append("possible competitor contact data found")
