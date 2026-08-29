@@ -20,6 +20,14 @@ CONFIG_PATH = ROOT / "assets/js/marketplace-config.js"
 SITE = "https://lumi-hanoi.com"
 MARKER = ".marketplace-generated"
 SITEMAP = ROOT / "sitemap-tin-dang.xml"
+MAIN_SITEMAP = ROOT / "sitemap.xml"
+SHOP_LANDING = ROOT / "cho-thue-shop-chan-de-lumi-hanoi" / "index.html"
+STATIC_LISTING_START = "<!-- MARKETPLACE-STATIC-LISTINGS:START -->"
+STATIC_LISTING_END = "<!-- MARKETPLACE-STATIC-LISTINGS:END -->"
+SHOP_LISTING_START = "<!-- MARKETPLACE-SHOP-LISTINGS:START -->"
+SHOP_LISTING_END = "<!-- MARKETPLACE-SHOP-LISTINGS:END -->"
+MAIN_SITEMAP_START = "<!-- MARKETPLACE-LISTINGS:START -->"
+MAIN_SITEMAP_END = "<!-- MARKETPLACE-LISTINGS:END -->"
 
 CATEGORY = {
     "sale": ("mua-ban-lumi-hanoi", "Mua bán"),
@@ -32,6 +40,7 @@ UNIT_LINKS = {
     "4PN": "/can-ho-4-phong-ngu-lumi-hanoi/",
     "Duplex": "/duplex-penthouse-lumi-hanoi/",
     "Penthouse": "/duplex-penthouse-lumi-hanoi/",
+    "Shop chân đế": "/cho-thue-shop-chan-de-lumi-hanoi/",
 }
 
 
@@ -191,6 +200,113 @@ def render_gallery(listing: dict) -> str:
         + str(len(images))
         + "</span></div>"
     )
+
+
+def render_static_card(listing: dict) -> str:
+    images = sorted(listing.get("listing_images") or [], key=lambda item: int(item.get("sort_order") or 0))
+    image_html = ""
+    if images:
+        src = storage_url(images[0].get("storage_path", ""))
+        alt = images[0].get("alt_text") or listing.get("title") or "Tin đăng Lumi Hanoi"
+        image_html = (
+            f'<a class="listing-card-slide" href="{esc(listing_url(listing))}" aria-label="Xem {esc(listing.get("title"))}">'
+            f'<img src="{esc(src)}" alt="{esc(alt)}" loading="lazy" decoding="async"></a>'
+        )
+    else:
+        image_html = (
+            f'<a class="listing-card-slide listing-card-placeholder" href="{esc(listing_url(listing))}">'
+            f'{esc(listing.get("unit_type") or "Căn hộ")} · {esc(listing.get("tower") or "Lumi Hanoi")}</a>'
+        )
+    description = compact_text(listing.get("description", ""))
+    if len(description) > 180:
+        description = description[:177].rsplit(" ", 1)[0] + "…"
+    facts = " · ".join(
+        part for part in [
+            format_price(listing),
+            f'{format_area(listing.get("area_sqm"))} m²' if listing.get("area_sqm") else "",
+            clean(listing.get("unit_type")),
+            f'Tầng {clean(listing.get("floor_label"))}' if listing.get("floor_label") else "",
+        ] if part
+    )
+    location = " · ".join(part for part in ["Lumi Hanoi", clean(listing.get("phase")), clean(listing.get("tower"))] if part)
+    return (
+        '<article class="listing-card listing-card--marketplace" data-static-listing-card>'
+        '<div class="listing-card-media"><div class="listing-card-gallery-track">' + image_html + '</div></div>'
+        '<div class="listing-card-body"><div class="listing-card-content">'
+        f'<h3><a href="{esc(listing_url(listing))}">{esc(listing.get("title"))}</a></h3>'
+        f'<div class="listing-card-facts"><strong class="listing-card-fact-price">{esc(facts)}</strong></div>'
+        f'<div class="listing-card-location"><span>{esc(location)}</span></div>'
+        f'<p class="listing-card-description">{esc(description or "Xem hình ảnh, giá và thông tin chi tiết của tin đăng.")}</p>'
+        '</div></div></article>'
+    )
+
+
+def replace_marked_block(raw: str, start: str, end: str, body: str) -> str:
+    block = start + "\n" + body.strip() + "\n" + end
+    if start in raw and end in raw:
+        return re.sub(re.escape(start) + r".*?" + re.escape(end), block, raw, count=1, flags=re.S)
+    return raw
+
+
+def sync_category_indexes(listings: list[dict]) -> None:
+    for listing_type, (segment, _) in CATEGORY.items():
+        path = ROOT / segment / "index.html"
+        if not path.exists():
+            continue
+        rows = [listing for listing in listings if listing.get("listing_type") == listing_type]
+        cards = "\n".join(render_static_card(listing) for listing in rows)
+        raw = path.read_text(encoding="utf-8")
+        if STATIC_LISTING_START in raw and STATIC_LISTING_END in raw:
+            raw = replace_marked_block(raw, STATIC_LISTING_START, STATIC_LISTING_END, cards)
+        else:
+            empty_grid = re.compile(r'(<div class="listing-grid" data-listing-grid)(?: hidden)?(>)\s*</div>')
+            replacement = (
+                r'\1\2\n' + STATIC_LISTING_START + "\n" + cards + "\n" + STATIC_LISTING_END + "\n</div>"
+            )
+            raw, count = empty_grid.subn(replacement, raw, count=1)
+            if count != 1:
+                raise RuntimeError(f"Could not locate listing grid in {path}")
+        if rows:
+            raw = raw.replace('<div class="listing-grid" data-listing-grid hidden>', '<div class="listing-grid" data-listing-grid>')
+            raw = re.sub(
+                r'<div class="marketplace-state" data-listing-state(?: hidden)? role="status">',
+                '<div class="marketplace-state" data-listing-state hidden role="status">',
+                raw,
+                count=1,
+            )
+        else:
+            raw = raw.replace('<div class="listing-grid" data-listing-grid>', '<div class="listing-grid" data-listing-grid hidden>')
+            raw = re.sub(
+                r'<div class="marketplace-state" data-listing-state(?: hidden)? role="status">',
+                '<div class="marketplace-state" data-listing-state role="status">',
+                raw,
+                count=1,
+            )
+        count_text = f"{len(rows)} tin đăng" if rows else "0 tin đăng"
+        raw = re.sub(
+            r'(<span class="marketplace-count" data-listing-count aria-label="Số tin đang hiển thị">).*?(</span>)',
+            rf'\g<1>{count_text}\2',
+            raw,
+            count=1,
+            flags=re.S,
+        )
+        path.write_text(raw, encoding="utf-8")
+
+
+def sync_shop_landing(listings: list[dict]) -> None:
+    if not SHOP_LANDING.exists():
+        return
+    shops = [
+        listing for listing in listings
+        if listing.get("listing_type") == "rent" and clean(listing.get("unit_type")).lower() == "shop chân đế"
+    ]
+    cards = "\n".join(render_static_card(listing) for listing in shops)
+    if not cards:
+        cards = '<div class="marketplace-state"><span class="marketplace-state-mark">LH</span><div><h3>Chưa có shop đang công khai</h3><p>Quay lại trang cho thuê để xem các loại căn khác tại Lumi Hanoi.</p></div></div>'
+    raw = SHOP_LANDING.read_text(encoding="utf-8")
+    raw = replace_marked_block(raw, SHOP_LISTING_START, SHOP_LISTING_END, cards)
+    raw = re.sub(r'(<span data-static-shop-count>).*?(</span>)', rf'\g<1>{len(shops)} tin shop đang hiển thị\2', raw, count=1, flags=re.S)
+    SHOP_LANDING.write_text(raw, encoding="utf-8")
 
 
 def render_page(listing: dict) -> str:
@@ -424,10 +540,45 @@ def write_sitemap(listings: list[dict]) -> None:
     SITEMAP.write_text("\n".join(rows) + "\n", encoding="utf-8")
 
 
+def write_main_sitemap(listings: list[dict]) -> None:
+    if not MAIN_SITEMAP.exists():
+        return
+    raw = MAIN_SITEMAP.read_text(encoding="utf-8")
+    landing_loc = SITE + "/cho-thue-shop-chan-de-lumi-hanoi/"
+    if landing_loc not in raw:
+        landing = (
+            "  <url><loc>" + landing_loc + "</loc><lastmod>2026-08-30</lastmod>"
+            "<changefreq>daily</changefreq><priority>0.9</priority></url>\n"
+        )
+        raw = raw.replace("</urlset>", landing + "</urlset>")
+    dynamic_rows = []
+    for listing in listings:
+        if not indexable(listing):
+            continue
+        loc = SITE + listing_url(listing)
+        lastmod = date_only(listing.get("approved_at") or listing.get("created_at"))
+        dynamic_rows.append("  <url>")
+        dynamic_rows.append(f"    <loc>{esc(loc)}</loc>")
+        if lastmod:
+            dynamic_rows.append(f"    <lastmod>{lastmod}</lastmod>")
+        dynamic_rows.append("    <changefreq>daily</changefreq>")
+        dynamic_rows.append("    <priority>0.7</priority>")
+        dynamic_rows.append("  </url>")
+    block = MAIN_SITEMAP_START + "\n" + "\n".join(dynamic_rows) + "\n" + MAIN_SITEMAP_END
+    if MAIN_SITEMAP_START in raw and MAIN_SITEMAP_END in raw:
+        raw = replace_marked_block(raw, MAIN_SITEMAP_START, MAIN_SITEMAP_END, "\n".join(dynamic_rows))
+    else:
+        raw = raw.replace("</urlset>", block + "\n</urlset>")
+    MAIN_SITEMAP.write_text(raw, encoding="utf-8")
+
+
 def main() -> None:
     listings = fetch_approved()
     generated = write_pages(listings)
+    sync_category_indexes(generated)
+    sync_shop_landing(generated)
     write_sitemap(generated)
+    write_main_sitemap(generated)
     indexed = sum(1 for listing in generated if indexable(listing))
     print(f"Marketplace SEO: generated={len(generated)}, indexable={indexed}")
 
