@@ -269,6 +269,8 @@ def render_page(listing: dict) -> str:
     phone = clean(listing.get("contact_phone"))
     phone_href = re.sub(r"[^+\\d]", "", phone)
     zalo_number = re.sub(r"\\D", "", phone)
+    zalo_href = f"https://zalo.me/{zalo_number}" if zalo_number else "#"
+    zalo_hidden = "" if zalo_number else " hidden"
     return f"""<!doctype html>
 <html lang="vi">
 <head>
@@ -324,7 +326,7 @@ def render_page(listing: dict) -> str:
         <div class="detail-poster" data-static-poster><span>Người đăng</span><strong>{esc(poster_name)}</strong></div>
         <div class="detail-contact">
           <a class="btn btn-primary" data-static-phone href="tel:{esc(phone_href)}">{esc(phone) or "Gọi người đăng"}</a>
-          <a class="btn" data-static-zalo href="{f"https://zalo.me/{esc(zalo_number)}" if zalo_number else "#"}" target="_blank" rel="noopener"{"" if zalo_number else " hidden"}>Nhắn Zalo</a>
+          <a class="btn" data-static-zalo href="{esc(zalo_href)}" target="_blank" rel="noopener"{zalo_hidden}>Nhắn Zalo</a>
         </div>
         <p class="detail-note">Không chuyển tiền chỉ dựa trên nội dung tin đăng hoặc trao đổi qua điện thoại.</p>
       </div></aside>
