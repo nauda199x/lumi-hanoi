@@ -1,11 +1,11 @@
 /*
  * Public browser configuration for the Lumi Hanoi marketplace.
- * The Supabase anon key is designed to be public. Never place a service-role
- * key, database password or another private credential in this file.
+ * The Supabase publishable key is designed for public browser clients. Never
+ * place a secret/service-role key, database password or private credential here.
  */
 window.LUMI_MARKETPLACE_CONFIG = Object.freeze({
   supabaseUrl: "",
-  supabaseAnonKey: "",
+  supabasePublishableKey: "",
   storageBucket: "listing-images",
   maxImages: 12,
   maxImageBytes: 5 * 1024 * 1024,

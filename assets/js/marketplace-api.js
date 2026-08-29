@@ -1,15 +1,15 @@
 (()=>{
   const config=window.LUMI_MARKETPLACE_CONFIG||{};
   const base=String(config.supabaseUrl||"").replace(/\/$/,"");
-  const anonKey=String(config.supabaseAnonKey||"");
+  const publishableKey=String(config.supabasePublishableKey||config.supabaseAnonKey||"");
   const sessionKey="lumi_marketplace_admin_session";
 
   class MarketplaceError extends Error{
     constructor(message,status=0,details=null){super(message);this.name="MarketplaceError";this.status=status;this.details=details;}
   }
 
-  const configured=()=>Boolean(base&&anonKey&&!base.includes("YOUR_PROJECT"));
-  const apiHeaders=(token=anonKey)=>({apikey:anonKey,Authorization:`Bearer ${token||anonKey}`});
+  const configured=()=>Boolean(base&&publishableKey&&!base.includes("YOUR_PROJECT"));
+  const apiHeaders=token=>({apikey:publishableKey,...(token?{Authorization:`Bearer ${token}`}:{})});
   const parseResponse=async response=>{
     if(response.status===204)return null;
     const text=await response.text();
@@ -130,10 +130,19 @@
     headers:{Prefer:"return=minimal"}
   });
 
+  const isAdminSession=async session=>{
+    if(!session?.access_token)return false;
+    let user=session.user;
+    if(!user?.id)user=await request("/auth/v1/user",{token:session.access_token});
+    if(!user?.id)return false;
+    const rows=await request(restPath("admin_users",{select:"user_id",user_id:`eq.${user.id}`,limit:"1"}),{token:session.access_token});
+    return Boolean(rows?.length);
+  };
+
   const signIn=async(email,password)=>{
     const session=await request("/auth/v1/token?grant_type=password",{method:"POST",body:{email:cleanText(email,200),password:String(password||"")}});
     saveSession(session);
-    const allowed=await request("/rest/v1/rpc/is_admin",{method:"POST",body:{},token:session.access_token});
+    const allowed=await isAdminSession(session);
     if(!allowed){saveSession(null);throw new MarketplaceError("Tài khoản này không có quyền quản trị.",403);}
     return session;
   };
@@ -146,7 +155,7 @@
     const session=await validSession();
     if(!session)return null;
     try{
-      const allowed=await request("/rest/v1/rpc/is_admin",{method:"POST",body:{},token:session.access_token});
+      const allowed=await isAdminSession(session);
       return allowed?session:null;
     }catch{return null;}
   };
