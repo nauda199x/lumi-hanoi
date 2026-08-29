@@ -186,8 +186,8 @@
 .marketplace-section{background:#f3efe6}
 .marketplace-heading{margin-bottom:22px}
 .marketplace-heading h2{letter-spacing:-.035em}
-.marketplace-toolbar{position:sticky;top:78px;z-index:25;grid-template-columns:minmax(190px,1.45fr) repeat(6,minmax(112px,.72fr)) auto;gap:9px;margin-bottom:22px;padding:12px;border:1px solid #d9d1c4;border-radius:14px;background:rgba(251,249,244,.97);box-shadow:0 10px 32px rgba(33,31,26,.08);backdrop-filter:blur(14px)}
-.marketplace-toolbar .field{gap:5px}.marketplace-toolbar .field label{padding-left:2px;font-size:.67rem}.marketplace-toolbar .field input,.marketplace-toolbar .field select{min-height:46px;border-color:#d8d0c4;border-radius:9px;background:#fff;font-size:.9rem}.marketplace-toolbar>.btn{min-height:46px;border-radius:9px}
+.marketplace-toolbar{position:sticky;top:78px;z-index:25;grid-template-columns:minmax(230px,1.6fr) minmax(165px,.9fr) minmax(145px,.78fr) minmax(165px,.9fr) minmax(155px,.84fr) minmax(155px,.84fr) minmax(145px,.78fr) auto;gap:10px;margin-bottom:22px;padding:12px;border:1px solid #d9d1c4;border-radius:14px;background:rgba(251,249,244,.97);box-shadow:0 10px 32px rgba(33,31,26,.08);backdrop-filter:blur(14px)}
+.marketplace-toolbar .field{min-width:0;gap:5px}.marketplace-toolbar .field label{padding-left:2px;font-size:.67rem}.marketplace-toolbar .field input,.marketplace-toolbar .field select{min-width:0;min-height:46px;padding-left:12px;padding-right:34px;border-color:#d8d0c4;border-radius:9px;background:#fff;font-size:.88rem;white-space:nowrap}.marketplace-toolbar>.btn{min-width:110px;min-height:46px;border-radius:9px}
 .marketplace-mobile-controls,.marketplace-filter-sheet-head,.marketplace-filter-apply,.marketplace-filter-backdrop{display:none}
 
 .listing-grid{display:grid;grid-template-columns:1fr;gap:18px}
@@ -233,8 +233,8 @@
 .marketplace-load-more{display:flex;align-items:center;justify-content:center;gap:16px;margin-top:24px;padding-top:18px;border-top:1px solid #ddd5c9}
 .marketplace-load-more[hidden]{display:none}.marketplace-load-more-status{color:#777770;font-size:.82rem}.marketplace-load-more .btn{min-width:180px;border-radius:999px}
 
-@media(max-width:1120px) and (min-width:701px){
-  .marketplace-toolbar{grid-template-columns:minmax(180px,1.3fr) repeat(3,minmax(125px,1fr));top:74px}
+@media(max-width:1450px) and (min-width:701px){
+  .marketplace-toolbar{grid-template-columns:minmax(220px,1.35fr) repeat(3,minmax(150px,1fr));top:74px}
   .marketplace-toolbar .field:nth-of-type(n+5),.marketplace-toolbar>.btn{grid-row:2}
   .listing-card--marketplace{grid-template-columns:minmax(310px,.9fr) minmax(0,1.1fr)}
   .listing-card-actions .listing-card-action--view{display:none}
