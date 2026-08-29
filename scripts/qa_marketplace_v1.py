@@ -11,6 +11,7 @@ required_files = [
     "assets/js/marketplace-form.js",
     "assets/js/marketplace-detail.js",
     "assets/js/marketplace-admin.js",
+    "giao-dich-lumi-hanoi/index.html",
     "dang-tin-lumi-hanoi/index.html",
     "tin-dang-lumi-hanoi/index.html",
     "admin/index.html",
@@ -28,6 +29,7 @@ schema = (ROOT / "supabase/marketplace-schema.sql").read_text(encoding="utf-8")
 config = (ROOT / "assets/js/marketplace-config.js").read_text(encoding="utf-8")
 api = (ROOT / "assets/js/marketplace-api.js").read_text(encoding="utf-8")
 home = (ROOT / "index.html").read_text(encoding="utf-8")
+transaction_hub = (ROOT / "giao-dich-lumi-hanoi/index.html").read_text(encoding="utf-8")
 site_js = (ROOT / "assets/js/site.js").read_text(encoding="utf-8")
 
 assert 'data-listing-type="sale"' in sale and 'marketplace-list.js' in sale
@@ -50,7 +52,10 @@ assert 'select:"id,slug,listing_code,listing_type,title,description' in api, "Pu
 assert "service-role" in config.lower() and "supabasePublishableKey" in config
 assert "service_role" not in config
 assert home.index('href="/tong-quan-lumi-hanoi/">Tổng quan</a>') < home.index("<summary>Giao dịch</summary>") < home.index('href="/mat-bang-lumi-hanoi/">Mặt bằng</a>')
-assert '<a class="btn" href="/mua-ban-lumi-hanoi/">Giao dịch</a>' in home
+assert '<a class="btn" href="/giao-dich-lumi-hanoi/">Giao dịch</a>' in home
+assert 'href="/mua-ban-lumi-hanoi/"' in transaction_hub
+assert 'href="/cho-thue-lumi-hanoi/"' in transaction_hub
+assert 'href="/dang-tin-lumi-hanoi/"' in transaction_hub
 assert "Cẩm nang giao dịch" not in home
 assert "overviewLink.after(transactionDropdown)" in site_js, "Every legacy page must prioritize the transaction dropdown after Overview"
 
