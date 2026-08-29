@@ -1,4 +1,21 @@
 (()=>{
+  // Google Analytics 4 — site-wide measurement.
+  // Loaded from the shared site script so new static pages and marketplace SEO pages
+  // are measured automatically without duplicating the tag in every HTML file.
+  const measurementId="G-EG08S7QJWG";
+  if(location.pathname.startsWith("/admin/")||window.__lumiGaLoaded)return;
+  window.__lumiGaLoaded=true;
+  window.dataLayer=window.dataLayer||[];
+  window.gtag=window.gtag||function(){window.dataLayer.push(arguments);};
+  window.gtag("js",new Date());
+  window.gtag("config",measurementId);
+  const tag=document.createElement("script");
+  tag.async=true;
+  tag.src=`https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(measurementId)}`;
+  document.head.append(tag);
+})();
+
+(()=>{
   // Load the final responsive cascade after the legacy/site stylesheet on every page.
   // Keeping this in site.js avoids touching dozens of static HTML files while the
   // CSS remains a normal local asset that browsers can cache.
