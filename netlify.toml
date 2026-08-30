@@ -182,6 +182,12 @@
   force = true
 
 [[redirects]]
+  from = "http://www.lumi-hanoi.com/*"
+  to = "https://lumi-hanoi.com/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
   from = "http://lumi-hanoi.com/*"
   to = "https://lumi-hanoi.com/:splat"
   status = 301

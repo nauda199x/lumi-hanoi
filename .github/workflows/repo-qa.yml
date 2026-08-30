@@ -34,6 +34,7 @@ jobs:
           python scripts/qa_responsive_v9.py
           python scripts/qa_brand_meta_v10_1.py
           python scripts/qa_legacy_redirects_v10_2.py
+          python scripts/qa_gsc_top5_v10_3.py
           python scripts/qa_public_source_cleanup.py
           python scripts/qa_marketplace_v1.py
       - name: Validate data and JavaScript syntax
