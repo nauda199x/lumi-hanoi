@@ -14,6 +14,7 @@ import urllib.parse
 import urllib.request
 from datetime import datetime
 from pathlib import Path
+from statistics import median
 
 ROOT = Path(__file__).resolve().parents[1]
 CONFIG_PATH = ROOT / "assets/js/marketplace-config.js"
@@ -22,12 +23,17 @@ MARKER = ".marketplace-generated"
 SITEMAP = ROOT / "sitemap-tin-dang.xml"
 MAIN_SITEMAP = ROOT / "sitemap.xml"
 SHOP_LANDING = ROOT / "cho-thue-shop-chan-de-lumi-hanoi" / "index.html"
+PRICE_PAGE = ROOT / "gia-can-ho-lumi-hanoi" / "index.html"
 STATIC_LISTING_START = "<!-- MARKETPLACE-STATIC-LISTINGS:START -->"
 STATIC_LISTING_END = "<!-- MARKETPLACE-STATIC-LISTINGS:END -->"
 SHOP_LISTING_START = "<!-- MARKETPLACE-SHOP-LISTINGS:START -->"
 SHOP_LISTING_END = "<!-- MARKETPLACE-SHOP-LISTINGS:END -->"
 MAIN_SITEMAP_START = "<!-- MARKETPLACE-LISTINGS:START -->"
 MAIN_SITEMAP_END = "<!-- MARKETPLACE-LISTINGS:END -->"
+MARKET_PRICE_START = "<!-- MARKET-PRICE-STATS:START -->"
+MARKET_PRICE_END = "<!-- MARKET-PRICE-STATS:END -->"
+APARTMENT_UNIT_TYPES = ("1PN", "2PN", "3PN", "4PN", "Duplex", "Penthouse")
+MARKET_PHASES = ("Signature", "Prestige", "Elite")
 
 CATEGORY = {
     "sale": ("mua-ban-lumi-hanoi", "Mua bán"),
@@ -246,6 +252,223 @@ def replace_marked_block(raw: str, start: str, end: str, body: str) -> str:
     if start in raw and end in raw:
         return re.sub(re.escape(start) + r".*?" + re.escape(end), block, raw, count=1, flags=re.S)
     return raw
+
+def numeric(value) -> float | None:
+    try:
+        number = float(value)
+    except (TypeError, ValueError):
+        return None
+    return number if number > 0 else None
+
+
+def market_rows(listings: list[dict], listing_type: str, unit_type: str | None = None, phase: str | None = None) -> list[dict]:
+    rows = []
+    for listing in listings:
+        if listing.get("listing_type") != listing_type:
+            continue
+        current_unit = clean(listing.get("unit_type"))
+        if current_unit.lower() == "shop chân đế":
+            continue
+        if current_unit not in APARTMENT_UNIT_TYPES:
+            continue
+        if unit_type and current_unit != unit_type:
+            continue
+        if phase and clean(listing.get("phase")) != phase:
+            continue
+        if numeric(listing.get("price_vnd")) is None or numeric(listing.get("area_sqm")) is None:
+            continue
+        rows.append(listing)
+    return rows
+
+
+def market_stats(rows: list[dict]) -> dict:
+    prices = [numeric(row.get("price_vnd")) for row in rows]
+    areas = [numeric(row.get("area_sqm")) for row in rows]
+    pairs = [(price, area) for price, area in zip(prices, areas) if price and area]
+    valid_prices = [price for price, _ in pairs]
+    per_sqm = [price / area for price, area in pairs]
+    if not valid_prices:
+        return {"count": 0, "min": None, "max": None, "median": None, "ppsm": None}
+    return {
+        "count": len(valid_prices),
+        "min": min(valid_prices),
+        "max": max(valid_prices),
+        "median": median(valid_prices),
+        "ppsm": median(per_sqm) if per_sqm else None,
+    }
+
+
+def format_market_price(value: float | None, listing_type: str) -> str:
+    if value is None:
+        return "—"
+    if listing_type == "rent":
+        amount = value / 1_000_000
+        text = f"{amount:,.1f}".replace(",", "X").replace(".", ",").replace("X", ".").rstrip("0").rstrip(",")
+        return text + " triệu/tháng"
+    amount = value / 1_000_000_000
+    text = f"{amount:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".").rstrip("0").rstrip(",")
+    return text + " tỷ"
+
+
+def format_market_range(stats: dict, listing_type: str) -> str:
+    if not stats.get("count"):
+        return "—"
+    low = format_market_price(stats.get("min"), listing_type)
+    high = format_market_price(stats.get("max"), listing_type)
+    return low if low == high else f"{low} – {high}"
+
+
+def format_market_ppsm(value: float | None, listing_type: str) -> str:
+    if value is None:
+        return "—"
+    amount = value / 1_000_000
+    text = f"{amount:,.1f}".replace(",", "X").replace(".", ",").replace("X", ".").rstrip("0").rstrip(",")
+    return text + (" tr/m²/tháng" if listing_type == "rent" else " tr/m²")
+
+
+def latest_market_date(listings: list[dict]) -> str:
+    dates = [date_only(item.get("approved_at") or item.get("created_at")) for item in listings]
+    dates = [value for value in dates if value]
+    return max(dates) if dates else datetime.now().date().isoformat()
+
+
+def vi_date(iso_date: str) -> str:
+    match = re.fullmatch(r"(\d{4})-(\d{2})-(\d{2})", iso_date or "")
+    return f"{match.group(3)}/{match.group(2)}/{match.group(1)}" if match else iso_date
+
+
+def render_market_table_rows(listings: list[dict], listing_type: str) -> str:
+    rendered = []
+    for unit in APARTMENT_UNIT_TYPES:
+        stats = market_stats(market_rows(listings, listing_type, unit_type=unit))
+        rendered.append(
+            "<tr>"
+            f"<th>{esc(unit)}</th>"
+            f"<td>{stats['count']}</td>"
+            f"<td>{esc(format_market_range(stats, listing_type))}</td>"
+            f"<td>{esc(format_market_price(stats.get('median'), listing_type))}</td>"
+            f"<td>{esc(format_market_ppsm(stats.get('ppsm'), listing_type))}</td>"
+            "</tr>"
+        )
+    return "\n".join(rendered)
+
+
+def render_phase_rows(listings: list[dict]) -> str:
+    rendered = []
+    for phase in MARKET_PHASES:
+        sale = market_stats(market_rows(listings, "sale", phase=phase))
+        rent = market_stats(market_rows(listings, "rent", phase=phase))
+        rendered.append(
+            "<tr>"
+            f"<th>{esc(phase)}</th>"
+            f"<td>{sale['count']}</td>"
+            f"<td>{esc(format_market_price(sale.get('median'), 'sale'))}</td>"
+            f"<td>{esc(format_market_ppsm(sale.get('ppsm'), 'sale'))}</td>"
+            f"<td>{rent['count']}</td>"
+            f"<td>{esc(format_market_price(rent.get('median'), 'rent'))}</td>"
+            "</tr>"
+        )
+    return "\n".join(rendered)
+
+
+def render_shop_market(listings: list[dict]) -> str:
+    sale_rows = [row for row in listings if row.get("listing_type") == "sale" and clean(row.get("unit_type")).lower() == "shop chân đế" and numeric(row.get("price_vnd")) and numeric(row.get("area_sqm"))]
+    rent_rows = [row for row in listings if row.get("listing_type") == "rent" and clean(row.get("unit_type")).lower() == "shop chân đế" and numeric(row.get("price_vnd")) and numeric(row.get("area_sqm"))]
+    sale_stats = market_stats_any(sale_rows)
+    rent_stats = market_stats_any(rent_rows)
+    sale_value = "Chưa có dữ liệu"
+    rent_value = "Chưa có dữ liệu"
+    if sale_stats["count"]:
+        sale_value = f"{format_market_price(sale_stats.get('median'), 'sale')} · khoảng {format_market_ppsm(sale_stats.get('ppsm'), 'sale')}"
+    if rent_stats["count"]:
+        rent_value = f"{format_market_price(rent_stats.get('median'), 'rent')} · khoảng {format_market_ppsm(rent_stats.get('ppsm'), 'rent')}"
+    return (
+        '<aside class="shop-market-box" aria-labelledby="shop-market-title"><div><p class="eyebrow">Dữ liệu tách riêng</p>'
+        '<h3 id="shop-market-title">Shop chân đế Lumi Hanoi</h3>'
+        f'<p>Shop không được gộp vào thống kê căn hộ ở. Hiện có {sale_stats["count"]} tin bán và {rent_stats["count"]} tin thuê shop đủ dữ liệu.</p></div>'
+        f'<dl><div><dt>Shop đang bán</dt><dd>{esc(sale_value)}</dd></div><div><dt>Shop đang thuê</dt><dd>{esc(rent_value)}</dd></div></dl></aside>'
+    )
+
+
+def market_stats_any(rows: list[dict]) -> dict:
+    pairs = []
+    for row in rows:
+        price = numeric(row.get("price_vnd"))
+        area = numeric(row.get("area_sqm"))
+        if price and area:
+            pairs.append((price, area))
+    if not pairs:
+        return {"count": 0, "min": None, "max": None, "median": None, "ppsm": None}
+    prices = [price for price, _ in pairs]
+    return {
+        "count": len(prices),
+        "min": min(prices),
+        "max": max(prices),
+        "median": median(prices),
+        "ppsm": median([price / area for price, area in pairs]),
+    }
+
+
+def render_market_price_block(listings: list[dict]) -> str:
+    sale = market_stats(market_rows(listings, "sale"))
+    rent = market_stats(market_rows(listings, "rent"))
+    updated = latest_market_date(listings)
+    warning = ""
+    if sale["count"] < 3 or rent["count"] < 3:
+        warning = (
+            '<div class="market-data-warning"><strong>Mẫu dữ liệu căn hộ hiện chưa đủ để công bố mức giá đại diện.</strong>'
+            '<span>Website không điền giá ước đoán. Khi có thêm tin 1PN, 2PN, 3PN… được duyệt, các bảng dưới sẽ tự cập nhật.</span></div>'
+        )
+    sale_median = format_market_price(sale.get("median"), "sale") if sale["count"] else "Chưa đủ dữ liệu"
+    sale_ppsm = format_market_ppsm(sale.get("ppsm"), "sale") if sale["count"] else "Chưa đủ dữ liệu"
+    rent_median = format_market_price(rent.get("median"), "rent") if rent["count"] else "Chưa đủ dữ liệu"
+    return f"""<section class="section market-price-snapshot" aria-labelledby="market-snapshot-title">
+  <div class="container">
+    <div class="market-price-heading">
+      <div><p class="eyebrow">Snapshot thị trường</p><h2 id="market-snapshot-title">Dữ liệu căn hộ đang công khai</h2></div>
+      <p class="market-price-updated">Tin đăng được đồng bộ tự động. Cập nhật dữ liệu gần nhất: <strong>{esc(vi_date(updated))}</strong>.</p>
+    </div>
+    <div class="market-kpis">
+      <article><span>Tin căn hộ đang bán</span><strong>{sale["count"]}</strong><small>Không tính shop chân đế</small></article>
+      <article><span>Giá bán trung vị</span><strong>{esc(sale_median)}</strong><small>Chỉ tính tin đủ giá và diện tích</small></article>
+      <article><span>Giá/m² trung vị</span><strong>{esc(sale_ppsm)}</strong><small>Dùng trung vị, không dùng trung bình</small></article>
+      <article><span>Giá thuê trung vị</span><strong>{esc(rent_median)}</strong><small>{rent["count"]} tin căn hộ đang cho thuê</small></article>
+    </div>
+    {warning}
+
+    <div class="market-table-card">
+      <div class="market-table-head"><div><p class="eyebrow">Mua bán</p><h3>Giá rao bán theo loại căn</h3></div><a href="/mua-ban-lumi-hanoi/">Xem quỹ căn →</a></div>
+      <div class="market-table-scroll"><table><thead><tr><th>Loại căn</th><th>Số tin</th><th>Khoảng giá rao</th><th>Trung vị</th><th>Giá/m² trung vị</th></tr></thead><tbody>
+        {render_market_table_rows(listings, "sale")}
+      </tbody></table></div>
+    </div>
+
+    <div class="market-table-card">
+      <div class="market-table-head"><div><p class="eyebrow">Cho thuê</p><h3>Giá rao thuê theo loại căn</h3></div><a href="/cho-thue-lumi-hanoi/">Xem quỹ thuê →</a></div>
+      <div class="market-table-scroll"><table><thead><tr><th>Loại căn</th><th>Số tin</th><th>Khoảng giá rao</th><th>Trung vị</th><th>Giá/m²/tháng</th></tr></thead><tbody>
+        {render_market_table_rows(listings, "rent")}
+      </tbody></table></div>
+    </div>
+
+    <div class="market-table-card">
+      <div class="market-table-head"><div><p class="eyebrow">Phân khu</p><h3>So sánh Signature, Prestige và Elite</h3></div><a href="/mat-bang-lumi-hanoi/">Đối chiếu mặt bằng →</a></div>
+      <div class="market-table-scroll"><table><thead><tr><th>Phân khu</th><th>Tin bán</th><th>Giá bán trung vị</th><th>Giá/m²</th><th>Tin thuê</th><th>Giá thuê trung vị</th></tr></thead><tbody>
+        {render_phase_rows(listings)}
+      </tbody></table></div>
+    </div>
+
+    {render_shop_market(listings)}
+  </div>
+</section>"""
+
+
+def sync_market_price_page(listings: list[dict]) -> None:
+    if not PRICE_PAGE.exists():
+        return
+    raw = PRICE_PAGE.read_text(encoding="utf-8")
+    raw = replace_marked_block(raw, MARKET_PRICE_START, MARKET_PRICE_END, render_market_price_block(listings))
+    PRICE_PAGE.write_text(raw, encoding="utf-8")
+
 
 
 def sync_category_indexes(listings: list[dict]) -> None:
@@ -544,6 +767,13 @@ def write_main_sitemap(listings: list[dict]) -> None:
     if not MAIN_SITEMAP.exists():
         return
     raw = MAIN_SITEMAP.read_text(encoding="utf-8")
+    price_loc = SITE + "/gia-can-ho-lumi-hanoi/"
+    market_lastmod = latest_market_date(listings)
+    if price_loc not in raw:
+        price_row = f'  <url><loc>{price_loc}</loc><lastmod>{market_lastmod}</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>\n'
+        raw = raw.replace("</urlset>", price_row + "</urlset>")
+    else:
+        raw = re.sub(r'(<loc>https://lumi-hanoi\\.com/gia-can-ho-lumi-hanoi/</loc><lastmod>)\\d{4}-\\d{2}-\\d{2}(</lastmod>)', rf'\\g<1>{market_lastmod}\\2', raw, count=1)
     landing_loc = SITE + "/cho-thue-shop-chan-de-lumi-hanoi/"
     if landing_loc not in raw:
         landing = (
@@ -577,6 +807,7 @@ def main() -> None:
     generated = write_pages(listings)
     sync_category_indexes(generated)
     sync_shop_landing(generated)
+    sync_market_price_page(generated)
     write_sitemap(generated)
     write_main_sitemap(generated)
     indexed = sum(1 for listing in generated if indexable(listing))
