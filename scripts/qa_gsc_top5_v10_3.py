@@ -37,6 +37,35 @@ if "<h1>Cho thuê căn hộ Lumi Hanoi</h1>" not in rent:
 if '"@type":"CollectionPage"' not in sale or '"@type":"CollectionPage"' not in rent:
     errors.append("marketplace hubs must use CollectionPage schema")
 
+cluster_pages = [
+    "lumi-signature/index.html",
+    "lumi-prestige/index.html",
+    "lumi-elite/index.html",
+    "vi-tri-lumi-hanoi/index.html",
+    "phap-ly-lumi-hanoi/index.html",
+    "tien-do-lumi-hanoi/index.html",
+    "can-ho-1-phong-ngu-lumi-hanoi/index.html",
+    "can-ho-2-phong-ngu-lumi-hanoi/index.html",
+    "can-ho-3-phong-ngu-lumi-hanoi/index.html",
+    "can-ho-4-phong-ngu-lumi-hanoi/index.html",
+    "duplex-penthouse-lumi-hanoi/index.html",
+    "mat-bang-lumi-hanoi/lumi-signature/s1/index.html",
+    "mat-bang-lumi-hanoi/lumi-signature/s2/index.html",
+    "mat-bang-lumi-hanoi/lumi-signature/s3/index.html",
+    "mat-bang-lumi-hanoi/lumi-signature/s5/index.html",
+    "mat-bang-lumi-hanoi/lumi-signature/s6/index.html",
+    "mat-bang-lumi-hanoi/lumi-prestige/p1/index.html",
+    "mat-bang-lumi-hanoi/lumi-prestige/p2/index.html",
+    "mat-bang-lumi-hanoi/lumi-elite/e1/index.html",
+    "mat-bang-lumi-hanoi/lumi-elite/e2/index.html",
+]
+for relative in cluster_pages:
+    html = read(relative)
+    if 'href="/mua-ban-lumi-hanoi/"' not in html:
+        errors.append(f"{relative}: missing sale marketplace link")
+    if 'href="/cho-thue-lumi-hanoi/"' not in html:
+        errors.append(f"{relative}: missing rental marketplace link")
+
 floor_hub = read("mat-bang-lumi-hanoi/index.html")
 for anchor in ("Mua bán căn hộ Lumi Hanoi", "Cho thuê căn hộ Lumi Hanoi"):
     if anchor not in floor_hub:
@@ -68,4 +97,4 @@ if errors:
         print("- " + error)
     sys.exit(1)
 
-print("GSC Top-5 SEO core QA passed.")
+print(f"GSC Top-5 SEO QA passed for {len(cluster_pages)} authority pages.")
