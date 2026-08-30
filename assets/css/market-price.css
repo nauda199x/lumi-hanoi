@@ -1,0 +1,85 @@
+/* Lumi Hanoi market price / data page — 2026-08-30 */
+.price-page{background:var(--paper)}
+.price-hero{position:relative;isolation:isolate;min-height:560px;display:flex;align-items:flex-end;overflow:hidden;background:#111;color:#fff}
+.price-hero-media{position:absolute;z-index:-3;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 55%}
+.price-hero:before{content:"";position:absolute;z-index:-2;inset:0;background:linear-gradient(90deg,rgba(11,14,12,.94) 0%,rgba(11,14,12,.66) 44%,rgba(11,14,12,.22) 76%),linear-gradient(0deg,rgba(11,14,12,.72),transparent 60%)}
+.price-hero-inner{padding-block:clamp(7rem,14vh,10rem) clamp(3rem,6vh,5rem)}
+.price-hero h1{max-width:12ch;font-size:clamp(3.2rem,7vw,6.8rem);line-height:.96}
+.price-hero .lead{max-width:760px;color:#dedbd4}
+.price-btn-light{background:rgba(255,255,255,.94)!important;border-color:#fff!important;color:#171916!important}
+.market-price-snapshot{padding-top:clamp(56px,7vw,88px)}
+.market-price-heading{display:flex;justify-content:space-between;gap:32px;align-items:end;margin-bottom:28px}
+.market-price-heading h2{margin-bottom:0}
+.market-price-updated{max-width:470px;margin:0;color:var(--muted);font-size:.86rem}
+.market-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid var(--line);border-left:1px solid var(--line);background:#fff}
+.market-kpis article{min-height:160px;padding:26px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);display:flex;flex-direction:column}
+.market-kpis span{color:var(--muted);font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+.market-kpis strong{margin-top:auto;font:500 clamp(1.55rem,2.8vw,2.7rem)/1.08 var(--font-display)}
+.market-kpis small{margin-top:8px;color:var(--muted);line-height:1.4}
+.market-data-warning{display:grid;grid-template-columns:.85fr 1.15fr;gap:32px;margin:18px 0 34px;padding:20px 22px;border:1px solid #dcccae;background:#fffaf0}
+.market-data-warning strong{font-size:.98rem}
+.market-data-warning span{color:var(--muted);font-size:.86rem;line-height:1.55}
+.market-table-card{margin-top:22px;border:1px solid var(--line);background:#fff}
+.market-table-head{display:flex;justify-content:space-between;gap:24px;align-items:end;padding:24px 26px;border-bottom:1px solid var(--line)}
+.market-table-head h3{margin:0;font-size:clamp(1.55rem,2.3vw,2.2rem)}
+.market-table-head a{white-space:nowrap;font-weight:800}
+.market-table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.market-table-card table{width:100%;min-width:760px;border-collapse:collapse}
+.market-table-card th,.market-table-card td{padding:15px 18px;border-bottom:1px solid var(--line);text-align:left;font-size:.88rem}
+.market-table-card thead th{background:#f2eee5;color:#4d4c47;font-size:.72rem;letter-spacing:.04em;text-transform:uppercase}
+.market-table-card tbody th{font-weight:800}
+.market-table-card tbody tr:last-child th,.market-table-card tbody tr:last-child td{border-bottom:0}
+.shop-market-box{display:grid;grid-template-columns:1fr 1fr;gap:42px;margin-top:28px;padding:28px;border:1px solid #2b332f;background:#171a18;color:#fff}
+.shop-market-box p{color:#c9c6bf}
+.shop-market-box dl{margin:0}
+.shop-market-box dl div{display:flex;justify-content:space-between;gap:20px;padding:14px 0;border-bottom:1px solid rgba(255,255,255,.15)}
+.shop-market-box dl div:last-child{border-bottom:0}
+.shop-market-box dt{color:#aaa79f}
+.shop-market-box dd{margin:0;text-align:right;font-weight:800}
+.price-reading-grid{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(280px,.6fr);gap:clamp(36px,7vw,90px);align-items:start}
+.price-reading-main>p{max-width:74ch}
+.price-factor-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;margin-top:22px;background:var(--line);border:1px solid var(--line)}
+.price-factor-grid>div{padding:25px;background:var(--paper)}
+.price-factor-grid>div>strong{color:var(--bronze-dark);font-size:.74rem;letter-spacing:.12em}
+.price-factor-grid h3{margin:9px 0 8px}
+.price-factor-grid p{margin:0;color:var(--muted);font-size:.88rem}
+.price-method-card{position:sticky;top:100px;padding:28px;border:1px solid var(--line);background:#fff}
+.price-method-card ol{padding-left:20px;color:var(--muted)}
+.price-method-card li{margin:0 0 12px}
+.price-method-card .btn{width:100%;justify-content:center}
+.price-unit-grid{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line);border-left:1px solid var(--line)}
+.price-unit-grid a{min-height:150px;padding:24px;display:flex;flex-direction:column;justify-content:space-between;border-right:1px solid var(--line);border-bottom:1px solid var(--line);transition:.2s ease}
+.price-unit-grid a:hover{background:#171a18;color:#fff;transform:translateY(-2px)}
+.price-unit-grid strong{font:500 clamp(1.7rem,3vw,2.8rem)/1 var(--font-display)}
+.price-unit-grid span{font-size:.82rem}
+.price-faq{display:grid;grid-template-columns:.72fr 1.28fr;gap:clamp(36px,7vw,90px)}
+.price-faq-list details{border-top:1px solid var(--line)}
+.price-faq-list details:last-child{border-bottom:1px solid var(--line)}
+.price-faq-list summary{padding:20px 0;cursor:pointer;font-weight:800}
+.price-faq-list details p{padding:0 0 20px;margin:0;color:var(--muted)}
+.price-cta{background:#171a18;color:#fff}
+.price-cta-inner{display:grid;grid-template-columns:1.2fr .8fr;gap:48px;align-items:center}
+.price-cta p{color:#c9c6bf}
+.price-cta .hero-actions{justify-content:flex-end}
+.price-cta .btn:not(.btn-primary){color:#fff;border-color:rgba(255,255,255,.45)}
+@media(max-width:900px){
+  .market-kpis{grid-template-columns:repeat(2,1fr)}
+  .price-reading-grid,.price-faq,.price-cta-inner{grid-template-columns:1fr}
+  .price-method-card{position:static}
+  .price-unit-grid{grid-template-columns:repeat(2,1fr)}
+  .price-cta .hero-actions{justify-content:flex-start}
+}
+@media(max-width:700px){
+  .price-hero{min-height:520px}
+  .price-hero-inner{padding-top:7rem}
+  .market-price-heading,.market-table-head{align-items:flex-start;flex-direction:column}
+  .market-kpis{grid-template-columns:1fr 1fr}
+  .market-kpis article{min-height:145px;padding:20px}
+  .market-data-warning,.shop-market-box{grid-template-columns:1fr}
+  .shop-market-box{gap:16px;padding:22px}
+  .price-factor-grid,.price-unit-grid{grid-template-columns:1fr}
+}
+@media(max-width:430px){
+  .market-kpis{grid-template-columns:1fr}
+  .market-kpis article{min-height:120px}
+}
