@@ -47,7 +47,7 @@ for name, html, marker, modified in (
 ):
     assert marker in html, f'{name}: missing source-backed handover section'
     assert '/noi-that-ban-giao-lumi-hanoi/' in html, f'{name}: missing handover internal link'
-    dates = re.findall(r'"dateModified":"(\\d{4}-\\d{2}-\\d{2})"', html)
+    dates = re.findall(r'"dateModified":"(\d{4}-\d{2}-\d{2})"', html)
     assert dates and max(dates) >= modified, f'{name}: dateModified older than {modified}'
 assert '/toa-p1-lumi-hanoi/' not in prestige, 'Prestige still links legacy P1 URL'
 assert '/toa-p2-lumi-hanoi/' not in prestige, 'Prestige still links legacy P2 URL'
