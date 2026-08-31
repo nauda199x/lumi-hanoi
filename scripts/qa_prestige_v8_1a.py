@@ -59,7 +59,7 @@ for tower in ("P1", "P2"):
     canonical = f"https://lumi-hanoi.com/mat-bang-lumi-hanoi/lumi-prestige/{tower.lower()}/"
     if f'<link rel="canonical" href="{canonical}">' not in html:
         fail("canonical mismatch on " + page)
-    if f"<h1>Mặt bằng tòa {tower} Lumi Hanoi</h1>" not in html:
+    if f"<h1>Mặt bằng {tower} Lumi Hanoi</h1>" not in html:
         fail("H1 mismatch on " + page)
     if f'data-tower="{tower}"' not in html or "/assets/js/floor-plan-tower.js" not in html:
         fail("floor-plan renderer wiring missing on " + page)
