@@ -300,4 +300,13 @@
       <image:loc>https://lumi-hanoi.com/assets/media/signature/penthouse/s6-floor-35.webp</image:loc>
     </image:image>
   </url>
+  <url>
+    <loc>https://lumi-hanoi.com/mat-bang-lumi-hanoi/lumi-elite/</loc>
+    <image:image>
+      <image:loc>https://lumi-hanoi.com/assets/media/elite/lumi-elite-facade.webp</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://lumi-hanoi.com/assets/media/layouts/lumi-elite-masterplan.webp</image:loc>
+    </image:image>
+  </url>
 </urlset>
