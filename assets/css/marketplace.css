@@ -401,3 +401,102 @@ body.detail-lightbox-open{overflow:hidden;overscroll-behavior:none}
   .detail-lightbox-hint{font-size:.72rem}
 }
 @media(prefers-reduced-motion:reduce){.detail-lightbox-stage img.is-animating{transition:none}}
+
+
+/* Super UX submit wizard — 2026-09-01 */
+.submit-page-premium .form-shell--premium{grid-template-columns:minmax(0,1fr) 320px;gap:24px}
+.marketplace-form--premium .form-section{margin-bottom:0;border:1px solid #ddd4c8;border-radius:18px;background:#fff;box-shadow:0 18px 50px rgba(28,29,25,.055)}
+.marketplace-form--premium .form-section[hidden]{display:none}
+.marketplace-form--premium .form-section-head{align-items:flex-start;margin-bottom:26px}
+.marketplace-form--premium .form-section-head h2{margin:.2rem 0 .35rem;font-size:clamp(1.75rem,3vw,2.45rem)}
+.marketplace-form--premium .form-section-head p{margin:0;color:var(--muted);line-height:1.6}
+.marketplace-form--premium .field{position:relative;margin-bottom:20px}
+.marketplace-form--premium .field label,.marketplace-form--premium .field-label{font-size:.75rem;letter-spacing:.045em}
+.marketplace-form--premium .field input,.marketplace-form--premium .field select,.marketplace-form--premium .field textarea{min-height:56px;border:1px solid #d1c8bb;border-radius:12px;padding:13px 15px;background:#fff;transition:border-color .16s ease,box-shadow .16s ease,background .16s ease}
+.marketplace-form--premium .field textarea{min-height:150px;line-height:1.6}
+.marketplace-form--premium .field input:focus,.marketplace-form--premium .field select:focus,.marketplace-form--premium .field textarea:focus{border-color:#9c7951;outline:0;box-shadow:0 0 0 4px rgba(156,121,81,.12)}
+.marketplace-form--premium .field input::placeholder,.marketplace-form--premium .field textarea::placeholder{color:#9b978f}
+.marketplace-form--premium .field-group-label{margin:18px 0 10px;color:#7d7468;font-size:.7rem;font-weight:850;letter-spacing:.1em;text-transform:uppercase}
+.choice-grid--premium{gap:14px}
+.choice-grid--premium .choice-card label{min-height:126px;border:1px solid #d7cfc3;border-radius:16px;padding:22px 20px;box-shadow:0 5px 18px rgba(30,31,27,.03)}
+.choice-grid--premium .choice-card label strong{font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:1.22rem;font-weight:850}
+.choice-grid--premium .choice-card label span{margin-top:6px;line-height:1.5}
+.choice-grid--premium .choice-card label em{margin-top:14px;color:#8a6840;font-style:normal;font-size:.72rem;font-weight:850}
+.choice-grid--premium .choice-card input:checked+label{border-color:#8f6c43;background:#fbf7f0;box-shadow:0 0 0 2px rgba(156,121,81,.14)}
+.form-progress{border-radius:14px}
+.marketplace-form--premium .form-progress{position:sticky;top:82px;z-index:15;margin-bottom:14px;padding:12px 14px;background:rgba(250,248,243,.96)}
+.marketplace-form--premium .form-progress ol{gap:8px}
+.marketplace-form--premium .form-progress button{border-radius:9px;padding:7px 5px}
+.marketplace-form--premium .form-progress button.is-active{background:#f0e7da}
+.marketplace-form--premium .form-progress button:disabled{opacity:.42;cursor:not-allowed}
+.wizard-actions{display:flex;align-items:center;justify-content:flex-end;gap:10px;margin-top:26px;padding-top:22px;border-top:1px solid var(--line)}
+.wizard-actions .btn{min-height:50px;border-radius:10px}
+.wizard-actions .wizard-back{margin-right:auto;background:#fff}
+.field-smart-action{justify-self:start;margin:-2px 0 4px;padding:5px 0;border:0;background:transparent;color:#8a6840;font:800 .75rem/1.2 Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.field-smart-action:hover{color:#5f4629}
+.image-drop--premium{min-height:176px;border:1.5px dashed #b7aa98;border-radius:16px;background:#fbf8f2;transition:border-color .16s ease,background .16s ease}
+.image-drop--premium:hover{border-color:#8f6c43;background:#f8f1e6}
+.image-selection-count{display:block;margin:10px 2px 0;color:#756e64;font-size:.78rem}
+.image-preview-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.image-preview{border-radius:12px}
+.image-preview-label{right:auto!important;left:6px}
+.image-preview-actions{position:absolute;left:6px;right:6px;bottom:6px;display:flex;justify-content:flex-end;gap:5px}
+.image-preview-actions button{min-height:28px;padding:3px 7px;border:0;border-radius:7px;background:rgba(20,21,19,.82);color:#fff;font-size:.65rem;font-weight:800;cursor:pointer}
+.image-preview .image-preview-label{bottom:auto;top:6px;border-radius:6px}
+.wizard-summary{border-radius:18px;box-shadow:0 18px 50px rgba(16,18,16,.12)}
+.wizard-summary-list{margin:22px 0 0;border-top:1px solid #454943}
+.wizard-summary-list div{display:grid;grid-template-columns:92px minmax(0,1fr);gap:10px;padding:13px 0;border-bottom:1px solid #454943}
+.wizard-summary-list dt{color:#999d96;font-size:.67rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+.wizard-summary-list dd{margin:0;color:#fff;font-size:.84rem;font-weight:750;text-align:right}
+.wizard-trust-box{margin-top:20px;padding-top:18px;border-top:0}
+.wizard-trust-box strong{color:#e0c49c}
+.form-submit--premium{margin-top:18px}
+.form-submit--premium .btn{border-radius:10px;min-height:52px}
+.form-status{border-radius:10px}
+@keyframes submit-step-in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.marketplace-form--premium .form-section:not([hidden]){animation:submit-step-in .2s ease}
+@media(max-width:1050px){
+  .submit-page-premium .form-shell--premium{grid-template-columns:1fr}
+  .wizard-summary{position:static;order:2}
+}
+@media(max-width:700px){
+  .submit-hero-premium:before{display:none}
+  .submit-hero-grid{padding-top:40px;padding-bottom:28px}
+  .submit-hero-copy h1{font-size:clamp(2.65rem,14vw,3.8rem)}
+  .submit-hero-copy .lead{line-height:1.6}
+  .submit-hero-card{display:none}
+  .submit-hero-link{margin-top:20px}
+  .submit-breadcrumb{display:none}
+  .submit-page-premium{padding-top:2rem}
+  .submit-page-intro{margin-bottom:20px}
+  .submit-page-intro h2{font-size:clamp(1.9rem,9vw,2.7rem);line-height:1.05}
+  .submit-page-intro>p{font-size:.9rem;line-height:1.6}
+  .marketplace-form--premium .form-progress{top:68px;margin:0 0 10px;padding:9px 9px 8px;border-radius:12px}
+  .marketplace-form--premium .form-progress-top{padding:0 3px}
+  .marketplace-form--premium .form-progress ol{gap:3px}
+  .marketplace-form--premium .form-progress button{min-height:38px;padding:4px 2px;font-size:.62rem}
+  .marketplace-form--premium .form-section{padding:20px 14px 22px;border-radius:14px}
+  .marketplace-form--premium .form-section-head{margin-bottom:20px;padding-bottom:15px}
+  .marketplace-form--premium .form-section-head h2{font-size:1.7rem}
+  .marketplace-form--premium .field-row,.marketplace-form--premium .field-row--3,.marketplace-form--premium .field-row--auto{gap:0}
+  .marketplace-form--premium .field input,.marketplace-form--premium .field select{min-height:54px;font-size:16px}
+  .marketplace-form--premium .field textarea{font-size:16px}
+  .choice-grid--premium{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+  .choice-grid--premium .choice-card label{min-height:112px;padding:16px 12px;border-radius:13px}
+  .choice-grid--premium .choice-card label strong{font-size:1rem}
+  .choice-grid--premium .choice-card label em{font-size:.62rem}
+  .wizard-actions{margin-top:18px;padding-top:17px}
+  .wizard-actions .btn{min-height:50px}
+  .wizard-actions .wizard-next{flex:1}
+  .wizard-actions .wizard-back{min-width:116px}
+  .image-drop--premium{min-height:148px;border-radius:14px;padding:18px 12px}
+  .image-preview-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+  .image-preview{border-radius:10px}
+  .wizard-summary{display:none}
+  .form-submit-copy{display:none}
+  .mobile-submit-bar{padding:9px 12px calc(9px + env(safe-area-inset-bottom))}
+  .mobile-submit-bar .btn{min-height:54px;border-radius:12px}
+}
+@media(prefers-reduced-motion:reduce){
+  .marketplace-form--premium .form-section:not([hidden]){animation:none}
+}
