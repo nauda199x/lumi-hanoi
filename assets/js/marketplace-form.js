@@ -190,6 +190,8 @@
   };
   const previousStep=()=>goToStep(Math.max(1,wizardStep-1));
   const initWizard=()=>{
+    const progress=form.querySelector("[data-form-progress]");
+    if(status&&progress&&status.parentElement!==form)progress.after(status);
     sections.forEach((section,index)=>{
       const step=index+1;
       if(section.querySelector("[data-wizard-actions]"))return;
