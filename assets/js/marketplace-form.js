@@ -31,11 +31,24 @@
   const draftMaxAge=7*24*60*60*1000;
   let previewUrls=[];
   let draftTimer=0;
-  let progressFrame=0;
   let isSubmitting=false;
+  let wizardStep=1;
+  let titleManuallyEdited=false;
+  const titleInput=form.elements.title;
+  const descriptionInput=form.elements.description;
+  const summaryTitle=document.querySelector("[data-summary-title]");
+  const summaryType=document.querySelector("[data-summary-type]");
+  const summaryUnit=document.querySelector("[data-summary-unit]");
+  const summaryLocation=document.querySelector("[data-summary-location]");
+  const summaryPrice=document.querySelector("[data-summary-price]");
+  const summaryImages=document.querySelector("[data-summary-images]");
 
   const setSubmitState=(label,disabled=isSubmitting)=>{
-    submitButtons.forEach(button=>{button.disabled=disabled;button.textContent=label;});
+    submitButtons.forEach(button=>{
+      button.disabled=disabled;
+      const isMobile=Boolean(button.closest("[data-mobile-submit]"));
+      button.textContent=!disabled&&isMobile&&wizardStep<4?"Tiếp tục":label;
+    });
   };
   const showStatus=(message,type="",scroll=true)=>{
     if(!status)return;
@@ -130,30 +143,90 @@
       const itemStep=index+1;
       item.classList.toggle("is-active",itemStep===next);
       item.classList.toggle("is-complete",itemStep<next);
+      item.disabled=itemStep>next+1;
       if(itemStep===next)item.setAttribute("aria-current","step");
       else item.removeAttribute("aria-current");
     });
   };
-  const progressFromScroll=()=>{
-    progressFrame=0;
-    const anchor=Math.min(window.innerHeight*.3,240);
-    let current=1;
-    sections.forEach(section=>{
-      if(section.getBoundingClientRect().top<=anchor)current=Number(section.dataset.formStep)||current;
-    });
-    setProgress(current);
+  const stepLabel=element=>{
+    if(!element?.id)return "thông tin bắt buộc";
+    return form.querySelector(`label[for="${CSS.escape(element.id)}"]`)?.textContent?.replace(/\s*\*\s*$/,"").trim()||"thông tin bắt buộc";
   };
-  const scheduleProgress=()=>{
-    if(progressFrame)return;
-    progressFrame=requestAnimationFrame(progressFromScroll);
+  const validateStep=step=>{
+    updatePriceHelp();
+    updatePhoneHelp();
+    const section=sections.find(item=>Number(item.dataset.formStep)===Number(step));
+    if(!section)return true;
+    const invalid=[...section.querySelectorAll("input,select,textarea")].find(element=>
+      !element.disabled&&element!==filesInput&&typeof element.checkValidity==="function"&&!element.checkValidity()
+    );
+    if(invalid){
+      invalid.setAttribute?.("aria-invalid","true");
+      showStatus(`Vui lòng kiểm tra lại mục “${stepLabel(invalid)}”.`,"error");
+      try{invalid.focus({preventScroll:true});}catch{}
+      invalid.scrollIntoView({behavior:"smooth",block:"center"});
+      return false;
+    }
+    if(Number(step)===3){
+      try{validateFileSelection([...(filesInput?.files||[])]);}
+      catch(error){showStatus(error.message,"error");filesInput?.closest(".image-drop")?.scrollIntoView({behavior:"smooth",block:"center"});return false;}
+    }
+    clearStatus();
+    return true;
   };
-  progressSteps.forEach((item,index)=>{
-    item.addEventListener("click",()=>{
-      const target=sections[index];
-      if(target)target.scrollIntoView({behavior:"smooth",block:"start"});
+  const goToStep=(step,{scroll=true}={})=>{
+    wizardStep=Math.min(Math.max(Number(step)||1,1),4);
+    sections.forEach(section=>{section.hidden=Number(section.dataset.formStep)!==wizardStep;});
+    setProgress(wizardStep);
+    setSubmitState("Gửi tin chờ duyệt",false);
+    if(scroll){
+      const target=form.querySelector("[data-form-progress]")||sections[wizardStep-1];
+      target?.scrollIntoView({behavior:"smooth",block:"start"});
+    }
+  };
+  const nextStep=()=>{
+    if(!validateStep(wizardStep))return;
+    goToStep(Math.min(4,wizardStep+1));
+  };
+  const previousStep=()=>goToStep(Math.max(1,wizardStep-1));
+  const initWizard=()=>{
+    const progress=form.querySelector("[data-form-progress]");
+    if(status&&progress&&status.parentElement!==form)progress.after(status);
+    sections.forEach((section,index)=>{
+      const step=index+1;
+      if(section.querySelector("[data-wizard-actions]"))return;
+      const nav=document.createElement("div");
+      nav.className="wizard-actions";
+      nav.dataset.wizardActions="";
+      if(step>1){
+        const back=document.createElement("button");
+        back.type="button";back.className="btn wizard-back";back.textContent="← Quay lại";
+        back.addEventListener("click",previousStep);
+        nav.append(back);
+      }
+      if(step<4){
+        const next=document.createElement("button");
+        next.type="button";next.className="btn btn-primary wizard-next";
+        next.textContent=step===1?"Tiếp tục — thông tin căn":"Tiếp tục";
+        next.addEventListener("click",nextStep);
+        nav.append(next);
+      }
+      if(step===4){
+        const submitBox=section.querySelector(".form-submit--premium");
+        section.insertBefore(nav,submitBox||null);
+      }else{
+        section.append(nav);
+      }
     });
-  });
-  sections.forEach(section=>section.addEventListener("focusin",()=>setProgress(section.dataset.formStep)));
+    progressSteps.forEach((item,index)=>{
+      item.addEventListener("click",()=>{
+        const target=index+1;
+        if(target<=wizardStep){goToStep(target);}
+        else if(target===wizardStep+1){nextStep();}
+      });
+    });
+    goToStep(1,{scroll:false});
+  };
 
   const draftElements=()=>[...form.elements].filter(element=>
     element.name&&element!==filesInput&&element.name!=="website"&&element.type!=="submit"
@@ -286,17 +359,50 @@
   };
 
   const clearPreviews=()=>{previewUrls.forEach(URL.revokeObjectURL);previewUrls=[];previews?.replaceChildren();};
+  const replaceSelectedFiles=files=>{
+    if(!filesInput||typeof DataTransfer==="undefined")return false;
+    const transfer=new DataTransfer();
+    files.forEach(file=>transfer.items.add(file));
+    filesInput.files=transfer.files;
+    return true;
+  };
   const renderPreviews=()=>{
     clearPreviews();
     const files=[...(filesInput?.files||[])];
+    if(summaryImages)summaryImages.textContent=files.length?`${files.length} ảnh đã chọn`:"Chưa chọn ảnh";
+    let counter=form.querySelector("[data-image-count]");
+    if(!counter&&filesInput?.closest(".image-drop")){
+      counter=document.createElement("strong");
+      counter.dataset.imageCount="";
+      counter.className="image-selection-count";
+      filesInput.closest(".image-drop").after(counter);
+    }
+    if(counter)counter.textContent=files.length?`Đã chọn ${files.length}/${Number(api.config.maxImages||12)} ảnh · ảnh đầu tiên là ảnh bìa`:"Chưa chọn ảnh";
+    if(!files.length)return;
     try{validateFileSelection(files);clearStatus();}catch(error){showStatus(error.message,"error",false);return;}
     files.forEach((file,index)=>{
       const figure=document.createElement("figure");figure.className="image-preview";
       const image=document.createElement("img");const url=URL.createObjectURL(file);previewUrls.push(url);
       image.src=url;image.alt=`Ảnh xem trước ${index+1}`;
       image.addEventListener("error",()=>{image.alt=`Đã chọn ảnh ${index+1}: ${file.name}`;});
-      const label=document.createElement("span");label.textContent=index===0?"Ảnh đại diện":String(index+1);
-      figure.append(image,label);previews?.append(figure);
+      const label=document.createElement("span");label.className="image-preview-label";label.textContent=index===0?"Ảnh bìa":String(index+1);
+      const actions=document.createElement("div");actions.className="image-preview-actions";
+      if(index>0){
+        const cover=document.createElement("button");cover.type="button";cover.textContent="Đặt bìa";cover.setAttribute("aria-label",`Đặt ảnh ${index+1} làm ảnh bìa`);
+        cover.addEventListener("click",()=>{
+          const next=[...(filesInput?.files||[])];
+          const picked=next.splice(index,1)[0];next.unshift(picked);
+          if(replaceSelectedFiles(next))renderPreviews();
+        });
+        actions.append(cover);
+      }
+      const remove=document.createElement("button");remove.type="button";remove.textContent="Xóa";remove.setAttribute("aria-label",`Xóa ảnh ${index+1}`);
+      remove.addEventListener("click",()=>{
+        const next=[...(filesInput?.files||[])];next.splice(index,1);
+        if(replaceSelectedFiles(next))renderPreviews();
+      });
+      actions.append(remove);
+      figure.append(image,label,actions);previews?.append(figure);
     });
   };
   const fieldLabel=element=>{
@@ -331,22 +437,92 @@
       title:value("title"),description:value("description"),contact_public:Boolean(form.elements.contact_public?.checked)
     };
   };
+  const suggestedTitle=()=>{
+    const unit=value("unit_type"),towerValue=value("tower"),phaseValue=value("phase");
+    if(!unit||!towerValue)return "";
+    const action=listingType()==="rent"?"Cho thuê":"Bán";
+    const area=numeric("area_sqm");
+    const floorValue=value("floor_label");
+    const parts=[`${action} căn ${unit} Lumi ${phaseValue} ${towerValue}`];
+    if(area)parts.push(`${formatNumber(area)}m²`);
+    if(floorValue)parts.push(`tầng ${floorValue.toLowerCase()}`);
+    return parts.join(", ");
+  };
+  const syncSuggestedTitle=()=>{
+    if(!titleInput||titleManuallyEdited)return;
+    const suggestion=suggestedTitle();
+    if(suggestion)titleInput.value=suggestion.slice(0,180);
+  };
+  const suggestedDescription=()=>{
+    const unit=value("unit_type")||"căn hộ";
+    const towerValue=value("tower");
+    const phaseValue=value("phase");
+    const area=numeric("area_sqm");
+    const floorValue=value("floor_label");
+    const furnishingValue=value("furnishing");
+    const rent=listingType()==="rent";
+    const price=priceAmount();
+    const lines=[
+      `${rent?"Cho thuê":"Cần bán"} ${unit}${towerValue?` tại tòa ${towerValue}`:""}${phaseValue?`, Lumi ${phaseValue}`:""}.`,
+      [area?`Diện tích ${formatNumber(area)}m²`:"",floorValue?`tầng ${floorValue.toLowerCase()}`:"",furnishingValue?furnishingValue.toLowerCase():""].filter(Boolean).join(" · "),
+      price?`${rent?"Giá thuê":"Giá bán"}: ${formatNumber(price)} ${rent?"triệu/tháng":"tỷ"}.`:"",
+      rent&&value("available_from")?`Có thể vào ở từ ${value("available_from")}.`:"",
+      "Anh/chị quan tâm vui lòng liên hệ để trao đổi thêm và hẹn xem căn."
+    ];
+    return lines.filter(Boolean).join("\n");
+  };
+  const addSmartActions=()=>{
+    const titleField=titleInput?.closest(".field");
+    if(titleField&&!titleField.querySelector("[data-smart-title]")){
+      const button=document.createElement("button");button.type="button";button.className="field-smart-action";button.dataset.smartTitle="";button.textContent="Tạo lại tiêu đề";
+      button.addEventListener("click",()=>{titleManuallyEdited=false;syncSuggestedTitle();titleInput.focus();scheduleDraft();});
+      titleField.insertBefore(button,titleInput);
+    }
+    const descriptionField=descriptionInput?.closest(".field");
+    if(descriptionField&&!descriptionField.querySelector("[data-smart-description]")){
+      const button=document.createElement("button");button.type="button";button.className="field-smart-action";button.dataset.smartDescription="";button.textContent="Gợi ý mô tả nhanh";
+      button.addEventListener("click",()=>{descriptionInput.value=suggestedDescription();descriptionInput.focus();scheduleDraft();});
+      descriptionField.insertBefore(button,descriptionInput);
+    }
+  };
+  const updateSummary=()=>{
+    const rent=listingType()==="rent";
+    const unit=value("unit_type");
+    const towerValue=value("tower");
+    const phaseValue=value("phase");
+    const amount=priceVnd();
+    if(summaryTitle)summaryTitle.textContent=rent?"Căn cho thuê Lumi Hanoi":"Căn bán Lumi Hanoi";
+    if(summaryType)summaryType.textContent=rent?"Cho thuê":"Mua bán";
+    if(summaryUnit)summaryUnit.textContent=unit||"Chưa chọn";
+    if(summaryLocation)summaryLocation.textContent=towerValue?`${towerValue} · ${phaseValue}`:"Chưa chọn tòa";
+    if(summaryPrice)summaryPrice.textContent=amount?api.formatCurrency(amount,listingType()):"Chưa nhập";
+    if(summaryImages){
+      const count=filesInput?.files?.length||0;
+      summaryImages.textContent=count?`${count} ảnh đã chọn`:"Chưa chọn ảnh";
+    }
+  };
 
   priceInput?.addEventListener("input",()=>{
     const raw=priceInput.value;
     const cleaned=raw.replace(/[^0-9,.\sA-Za-zÀ-ỹ/]/g,"");
     if(cleaned!==raw)priceInput.value=cleaned;
     updatePriceHelp();
+    updateSummary();
   });
   phoneInput?.addEventListener("input",updatePhoneHelp);
+  titleInput?.addEventListener("input",()=>{titleManuallyEdited=true;});
   form.addEventListener("input",event=>{
     if(event.target!==priceInput&&event.target!==phoneInput)event.target?.removeAttribute?.("aria-invalid");
+    if(["area_sqm","floor_label","furnishing"].includes(event.target?.name))syncSuggestedTitle();
+    updateSummary();
     scheduleDraft();
   });
   form.addEventListener("change",event=>{
     if(event.target.name==="listing_type")refreshType(true);
     if(event.target===phase)refreshTowers();
     if(event.target===filesInput)renderPreviews();
+    if(["listing_type","phase","tower","unit_type","area_sqm","floor_label"].includes(event.target?.name))syncSuggestedTitle();
+    updateSummary();
     if(event.target!==filesInput)scheduleDraft();
   });
   form.addEventListener("submit",async event=>{
@@ -354,6 +530,7 @@
     if(isSubmitting)return;
     clearStatus();
     if(form.elements.website?.value){showStatus("Tin của anh/chị đã được tiếp nhận.","success");return;}
+    if(wizardStep<4){nextStep();return;}
     if(!validateFormFields())return;
     if(!api.configured()){showStatus("Hệ thống dữ liệu đang được kết nối. Vui lòng quay lại sau ít phút.","error");return;}
     const selectedFiles=[...(filesInput?.files||[])];
@@ -391,8 +568,6 @@
     }
   });
 
-  window.addEventListener("scroll",scheduleProgress,{passive:true});
-  window.addEventListener("resize",scheduleProgress,{passive:true});
   if(mobileSubmitBar&&"IntersectionObserver" in window){
     const observer=new IntersectionObserver(entries=>{
       const visible=entries.some(entry=>entry.isIntersecting);
@@ -411,7 +586,8 @@
     updateKeyboardState();
   }
 
-  restoreDraft();
+  const restored=restoreDraft();
+  if(restored&&titleInput?.value.trim())titleManuallyEdited=true;
   const preset=location.hash.replace(/^#/,"");
   const beforePreset=listingType();
   if(preset==="cho-thue")form.querySelector('[name="listing_type"][value="rent"]').checked=true;
@@ -421,6 +597,9 @@
   refreshTowers();
   updatePhoneHelp();
   updatePriceHelp();
-  setProgress(1);
-  scheduleProgress();
+  addSmartActions();
+  syncSuggestedTitle();
+  updateSummary();
+  renderPreviews();
+  initWizard();
 })();
