@@ -585,6 +585,14 @@
     window.visualViewport.addEventListener("resize",updateKeyboardState);
     updateKeyboardState();
   }
+  const footer=document.querySelector(".site-footer");
+  if(mobileSubmitBar&&footer&&"IntersectionObserver" in window){
+    const footerObserver=new IntersectionObserver(entries=>{
+      const footerVisible=entries.some(entry=>entry.isIntersecting);
+      mobileSubmitBar.classList.toggle("is-footer",footerVisible);
+    },{threshold:.04});
+    footerObserver.observe(footer);
+  }
 
   const restored=restoreDraft();
   if(restored&&titleInput?.value.trim())titleManuallyEdited=true;
