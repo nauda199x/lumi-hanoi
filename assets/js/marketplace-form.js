@@ -178,7 +178,7 @@
     wizardStep=Math.min(Math.max(Number(step)||1,1),4);
     sections.forEach(section=>{section.hidden=Number(section.dataset.formStep)!==wizardStep;});
     setProgress(wizardStep);
-    setSubmitState("Gửi tin chờ duyệt",false);
+    setSubmitState("Gửi tin để duyệt",false);
     if(scroll){
       const target=form.querySelector("[data-form-progress]")||sections[wizardStep-1];
       target?.scrollIntoView({behavior:"smooth",block:"start"});
@@ -480,7 +480,7 @@
     }
     const descriptionField=descriptionInput?.closest(".field");
     if(descriptionField&&!descriptionField.querySelector("[data-smart-description]")){
-      const button=document.createElement("button");button.type="button";button.className="field-smart-action";button.dataset.smartDescription="";button.textContent="Gợi ý mô tả nhanh";
+      const button=document.createElement("button");button.type="button";button.className="field-smart-action";button.dataset.smartDescription="";button.textContent="Tạo mô tả gợi ý";
       button.addEventListener("click",()=>{descriptionInput.value=suggestedDescription();descriptionInput.focus();scheduleDraft();});
       descriptionField.insertBefore(button,descriptionInput);
     }
@@ -532,7 +532,7 @@
     if(form.elements.website?.value){showStatus("Tin của anh/chị đã được tiếp nhận.","success");return;}
     if(wizardStep<4){nextStep();return;}
     if(!validateFormFields())return;
-    if(!api.configured()){showStatus("Hệ thống dữ liệu đang được kết nối. Vui lòng quay lại sau ít phút.","error");return;}
+    if(!api.configured()){showStatus("Dữ liệu giao dịch đang được cập nhật. Vui lòng quay lại sau ít phút.","error");return;}
     const selectedFiles=[...(filesInput?.files||[])];
     try{validateFileSelection(selectedFiles);}catch(error){showStatus(error.message,"error");return;}
 
@@ -553,7 +553,7 @@
       }
       const imageNote=files.length&&uploaded<files.length?` Đã tải ${uploaded}/${files.length} ảnh; quản trị viên sẽ liên hệ nếu cần bổ sung.`:"";
       clearDraft();
-      showStatus(`Đã nhận tin ${listing.listing_code}. Tin đang chờ quản trị viên duyệt và chưa hiển thị công khai.${imageNote}`,"success");
+      showStatus(`Tin ${listing.listing_code} đã được tiếp nhận và đang chờ kiểm tra trước khi công khai.${imageNote}`,"success");
       form.reset();
       clearPreviews();
       refreshType(false);
@@ -561,10 +561,10 @@
       updatePhoneHelp();
       setProgress(1);
     }catch(error){
-      showStatus(error.status===429?"Anh/chị gửi quá nhanh. Vui lòng chờ rồi thử lại.":`Chưa gửi được tin: ${error.message}`,"error");
+      showStatus(error.status===429?"Yêu cầu đang được gửi liên tiếp. Vui lòng đợi trong giây lát trước khi gửi lại.":`Chưa gửi được tin: ${error.message}`,"error");
     }finally{
       isSubmitting=false;
-      setSubmitState("Gửi tin chờ duyệt",false);
+      setSubmitState("Gửi tin để duyệt",false);
     }
   });
 
