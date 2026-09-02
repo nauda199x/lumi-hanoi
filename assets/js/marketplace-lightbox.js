@@ -66,8 +66,29 @@
     zoomOutButton=overlay.querySelector("[data-lightbox-zoom-out]");
     resetButton=overlay.querySelector("[data-lightbox-reset]");
 
+    const panBounds=()=>{
+      const baseWidth=lightboxImage?.offsetWidth||0;
+      const baseHeight=lightboxImage?.offsetHeight||0;
+      return {
+        x:Math.max(0,(baseWidth*scale-stage.clientWidth)/2),
+        y:Math.max(0,(baseHeight*scale-stage.clientHeight)/2)
+      };
+    };
+
+    const clampTranslation=()=>{
+      if(scale<=1.01){
+        translateX=0;
+        translateY=0;
+        return;
+      }
+      const bounds=panBounds();
+      translateX=clamp(translateX,-bounds.x,bounds.x);
+      translateY=clamp(translateY,-bounds.y,bounds.y);
+    };
+
     const applyTransform=(animate=false)=>{
       if(!lightboxImage)return;
+      clampTranslation();
       lightboxImage.classList.toggle("is-animating",animate);
       lightboxImage.style.transform=`translate3d(${translateX}px,${translateY}px,0) scale(${scale})`;
       stage.classList.toggle("is-zoomed",scale>1.01);
@@ -84,6 +105,20 @@
       applyTransform(animate);
     };
 
+    const fitImage=(reset=true)=>{
+      if(!lightboxImage||!stage||!lightboxImage.naturalWidth||!lightboxImage.naturalHeight)return;
+      const availableWidth=stage.clientWidth;
+      const availableHeight=stage.clientHeight;
+      if(!availableWidth||!availableHeight)return;
+      const fit=Math.min(1,availableWidth/lightboxImage.naturalWidth,availableHeight/lightboxImage.naturalHeight);
+      lightboxImage.style.width=`${Math.max(1,Math.floor(lightboxImage.naturalWidth*fit))}px`;
+      lightboxImage.style.height=`${Math.max(1,Math.floor(lightboxImage.naturalHeight*fit))}px`;
+      lightboxImage.style.maxWidth="none";
+      lightboxImage.style.maxHeight="none";
+      lightboxImage.style.visibility="";
+      if(reset)resetTransform(false);else applyTransform(false);
+    };
+
     const setScale=(nextScale,animate=true)=>{
       const target=clamp(nextScale,1,4);
       if(target===1){
@@ -91,21 +126,25 @@
         return;
       }
       scale=target;
-      translateX=clamp(translateX,-stage.clientWidth*(scale-1)/2,stage.clientWidth*(scale-1)/2);
-      translateY=clamp(translateY,-stage.clientHeight*(scale-1)/2,stage.clientHeight*(scale-1)/2);
       applyTransform(animate);
     };
 
     const render=()=>{
       const source=activeImages[activeIndex];
       if(!source)return;
-      lightboxImage.src=source.currentSrc||source.src;
+      lightboxImage.style.visibility="hidden";
+      lightboxImage.removeAttribute("style");
+      lightboxImage.style.visibility="hidden";
+      lightboxImage.src=source.src||source.currentSrc;
       lightboxImage.alt=source.alt||`Ảnh căn hộ ${activeIndex+1}`;
       countNode.textContent=`${activeIndex+1}/${activeImages.length}`;
       prevButton.disabled=activeIndex===0;
       nextButton.disabled=activeIndex===activeImages.length-1;
       resetTransform(false);
+      if(lightboxImage.complete&&lightboxImage.naturalWidth)requestAnimationFrame(()=>fitImage(true));
     };
+
+    lightboxImage.addEventListener("load",()=>requestAnimationFrame(()=>fitImage(true)));
 
     const go=direction=>{
       const target=activeIndex+direction;
@@ -126,9 +165,10 @@
       activeImages=images;
       activeIndex=clamp(index,0,Math.max(0,images.length-1));
       lastFocus=opener||document.activeElement;
-      render();
       overlay.hidden=false;
       document.body.classList.add("detail-lightbox-open");
+      render();
+      requestAnimationFrame(()=>fitImage(true));
       closeButton.focus({preventScroll:true});
     };
 
@@ -182,10 +222,6 @@
         event.preventDefault();
         translateX=dragStart.translateX+(event.clientX-dragStart.x);
         translateY=dragStart.translateY+(event.clientY-dragStart.y);
-        const maxX=stage.clientWidth*(scale-1)/2;
-        const maxY=stage.clientHeight*(scale-1)/2;
-        translateX=clamp(translateX,-maxX,maxX);
-        translateY=clamp(translateY,-maxY,maxY);
         applyTransform(false);
       }
     });
@@ -210,6 +246,7 @@
     };
     stage.addEventListener("pointerup",finishPointer);
     stage.addEventListener("pointercancel",finishPointer);
+    window.addEventListener("resize",()=>{if(overlay&&!overlay.hidden)requestAnimationFrame(()=>fitImage(true));},{passive:true});
 
     document.addEventListener("keydown",event=>{
       if(!overlay||overlay.hidden)return;
