@@ -176,12 +176,6 @@
   force = true
 
 [[redirects]]
-  from = "/lien-he/*"
-  to = "/giao-dich-lumi-hanoi/:splat"
-  status = 301
-  force = true
-
-[[redirects]]
   from = "http://www.lumi-hanoi.com/*"
   to = "https://lumi-hanoi.com/:splat"
   status = 301
