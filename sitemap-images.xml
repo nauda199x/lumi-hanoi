@@ -309,4 +309,22 @@
       <image:loc>https://lumi-hanoi.com/assets/media/layouts/lumi-elite-masterplan.webp</image:loc>
     </image:image>
   </url>
+  <url>
+    <loc>https://lumi-hanoi.com/tin-tuc/lumi-hanoi-ban-giao-khi-nao/</loc>
+    <image:image><image:loc>https://lumi-hanoi.com/assets/media/progress/lumi-hanoi-tien-do-thang-07-2026-tong-the.webp</image:loc></image:image>
+    <image:image><image:loc>https://lumi-hanoi.com/assets/media/progress/lumi-hanoi-canh-quan-thang-07-2026.webp</image:loc></image:image>
+    <image:image><image:loc>https://lumi-hanoi.com/assets/media/progress/lumi-hanoi-be-boi-cau-vong-thang-07-2026.webp</image:loc></image:image>
+  </url>
+  <url>
+    <loc>https://lumi-hanoi.com/tin-tuc/phi-quan-ly-lumi-hanoi/</loc>
+    <image:image><image:loc>https://lumi-hanoi.com/assets/media/elite/lumi-elite-lobby-e1.webp</image:loc></image:image>
+    <image:image><image:loc>https://lumi-hanoi.com/assets/media/prestige/lumi-prestige-hero.webp</image:loc></image:image>
+    <image:image><image:loc>https://lumi-hanoi.com/assets/media/signature/lumi-signature-landscape.webp</image:loc></image:image>
+  </url>
+  <url>
+    <loc>https://lumi-hanoi.com/tin-tuc/kinh-nghiem-cho-thue-can-ho-lumi-hanoi/</loc>
+    <image:image><image:loc>https://lumi-hanoi.com/assets/media/home/lumi-hanoi-streetscape.webp</image:loc></image:image>
+    <image:image><image:loc>https://lumi-hanoi.com/assets/media/elite/lumi-elite-lobby-e1.webp</image:loc></image:image>
+    <image:image><image:loc>https://lumi-hanoi.com/assets/media/prestige/lumi-prestige-hero.webp</image:loc></image:image>
+  </url>
 </urlset>
