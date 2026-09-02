@@ -74,7 +74,8 @@ assert 'detail-gallery-nav--prev' in detail_js and 'detail-gallery-nav--next' in
 assert 'ArrowLeft' in detail_js and 'ArrowRight' in detail_js, "Desktop gallery should support keyboard arrow navigation"
 assert 'detail-gallery-nav--prev' in market_css and 'detail-gallery-nav--next' in market_css, "Desktop gallery arrows need visible styling"
 assert 'detail-gallery-nav--prev' in (ROOT / "assets/js/marketplace-static-status.js").read_text(encoding="utf-8"), "Static SEO listings need desktop gallery controls"
-assert '20260829-detail4' in detail and '20260829-detail4' in seo_generator, "Detail assets must bust stale gallery cache"
+assert 'marketplace-detail.js?v=20260902-procopy' in detail, "Dynamic detail page must use the current detail script cache key"
+assert 'marketplace-lightbox.js?v=20260902-fullimage' in detail and 'marketplace-lightbox.js?v=20260902-fullimage' in seo_generator, "Dynamic and generated detail pages must use the current full-image lightbox cache key"
 assert 'DETAIL PORTAL UX 2026-08-29' in market_css and 'scroll-snap-type:x mandatory' in market_css, "Marketplace detail CSS must keep swipe-first gallery behavior"
 assert 'detail-shell detail-shell--portal' in seo_generator and 'detail-mobile-contact' in seo_generator, "Generated SEO listing pages must share the same portal layout"
 assert 'detail-gallery-track' in seo_generator and 'data-static-gallery-counter' in seo_generator, "Generated listing pages must include swipe gallery markup"
@@ -111,7 +112,7 @@ assert 'marketplace-load-more' in list_js and 'pageSize=()=>mobileQuery.matches?
 assert 'pricePerSqm' in list_js and 'timeAgo' in list_js, "Sale cards need price per sqm and listing recency"
 assert all('name="area"' in page for page in (sale,rent)), "Sale and rent filters need area controls"
 assert all('name="sort"' not in page for page in (sale,rent)), "Public marketplace must not expose sorting that can override paid priority"
-assert all('20260902-mobileux2' in page for page in (sale,rent)), "Marketplace hubs must bust stale list assets"
+assert all('marketplace-list.js?v=20260902-procopy' in page for page in (sale,rent)), "Marketplace hubs must use the current list script cache key"
 assert 'MARKETPLACE LIST SUPER UX 2026-08-29' in market_css, "Marketplace list must include the new responsive UX stylesheet"
 assert 'grid-template-columns:minmax(360px,.96fr) minmax(0,1.22fr)' in market_css, "Desktop cards must use horizontal marketplace layout"
 assert 'scroll-snap-type:x mandatory' in market_css and '.marketplace-toolbar.is-mobile-open' in market_css, "Mobile cards need swipe gallery and filter bottom sheet"
@@ -136,7 +137,7 @@ assert 'href="/cho-thue-lumi-hanoi/"' in transaction_hub
 assert 'href="/dang-tin-lumi-hanoi/"' in transaction_hub
 assert '<h2><a class="transaction-path-link" href="/mua-ban-lumi-hanoi/">Tìm căn để mua</a></h2>' in transaction_hub
 assert '<h2><a class="transaction-path-link" href="/cho-thue-lumi-hanoi/">Tìm căn để thuê</a></h2>' in transaction_hub
-assert "Anh/chị đang muốn mua hay thuê?" in transaction_hub and "Anh đang muốn mua hay thuê?" not in transaction_hub
+assert "Mua bán và cho thuê căn hộ Lumi Hanoi" in transaction_hub, "Transaction hub must keep the professional marketplace heading"
 assert "hoặc anh/chị không có quyền xóa" in api and "hoặc anh không có quyền xóa" not in api
 assert "Cẩm nang giao dịch" not in home
 assert "overviewLink.after(transactionDropdown)" in site_js, "Every legacy page must prioritize the transaction dropdown after Overview"
