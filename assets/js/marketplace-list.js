@@ -21,7 +21,6 @@
   let filteredRows=[];
   let visibleCount=0;
   let timer=0;
-  let sortMode="newest";
 
   const el=(tag,className,text)=>{
     const node=document.createElement(tag);
@@ -228,11 +227,7 @@
   const mobileFilterLabel=el("span","marketplace-mobile-filter-label","Bộ lọc");
   const mobileFilterMeta=el("span","marketplace-mobile-filter-meta","");
   mobileFilterButton.append(mobileFilterLabel,mobileFilterMeta);
-  const mobileSort=document.createElement("select");
-  mobileSort.className="marketplace-mobile-sort";
-  mobileSort.setAttribute("aria-label","Sắp xếp tin đăng");
-  [["newest","Mới nhất"],["price-asc","Giá thấp"],["price-desc","Giá cao"]].forEach(([value,label])=>mobileSort.append(new Option(label,value)));
-  mobileControls.append(mobileFilterButton,mobileSort);
+  mobileControls.append(mobileFilterButton);
   form.insertAdjacentElement("beforebegin",mobileControls);
 
   const quickFilters=el("div","marketplace-quick-filters");
@@ -259,7 +254,6 @@
   const openFilterSheet=()=>{form.classList.add("is-mobile-open");backdrop.classList.add("is-visible");document.body.classList.add("marketplace-filter-open");};
   const closeFilterSheet=()=>{form.classList.remove("is-mobile-open");backdrop.classList.remove("is-visible");document.body.classList.remove("marketplace-filter-open");};
   mobileFilterButton.addEventListener("click",openFilterSheet);
-  mobileSort.addEventListener("change",()=>{sortMode=mobileSort.value;showRows();});
   closeFilters.addEventListener("click",closeFilterSheet);
   applyFilters.addEventListener("click",closeFilterSheet);
   backdrop.addEventListener("click",closeFilterSheet);
@@ -272,16 +266,9 @@
     [...quickFilters.children].forEach(button=>button.classList.toggle("is-active",button.dataset.value===String(values.bedroom||"")));
   };
 
-  const sortRows=rows=>{
-    const next=[...rows];
-    if(sortMode==="price-asc")return next.sort((a,b)=>Number(a.price_vnd||0)-Number(b.price_vnd||0));
-    if(sortMode==="price-desc")return next.sort((a,b)=>Number(b.price_vnd||0)-Number(a.price_vnd||0));
-    return next.sort((a,b)=>new Date(b.approved_at||b.created_at||0)-new Date(a.approved_at||a.created_at||0));
-  };
-
   const showRows=()=>{
     const filters=filterValues();
-    filteredRows=sortRows(applyClientFilters(sourceRows,filters));
+    filteredRows=applyClientFilters(sourceRows,filters);
     syncMobileControls();
     applyFilters.textContent=filteredRows.length?`Xem ${filteredRows.length} căn`:"Xem kết quả";
     if(filteredRows.length){
