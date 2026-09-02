@@ -49,8 +49,27 @@ jobs:
           from pathlib import Path
           from urllib.parse import urlparse, unquote
 
-          ET.parse('sitemap.xml')
+          main_root = ET.parse('sitemap.xml').getroot()
+          listing_root = ET.parse('sitemap-tin-dang.xml').getroot()
           print('sitemap.xml: OK')
+          print('sitemap-tin-dang.xml: OK')
+
+          sm_ns = {'sm': 'http://www.sitemaps.org/schemas/sitemap/0.9'}
+          main_locs = {node.text for node in main_root.findall('.//sm:loc', sm_ns) if node.text}
+          listing_locs = {node.text for node in listing_root.findall('.//sm:loc', sm_ns) if node.text}
+          overlap = sorted(main_locs & listing_locs)
+          if overlap:
+              raise SystemExit(f'listing URLs duplicated across sitemaps: {overlap[:10]}')
+
+          required_trust_pages = [
+              'gioi-thieu/index.html',
+              'lien-he/index.html',
+              'chinh-sach-bao-mat/index.html',
+              'dieu-khoan-su-dung/index.html',
+          ]
+          for page in required_trust_pages:
+              if not Path(page).is_file():
+                  raise SystemExit(f'missing trust page: {page}')
 
           ns = {
               'sm': 'http://www.sitemaps.org/schemas/sitemap/0.9',
