@@ -30,7 +30,7 @@
   };
   const loadMoreWrap=el("div","marketplace-load-more");
   const loadMoreStatus=el("span","marketplace-load-more-status","");
-  const loadMoreButton=el("button","btn","Xem thêm căn");
+  const loadMoreButton=el("button","btn","Xem thêm tin");
   loadMoreButton.type="button";
   loadMoreWrap.append(loadMoreStatus,loadMoreButton);
   grid.insertAdjacentElement("afterend",loadMoreWrap);
@@ -180,7 +180,7 @@
       const zaloLink=el("a","listing-card-action listing-card-action--zalo","Zalo");
       zaloLink.href=`https://zalo.me/${zalo}`;zaloLink.target="_blank";zaloLink.rel="noopener";actions.append(zaloLink);
     }
-    const view=el("a","listing-card-action listing-card-action--view","Xem căn");
+    const view=el("a","listing-card-action listing-card-action--view","Xem chi tiết");
     view.href=cleanUrl;view.addEventListener("click",openLive);actions.append(view);
 
     footer.append(poster,actions);
@@ -213,9 +213,9 @@
     filteredRows.slice(visibleCount,next).forEach(listing=>fragment.append(cardFor(listing)));
     grid.append(fragment);visibleCount=next;
     if(count)count.textContent=`${filteredRows.length} tin đăng`;
-    loadMoreStatus.textContent=filteredRows.length?`Đang xem ${visibleCount}/${filteredRows.length} căn`:"";
+    loadMoreStatus.textContent=filteredRows.length?`Đang hiển thị ${visibleCount}/${filteredRows.length} tin`:"";
     const remaining=Math.max(0,filteredRows.length-visibleCount);
-    loadMoreButton.textContent=`Xem thêm ${Math.min(pageSize(),remaining)} căn`;
+    loadMoreButton.textContent=`Xem thêm ${Math.min(pageSize(),remaining)} tin`;
     loadMoreButton.hidden=!remaining;
     loadMoreWrap.hidden=filteredRows.length<=pageSize();
   };
@@ -274,16 +274,16 @@
     if(filteredRows.length){
       grid.hidden=false;if(state)state.hidden=true;renderMore(true);
     }else if(sourceRows.length||activeFilterCount(filters)){
-      setState("Không tìm thấy căn phù hợp","Thử bỏ bớt điều kiện lọc hoặc thay đổi khoảng giá, diện tích.","0",false);
+      setState("Không tìm thấy căn phù hợp","Điều chỉnh bộ lọc hoặc thay đổi khoảng giá, diện tích để mở rộng kết quả.","0",false);
     }else{
-      setState(`Chưa có tin đăng ${type==="rent"?"cho thuê":"mua bán"}`,"Anh/chị có căn cần giao dịch có thể đăng miễn phí. Tin chỉ xuất hiện sau khi quản trị viên duyệt.","0",true);
+      setState(`Chưa có tin đăng ${type==="rent"?"cho thuê":"mua bán"}`,"Nếu có căn cần mua bán hoặc cho thuê, anh/chị có thể đăng tin miễn phí. Tin được kiểm tra trước khi công khai.","0",true);
     }
   };
 
   const load=async()=>{
     if(!api.configured()){
       if(count)count.textContent="Đang kết nối";
-      setState("Quỹ căn đang được kết nối","Hệ thống đang kết nối dữ liệu giao dịch. Vui lòng thử lại sau ít phút.","LH",false);
+      setState("Dữ liệu giao dịch đang được cập nhật","Hệ thống đang cập nhật danh sách tin giao dịch. Vui lòng quay lại sau ít phút.","LH",false);
       return;
     }
     setLoading(true);
@@ -292,7 +292,7 @@
       showRows();
     }catch(error){
       if(count)count.textContent="Chưa tải được dữ liệu";
-      setState("Không thể tải danh sách căn",error.status===0?"Vui lòng kiểm tra kết nối mạng và thử lại.":"Dữ liệu tạm thời chưa sẵn sàng. Vui lòng thử lại sau.","!",false);
+      setState("Chưa thể tải danh sách căn hộ",error.status===0?"Vui lòng kiểm tra kết nối mạng và tải lại trang.":"Dữ liệu tạm thời chưa sẵn sàng. Vui lòng quay lại sau.","!",false);
     }finally{setLoading(false);}
   };
 
