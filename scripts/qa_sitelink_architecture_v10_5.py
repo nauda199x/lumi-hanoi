@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """Regression checks for core navigation and P1/P2 sitelink architecture."""
 from pathlib import Path
-import re
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -71,10 +70,15 @@ for url in (
     "https://lumi-hanoi.com/mat-bang-lumi-hanoi/lumi-prestige/p1/",
     "https://lumi-hanoi.com/mat-bang-lumi-hanoi/lumi-prestige/p2/",
 ):
-    pattern = rf"<loc>{re.escape(url)}</loc><lastmod>(\\d{{4}}-\\d{{2}}-\\d{{2}})</lastmod>"
-    match = re.search(pattern, sitemap)
-    if not match or match.group(1) < "2026-08-31":
-        errors.append(f"sitemap lastmod missing or stale for {url}")
+    prefix = f"<loc>{url}</loc><lastmod>"
+    start = sitemap.find(prefix)
+    if start < 0:
+        errors.append(f"sitemap lastmod missing for {url}")
+        continue
+    date_start = start + len(prefix)
+    lastmod = sitemap[date_start:date_start + 10]
+    if len(lastmod) != 10 or lastmod < "2026-08-31":
+        errors.append(f"sitemap lastmod stale for {url}")
 
 if errors:
     print("SEO sitelink architecture QA: FAIL")
