@@ -42,21 +42,21 @@
     <section class="submit-hero-premium" aria-labelledby="submit-title">
       <div class="container submit-hero-grid">
         <div class="submit-hero-copy">
-          <p class="eyebrow">Gửi căn hộ lên cổng giao dịch</p>
+          <p class="eyebrow">Đăng tin trên cổng giao dịch</p>
           <h1 id="submit-title">Đăng tin Lumi Hanoi</h1>
-          <p class="lead">Đăng căn bán hoặc cho thuê theo từng bước ngắn. Hệ thống chỉ hỏi đúng thông tin cần thiết, tự lưu bản nháp và hỗ trợ tạo nội dung tin nhanh.</p>
+          <p class="lead">Hoàn thiện thông tin mua bán hoặc cho thuê theo quy trình 4 bước. Biểu mẫu được phân nhóm theo từng loại giao dịch và tự lưu bản nháp trên thiết bị.</p>
           <div class="submit-hero-pills" aria-label="Lợi ích khi đăng tin">
             <span>Không cần tạo tài khoản</span>
             <span>Miễn phí đăng tin</span>
             <span>Tự lưu bản nháp</span>
           </div>
-          <a class="submit-hero-link" href="#form-start">Bắt đầu điền thông tin <span aria-hidden="true">↓</span></a>
+          <a class="submit-hero-link" href="#form-start">Bắt đầu đăng tin <span aria-hidden="true">↓</span></a>
         </div>
         <div class="submit-hero-card" aria-label="Thông tin trước khi đăng">
           <p class="eyebrow">Trước khi bắt đầu</p>
           <div class="submit-hero-stat"><strong>01–12</strong><span>ảnh căn hộ có thể tải lên</span></div>
-          <div class="submit-hero-stat"><strong>4 bước</strong><span>Mỗi lần chỉ hiển thị một phần để điền nhanh hơn</span></div>
-          <div class="submit-hero-stat"><strong>Chờ duyệt</strong><span>Thông tin chưa công khai ngay sau khi gửi</span></div>
+          <div class="submit-hero-stat"><strong>4 bước</strong><span>Thông tin được phân nhóm rõ ràng theo từng bước</span></div>
+          <div class="submit-hero-stat"><strong>Kiểm duyệt trước khi công khai</strong><span>Tin được kiểm tra nội dung trước khi hiển thị trên website</span></div>
           <p class="submit-hero-note">Không tải ảnh CCCD, hợp đồng đầy đủ hoặc giấy tờ chứa dữ liệu cá nhân.</p>
         </div>
       </div>
@@ -69,9 +69,9 @@
         <div class="submit-page-intro">
           <div>
             <p class="eyebrow section-kicker">Biểu mẫu đăng tin</p>
-            <h2>Đăng căn thật nhanh, không bị ngợp bởi form dài</h2>
+            <h2>Đăng tin mua bán hoặc cho thuê Lumi Hanoi</h2>
           </div>
-          <p>Chọn <strong>Mua bán</strong> hoặc <strong>Cho thuê</strong>. Sau đó hệ thống dẫn anh/chị đi từng bước và tự đổi trường thông tin theo đúng loại giao dịch.</p>
+          <p>Chọn <strong>Mua bán</strong> hoặc <strong>Cho thuê</strong> để hệ thống hiển thị đúng nhóm thông tin cần cung cấp cho từng loại giao dịch.</p>
         </div>
 
         <div class="form-shell form-shell--premium">
@@ -93,8 +93,8 @@
                 <span class="form-section-index">01</span>
               </div>
               <div class="choice-grid choice-grid--premium">
-                <div class="choice-card choice-card--sale"><input id="type-sale" name="listing_type" type="radio" value="sale" checked><label for="type-sale"><strong>Mua bán</strong><span>Chuyển nhượng hoặc bán lại căn hộ</span><em>Đăng căn bán →</em></label></div>
-                <div class="choice-card choice-card--rent"><input id="type-rent" name="listing_type" type="radio" value="rent"><label for="type-rent"><strong>Cho thuê</strong><span>Đăng căn hộ cho thuê dài hạn</span><em>Đăng căn thuê →</em></label></div>
+                <div class="choice-card choice-card--sale"><input id="type-sale" name="listing_type" type="radio" value="sale" checked><label for="type-sale"><strong>Mua bán</strong><span>Chuyển nhượng hoặc bán lại căn hộ</span><em>Đăng tin mua bán →</em></label></div>
+                <div class="choice-card choice-card--rent"><input id="type-rent" name="listing_type" type="radio" value="rent"><label for="type-rent"><strong>Cho thuê</strong><span>Đăng căn hộ cho thuê dài hạn</span><em>Đăng tin cho thuê →</em></label></div>
               </div>
             </div>
 
@@ -125,18 +125,18 @@
 
             <div class="form-section form-section--premium" data-form-step="3">
               <div class="form-section-head">
-                <div><p class="form-section-kicker">Phần khách nhìn thấy</p><h2>Nội dung và hình ảnh</h2><p>Tiêu đề rõ ràng và ảnh thật giúp khách hiểu căn nhanh hơn.</p></div>
+                <div><p class="form-section-kicker">Nội dung hiển thị công khai</p><h2>Nội dung và hình ảnh</h2><p>Tiêu đề rõ ràng và hình ảnh thực tế giúp người xem đánh giá căn hộ đầy đủ hơn.</p></div>
                 <span class="form-section-index">03</span>
               </div>
               <div class="field"><label for="title">Tiêu đề tin *</label><input id="title" name="title" maxlength="180" required placeholder="Ví dụ: Bán căn 2PN Lumi Prestige P1, tầng trung, view nội khu"></div>
               <div class="field"><label for="description">Mô tả chi tiết *</label><textarea id="description" name="description" maxlength="3000" minlength="30" required placeholder="Mô tả hiện trạng, ưu điểm, thời gian xem căn và các điều kiện cần biết…"></textarea><small>Không ghi số tài khoản, số giấy tờ tùy thân hoặc thông tin nhạy cảm.</small></div>
-              <label class="image-drop image-drop--premium" for="images"><span class="image-drop-mark" aria-hidden="true">＋</span><span><strong>Chọn ảnh căn hộ *</strong><span>1–12 ảnh · JPG, PNG, WebP, HEIC/HEIF · ảnh lớn sẽ được tự tối ưu trước khi tải.</span><em>Chạm hoặc bấm để chọn ảnh</em></span><input id="images" name="images" type="file" accept="image/jpeg,image/png,image/webp,image/heic,image/heif,.jpg,.jpeg,.png,.webp,.heic,.heif" multiple></label>
+              <label class="image-drop image-drop--premium" for="images"><span class="image-drop-mark" aria-hidden="true">＋</span><span><strong>Chọn ảnh căn hộ *</strong><span>1–12 ảnh · JPG, PNG, WebP, HEIC/HEIF · ảnh lớn sẽ được tự tối ưu trước khi tải.</span><em>Chọn ảnh từ thiết bị</em></span><input id="images" name="images" type="file" accept="image/jpeg,image/png,image/webp,image/heic,image/heif,.jpg,.jpeg,.png,.webp,.heic,.heif" multiple></label>
               <div class="image-preview-grid" data-image-previews aria-live="polite"></div>
             </div>
 
             <div class="form-section form-section--premium" data-form-step="4">
               <div class="form-section-head">
-                <div><p class="form-section-kicker">Thông tin kết nối</p><h2>Người đăng và liên hệ</h2><p>Số này sẽ được dùng để khách gọi hoặc mở Zalo sau khi tin được duyệt.</p></div>
+                <div><p class="form-section-kicker">Thông tin kết nối</p><h2>Người đăng và liên hệ</h2><p>Số điện thoại được hiển thị trên tin sau khi duyệt để người quan tâm liên hệ trực tiếp qua cuộc gọi hoặc Zalo.</p></div>
                 <span class="form-section-index">04</span>
               </div>
               <div class="field-row">
@@ -145,16 +145,16 @@
               </div>
               <div class="field" aria-hidden="true" style="position:absolute;left:-9999px"><label for="website">Website</label><input id="website" name="website" tabindex="-1" autocomplete="off"></div>
               <div class="form-consent form-consent--premium"><input id="contact-public" name="contact_public" type="checkbox" required><label for="contact-public"><strong>Tôi đồng ý công khai số liên hệ khi tin được duyệt</strong> và xác nhận thông tin trên là đúng trong phạm vi hiểu biết của mình. Việc “đã duyệt” không đồng nghĩa website xác nhận pháp lý hoặc bảo đảm giao dịch.</label></div>
-              <div class="form-submit form-submit--premium"><p class="form-status" data-form-status hidden role="status"></p><div class="form-submit-copy"><strong>Sẵn sàng gửi?</strong><span>Kiểm tra lại giá, số điện thoại và ảnh trước khi gửi.</span></div><button class="btn btn-primary" type="submit">Gửi tin chờ duyệt</button></div>
+              <div class="form-submit form-submit--premium"><p class="form-status" data-form-status hidden role="status"></p><div class="form-submit-copy"><strong>Kiểm tra thông tin trước khi gửi</strong><span>Đối chiếu lại mức giá, số điện thoại và hình ảnh đã chọn.</span></div><button class="btn btn-primary" type="submit">Gửi tin để duyệt</button></div>
             </div>
-            <div class="mobile-submit-bar" data-mobile-submit aria-label="Gửi tin nhanh trên điện thoại"><button class="btn btn-primary" type="submit">Gửi tin chờ duyệt</button></div>
+            <div class="mobile-submit-bar" data-mobile-submit aria-label="Gửi tin trên điện thoại"><button class="btn btn-primary" type="submit">Gửi tin để duyệt</button></div>
           </form>
 
-          <aside class="form-aside form-aside--premium wizard-summary" aria-label="Xem nhanh tin đang tạo">
+          <aside class="form-aside form-aside--premium wizard-summary" aria-label="Tóm tắt tin đăng">
             <div class="form-aside-top">
-              <p class="eyebrow">Xem nhanh tin đang tạo</p>
+              <p class="eyebrow">Tóm tắt tin đăng</p>
               <h2 data-summary-title>Căn bán Lumi Hanoi</h2>
-              <p>Thông tin bên dưới tự cập nhật khi anh/chị điền form.</p>
+              <p>Thông tin tóm tắt được cập nhật theo nội dung đã nhập.</p>
             </div>
             <dl class="wizard-summary-list">
               <div><dt>Giao dịch</dt><dd data-summary-type>Mua bán</dd></div>
@@ -165,7 +165,7 @@
             </dl>
             <div class="form-aside-safe wizard-trust-box">
               <strong>Đăng miễn phí · không cần tài khoản</strong>
-              <p>Tin chỉ công khai sau khi được kiểm tra. Không tải CCCD, hợp đồng đầy đủ, số tài khoản hoặc giấy tờ chứa dữ liệu cá nhân.</p>
+              <p>Tin chỉ được công khai sau bước kiểm tra nội dung. Không tải lên CCCD, hợp đồng đầy đủ, số tài khoản hoặc giấy tờ chứa dữ liệu cá nhân.</p>
             </div>
           </aside>
         </div>
