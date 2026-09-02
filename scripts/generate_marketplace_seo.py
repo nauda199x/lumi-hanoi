@@ -764,6 +764,11 @@ def write_sitemap(listings: list[dict]) -> None:
 
 
 def write_main_sitemap(listings: list[dict]) -> None:
+    """Keep static marketplace landing pages fresh without duplicating listing URLs.
+
+    Individual approved listings live only in sitemap-tin-dang.xml. Keeping the
+    main sitemap static prevents duplicate submitted URLs as the marketplace scales.
+    """
     if not MAIN_SITEMAP.exists():
         return
     raw = MAIN_SITEMAP.read_text(encoding="utf-8")
@@ -773,7 +778,13 @@ def write_main_sitemap(listings: list[dict]) -> None:
         price_row = f'  <url><loc>{price_loc}</loc><lastmod>{market_lastmod}</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>\n'
         raw = raw.replace("</urlset>", price_row + "</urlset>")
     else:
-        raw = re.sub(r'(<loc>https://lumi-hanoi\\.com/gia-can-ho-lumi-hanoi/</loc><lastmod>)\\d{4}-\\d{2}-\\d{2}(</lastmod>)', rf'\\g<1>{market_lastmod}\\2', raw, count=1)
+        raw = re.sub(
+            r'(<loc>https://lumi-hanoi\\.com/gia-can-ho-lumi-hanoi/</loc><lastmod>)\\d{4}-\\d{2}-\\d{2}(</lastmod>)',
+            rf'\\g<1>{market_lastmod}\\2',
+            raw,
+            count=1,
+        )
+
     landing_loc = SITE + "/cho-thue-shop-chan-de-lumi-hanoi/"
     if landing_loc not in raw:
         landing = (
@@ -781,26 +792,15 @@ def write_main_sitemap(listings: list[dict]) -> None:
             "<changefreq>daily</changefreq><priority>0.9</priority></url>\n"
         )
         raw = raw.replace("</urlset>", landing + "</urlset>")
-    dynamic_rows = []
-    for listing in listings:
-        if not indexable(listing):
-            continue
-        loc = SITE + listing_url(listing)
-        lastmod = date_only(listing.get("approved_at") or listing.get("created_at"))
-        dynamic_rows.append("  <url>")
-        dynamic_rows.append(f"    <loc>{esc(loc)}</loc>")
-        if lastmod:
-            dynamic_rows.append(f"    <lastmod>{lastmod}</lastmod>")
-        dynamic_rows.append("    <changefreq>daily</changefreq>")
-        dynamic_rows.append("    <priority>0.7</priority>")
-        dynamic_rows.append("  </url>")
-    block = MAIN_SITEMAP_START + "\n" + "\n".join(dynamic_rows) + "\n" + MAIN_SITEMAP_END
-    if MAIN_SITEMAP_START in raw and MAIN_SITEMAP_END in raw:
-        raw = replace_marked_block(raw, MAIN_SITEMAP_START, MAIN_SITEMAP_END, "\n".join(dynamic_rows))
-    else:
-        raw = raw.replace("</urlset>", block + "\n</urlset>")
-    MAIN_SITEMAP.write_text(raw, encoding="utf-8")
 
+    # Clean up the legacy block once, and never add listing URLs back here.
+    raw = re.sub(
+        r'\\n?<!-- MARKETPLACE-LISTINGS:START -->.*?<!-- MARKETPLACE-LISTINGS:END -->\\n?',
+        "\\n",
+        raw,
+        flags=re.S,
+    )
+    MAIN_SITEMAP.write_text(raw, encoding="utf-8")
 
 def main() -> None:
     listings = fetch_approved()

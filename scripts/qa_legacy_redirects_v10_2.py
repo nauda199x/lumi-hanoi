@@ -31,8 +31,7 @@ REDIRECTS = {
     "tien-do/index.html": "/tien-do-lumi-hanoi/",
     "giai-doan-1/index.html": "/lumi-signature/",
     "giai-doan-3/index.html": "/lumi-elite/",
-    "chu-dau-tu/index.html": "/chu-dau-tu-capitaland/",
-    "lien-he/index.html": "/giao-dich-lumi-hanoi/"
+    "chu-dau-tu/index.html": "/chu-dau-tu-capitaland/"
 }
 
 errors = []
@@ -65,7 +64,6 @@ for old, new in {
     "/giai-doan-1/*": "/lumi-signature/:splat",
     "/giai-doan-3/*": "/lumi-elite/:splat",
     "/chu-dau-tu/*": "/chu-dau-tu-capitaland/:splat",
-    "/lien-he/*": "/giao-dich-lumi-hanoi/:splat",
 }.items():
     if (old, new, 301, True) not in rules:
         errors.append(f"netlify.toml missing 301: {old} -> {new}")

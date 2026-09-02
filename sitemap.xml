@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://lumi-hanoi.com/</loc><lastmod>2026-08-31</lastmod><priority>1.0</priority></url>
+  <url><loc>https://lumi-hanoi.com/</loc><lastmod>2026-09-02</lastmod><priority>1.0</priority></url>
   <url><loc>https://lumi-hanoi.com/giao-dich-lumi-hanoi/</loc><lastmod>2026-08-30</lastmod><priority>0.9</priority></url>
   <url><loc>https://lumi-hanoi.com/gia-can-ho-lumi-hanoi/</loc><lastmod>2026-08-30</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>
   <url><loc>https://lumi-hanoi.com/cho-thue-lumi-hanoi/</loc><lastmod>2026-08-30</lastmod><priority>0.8</priority></url>
-  <url><loc>https://lumi-hanoi.com/dang-tin-lumi-hanoi/</loc><lastmod>2026-08-29</lastmod><priority>0.7</priority></url>
+  <url><loc>https://lumi-hanoi.com/dang-tin-lumi-hanoi/</loc><lastmod>2026-09-02</lastmod><priority>0.7</priority></url>
   <url><loc>https://lumi-hanoi.com/ky-gui-lumi-hanoi/</loc><lastmod>2026-08-19</lastmod><priority>0.8</priority></url>
   <url><loc>https://lumi-hanoi.com/lumi-elite/</loc><lastmod>2026-08-30</lastmod><priority>0.8</priority></url>
   <url><loc>https://lumi-hanoi.com/layout-can-ho-lumi-prestige/</loc><lastmod>2026-08-21</lastmod><priority>0.9</priority></url>
@@ -67,19 +67,8 @@
   <url><loc>https://lumi-hanoi.com/cho-thue-shop-chan-de-lumi-hanoi/</loc><lastmod>2026-08-30</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>
   <url><loc>https://lumi-hanoi.com/tin-tuc/lumi-hanoi-ban-giao-khi-nao/</loc><lastmod>2026-09-02</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
   <url><loc>https://lumi-hanoi.com/tin-tuc/phi-quan-ly-lumi-hanoi/</loc><lastmod>2026-09-02</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://lumi-hanoi.com/tin-tuc/kinh-nghiem-cho-thue-can-ho-lumi-hanoi/</loc><lastmod>2026-09-02</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
-<!-- MARKETPLACE-LISTINGS:START -->
-<url>
-    <loc>https://lumi-hanoi.com/mua-ban-lumi-hanoi/ban-shop-chan-de-toa-s6-lh-32ca9322/</loc>
-    <lastmod>2026-08-29</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://lumi-hanoi.com/cho-thue-lumi-hanoi/cho-thue-shop-chan-de-toa-prestige-lh-71274f35/</loc>
-    <lastmod>2026-08-29</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.7</priority>
-  </url>
-<!-- MARKETPLACE-LISTINGS:END -->
+  <url><loc>https://lumi-hanoi.com/tin-tuc/kinh-nghiem-cho-thue-can-ho-lumi-hanoi/</loc><lastmod>2026-09-02</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>  <url><loc>https://lumi-hanoi.com/gioi-thieu/</loc><lastmod>2026-09-02</lastmod><priority>0.6</priority></url>
+  <url><loc>https://lumi-hanoi.com/lien-he/</loc><lastmod>2026-09-02</lastmod><priority>0.7</priority></url>
+  <url><loc>https://lumi-hanoi.com/chinh-sach-bao-mat/</loc><lastmod>2026-09-02</lastmod><priority>0.5</priority></url>
+  <url><loc>https://lumi-hanoi.com/dieu-khoan-su-dung/</loc><lastmod>2026-09-02</lastmod><priority>0.5</priority></url>
 </urlset>

@@ -9,6 +9,28 @@
   window.gtag=window.gtag||function(){window.dataLayer.push(arguments);};
   window.gtag("js",new Date());
   window.gtag("config",measurementId);
+
+  // Privacy-safe conversion events. Do not send phone numbers, names, listing codes,
+  // or any other user-entered/personal data to Analytics.
+  const track=(eventName,params={})=>{
+    try{
+      window.gtag("event",eventName,{page_path:location.pathname,...params});
+    }catch{}
+  };
+  window.LumiAnalytics=Object.freeze({track});
+  document.addEventListener("click",event=>{
+    const link=event.target.closest?.("a[href]");
+    if(!link)return;
+    const href=link.getAttribute("href")||"";
+    if(/^tel:/i.test(href)){
+      track("phone_click",{contact_surface:"site_link"});
+      return;
+    }
+    if(/(?:^|\/\/)zalo\.me\//i.test(href)){
+      track("zalo_click",{contact_surface:"site_link"});
+    }
+  });
+
   const tag=document.createElement("script");
   tag.async=true;
   tag.src=`https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(measurementId)}`;
@@ -100,6 +122,22 @@
       }
     });
   }
+  document.querySelectorAll('.site-footer .footer-links').forEach(nav=>{
+    const trustLinks=[
+      ['/gioi-thieu/','Giới thiệu'],
+      ['/lien-he/','Liên hệ'],
+      ['/chinh-sach-bao-mat/','Chính sách bảo mật'],
+      ['/dieu-khoan-su-dung/','Điều khoản sử dụng']
+    ];
+    trustLinks.forEach(([href,label])=>{
+      if(nav.querySelector(`a[href="${href}"]`))return;
+      const link=document.createElement('a');
+      link.href=href;
+      link.textContent=label;
+      nav.append(link);
+    });
+  });
+
   document.querySelectorAll('[data-year]').forEach(el=>{el.textContent=new Date().getFullYear();});
 
   const reveals=[...document.querySelectorAll('[data-reveal]')];

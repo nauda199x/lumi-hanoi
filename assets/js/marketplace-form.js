@@ -554,6 +554,10 @@
       const imageNote=files.length&&uploaded<files.length?` Đã tải ${uploaded}/${files.length} ảnh; quản trị viên sẽ liên hệ nếu cần bổ sung.`:"";
       clearDraft();
       showStatus(`Tin ${listing.listing_code} đã được tiếp nhận và đang chờ kiểm tra trước khi công khai.${imageNote}`,"success");
+      window.LumiAnalytics?.track?.("form_submit_dang_tin",{
+        listing_type:listingType(),
+        image_count:uploaded
+      });
       form.reset();
       clearPreviews();
       refreshType(false);
