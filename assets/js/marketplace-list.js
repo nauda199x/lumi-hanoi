@@ -58,7 +58,8 @@
   };
   const applyQueryFilters=()=>{
     const params=new URLSearchParams(location.search);
-    const requestedTower=String(params.get("tower")||"").trim().toUpperCase();
+    const hashParams=new URLSearchParams(location.hash.replace(/^#/,""));
+    const requestedTower=String(params.get("tower")||hashParams.get("tower")||"").trim().toUpperCase();
     const allTowers=Object.values(towerMap).flat();
     const inferredPhase=Object.entries(towerMap).find(([,items])=>items.includes(requestedTower))?.[0]||"";
     if(phase&&inferredPhase)phase.value=inferredPhase;
