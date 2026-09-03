@@ -112,7 +112,7 @@ assert 'marketplace-load-more' in list_js and 'pageSize=()=>mobileQuery.matches?
 assert 'pricePerSqm' in list_js and 'timeAgo' in list_js, "Sale cards need price per sqm and listing recency"
 assert all('name="area"' in page for page in (sale,rent)), "Sale and rent filters need area controls"
 assert all('name="sort"' not in page for page in (sale,rent)), "Public marketplace must not expose sorting that can override paid priority"
-assert all('marketplace-list.js?v=20260902-procopy' in page for page in (sale,rent)), "Marketplace hubs must use the current list script cache key"
+assert all('marketplace-list.js?v=20260903-tower-filter' in page for page in (sale,rent)), "Marketplace hubs must use the current list script cache key"
 assert 'MARKETPLACE LIST SUPER UX 2026-08-29' in market_css, "Marketplace list must include the new responsive UX stylesheet"
 assert 'grid-template-columns:minmax(360px,.96fr) minmax(0,1.22fr)' in market_css, "Desktop cards must use horizontal marketplace layout"
 assert 'scroll-snap-type:x mandatory' in market_css and '.marketplace-toolbar.is-mobile-open' in market_css, "Mobile cards need swipe gallery and filter bottom sheet"
