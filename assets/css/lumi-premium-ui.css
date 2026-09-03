@@ -1164,3 +1164,29 @@ p,.lead{letter-spacing:-.012em}
     color:var(--lumi-accent-dark)!important;
   }
 }
+
+
+/* Mobile nav visibility hard fix — 2026-09-03 */
+@media(max-width:1000px){
+  .nav-links{
+    display:none!important;
+  }
+  .nav-links[data-open="true"]{
+    display:flex!important;
+  }
+}
+@media(max-width:760px){
+  .mobile-property-nav a:last-child{
+    display:flex!important;
+    flex-direction:column!important;
+    align-items:center!important;
+    justify-content:center!important;
+    text-align:center!important;
+  }
+  .mobile-property-nav a:last-child>span,
+  .mobile-property-nav a:last-child>small{
+    width:100%!important;
+    margin:0!important;
+    text-align:center!important;
+  }
+}
