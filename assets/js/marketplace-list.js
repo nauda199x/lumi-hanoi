@@ -66,11 +66,7 @@
     refreshTowers();
     if(tower&&allTowers.includes(requestedTower))tower.value=requestedTower;
   };
-  const liveDetailUrl=listing=>{
-    const slug=api.cleanText(listing?.slug,120);
-    const route="/tin-dang-lumi-hanoi/";
-    return slug?`${route}?slug=${encodeURIComponent(slug)}`:route;
-  };
+  const liveDetailUrl=listing=>api.listingUrl(listing);
   const openLiveFor=listing=>event=>{
     if(event.defaultPrevented||(event.button&&event.button!==0)||event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;
     event.preventDefault();
