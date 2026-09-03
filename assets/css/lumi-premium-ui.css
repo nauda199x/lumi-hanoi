@@ -1183,7 +1183,8 @@ p,.lead{letter-spacing:-.012em}
     justify-content:center!important;
     text-align:center!important;
   }
-  .mobile-property-nav__post>span,\n  .mobile-property-nav__post>small{
+  .mobile-property-nav__post>span,
+  .mobile-property-nav__post>small{
     width:100%!important;
     margin:0!important;
     text-align:center!important;
