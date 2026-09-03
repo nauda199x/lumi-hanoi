@@ -54,7 +54,7 @@
   if(!document.querySelector('link[data-lumi-premium-ui]')){
     const premiumStyles=document.createElement('link');
     premiumStyles.rel='stylesheet';
-    premiumStyles.href='/assets/css/lumi-premium-ui.css?v=20260903-taskbar5';
+    premiumStyles.href='/assets/css/lumi-premium-ui.css?v=20260903-marketplace-mobile1';
     premiumStyles.dataset.lumiPremiumUi='true';
     document.head.append(premiumStyles);
   }
@@ -173,7 +173,11 @@
     window.addEventListener('scroll',syncHeaderState,{passive:true});
   }
 
+  const isListingDetail=
+    document.body.classList.contains('listing-detail-page')||
+    Boolean(document.querySelector('[data-static-listing],[data-listing-detail]'));
   const mobileNavExcluded=
+    isListingDetail||
     location.pathname.startsWith('/admin/')||
     location.pathname.startsWith('/tin-dang-lumi-hanoi/')||
     location.pathname.startsWith('/dang-tin-lumi-hanoi/');
@@ -200,6 +204,24 @@
     });
     document.body.append(mobileNav);
     document.body.classList.add('has-mobile-property-nav');
+  }
+
+  if(isListingDetail){
+    const cleanGenericDetailQuickfacts=()=>{
+      document.querySelectorAll('.detail-quickfacts span').forEach(item=>{
+        const value=item.textContent.replace(/\\s+/g,' ').trim();
+        item.hidden=/^Tầng\\s+(Liên hệ|Không rõ|N\\/?A)$/i.test(value);
+      });
+    };
+    cleanGenericDetailQuickfacts();
+    const dynamicDetail=document.querySelector('[data-listing-detail]');
+    if(dynamicDetail){
+      new MutationObserver(cleanGenericDetailQuickfacts).observe(dynamicDetail,{
+        childList:true,
+        subtree:true,
+        characterData:true
+      });
+    }
   }
 
   document.querySelectorAll('.site-footer .footer-links').forEach(nav=>{
