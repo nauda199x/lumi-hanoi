@@ -54,7 +54,7 @@
   if(!document.querySelector('link[data-lumi-premium-ui]')){
     const premiumStyles=document.createElement('link');
     premiumStyles.rel='stylesheet';
-    premiumStyles.href='/assets/css/lumi-premium-ui.css?v=20260903-menu4';
+    premiumStyles.href='/assets/css/lumi-premium-ui.css?v=20260903-taskbar5';
     premiumStyles.dataset.lumiPremiumUi='true';
     document.head.append(premiumStyles);
   }
@@ -184,13 +184,14 @@
     const mobileItems=[
       ['⌂','Trang chủ','/'],
       ['⌗','Mặt bằng','/mat-bang-lumi-hanoi/'],
+      ['＋','Đăng tin','/dang-tin-lumi-hanoi/'],
       ['₫','Mua bán','/mua-ban-lumi-hanoi/'],
-      ['⌁','Cho thuê','/cho-thue-lumi-hanoi/'],
-      ['＋','Đăng tin','/dang-tin-lumi-hanoi/']
+      ['⌁','Cho thuê','/cho-thue-lumi-hanoi/']
     ];
     mobileItems.forEach(([icon,label,href])=>{
       const link=document.createElement('a');
       link.href=href;
+      if(href==='/dang-tin-lumi-hanoi/')link.classList.add('mobile-property-nav__post');
       link.innerHTML='<span aria-hidden="true">'+icon+'</span><small>'+label+'</small>';
       const target=new URL(href,location.origin).pathname;
       const current=(target==='/'&&location.pathname==='/')||(target!=='/'&&location.pathname.startsWith(target));
