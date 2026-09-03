@@ -21,7 +21,7 @@ IMPORTANT = ["", "tong-quan-lumi-hanoi", "vi-tri-lumi-hanoi", "mat-bang-lumi-han
  "can-ho-4-phong-ngu-lumi-hanoi", "duplex-penthouse-lumi-hanoi", "tin-tuc"]
 COMPETITORS = ("vinhomes.vn", "batdongsan.com.vn", "onehousing.vn")
 PROHIBITED = ("đăng ký ngay", "nhận bảng giá sốc", "chỉ còn ")
-INTENTIONAL_NOINDEX = {Path("admin/index.html"), Path("tin-dang-lumi-hanoi/index.html")}
+INTENTIONAL_NOINDEX = {Path("admin/index.html"), Path("tin-dang-lumi-hanoi/index.html"), Path("tin-dang-khong-con-hien-thi/index.html")}
 
 
 def trusted_drive_ids() -> set[str]:
