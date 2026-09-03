@@ -1103,7 +1103,7 @@ p,.lead{letter-spacing:-.012em}
     background:var(--lumi-accent-soft);
     color:var(--lumi-accent-dark);
   }
-  .mobile-property-nav a:last-child{
+  .mobile-property-nav__post{
     background:var(--lumi-dark);
     color:#fff;
   }
@@ -1176,17 +1176,28 @@ p,.lead{letter-spacing:-.012em}
   }
 }
 @media(max-width:760px){
-  .mobile-property-nav a:last-child{
+  .mobile-property-nav__post{
     display:flex!important;
     flex-direction:column!important;
     align-items:center!important;
     justify-content:center!important;
     text-align:center!important;
   }
-  .mobile-property-nav a:last-child>span,
-  .mobile-property-nav a:last-child>small{
+  .mobile-property-nav__post>span,\n  .mobile-property-nav__post>small{
     width:100%!important;
     margin:0!important;
     text-align:center!important;
   }
+}
+
+
+/* Center post action as the middle taskbar item — 2026-09-03 */
+@media(max-width:760px){
+  .mobile-property-nav a[href="/dang-tin-lumi-hanoi/"]{
+    order:3;
+    background:var(--lumi-dark)!important;
+    color:#fff!important;
+  }
+  .mobile-property-nav a[href="/mua-ban-lumi-hanoi/"]{order:4}
+  .mobile-property-nav a[href="/cho-thue-lumi-hanoi/"]{order:5}
 }
