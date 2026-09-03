@@ -2,7 +2,7 @@ name: Sync Marketplace SEO Pages
 
 on:
   schedule:
-    - cron: "*/5 * * * *"
+    - cron: "2-59/5 * * * *"
   workflow_dispatch:
   push:
     branches: [main]
@@ -15,11 +15,12 @@ permissions:
 
 concurrency:
   group: marketplace-seo-sync
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   sync:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
         with:
