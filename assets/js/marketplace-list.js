@@ -56,6 +56,15 @@
     tower.replaceChildren(new Option("Tất cả tòa",""),...options.map(value=>new Option(value,value)));
     if(options.includes(selected))tower.value=selected;
   };
+  const applyQueryFilters=()=>{
+    const params=new URLSearchParams(location.search);
+    const requestedTower=String(params.get("tower")||"").trim().toUpperCase();
+    const allTowers=Object.values(towerMap).flat();
+    const inferredPhase=Object.entries(towerMap).find(([,items])=>items.includes(requestedTower))?.[0]||"";
+    if(phase&&inferredPhase)phase.value=inferredPhase;
+    refreshTowers();
+    if(tower&&allTowers.includes(requestedTower))tower.value=requestedTower;
+  };
   const liveDetailUrl=listing=>{
     const slug=api.cleanText(listing?.slug,120);
     const route="/tin-dang-lumi-hanoi/";
@@ -310,5 +319,5 @@
   });
   form?.addEventListener("reset",()=>setTimeout(()=>{refreshTowers();syncMobileControls();load();},0));
   mobileQuery.addEventListener?.("change",()=>{if(filteredRows.length)renderMore(true);});
-  refreshTowers();syncMobileControls();load();
+  applyQueryFilters();syncMobileControls();load();
 })();
