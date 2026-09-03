@@ -1,3 +1,17 @@
+
+# Removed/expired marketplace listings: serve a helpful real 404 without
+# redirecting crawlers to the noindex dynamic fallback. Existing static listing
+# files shadow these rules, so approved SEO pages keep returning 200.
+[[redirects]]
+  from = "/mua-ban-lumi-hanoi/*"
+  to = "/tin-dang-khong-con-hien-thi/"
+  status = 404
+
+[[redirects]]
+  from = "/cho-thue-lumi-hanoi/*"
+  to = "/tin-dang-khong-con-hien-thi/"
+  status = 404
+
 [build]
   publish = "."
 
