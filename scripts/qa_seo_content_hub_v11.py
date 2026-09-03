@@ -44,7 +44,7 @@ for tower, (path, group_count) in tower_pages.items():
         errors.append(f"{tower}: expected exactly one H1")
     if f'id="{tower.lower()}-read-plan"' not in raw:
         errors.append(f"{tower}: missing decision-context section")
-    if f'/mua-ban-lumi-hanoi/?tower={tower}' not in raw or f'/cho-thue-lumi-hanoi/?tower={tower}' not in raw:
+    if f'/mua-ban-lumi-hanoi/#tower={tower}' not in raw or f'/cho-thue-lumi-hanoi/#tower={tower}' not in raw:
         errors.append(f"{tower}: missing tower-filter marketplace links")
     graphs = jsonld(raw)
     flat = []
@@ -81,7 +81,7 @@ for path in social_pages:
         errors.append(f"{path}: incomplete OG/Twitter metadata")
 
 market_js = read("assets/js/marketplace-list.js")
-if "const applyQueryFilters=()=>{" not in market_js or 'params.get("tower")' not in market_js:
+if "const applyQueryFilters=()=>{" not in market_js or 'hashParams.get("tower")' not in market_js:
     errors.append("marketplace tower deep-link initialization missing")
 for path in ("mua-ban-lumi-hanoi/index.html", "cho-thue-lumi-hanoi/index.html"):
     if "marketplace-list.js?v=20260903-tower-filter" not in read(path):
