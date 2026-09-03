@@ -33,6 +33,9 @@ REQUIRED_PATHS = {
 TOWER_LOOKUP_PATH = re.compile(
     r"^/toa-(?:signature-(?:1|2|3|5|6)|prestige-(?:1|2)|elite-(?:1|2))-lumi-hanoi/$"
 )
+MARKETPLACE_LISTING_PATH = re.compile(
+    r"^/(?:mua-ban-lumi-hanoi|cho-thue-lumi-hanoi)/[^/]+/$"
+)
 
 
 class PageParser(HTMLParser):
@@ -176,13 +179,17 @@ def main() -> int:
         elif parsed.path not in pages:
             errors.append(f"sitemap URL is unexpectedly noindexed: {url}")
 
-    # V8.2 tower lookup pages deliberately form one named entity cluster. Their
-    # exact titles, descriptions and canonicals are still required to be unique
-    # above, but a shared lookup suffix is not doorway-page evidence by itself.
+    # V8.2 tower lookup pages and generated marketplace detail pages deliberately
+    # form named entity clusters. Exact titles, descriptions and canonicals are
+    # still required to be unique above, but their shared brand suffixes are not
+    # doorway-page evidence by themselves. Marketplace listings are generated at
+    # scale, so counting the common "| Lumi Hanoi" suffix would create a permanent
+    # false positive as soon as four valid listing pages exist.
     fingerprints = Counter(
         title_fingerprint(parser.title)
         for path, parser in pages.items()
         if not TOWER_LOOKUP_PATH.match(path)
+        and not MARKETPLACE_LISTING_PATH.match(path)
     )
     for template, count in fingerprints.items():
         if template and count >= 4:
