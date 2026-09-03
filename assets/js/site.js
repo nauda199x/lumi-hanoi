@@ -54,7 +54,7 @@
   if(!document.querySelector('link[data-lumi-premium-ui]')){
     const premiumStyles=document.createElement('link');
     premiumStyles.rel='stylesheet';
-    premiumStyles.href='/assets/css/lumi-premium-ui.css?v=20260903-premium1';
+    premiumStyles.href='/assets/css/lumi-premium-ui.css?v=20260903-menu3';
     premiumStyles.dataset.lumiPremiumUi='true';
     document.head.append(premiumStyles);
   }
