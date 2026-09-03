@@ -5,18 +5,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Không tìm thấy trang | Lumi Hanoi</title>
     <meta name="robots" content="noindex,follow">
-    <script>
-      (() => {
-        const match = location.pathname.match(/^\/(mua-ban-lumi-hanoi|cho-thue-lumi-hanoi)\/([a-z0-9-]+)\/?$/i);
-        if (!match) return;
-        const slug = match[2];
-        if (!/-lh-[a-z0-9]{8}$/i.test(slug)) return;
-        document.documentElement.style.visibility = "hidden";
-        const route = "/tin-dang-lumi-hanoi/";
-        location.replace(`${route}?slug=${encodeURIComponent(slug)}`);
-      })();
-    </script>
-    <link rel="icon" href="/favicon.svg?v=20260828" type="image/svg+xml"><link rel="icon" href="/favicon-32x32.png?v=20260828" sizes="32x32" type="image/png"><link rel="apple-touch-icon" href="/apple-touch-icon.png?v=20260828"><link rel="manifest" href="/site.webmanifest">
+<link rel="icon" href="/favicon.svg?v=20260828" type="image/svg+xml"><link rel="icon" href="/favicon-32x32.png?v=20260828" sizes="32x32" type="image/png"><link rel="apple-touch-icon" href="/apple-touch-icon.png?v=20260828"><link rel="manifest" href="/site.webmanifest">
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><link rel="stylesheet" href="/assets/css/site.css?v=20260829-type">
   </head>
   <body>
@@ -25,9 +14,7 @@
         <p class="eyebrow">Lumi Hanoi</p>
         <h1>404</h1>
         <p class="lead">Trang anh/chị tìm kiếm không tồn tại hoặc đã được chuyển.</p>
-        <div class="hero-actions" style="justify-content:center">
-          <a class="btn btn-primary" href="/">Về trang chủ</a>
-        </div>
+        <div class="hero-actions" style="justify-content:center"><a class="btn btn-primary" href="/">Về trang chủ</a><a class="btn" href="/mua-ban-lumi-hanoi/">Xem căn mua bán</a><a class="btn" href="/cho-thue-lumi-hanoi/">Xem căn cho thuê</a></div>
       </div>
     </main>
     <footer class="site-footer">
