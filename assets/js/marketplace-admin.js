@@ -21,9 +21,24 @@
   const statusPill=row=>{const status=effectiveStatus(row);return el("span",`status-pill status-${status}`,statusLabels[status]||status);};
   const action=(label,className,onClick)=>{const button=el("button",`admin-action ${className||""}`,label);button.type="button";button.addEventListener("click",onClick);return button;};
   const expiresAt=()=>new Date(Date.now()+Number(api.config.listingLifetimeDays||45)*86400000).toISOString();
+  const triggerSeoSync=async reason=>{
+    try{
+      const result=await api.requestSeoSync(reason);
+      return result?.dispatched
+        ?" SEO đang được đồng bộ ngay sang URL tĩnh và sitemap."
+        :" SEO sẽ được đồng bộ tự động trong vài phút.";
+    }catch{
+      return " SEO sẽ được đồng bộ tự động trong vài phút.";
+    }
+  };
   const patchAndReload=async(id,patch,message)=>{
     showDashboardStatus("Đang cập nhật…");
-    try{await api.updateListing(id,patch);showDashboardStatus(message);await load();}
+    try{
+      await api.updateListing(id,patch);
+      const syncMessage=await triggerSeoSync("listing_updated");
+      showDashboardStatus(`${message}${syncMessage}`);
+      await load();
+    }
     catch(error){showDashboardStatus(`Không cập nhật được: ${error.message}`,true);}
   };
   const deleteAndReload=async(row,button)=>{
@@ -37,7 +52,8 @@
       const result=await api.deleteListing(row);
       rows=rows.filter(item=>item.id!==row.id);
       render();
-      showDashboardStatus(`Đã xóa vĩnh viễn tin ${code}${result.deletedImageCount?` và ${result.deletedImageCount} ảnh`:""}.`);
+      const syncMessage=await triggerSeoSync("listing_deleted");
+      showDashboardStatus(`Đã xóa vĩnh viễn tin ${code}${result.deletedImageCount?` và ${result.deletedImageCount} ảnh`:""}.${syncMessage}`);
     }catch(error){
       button.disabled=false;
       showDashboardStatus(`Không xóa được tin: ${error.message}`,true);
