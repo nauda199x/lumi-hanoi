@@ -209,8 +209,14 @@
   if(isListingDetail){
     const cleanGenericDetailQuickfacts=()=>{
       document.querySelectorAll('.detail-quickfacts span').forEach(item=>{
-        const value=item.textContent.replace(/\\s+/g,' ').trim();
-        item.hidden=/^Tầng\\s+(Liên hệ|Không rõ|N\\/?A)$/i.test(value);
+        const value=item.textContent
+          .trim()
+          .replaceAll('\n',' ')
+          .replaceAll('\t',' ')
+          .split(' ')
+          .filter(Boolean)
+          .join(' ');
+        item.hidden=['Tầng Liên hệ','Tầng Không rõ','Tầng N/A','Tầng NA'].includes(value);
       });
     };
     cleanGenericDetailQuickfacts();
