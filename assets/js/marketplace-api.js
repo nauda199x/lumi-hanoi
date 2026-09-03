@@ -193,9 +193,19 @@
     return {id,deletedImageCount:imagePaths.length};
   };
 
+  const requestSeoSync=async(reason="admin_change")=>{
+    const session=await requireAdmin();
+    if(!session)throw new MarketplaceError("Phiên quản trị đã hết hạn.",401);
+    return request("/functions/v1/marketplace-seo-sync",{
+      method:"POST",
+      body:{reason:cleanText(reason,80)},
+      token:session.access_token
+    });
+  };
+
   window.LumiMarketplace={
     config,configured,MarketplaceError,cleanText,slugify,formatCurrency,imageUrl,listingUrl,
     listPublic,getPublicListing,createListing,uploadImage,addListingImage,createReport,
-    signIn,signOut,requireAdmin,listAdmin,updateListing,deleteListing
+    signIn,signOut,requireAdmin,listAdmin,updateListing,deleteListing,requestSeoSync
   };
 })();
