@@ -73,6 +73,7 @@ social_pages = [
     "mat-bang-lumi-hanoi/lumi-signature/index.html",
     "mat-bang-lumi-hanoi/lumi-prestige/index.html",
     "tin-tuc/index.html",
+    "cho-thue-lumi-hanoi/index.html",
 ]
 for path in social_pages:
     raw = read(path)
