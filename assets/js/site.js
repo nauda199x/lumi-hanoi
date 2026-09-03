@@ -49,6 +49,16 @@
     document.head.append(responsiveStyles);
   }
 
+  document.documentElement.classList.add('lumi-premium-ready');
+  document.body.classList.add('lumi-premium-portal');
+  if(!document.querySelector('link[data-lumi-premium-ui]')){
+    const premiumStyles=document.createElement('link');
+    premiumStyles.rel='stylesheet';
+    premiumStyles.href='/assets/css/lumi-premium-ui.css?v=20260903-premium1';
+    premiumStyles.dataset.lumiPremiumUi='true';
+    document.head.append(premiumStyles);
+  }
+
   const button=document.querySelector('[data-nav-toggle]');
   const nav=document.querySelector('[data-nav-links]');
   if(button&&nav){
@@ -121,7 +131,52 @@
         if(getComputedStyle(button).display!=='none')button.focus();
       }
     });
+
+    if(!nav.querySelector('.nav-direct-cta')){
+      const directCta=document.createElement('a');
+      directCta.className='nav-direct-cta';
+      directCta.href='/dang-tin-lumi-hanoi/';
+      directCta.textContent='Đăng tin';
+      if(location.pathname==='/dang-tin-lumi-hanoi/')directCta.setAttribute('aria-current','page');
+      nav.append(directCta);
+    }
   }
+
+  const siteHeader=document.querySelector('.site-header');
+  if(siteHeader){
+    const syncHeaderState=()=>siteHeader.classList.toggle('is-scrolled',window.scrollY>12);
+    syncHeaderState();
+    window.addEventListener('scroll',syncHeaderState,{passive:true});
+  }
+
+  const mobileNavExcluded=
+    location.pathname.startsWith('/admin/')||
+    location.pathname.startsWith('/tin-dang-lumi-hanoi/')||
+    location.pathname.startsWith('/dang-tin-lumi-hanoi/');
+  if(!mobileNavExcluded&&!document.querySelector('.mobile-property-nav')){
+    const mobileNav=document.createElement('nav');
+    mobileNav.className='mobile-property-nav';
+    mobileNav.setAttribute('aria-label','Điều hướng nhanh');
+    const mobileItems=[
+      ['⌂','Trang chủ','/'],
+      ['⌗','Mặt bằng','/mat-bang-lumi-hanoi/'],
+      ['₫','Mua bán','/mua-ban-lumi-hanoi/'],
+      ['⌁','Cho thuê','/cho-thue-lumi-hanoi/'],
+      ['＋','Đăng tin','/dang-tin-lumi-hanoi/']
+    ];
+    mobileItems.forEach(([icon,label,href])=>{
+      const link=document.createElement('a');
+      link.href=href;
+      link.innerHTML='<span aria-hidden="true">'+icon+'</span><small>'+label+'</small>';
+      const target=new URL(href,location.origin).pathname;
+      const current=(target==='/'&&location.pathname==='/')||(target!=='/'&&location.pathname.startsWith(target));
+      if(current)link.setAttribute('aria-current','page');
+      mobileNav.append(link);
+    });
+    document.body.append(mobileNav);
+    document.body.classList.add('has-mobile-property-nav');
+  }
+
   document.querySelectorAll('.site-footer .footer-links').forEach(nav=>{
     const trustLinks=[
       ['/gioi-thieu/','Giới thiệu'],
