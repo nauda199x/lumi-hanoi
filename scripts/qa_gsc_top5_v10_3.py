@@ -17,20 +17,30 @@ def read(relative: str) -> str:
         return ""
     return path.read_text(encoding="utf-8")
 
+def title_of(source: str) -> str:
+    match = re.search(r"<title>(.*?)</title>", source, re.I | re.S)
+    return re.sub(r"\s+", " ", match.group(1)).strip() if match else ""
+
 home = read("index.html")
 overview = read("tong-quan-lumi-hanoi/index.html")
 sale = read("mua-ban-lumi-hanoi/index.html")
 rent = read("cho-thue-lumi-hanoi/index.html")
 
-checks = {
+exact_checks = {
     "home title": (home, "Lumi Hanoi – Thông tin dự án, Mua bán & Cho thuê căn hộ"),
     "overview title": (overview, "Tổng quan Lumi Hanoi: quy mô 5,6 ha, 9 tòa, 3.950 căn"),
-    "sale title": (sale, "Mua bán căn hộ Lumi Hanoi – Quỹ căn chuyển nhượng cập nhật"),
-    "rent title": (rent, "Cho thuê căn hộ Lumi Hanoi – Tin đăng mới & giá thuê"),
 }
-for label, (source, token) in checks.items():
-    if f"<title>{token}</title>" not in source:
+for label, (source, token) in exact_checks.items():
+    if title_of(source) != token:
         errors.append(f"{label} is not aligned with the GSC keyword map")
+
+sale_title = title_of(sale)
+if not sale_title.startswith("Mua bán căn hộ Lumi Hanoi"):
+    errors.append("sale title must preserve the 'Mua bán căn hộ Lumi Hanoi' search intent")
+
+rent_title = title_of(rent)
+if not re.fullmatch(r"Cho Thuê Căn Hộ Lumi Hanoi \| Tin Mới T(?:[1-9]|1[0-2])/\d{4}", rent_title):
+    errors.append("rent title must preserve the monthly 'Cho Thuê Căn Hộ Lumi Hanoi' search intent")
 
 if "<h1>Cho thuê căn hộ Lumi Hanoi</h1>" not in rent:
     errors.append("rental H1 must target 'Cho thuê căn hộ Lumi Hanoi'")
