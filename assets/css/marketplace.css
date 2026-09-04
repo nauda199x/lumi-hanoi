@@ -14,7 +14,99 @@
 .detail-gallery-nav--prev{left:14px}
 .detail-gallery-nav--next{right:14px}
 
+/* Successful listing submission: replace the old one-line notice with a focused confirmation card. */
+.form-shell.is-submitted{grid-template-columns:minmax(0,1fr)}
+.form-shell.is-submitted .wizard-summary{display:none}
+.marketplace-form.is-submitted .form-progress,
+.marketplace-form.is-submitted .form-section,
+.marketplace-form.is-submitted .mobile-submit-bar{display:none!important}
+.marketplace-form .submit-success-card{
+  display:grid;
+  grid-template-columns:auto minmax(0,1fr);
+  gap:18px 20px;
+  align-items:start;
+  margin:0;
+  padding:clamp(24px,4vw,38px);
+  border:1px solid #cddcd3;
+  border-radius:22px;
+  background:linear-gradient(145deg,#fbfdfb 0%,#f2f7f3 100%);
+  color:#193a2e;
+  box-shadow:0 20px 48px rgba(31,64,48,.10)
+}
+.marketplace-form .submit-success-mark{
+  display:grid;
+  width:56px;
+  height:56px;
+  place-items:center;
+  border-radius:50%;
+  background:#315c46;
+  color:#fff;
+  font-size:1.55rem;
+  font-weight:900;
+  line-height:1;
+  box-shadow:0 10px 24px rgba(49,92,70,.22)
+}
+.marketplace-form .submit-success-copy{display:grid;gap:8px;min-width:0}
+.marketplace-form .submit-success-eyebrow{
+  color:#667b6e;
+  font-size:.7rem;
+  font-weight:900;
+  letter-spacing:.12em;
+  text-transform:uppercase
+}
+.marketplace-form .submit-success-title{
+  color:#173c2f;
+  font-size:clamp(1.55rem,3vw,2.15rem);
+  font-weight:850;
+  line-height:1.12;
+  letter-spacing:-.025em
+}
+.marketplace-form .submit-success-text{
+  max-width:760px;
+  color:#52645a;
+  font-size:1rem;
+  line-height:1.62
+}
+.marketplace-form .submit-success-note{
+  max-width:760px;
+  margin-top:4px;
+  padding-top:12px;
+  border-top:1px solid #dce6df;
+  color:#69786f;
+  font-size:.84rem;
+  line-height:1.55
+}
+.marketplace-form .submit-success-actions{
+  grid-column:2;
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-top:2px
+}
+.marketplace-form .submit-success-actions .btn{min-height:46px}
+.marketplace-form .submit-success-secondary{
+  border:1px solid #bdcfc4;
+  background:#fff;
+  color:#254c3d
+}
+.marketplace-form .submit-success-secondary:hover{
+  border-color:#8faf9c;
+  background:#f7fbf8;
+  color:#173c2f
+}
+
 @media(max-width:700px){
   .listing-card-gallery-track{scroll-snap-type:x mandatory}
   .marketplace-toolbar.is-mobile-open{transform:none}
+  .marketplace-form .submit-success-card{
+    grid-template-columns:1fr;
+    gap:16px;
+    padding:24px 20px;
+    border-radius:18px
+  }
+  .marketplace-form .submit-success-mark{width:52px;height:52px;font-size:1.4rem}
+  .marketplace-form .submit-success-title{font-size:1.55rem}
+  .marketplace-form .submit-success-text{font-size:.94rem}
+  .marketplace-form .submit-success-actions{grid-column:1;display:grid;width:100%;margin-top:4px}
+  .marketplace-form .submit-success-actions .btn{width:100%;min-height:48px}
 }
