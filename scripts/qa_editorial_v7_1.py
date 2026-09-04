@@ -29,7 +29,9 @@ for path in HTML:
     if 'article-layout' not in text:
         continue
     rel = path.relative_to(ROOT).as_posix()
-    has_sidebar = '<aside class="side-nav"' in text
+    # Legacy editorial pages use aside.side-nav; marketplace/category pages use
+    # an aside containing .toc. Both are real sidebar compositions.
+    has_sidebar = re.search(r"<aside\b", text, re.I) is not None
     require(('reading-shell' in text) ^ ('editorial-shell' in text),
             f"{rel}: article layout needs exactly one page-type shell")
     if rel == PRESTIGE_CATALOGUE:
