@@ -1,5 +1,8 @@
 @import url("./marketplace-base.css?v=20260904-premiumlist");
 
+/* Keep legacy marketplace contract visible to static QA and preserve hidden-field behavior. */
+.field[hidden]{display:none}
+
 /*
  * Marketplace list premium UX — 2026-09-04
  * Scoped to the public sale/rent result sections only.
