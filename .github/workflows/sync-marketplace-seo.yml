@@ -8,6 +8,7 @@ on:
     branches: [main]
     paths:
       - "scripts/generate_marketplace_seo.py"
+      - "scripts/generate_rent_category_seo.py"
       - ".github/workflows/sync-marketplace-seo.yml"
 
 permissions:
@@ -29,15 +30,20 @@ jobs:
         with:
           python-version: "3.11"
       - name: Generate approved listing pages
-        run: python scripts/generate_marketplace_seo.py
+        run: |
+          python scripts/generate_marketplace_seo.py
+          python scripts/generate_rent_category_seo.py
+      - name: Validate rental SEO generator syntax
+        run: python -m py_compile scripts/generate_rent_category_seo.py
       - name: Commit generated SEO pages
         run: |
-          if git diff --quiet -- mua-ban-lumi-hanoi cho-thue-lumi-hanoi cho-thue-shop-chan-de-lumi-hanoi gia-can-ho-lumi-hanoi sitemap.xml sitemap-tin-dang.xml; then
+          PATHS="mua-ban-lumi-hanoi cho-thue-lumi-hanoi cho-thue-shop-chan-de-lumi-hanoi gia-can-ho-lumi-hanoi cho-thue-can-ho-1-phong-ngu-lumi-hanoi cho-thue-can-ho-2-phong-ngu-lumi-hanoi cho-thue-can-ho-3-phong-ngu-lumi-hanoi cho-thue-can-ho-4-phong-ngu-lumi-hanoi cho-thue-duplex-lumi-hanoi cho-thue-penthouse-lumi-hanoi sitemap.xml sitemap-tin-dang.xml"
+          if [ -z "$(git status --porcelain -- $PATHS)" ]; then
             echo "Marketplace SEO pages are already current."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add mua-ban-lumi-hanoi cho-thue-lumi-hanoi cho-thue-shop-chan-de-lumi-hanoi gia-can-ho-lumi-hanoi sitemap.xml sitemap-tin-dang.xml
+          git add $PATHS
           git commit -m "Sync approved marketplace SEO pages"
           git push origin HEAD:main
