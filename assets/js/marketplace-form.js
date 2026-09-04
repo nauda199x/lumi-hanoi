@@ -24,6 +24,7 @@
   const sections=[...form.querySelectorAll("[data-form-step]")];
   const draftStatus=form.querySelector("[data-draft-status]");
   const mobileSubmitBar=form.querySelector("[data-mobile-submit]");
+  const formShell=form.closest(".form-shell");
   const towerMap={Signature:["S1","S2","S3","S5","S6"],Prestige:["P1","P2"],Elite:["E1","E2"]};
   const directImageTypes=new Set(["image/jpeg","image/png","image/webp"]);
   const iphoneImageTypes=new Set(["image/heic","image/heif"]);
@@ -52,6 +53,8 @@
   };
   const showStatus=(message,type="",scroll=true)=>{
     if(!status)return;
+    form.classList.remove("is-submitted");
+    formShell?.classList.remove("is-submitted");
     status.hidden=false;
     status.textContent=message;
     status.className=`form-status${type?` is-${type}`:""}`;
@@ -62,6 +65,59 @@
     status.hidden=true;
     status.textContent="";
     status.className="form-status";
+  };
+  const showSuccessBox=(submissionType,imageNote="")=>{
+    if(!status)return;
+    const rent=submissionType==="rent";
+    status.hidden=false;
+    status.className="form-status is-success submit-success-card";
+    status.replaceChildren();
+    form.classList.add("is-submitted");
+    formShell?.classList.add("is-submitted");
+
+    const mark=document.createElement("span");
+    mark.className="submit-success-mark";
+    mark.setAttribute("aria-hidden","true");
+    mark.textContent="✓";
+
+    const copy=document.createElement("span");
+    copy.className="submit-success-copy";
+    const eyebrow=document.createElement("span");
+    eyebrow.className="submit-success-eyebrow";
+    eyebrow.textContent="Gửi tin thành công";
+    const title=document.createElement("strong");
+    title.className="submit-success-title";
+    title.textContent="Tin đăng đã được tiếp nhận";
+    const body=document.createElement("span");
+    body.className="submit-success-text";
+    body.textContent=`Tin ${rent?"cho thuê":"mua bán"} đang chờ kiểm tra nội dung trước khi công khai trên Lumi Hanoi.`;
+    const note=document.createElement("span");
+    note.className="submit-success-note";
+    note.textContent=imageNote||"Sau khi được duyệt, số điện thoại/Zalo đã nhập sẽ hiển thị để người quan tâm liên hệ trực tiếp.";
+    copy.append(eyebrow,title,body,note);
+
+    const actions=document.createElement("span");
+    actions.className="submit-success-actions";
+    const again=document.createElement("button");
+    again.type="button";
+    again.className="btn btn-primary";
+    again.textContent="Đăng thêm tin";
+    again.addEventListener("click",()=>{
+      form.classList.remove("is-submitted");
+      formShell?.classList.remove("is-submitted");
+      clearStatus();
+      titleManuallyEdited=false;
+      goToStep(1);
+      updateSummary();
+    });
+    const listingLink=document.createElement("a");
+    listingLink.className="btn submit-success-secondary";
+    listingLink.href=rent?"/cho-thue-lumi-hanoi/":"/mua-ban-lumi-hanoi/";
+    listingLink.textContent=rent?"Xem danh sách cho thuê":"Xem danh sách mua bán";
+    actions.append(again,listingLink);
+
+    status.append(mark,copy,actions);
+    status.scrollIntoView({behavior:"smooth",block:"start"});
   };
   const listingType=()=>form.querySelector('[name="listing_type"]:checked')?.value||"sale";
   const formatNumber=value=>new Intl.NumberFormat("vi-VN",{maximumFractionDigits:2}).format(value);
@@ -535,6 +591,7 @@
     if(!api.configured()){showStatus("Dữ liệu giao dịch đang được cập nhật. Vui lòng quay lại sau ít phút.","error");return;}
     const selectedFiles=[...(filesInput?.files||[])];
     try{validateFileSelection(selectedFiles);}catch(error){showStatus(error.message,"error");return;}
+    const submissionType=listingType();
 
     isSubmitting=true;
     setSubmitState("Đang chuẩn bị ảnh…",true);
@@ -551,19 +608,22 @@
           uploaded++;
         }catch(error){console.warn("Image upload failed",error);}
       }
-      const imageNote=files.length&&uploaded<files.length?` Đã tải ${uploaded}/${files.length} ảnh; quản trị viên sẽ liên hệ nếu cần bổ sung.`:"";
+      const imageNote=files.length&&uploaded<files.length?`Đã tải ${uploaded}/${files.length} ảnh. Quản trị viên sẽ liên hệ nếu cần bổ sung.`:"";
       clearDraft();
-      showStatus(`Tin ${listing.listing_code} đã được tiếp nhận và đang chờ kiểm tra trước khi công khai.${imageNote}`,"success");
       window.LumiAnalytics?.track?.("form_submit_dang_tin",{
-        listing_type:listingType(),
+        listing_type:submissionType,
         image_count:uploaded
       });
       form.reset();
+      titleManuallyEdited=false;
       clearPreviews();
       refreshType(false);
       refreshTowers();
       updatePhoneHelp();
-      setProgress(1);
+      updatePriceHelp();
+      goToStep(1,{scroll:false});
+      updateSummary();
+      showSuccessBox(submissionType,imageNote);
     }catch(error){
       showStatus(error.status===429?"Yêu cầu đang được gửi liên tiếp. Vui lòng đợi trong giây lát trước khi gửi lại.":`Chưa gửi được tin: ${error.message}`,"error");
     }finally{
