@@ -16,30 +16,49 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - name: Run SEO and visual regression suites
+      - name: SEO V5 QA
+        run: python scripts/qa_seo_v5.py
+      - name: SEO V5.1 QA
+        run: python scripts/qa_seo_v5_1.py
+      - name: SEO V6 QA
+        run: python scripts/qa_seo_v6.py
+      - name: Visual V7 QA
+        run: python scripts/qa_visual_v7.py
+      - name: Editorial V7.1 QA
+        run: python scripts/qa_editorial_v7_1.py
+      - name: Prestige V8.1a QA
+        run: python scripts/qa_prestige_v8_1a.py
+      - name: Prestige V8.1b QA
+        run: python scripts/qa_prestige_v8_1b.py
+      - name: Prestige V8.1c QA
+        run: python scripts/qa_prestige_v8_1c.py
+      - name: Prestige V8.1d QA
+        run: python scripts/qa_prestige_v8_1d.py
+      - name: Floorplans V8.2 QA
+        run: python scripts/qa_floorplans_v8_2.py
+      - name: Handover V8.6 QA
+        run: python scripts/qa_handover_v8_6.py
+      - name: Visual library V8.7 QA
+        run: python scripts/qa_visual_library_v8_7.py
+      - name: Amenity scope V8.8 QA
+        run: python scripts/qa_amenity_scope_v8_8.py
+      - name: Responsive V9 QA
+        run: python scripts/qa_responsive_v9.py
+      - name: Brand legacy and content hub QA
         run: |
-          python scripts/qa_seo_v5.py
-          python scripts/qa_seo_v5_1.py
-          python scripts/qa_seo_v6.py
-          python scripts/qa_visual_v7.py
-          python scripts/qa_editorial_v7_1.py
-          python scripts/qa_prestige_v8_1a.py
-          python scripts/qa_prestige_v8_1b.py
-          python scripts/qa_prestige_v8_1c.py
-          python scripts/qa_prestige_v8_1d.py
-          python scripts/qa_floorplans_v8_2.py
-          python scripts/qa_handover_v8_6.py
-          python scripts/qa_visual_library_v8_7.py
-          python scripts/qa_amenity_scope_v8_8.py
-          python scripts/qa_responsive_v9.py
           python scripts/qa_brand_meta_v10_1.py
           python scripts/qa_legacy_redirects_v10_2.py
           python scripts/qa_seo_content_hub_v11.py
-          python scripts/qa_gsc_top5_v10_3.py
-          python scripts/qa_market_price_v10_4.py
-          python scripts/qa_sitelink_architecture_v10_5.py
-          python scripts/qa_public_source_cleanup.py
-          python scripts/qa_marketplace_v1.py
+      - name: GSC Top-5 SEO QA
+        run: python scripts/qa_gsc_top5_v10_3.py
+      - name: Market price QA
+        run: python scripts/qa_market_price_v10_4.py
+      - name: Sitelink architecture QA
+        run: python scripts/qa_sitelink_architecture_v10_5.py
+      - name: Public source cleanup QA
+        run: python scripts/qa_public_source_cleanup.py
+      - name: Marketplace QA
+        run: python scripts/qa_marketplace_v1.py
       - name: Validate data and JavaScript syntax
         run: |
           python -m json.tool assets/data/floor-plans.json >/dev/null
