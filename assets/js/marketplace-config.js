@@ -11,3 +11,17 @@ window.LUMI_MARKETPLACE_CONFIG = Object.freeze({
   maxImageBytes: 5 * 1024 * 1024,
   listingLifetimeDays: 45
 });
+
+/*
+ * Keep the description required, but do not force sellers/landlords to write
+ * filler text just to reach an arbitrary minimum length. The database applies
+ * the same rule: at least one non-whitespace character, maximum 3000 chars.
+ */
+(function relaxMarketplaceDescriptionMinimum(){
+  const apply=()=>{
+    const description=document.querySelector('[data-marketplace-submit] textarea[name="description"]');
+    if(description) description.minLength=1;
+  };
+  if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",apply,{once:true});
+  else apply();
+})();
