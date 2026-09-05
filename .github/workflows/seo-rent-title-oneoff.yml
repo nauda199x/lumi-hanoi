@@ -1,0 +1,66 @@
+name: One-off SEO rent title update
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/seo-rent-title-oneoff.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  update-seo:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Update rental hub SEO wording
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('cho-thue-lumi-hanoi/index.html')
+          text = path.read_text(encoding='utf-8')
+
+          replacements = {
+              '<title>Thuê Lumi Hanoi | Căn Hộ Cho Thuê Mới Nhất T9/2026</title>': '<title>Cho Thuê Chung Cư Lumi Hanoi Mới Nhất T9/2026</title>',
+              '<meta name="description" content="Thuê Lumi Hanoi: quỹ căn cho thuê cập nhật theo tòa, phân khu và loại căn. Xem giá rao, diện tích, hình ảnh và liên hệ trực tiếp người đăng.">': '<meta name="description" content="Cho thuê chung cư Lumi Hanoi cập nhật T9/2026: quỹ căn theo phân khu, tòa và loại căn. Xem giá thuê, diện tích, hình ảnh và liên hệ trực tiếp người đăng.">',
+              '<meta property="og:title" content="Thuê Lumi Hanoi | Căn Hộ Cho Thuê Mới Nhất T9/2026">': '<meta property="og:title" content="Cho Thuê Chung Cư Lumi Hanoi Mới Nhất T9/2026">',
+              '<meta property="og:description" content="Thuê Lumi Hanoi: quỹ căn cho thuê cập nhật theo tòa, phân khu và loại căn. Xem giá rao, diện tích, hình ảnh và liên hệ trực tiếp người đăng.">': '<meta property="og:description" content="Cho thuê chung cư Lumi Hanoi cập nhật T9/2026: quỹ căn theo phân khu, tòa và loại căn. Xem giá thuê, diện tích, hình ảnh và liên hệ trực tiếp người đăng.">',
+              '"name":"Cho thuê căn hộ Lumi Hanoi","item":"https://lumi-hanoi.com/cho-thue-lumi-hanoi/"': '"name":"Cho thuê chung cư Lumi Hanoi","item":"https://lumi-hanoi.com/cho-thue-lumi-hanoi/"',
+              '"@type":"CollectionPage","name":"Cho thuê căn hộ Lumi Hanoi","headline":"Thuê Lumi Hanoi | Căn Hộ Cho Thuê Mới Nhất T9/2026","description":"Danh sách căn hộ Lumi Hanoi đang cho thuê theo phân khu, tòa, loại căn và mức giá; xem ảnh, giá thuê và liên hệ trực tiếp người đăng."': '"@type":"CollectionPage","name":"Cho thuê chung cư Lumi Hanoi","headline":"Cho Thuê Chung Cư Lumi Hanoi Mới Nhất T9/2026","description":"Danh sách chung cư Lumi Hanoi đang cho thuê theo phân khu, tòa, loại căn và mức giá; xem ảnh, giá thuê và liên hệ trực tiếp người đăng."',
+              '"about":["Cho thuê căn hộ Lumi Hanoi","Thuê căn hộ Lumi Hanoi","Quỹ căn cho thuê Lumi Hanoi"]': '"about":["Cho thuê chung cư Lumi Hanoi","Cho thuê căn hộ Lumi Hanoi","Thuê Lumi Hanoi","Quỹ căn cho thuê Lumi Hanoi"]',
+              '<meta property="og:image:alt" content="Cho thuê căn hộ Lumi Hanoi – Quỹ căn đang cho thuê">': '<meta property="og:image:alt" content="Cho thuê chung cư Lumi Hanoi – Quỹ căn đang cho thuê">',
+              '<meta name="twitter:title" content="Thuê Lumi Hanoi | Căn Hộ Cho Thuê Mới Nhất T9/2026">': '<meta name="twitter:title" content="Cho Thuê Chung Cư Lumi Hanoi Mới Nhất T9/2026">',
+              '<meta name="twitter:description" content="Thuê Lumi Hanoi: quỹ căn cho thuê cập nhật theo tòa, phân khu và loại căn. Xem giá rao, diện tích, hình ảnh và liên hệ trực tiếp người đăng.">': '<meta name="twitter:description" content="Cho thuê chung cư Lumi Hanoi cập nhật T9/2026: quỹ căn theo phân khu, tòa và loại căn. Xem giá thuê, diện tích, hình ảnh và liên hệ trực tiếp người đăng.">',
+              '<span aria-hidden="true">/</span>Cho thuê căn hộ Lumi Hanoi</div>': '<span aria-hidden="true">/</span>Cho thuê chung cư Lumi Hanoi</div>',
+              '<h1>Cho thuê căn hộ Lumi Hanoi</h1>': '<h1>Cho thuê chung cư Lumi Hanoi</h1>',
+          }
+
+          missing = [old for old in replacements if old not in text]
+          if missing:
+              raise SystemExit('Expected source text not found; refusing partial update: ' + repr(missing))
+
+          for old, new in replacements.items():
+              text = text.replace(old, new)
+
+          path.write_text(text, encoding='utf-8')
+          PY
+
+      - name: Verify SEO output
+        run: |
+          grep -F '<title>Cho Thuê Chung Cư Lumi Hanoi Mới Nhất T9/2026</title>' cho-thue-lumi-hanoi/index.html
+          grep -F '<h1>Cho thuê chung cư Lumi Hanoi</h1>' cho-thue-lumi-hanoi/index.html
+          grep -F 'name="description" content="Cho thuê chung cư Lumi Hanoi cập nhật T9/2026' cho-thue-lumi-hanoi/index.html
+
+      - name: Commit update
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add cho-thue-lumi-hanoi/index.html
+          git diff --cached --quiet && exit 0
+          git commit -m 'SEO: add chung cu keyword to Lumi Hanoi rental hub'
+          git push origin main
