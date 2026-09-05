@@ -80,13 +80,13 @@ window.LUMI_MARKETPLACE_CONFIG = Object.freeze({
       const sequenceByType=new Map();
       const latestPromiseByType=new Map();
 
-      api.listPublic=(type,filters={})=>{
+      api.listPublic=(type,filters={},options={})=>{
         const key=String(type||"");
         const requestId=(sequenceByType.get(key)||0)+1;
         sequenceByType.set(key,requestId);
         const snapshot={...filters};
 
-        const core=originalListPublic(type,snapshot).then(rows=>
+        const core=originalListPublic(type,snapshot,options).then(rows=>
           (Array.isArray(rows)?rows:[]).filter(row=>rowMatches(row,snapshot))
         );
         latestPromiseByType.set(key,core);

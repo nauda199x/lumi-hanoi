@@ -250,7 +250,7 @@ def render_static_card(listing: dict) -> str:
 def replace_marked_block(raw: str, start: str, end: str, body: str) -> str:
     block = start + "\n" + body.strip() + "\n" + end
     if start in raw and end in raw:
-        return re.sub(re.escape(start) + r".*?" + re.escape(end), block, raw, count=1, flags=re.S)
+        return re.sub(re.escape(start) + r".*?" + re.escape(end), lambda _: block, raw, count=1, flags=re.S)
     return raw
 
 def numeric(value) -> float | None:
@@ -477,6 +477,11 @@ def sync_category_indexes(listings: list[dict]) -> None:
         if not path.exists():
             continue
         rows = [listing for listing in listings if listing.get("listing_type") == listing_type]
+        if listing_type == "sale":
+            import sys
+            from marketplace_inventory import sync_sale_inventory
+            sync_sale_inventory(sys.modules[__name__], rows)
+            continue
         cards = "\n".join(render_static_card(listing) for listing in rows)
         raw = path.read_text(encoding="utf-8")
         if STATIC_LISTING_START in raw and STATIC_LISTING_END in raw:

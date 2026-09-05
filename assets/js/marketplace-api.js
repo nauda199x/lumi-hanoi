@@ -16,18 +16,29 @@
     if(!text)return null;
     try{return JSON.parse(text);}catch{return text;}
   };
-  const request=async(path,{method="GET",body,token,headers={}}={})=>{
+  const request=async(path,{method="GET",body,token,headers={},signal,withCount=false}={})=>{
     if(!configured())throw new MarketplaceError("Hệ thống dữ liệu chưa được kết nối.");
     const payloadIsBinary=body instanceof Blob||body instanceof ArrayBuffer;
     const response=await fetch(`${base}${path}`,{
-      method,
+      method,signal,
       headers:{...apiHeaders(token),...(body!==undefined&&!payloadIsBinary?{"Content-Type":"application/json"}:{}),...headers},
       body:body===undefined?undefined:(payloadIsBinary?body:JSON.stringify(body))
     });
     const data=await parseResponse(response);
+    // A saved page can disappear when listings expire. Preserve the total so
+    // the caller can return to the last available page instead of showing error.
+    if(withCount&&response.status===416){
+      const total=response.headers.get("Content-Range")?.split("/")[1];
+      if(/^\d+$/.test(total||""))return {rows:[],total:Number(total)};
+    }
     if(!response.ok){
       const message=data?.message||data?.msg||data?.error_description||data?.error||`Yêu cầu không thành công (${response.status}).`;
       throw new MarketplaceError(message,response.status,data);
+    }
+    if(withCount){
+      const total=response.headers.get("Content-Range")?.split("/")[1];
+      if(!/^\d+$/.test(total||""))throw new MarketplaceError("Không đọc được tổng số căn.");
+      return {rows:data,total:Number(total)};
     }
     return data;
   };
@@ -75,7 +86,7 @@
     return session;
   };
 
-  const listPublic=async(type,filters={})=>{
+  const listPublic=async(type,filters={},options={})=>{
     const params={
       select:"id,slug,listing_code,listing_type,title,description,poster_name,contact_phone,phase,tower,bedroom_count,unit_type,area_sqm,price_vnd,furnishing,floor_label,available_from,is_featured,approved_at,expires_at,created_at,listing_images(id,storage_path,sort_order,alt_text)",
       listing_type:`eq.${type}`,
@@ -88,9 +99,42 @@
     if(filters.bedroom)params.unit_type=`eq.${filters.bedroom}`;
     if(filters.minPrice)params.price_vnd=`gte.${Number(filters.minPrice)}`;
     if(filters.maxPrice)params.price_vnd=`lte.${Number(filters.maxPrice)}`;
-    const rows=await request(restPath("listings",params));
+    const rows=await request(restPath("listings",params),{signal:options.signal});
     const keyword=cleanText(filters.keyword,80).toLocaleLowerCase("vi");
     return keyword?rows.filter(row=>[row.title,row.phase,row.tower,row.unit_type].some(value=>String(value||"").toLocaleLowerCase("vi").includes(keyword))):rows;
+  };
+
+  // Apply filters and ordering BEFORE the range. Each inventory request returns
+  // at most ten records, even when the marketplace has hundreds of listings.
+  const listPublicPage=async(type,filters={},page=1,{signal}={})=>{
+    const orders={
+      newest:"approved_at.desc.nullslast,created_at.desc,id.desc",
+      price_asc:"price_vnd.asc.nullslast,approved_at.desc,id.desc",
+      price_desc:"price_vnd.desc.nullslast,approved_at.desc,id.desc",
+      area_asc:"area_sqm.asc.nullslast,approved_at.desc,id.desc",
+      area_desc:"area_sqm.desc.nullslast,approved_at.desc,id.desc"
+    };
+    const params={
+      select:"id,slug,listing_type,title,poster_name,contact_phone,phase,tower,unit_type,area_sqm,price_vnd,floor_label,is_featured,approved_at,created_at,listing_images(storage_path,sort_order,alt_text)",
+      listing_type:`eq.${type==="rent"?"rent":"sale"}`,status:"eq.approved",
+      order:orders[filters.sort]||orders.newest,limit:"10",
+      offset:String((Math.max(1,Math.min(100000,Math.floor(Number(page)||1)))-1)*10)
+    };
+    if(filters.phase)params.phase=`eq.${cleanText(filters.phase,40)}`;
+    if(filters.tower)params.tower=`eq.${cleanText(filters.tower,40)}`;
+    if(filters.bedroom)params.unit_type=`eq.${cleanText(filters.bedroom,40)}`;
+    if(Number(filters.maxPrice)>0)params.price_vnd=`lte.${Number(filters.maxPrice)}`;
+    const areas={"0-50":"(area_sqm.gt.0,area_sqm.lt.50)","50-70":"(area_sqm.gte.50,area_sqm.lt.70)","70-90":"(area_sqm.gte.70,area_sqm.lt.90)","90-120":"(area_sqm.gte.90,area_sqm.lte.120)","120-9999":"(area_sqm.gt.120)"};
+    if(areas[filters.area])params.and=areas[filters.area];
+    const keyword=cleanText(filters.keyword,80);
+    if(keyword){
+      // Quoted PostgREST values keep punctuation out of the query grammar.
+      // Treat wildcard characters literally; the surrounding % means contains.
+      const literal=keyword.replace(/[\\%_*]/g,"\\$&");
+      const value=JSON.stringify(`%${literal}%`);
+      params.or=`(${["title","phase","tower","unit_type"].map(field=>`${field}.ilike.${value}`).join(",")})`;
+    }
+    return request(restPath("listings",params),{signal,withCount:true,headers:{Prefer:"count=exact"}});
   };
 
   const getPublicListing=async identifier=>{
@@ -205,7 +249,7 @@
 
   window.LumiMarketplace={
     config,configured,MarketplaceError,cleanText,slugify,formatCurrency,imageUrl,listingUrl,
-    listPublic,getPublicListing,createListing,uploadImage,addListingImage,createReport,
+    listPublic,listPublicPage,getPublicListing,createListing,uploadImage,addListingImage,createReport,
     signIn,signOut,requireAdmin,listAdmin,updateListing,deleteListing,requestSeoSync
   };
 })();

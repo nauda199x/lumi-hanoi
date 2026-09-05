@@ -1,6 +1,6 @@
 (()=>{
   const root=document.querySelector("[data-marketplace-list]");
-  if(!root||!window.LumiMarketplace)return;
+  if(!root||root.hasAttribute("data-inventory")||!window.LumiMarketplace)return;
   const api=window.LumiMarketplace;
   const type=root.dataset.listingType==="rent"?"rent":"sale";
   const grid=root.querySelector("[data-listing-grid]");
@@ -21,6 +21,8 @@
   let filteredRows=[];
   let visibleCount=0;
   let timer=0;
+  let loadVersion=0;
+  let controller;
 
   const el=(tag,className,text)=>{
     const node=document.createElement(tag);
@@ -280,6 +282,8 @@
   const showRows=()=>{
     const filters=filterValues();
     filteredRows=applyClientFilters(sourceRows,filters);
+    if(count)count.textContent=`${filteredRows.length} tin đăng`;
+    if(!filteredRows.length)grid.replaceChildren();
     syncMobileControls();
     applyFilters.textContent=filteredRows.length?`Xem ${filteredRows.length} căn`:"Xem kết quả";
     if(filteredRows.length){
@@ -292,6 +296,8 @@
   };
 
   const load=async()=>{
+    const version=++loadVersion;
+    controller?.abort();controller=new AbortController();
     if(!api.configured()){
       if(count)count.textContent="Đang kết nối";
       setState("Dữ liệu giao dịch đang được cập nhật","Hệ thống đang cập nhật danh sách tin giao dịch. Vui lòng quay lại sau ít phút.","LH",false);
@@ -299,15 +305,19 @@
     }
     setLoading(true);
     try{
-      sourceRows=await api.listPublic(type,filterValues());
+      const rows=await api.listPublic(type,filterValues(),{signal:controller.signal});
+      if(version!==loadVersion)return;
+      sourceRows=rows;
       showRows();
     }catch(error){
+      if(version!==loadVersion||error.name==="AbortError")return;
       if(count)count.textContent="Chưa tải được dữ liệu";
       setState("Chưa thể tải danh sách căn hộ",error.status===0?"Vui lòng kiểm tra kết nối mạng và tải lại trang.":"Dữ liệu tạm thời chưa sẵn sàng. Vui lòng quay lại sau.","!",false);
-    }finally{setLoading(false);}
+    }finally{if(version===loadVersion)setLoading(false);}
   };
 
-  const scheduleLoad=delay=>{clearTimeout(timer);timer=setTimeout(load,delay);};
+  const scheduleLoad=delay=>{clearTimeout(timer);++loadVersion;controller?.abort();timer=setTimeout(load,delay);};
+  form?.addEventListener("submit",event=>{event.preventDefault();scheduleLoad(0);});
   form?.addEventListener("input",event=>{
     if(event.target===phase)refreshTowers();
     syncMobileControls();
@@ -316,7 +326,6 @@
   form?.addEventListener("change",event=>{
     if(event.target===phase)refreshTowers();
     syncMobileControls();
-    if(event.target.name==="area"){showRows();return;}
     scheduleLoad(30);
   });
   form?.addEventListener("reset",()=>setTimeout(()=>{refreshTowers();syncMobileControls();load();},0));
