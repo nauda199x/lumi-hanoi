@@ -152,12 +152,17 @@
 
     const facts=el("div","listing-card-facts");
     facts.append(el("strong","listing-card-fact-price",api.formatCurrency(listing.price_vnd,listing.listing_type)));
-    [
+    const factValues=[
       formatArea(listing.area_sqm),
       pricePerSqm(listing),
       listing.unit_type,
       listing.floor_label?("Tầng "+listing.floor_label):""
-    ].filter(Boolean).forEach(value=>facts.append(el("span","",value)));
+    ].filter(Boolean);
+    factValues.forEach(value=>{
+      facts.append(document.createTextNode(", "));
+      facts.append(el("span","",value));
+    });
+    facts.append(document.createTextNode("."));
 
     const location=el("div","listing-card-location");
     location.append(el("span","listing-card-location-mark","⌖"));
