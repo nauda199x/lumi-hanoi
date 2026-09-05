@@ -84,7 +84,7 @@ market_js = read("assets/js/marketplace-list.js")
 if "const applyQueryFilters=()=>{" not in market_js or 'hashParams.get("tower")' not in market_js:
     errors.append("marketplace tower deep-link initialization missing")
 for path in ("mua-ban-lumi-hanoi/index.html", "cho-thue-lumi-hanoi/index.html"):
-    if "marketplace-list.js?v=20260903-canonical-links" not in read(path):
+    if "marketplace-list.js?v=20260905-inventory2" not in read(path):
         errors.append(f"{path}: stale marketplace list cache key")
 
 netlify = read("netlify.toml")

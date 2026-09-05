@@ -123,7 +123,9 @@ def main() -> int:
     for path in V5_REQUIRED:
         if not file_for(path).is_file(): errors.append(f"V5/V5.1 required page missing: {path}")
     public = "\n".join(
-        p.read_text(encoding="utf-8", errors="ignore")
+        # Public listing blocks legitimately include each poster's contact.
+        # Keep the competitor/contact check on editorial content outside them.
+        re.sub(r"<!-- MARKETPLACE-STATIC-LISTINGS:START -->.*?<!-- MARKETPLACE-STATIC-LISTINGS:END -->", "", p.read_text(encoding="utf-8", errors="ignore"), flags=re.S)
         for p in ROOT.rglob("*.html")
         if not (p.parent / ".marketplace-generated").is_file()
     )

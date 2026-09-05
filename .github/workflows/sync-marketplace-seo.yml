@@ -8,6 +8,7 @@ on:
     branches: [main]
     paths:
       - "scripts/generate_marketplace_seo.py"
+      - "scripts/marketplace_inventory.py"
       - "scripts/generate_marketplace_seo_average.py"
       - "scripts/generate_rent_category_seo.py"
       - "scripts/strengthen_rent_hub_seo.py"
@@ -41,6 +42,7 @@ jobs:
       - name: Validate rental SEO generator syntax
         run: |
           python -m py_compile scripts/generate_marketplace_seo_average.py
+          python -m py_compile scripts/marketplace_inventory.py
           python -m py_compile scripts/generate_rent_category_seo.py
           python -m py_compile scripts/strengthen_rent_hub_seo.py
           python -m py_compile scripts/normalize_marketplace_snippet_text.py

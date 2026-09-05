@@ -1,0 +1,12 @@
+{
+  "name": "lumi-hanoi-static",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "test": "node --test scripts/qa_inventory_api.cjs && python scripts/qa_inventory.py",
+    "build": "npm test && node --check assets/js/marketplace-inventory.js && node --check assets/js/marketplace-list.js"
+  },
+  "devDependencies": {
+    "vite": "8.2.2"
+  }
+}
