@@ -11,7 +11,10 @@
   const count=root.querySelector("[data-listing-count]");
   const sort=root.querySelector("[name=sort]");
   const toggle=root.querySelector("[data-inventory-filter-toggle]");
-  const base="/mua-ban-lumi-hanoi/";
+  const type=root.dataset.listingType==="rent"?"rent":"sale";
+  const base=type==="rent"?"/cho-thue-lumi-hanoi/":"/mua-ban-lumi-hanoi/";
+  const homeTitle=/\/page\/\d+\/$/.test(location.pathname)?root.dataset.inventoryHomeTitle||document.title:document.title;
+  const quick=root.querySelector("[data-inventory-quick]");
   const towers={Signature:["S1","S2","S3","S5","S6"],Prestige:["P1","P2"],Elite:["E1","E2"]};
   const keys=["keyword","phase","tower","bedroom","max_price","area","sort"];
   let page=1,version=0,timer,controller,total=0,initial=true;
@@ -53,49 +56,66 @@
     canonical.hostname="lumi-hanoi.com";canonical.protocol="https:";canonical.port="";
     document.querySelector('link[rel="canonical"]')?.setAttribute("href",canonical.href);
     document.querySelector('meta[property="og:url"]')?.setAttribute("content",canonical.href);
-    document.title=`Mua bán căn hộ Lumi Hanoi – ${page>1?`Trang ${page}`:"Quỹ căn đang chuyển nhượng"}`;
+    document.title=page>1?`${type==="rent"?"Cho thuê":"Mua bán"} căn hộ Lumi Hanoi – Trang ${page}`:homeTitle;
   };
   const area=value=>Number(value)>0?`${Number(value).toLocaleString("vi-VN",{maximumFractionDigits:1})} m²`:"";
+  const icons={
+    pin:'<path d="M12 21s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12Z"/><circle cx="12" cy="9" r="2.5"/>',
+    area:'<path d="M9 3H3v6m12-6h6v6M3 15v6h6m12-6v6h-6M3 3l5 5m8 8 5 5m0-18-5 5M8 16l-5 5"/>',
+    bed:'<path d="M3 18V7m18 11V7M3 15h18M6 11V7h12v4M3 11h18v9M3 15v5"/>',
+    floor:'<path d="m12 3 9 5-9 5-9-5 9-5Zm-9 9 9 5 9-5M3 16l9 5 9-5"/>',
+    phone:'<path d="m8 3 3 5-3 3c2 3 3 4 6 5l3-3 4 3c-1 4-3 5-6 4C8 18 3 12 3 6c0-2 2-3 5-3Z"/>',
+    image:'<rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8" cy="9" r="1.5"/><path d="m3 17 5-5 4 4 3-3 6 6"/>'
+  };
+  const icon=name=>{const span=el("span");span.innerHTML=`<svg class="inventory-icon" viewBox="0 0 24 24" aria-hidden="true">${icons[name]||""}</svg>`;return span.firstElementChild;};
+  const initials=name=>String(name||"").trim().split(/\s+/).filter(p=>/[\p{L}\p{N}]/u.test(p)).slice(-2).map(p=>p.match(/[\p{L}\p{N}]/u)[0]).join("").toLocaleUpperCase("vi");
   const rowFor=(listing,index)=>{
     const row=el("article","inventory-row");
     const url=api.listingUrl(listing);
-    const media=el("a","inventory-media");media.href=url;media.setAttribute("aria-label",`Xem ${listing.title}`);
+    const media=el("a","inventory-media");media.href=url;media.setAttribute("aria-label",`Xem ${listing.title||"căn hộ"}`);
     const images=[...(listing.listing_images||[])].filter(i=>i.storage_path).sort((a,b)=>Number(a.sort_order)-Number(b.sort_order));
-    const placeholder=el("span","inventory-placeholder","Chưa có ảnh");media.append(placeholder);
+    media.append(el("span","inventory-placeholder","Chưa có ảnh"));
     if(images.length){
-      const image=el("img");image.src=api.imageUrl(images[0].storage_path);image.alt=images[0].alt_text||listing.title;
-      image.width=280;image.height=210;image.loading=index===0?"eager":"lazy";image.decoding="async";
+      const image=el("img");image.src=api.imageUrl(images[0].storage_path);image.alt=images[0].alt_text||listing.title||"Ảnh căn hộ Lumi Hanoi";
+      image.width=560;image.height=420;image.loading=index===0?"eager":"lazy";image.decoding="async";
       image.addEventListener("error",()=>image.remove(),{once:true});media.append(image);
-      if(images.length>1)media.append(el("span","inventory-image-count",`${images.length} ảnh`));
+      const counter=el("span","inventory-image-count");counter.append(icon("image"),document.createTextNode(`${images.length} ảnh`));media.append(counter);
     }
+    media.append(el("span","inventory-status",type==="rent"?"CHO THUÊ":"MUA BÁN"));
     const info=el("div","inventory-info");
-    const heading=el("h3");const title=el("a","",listing.title||"Xem căn hộ");title.href=url;title.title=listing.title||"";heading.append(title);info.append(heading);
-    const specs=[area(listing.area_sqm),listing.unit_type,listing.floor_label?`Tầng ${listing.floor_label.toLocaleLowerCase("vi")}`:""].filter(Boolean);
-    if(specs.length)info.append(el("p","inventory-specs",specs.join(" · ")));
     const place=[listing.phase,listing.tower].filter(Boolean).join(" · ");
-    if(place){const location=el("p","inventory-location",place);location.title=place;info.append(location);}
-    const price=el("div","inventory-price");price.append(el("strong","",api.formatCurrency(listing.price_vnd,"sale")));
-    if(Number(listing.price_vnd)>0&&Number(listing.area_sqm)>0)price.append(el("small","",`${(listing.price_vnd/listing.area_sqm/1e6).toLocaleString("vi-VN",{maximumFractionDigits:1})} tr/m²`));
+    if(place){const location=el("p","inventory-location");location.title=place;location.append(icon("pin"),el("span","",place));info.append(location);}
+    const heading=el("h3");const title=el("a","",listing.title||"Xem căn hộ");title.href=url;title.title=listing.title||"";heading.append(title);info.append(heading);
+    const specs=el("p","inventory-specs");
+    const facts=[["area",area(listing.area_sqm)],["bed",listing.unit_type],["floor",listing.floor_label?`Tầng ${String(listing.floor_label).toLocaleLowerCase("vi")}`:""]].filter(([,value])=>value);
+    facts.forEach(([name,value],i)=>{const item=el("span");item.append(icon(name),document.createTextNode(value+(i<facts.length-1?", ":"")));specs.append(item);});
+    if(specs.childElementCount)info.append(specs);
+    const price=el("div","inventory-price");price.append(el("span","inventory-price-label",type==="rent"?"Giá thuê":"Giá bán"));
+    const formatted=api.formatCurrency(listing.price_vnd,type),parts=formatted.match(/^(.*?) (tỷ|triệu\/tháng|triệu)$/);
+    const amount=el("strong","",parts?parts[1]:formatted);
+    if(parts)amount.append(document.createTextNode(" "),el("span","inventory-price-unit",parts[2]));price.append(amount);
+    if(type==="sale"&&Number(listing.price_vnd)>0&&Number(listing.area_sqm)>0)price.append(el("small","",`${(listing.price_vnd/listing.area_sqm/1e6).toLocaleString("vi-VN",{maximumFractionDigits:1})} tr/m²`));
     const poster=el("div","inventory-poster");
-    if(listing.poster_name){
-      const avatar=el("span","inventory-avatar",listing.poster_name.trim().split(/\s+/).slice(-2).map(p=>p[0]).join("").toUpperCase());avatar.setAttribute("aria-hidden","true");poster.append(avatar);
-    }
+    if(listing.poster_name){const avatar=el("span","inventory-avatar",initials(listing.poster_name));avatar.setAttribute("aria-hidden","true");poster.append(avatar);}
     const person=el("div");
     if(listing.poster_name){const name=el("strong","",listing.poster_name);name.title=listing.poster_name;person.append(name);}
     const date=new Date(listing.approved_at||listing.created_at||"");
-    if(!Number.isNaN(date.getTime())){
-      const time=el("time","",`Đăng ${date.toLocaleDateString("vi-VN")}`);time.dateTime=date.toISOString();person.append(time);
-    }
+    if(!Number.isNaN(date.getTime())){const time=el("time","",`Đăng ${date.toLocaleDateString("vi-VN")}`);time.dateTime=date.toISOString();person.append(time);}
     poster.append(person);
     const actions=el("div","inventory-actions");
     const phone=String(listing.contact_phone||"").trim();const tel=phone.replace(/[^+\d]/g,"");
     if(tel){
       const call=el("a","inventory-call");call.href=`tel:${tel}`;call.setAttribute("aria-label",`Gọi ${listing.poster_name||"người đăng"}, ${phone}`);
-      call.append(el("span","inventory-phone",phone),el("span","inventory-call-label","Gọi"));actions.append(call);
+      call.append(icon("phone"),el("span","inventory-phone",phone),el("span","inventory-call-label","Gọi"));actions.append(call);
       const zalo=el("a","inventory-zalo","Zalo");zalo.href=`https://zalo.me/${phone.replace(/\D/g,"")}`;zalo.target="_blank";zalo.rel="noopener";actions.append(zalo);
     }
-    const view=el("a","inventory-view","Xem chi tiết →");view.href=url;actions.append(view);
+    const view=el("a","inventory-view");view.href=url;view.append(el("span","","Xem chi tiết"),el("span","","→"));actions.append(view);
     row.append(media,info,price,poster,actions);return row;
+  };
+  const syncControls=()=>{
+    const active=keys.filter(k=>k!=="sort"&&values()[k]).length;
+    toggle.textContent=`Bộ lọc${active?` (${active})`:""}`;
+    quick?.querySelectorAll("[data-unit-filter]").forEach(button=>button.setAttribute("aria-pressed",String(button.dataset.unitFilter===form.elements.bedroom.value)));
   };
   const renderPager=()=>{
     const pages=Math.max(1,Math.ceil(total/10));pager.replaceChildren();
@@ -128,7 +148,7 @@
       state.hidden=true;pager.hidden=true;summary.textContent="Đang tải quỹ căn…";
     }
     try{
-      const result=await api.listPublicPage("sale",filters(),page,{signal:controller.signal});
+      const result=await api.listPublicPage(type,filters(),page,{signal:controller.signal});
       if(requestVersion!==version)return;
       total=result.total;
       const last=Math.max(1,Math.ceil(total/10));
@@ -138,7 +158,7 @@
       if(schema)schema.textContent=JSON.stringify({"@context":"https://schema.org","@type":"ItemList",numberOfItems:result.rows.length,itemListElement:result.rows.map((row,i)=>({"@type":"ListItem",position:(page-1)*10+i+1,url:`https://lumi-hanoi.com${api.listingUrl(row)}`,name:row.title}))});
       if(!total){
         const active=keys.some(k=>k!=="sort"&&values()[k]);
-        showState(active?"Không tìm thấy căn phù hợp":"Chưa có căn đang rao bán",active?"Anh/chị có thể xóa bớt bộ lọc để xem thêm quỹ căn.":"Tin mua bán mới sẽ được hiển thị sau khi duyệt.");
+        showState(active?"Không tìm thấy căn phù hợp":(type==="rent"?"Chưa có căn đang cho thuê":"Chưa có căn đang rao bán"),active?"Anh/chị có thể xóa bớt bộ lọc để xem thêm quỹ căn.":"Tin mới sẽ được hiển thị sau khi duyệt.");
       }
       renderPager();updateUrl(true);
       if(scroll){root.querySelector("[data-inventory-results]").scrollIntoView({block:"start",behavior:"instant"});summary.focus({preventScroll:true});}
@@ -151,10 +171,10 @@
   const changed=(delay=0)=>{
     clearTimeout(timer);++version;controller?.abort();page=1;updateUrl(delay>0);
     count.textContent="Đang tải…";grid.replaceChildren();pager.hidden=true;state.hidden=true;
-    const active=keys.filter(k=>k!=="sort"&&values()[k]).length;
-    toggle.textContent=`Bộ lọc${active?` (${active})`:""}`;
+    syncControls();
     timer=setTimeout(()=>load(),delay);
   };
+  quick?.addEventListener("click",e=>{const button=e.target.closest("[data-unit-filter]");if(button){form.elements.bedroom.value=button.dataset.unitFilter;changed();}});
   form.addEventListener("input",e=>{if(e.target.name==="keyword")changed(320);});
   form.addEventListener("change",e=>{if(e.target.name==="phase")refreshTowers();if(e.target.name!=="keyword")changed();});
   sort.addEventListener("change",()=>changed());
@@ -172,6 +192,6 @@
     e.preventDefault();clearTimeout(timer);page=Number(a.dataset.page);updateUrl();load({scroll:true});
   });
   state.querySelector("[data-inventory-retry]").addEventListener("click",()=>load());
-  window.addEventListener("popstate",()=>{clearTimeout(timer);readLocation();load();});
-  readLocation();load();
+  window.addEventListener("popstate",()=>{clearTimeout(timer);readLocation();syncControls();load();});
+  readLocation();syncControls();load();
 })();

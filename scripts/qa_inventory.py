@@ -33,48 +33,54 @@ class Page(HTMLParser):
 
 
 def main():
-    template = (gen.ROOT / "mua-ban-lumi-hanoi/index.html").read_text()
-    # Synthetic records exercise page boundaries and escaping only in a temp dir.
-    rows = [dict(id=f"{i:04}", slug=f"qa-listing-{i:04}", listing_type="sale", title=f"QA căn hộ {i}",
-                 approved_at="2026-09-05T10:00:00Z", created_at="2026-09-05T09:00:00Z",
-                 unit_type="2PN", phase="Signature", tower="S3", price_vnd=4280000000,
-                 area_sqm=54, poster_name="QA", contact_phone="", listing_images=[]) for i in range(56)]
-    with tempfile.TemporaryDirectory() as tmp:
-        root = Path(tmp)
-        target = root / "mua-ban-lumi-hanoi/index.html"
-        target.parent.mkdir(parents=True)
-        target.write_text(template)
-        g = SimpleNamespace(**{k: getattr(gen, k) for k in dir(gen) if not k.startswith("__")})
-        g.ROOT = root
-        inv.sync_sale_inventory(g, rows)
-        seen = set()
-        for n in range(1, 7):
-            page = root / inv.page_url(n).lstrip("/") / "index.html"
-            raw = page.read_text()
-            parsed = Page(raw)
-            assert parsed.rows == (10 if n < 6 else 6), (n, parsed.rows)
-            assert parsed.canonical == gen.SITE + inv.page_url(n)
-            links = {a["href"] for a in parsed.links if "data-page" in a}
-            if n < 6:
-                assert inv.page_url(n+1) in links
-            if n > 1:
-                assert inv.page_url(n-1) in links
-                assert 'content="index,follow"' in raw
-                assert "Hướng dẫn mua chuyển nhượng căn hộ Lumi Hanoi" not in raw
-            detail_links = {a["href"] for a in parsed.links if "/qa-listing-" in a.get("href", "")}
-            assert not seen.intersection(detail_links), "Pages repeat listings"
-            seen.update(detail_links)
-            for data in re.findall(r'<script type="application/ld\+json"[^>]*>(.*?)</script>', raw, re.S):
-                json.loads(data)
-        assert len(seen) == 56
-        original = target.read_bytes()
-        inv.sync_sale_inventory(g, rows)
-        assert target.read_bytes() == original, "Scheduled sync must be idempotent"
-        inv.sync_sale_inventory(g, [])
-        assert Page(target.read_text()).rows == 0
-        assert 'data-listing-state hidden' not in target.read_text()
-        assert not (root / "mua-ban-lumi-hanoi/page/2").exists()
+    for listing_type, segment in [("sale", "mua-ban-lumi-hanoi"), ("rent", "cho-thue-lumi-hanoi")]:
+        template = (gen.ROOT / segment / "index.html").read_text()
+        # Synthetic records exercise page boundaries and escaping only in a temp dir.
+        rows = [dict(id=f"{i:04}", slug=f"qa-listing-{i:04}", listing_type=listing_type, title=f"QA căn hộ {i}",
+                     approved_at="2026-09-05T10:00:00Z", created_at="2026-09-05T09:00:00Z",
+                     unit_type="2PN", phase="Signature", tower="S3", price_vnd=4280000000,
+                     area_sqm=54, poster_name="QA", contact_phone="", listing_images=[]) for i in range(56)]
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            target = root / segment / "index.html"
+            target.parent.mkdir(parents=True)
+            target.write_text(template)
+            g = SimpleNamespace(**{k: getattr(gen, k) for k in dir(gen) if not k.startswith("__")})
+            g.ROOT = root
+            inv.sync_inventory(g, rows, listing_type)
+            seen = set()
+            for n in range(1, 7):
+                page = root / inv.page_url(n, listing_type).lstrip("/") / "index.html"
+                raw = page.read_text()
+                parsed = Page(raw)
+                assert parsed.rows == (10 if n < 6 else 6), (n, parsed.rows)
+                assert parsed.canonical == gen.SITE + inv.page_url(n, listing_type)
+                links = {a["href"] for a in parsed.links if "data-page" in a}
+                if n < 6:
+                    assert inv.page_url(n+1, listing_type) in links
+                if n > 1:
+                    assert inv.page_url(n-1, listing_type) in links
+                    assert re.search(r'content="index,follow(?:,max-image-preview:large)?"', raw)
+                    assert 'class="container article-layout' not in raw
+                detail_links = {a["href"] for a in parsed.links if "/qa-listing-" in a.get("href", "")}
+                assert not seen.intersection(detail_links), "Pages repeat listings"
+                seen.update(detail_links)
+                for data in re.findall(r'<script type="application/ld\+json"[^>]*>(.*?)</script>', raw, re.S):
+                    json.loads(data)
+            assert len(seen) == 56
+            original = target.read_bytes()
+            inv.sync_inventory(g, rows, listing_type)
+            assert target.read_bytes() == original, "Scheduled sync must be idempotent"
+            inv.sync_inventory(g, [], listing_type)
+            assert Page(target.read_text()).rows == 0
+            assert 'data-listing-state hidden' not in target.read_text()
+            assert not (root / segment / "page/2").exists()
 
+    rental = inv.render_row(gen, dict(rows[0], listing_type="rent", price_vnd=10000000))
+    assert "triệu/tháng" in rental and "tr/m²" not in rental, "Rental cards show monthly total only"
+    assert '/cho-thue-lumi-hanoi/qa-listing-' in rental
+    sale = inv.render_row(gen, dict(rows[0], listing_type="sale"))
+    assert "tr/m²" in sale and '/mua-ban-lumi-hanoi/qa-listing-' in sale
     unusual = dict(rows[0], title='<script>alert("x")</script>', poster_name="", area_sqm=None, floor_label=None,
                    tower="", phase="", listing_images=[dict(storage_path="qa/one.jpg", sort_order=0)])
     raw = inv.render_row(gen, unusual)
@@ -87,7 +93,7 @@ def main():
     assert r"\1" in gen.replace_marked_block("A body B", "A", "B", r"Title \1"), "User text is not a regex replacement"
     for file in ("marketplace_inventory.py", "generate_marketplace_seo.py"):
         ast.parse((gen.ROOT / "scripts" / file).read_text(), feature_version=(3, 11))
-    print("Inventory QA: 56 records → 6 crawlable pages, 10/page, self-canonicals, no duplicates, empty state, escaping, image hints, idempotent sync: PASS")
+    print("Both inventory hubs: 56 records → 6 crawlable pages, 10/page, self-canonicals, no duplicates, empty state, escaping, image hints, idempotent sync: PASS")
 
 
 if __name__ == "__main__":
