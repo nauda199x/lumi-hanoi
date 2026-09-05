@@ -477,10 +477,10 @@ def sync_category_indexes(listings: list[dict]) -> None:
         if not path.exists():
             continue
         rows = [listing for listing in listings if listing.get("listing_type") == listing_type]
-        if listing_type == "sale":
+        if "data-inventory" in path.read_text(encoding="utf-8"):
             import sys
-            from marketplace_inventory import sync_sale_inventory
-            sync_sale_inventory(sys.modules[__name__], rows)
+            from marketplace_inventory import sync_inventory
+            sync_inventory(sys.modules[__name__], rows, listing_type)
             continue
         cards = "\n".join(render_static_card(listing) for listing in rows)
         raw = path.read_text(encoding="utf-8")
