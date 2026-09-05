@@ -9,6 +9,7 @@ on:
     paths:
       - "scripts/generate_marketplace_seo.py"
       - "scripts/generate_rent_category_seo.py"
+      - "scripts/strengthen_rent_hub_seo.py"
       - ".github/workflows/sync-marketplace-seo.yml"
 
 permissions:
@@ -33,11 +34,14 @@ jobs:
         run: |
           python scripts/generate_marketplace_seo.py
           python scripts/generate_rent_category_seo.py
+          python scripts/strengthen_rent_hub_seo.py
       - name: Validate rental SEO generator syntax
-        run: python -m py_compile scripts/generate_rent_category_seo.py
+        run: |
+          python -m py_compile scripts/generate_rent_category_seo.py
+          python -m py_compile scripts/strengthen_rent_hub_seo.py
       - name: Commit generated SEO pages
         run: |
-          PATHS="mua-ban-lumi-hanoi cho-thue-lumi-hanoi cho-thue-shop-chan-de-lumi-hanoi gia-can-ho-lumi-hanoi cho-thue-can-ho-1-phong-ngu-lumi-hanoi cho-thue-can-ho-2-phong-ngu-lumi-hanoi cho-thue-can-ho-3-phong-ngu-lumi-hanoi cho-thue-can-ho-4-phong-ngu-lumi-hanoi cho-thue-duplex-lumi-hanoi cho-thue-penthouse-lumi-hanoi sitemap.xml sitemap-tin-dang.xml"
+          PATHS="mua-ban-lumi-hanoi cho-thue-lumi-hanoi cho-thue-shop-chan-de-lumi-hanoi gia-can-ho-lumi-hanoi cho-thue-can-ho-1-phong-ngu-lumi-hanoi cho-thue-can-ho-2-phong-ngu-lumi-hanoi cho-thue-can-ho-3-phong-ngu-lumi-hanoi cho-thue-can-ho-4-phong-ngu-lumi-hanoi cho-thue-duplex-lumi-hanoi cho-thue-penthouse-lumi-hanoi cho-thue-lumi-signature cho-thue-lumi-prestige cho-thue-lumi-elite lumi-signature lumi-prestige lumi-elite sitemap.xml sitemap-tin-dang.xml"
           if [ -z "$(git status --porcelain -- $PATHS)" ]; then
             echo "Marketplace SEO pages are already current."
             exit 0
