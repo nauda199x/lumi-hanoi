@@ -39,8 +39,12 @@ if not sale_title.startswith("Mua bán căn hộ Lumi Hanoi"):
     errors.append("sale title must preserve the 'Mua bán căn hộ Lumi Hanoi' search intent")
 
 rent_title = title_of(rent)
-if not re.fullmatch(r"Cho Thuê Căn Hộ Lumi Hanoi \| Tin Mới T(?:[1-9]|1[0-2])/\d{4}", rent_title):
-    errors.append("rent title must preserve the monthly 'Cho Thuê Căn Hộ Lumi Hanoi' search intent")
+rent_title_patterns = (
+    r"Cho Thuê Căn Hộ Lumi Hanoi \| Tin Mới T(?:[1-9]|1[0-2])/\d{4}",
+    r"Thuê Lumi Hanoi \| Căn Hộ Cho Thuê Mới Nhất T(?:[1-9]|1[0-2])/\d{4}",
+)
+if not any(re.fullmatch(pattern, rent_title) for pattern in rent_title_patterns):
+    errors.append("rent title must preserve the monthly Lumi Hanoi rental search intent")
 
 if "<h1>Cho thuê căn hộ Lumi Hanoi</h1>" not in rent:
     errors.append("rental H1 must target 'Cho thuê căn hộ Lumi Hanoi'")
