@@ -6,6 +6,7 @@ market aggregation. For the price page, its statistics function is switched from
 median to arithmetic mean before generation, then the explanatory copy is kept in
 sync with that methodology.
 """
+import re
 from statistics import mean
 
 import generate_marketplace_seo as gen
@@ -43,6 +44,46 @@ def update_price_methodology_copy() -> None:
     path.write_text(raw, encoding="utf-8")
 
 
+def remove_rental_ppsm_display() -> None:
+    """Keep rental market pricing in monthly totals; price/m² remains sale-only."""
+    path = gen.PRICE_PAGE
+    if not path.exists():
+        return
+
+    raw = path.read_text(encoding="utf-8")
+    rent_marker = '<div class="market-table-head"><div><p class="eyebrow">Cho thuê</p><h3>Giá rao thuê theo loại căn</h3></div><a href="/cho-thue-lumi-hanoi/">Xem quỹ thuê →</a></div>'
+    start = raw.find(rent_marker)
+    if start < 0:
+        raise RuntimeError("Could not locate rental price table")
+
+    card_start = raw.rfind('<div class="market-table-card">', 0, start)
+    next_card = raw.find('<div class="market-table-card">', start + len(rent_marker))
+    if card_start < 0 or next_card < 0:
+        raise RuntimeError("Could not isolate rental price table")
+
+    block = raw[card_start:next_card]
+    block = block.replace('<th>Giá/m²/tháng</th>', '')
+    block = re.sub(
+        r'(<tr><th>[^<]+</th><td>[^<]*</td><td>[^<]*</td><td>[^<]*</td>)<td>[^<]*</td>(</tr>)',
+        r'\1\2',
+        block,
+    )
+    raw = raw[:card_start] + block + raw[next_card:]
+
+    # Shop rental pricing follows the same rule: show total monthly rent only.
+    raw = re.sub(
+        r'(<dt>Shop đang thuê</dt><dd>[^<]*?) · khoảng [^<]*(</dd>)',
+        r'\1\2',
+        raw,
+        count=1,
+    )
+
+    if "Giá/m²/tháng" in raw:
+        raise RuntimeError("Rental price/m² column still present after cleanup")
+
+    path.write_text(raw, encoding="utf-8")
+
+
 def main() -> None:
     # generate_marketplace_seo imports `median` into module scope. Rebinding that
     # symbol makes all price-page aggregate calculations use arithmetic mean,
@@ -50,7 +91,8 @@ def main() -> None:
     gen.median = mean
     gen.main()
     update_price_methodology_copy()
-    print("Market price page: arithmetic-average methodology applied")
+    remove_rental_ppsm_display()
+    print("Market price page: arithmetic-average methodology applied; rental price/m² hidden")
 
 
 if __name__ == "__main__":
