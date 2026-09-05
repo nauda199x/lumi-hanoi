@@ -29,6 +29,13 @@
 .market-table-card thead th{background:#f2eee5;color:#4d4c47;font-size:.72rem;letter-spacing:.04em;text-transform:uppercase}
 .market-table-card tbody th{font-weight:800}
 .market-table-card tbody tr:last-child th,.market-table-card tbody tr:last-child td{border-bottom:0}
+/* Rental prices are presented as total monthly rent, not price per m². */
+.market-table-card:has(.market-table-head a[href="/cho-thue-lumi-hanoi/"]) table{min-width:0;table-layout:fixed}
+.market-table-card:has(.market-table-head a[href="/cho-thue-lumi-hanoi/"]) th:nth-child(1),.market-table-card:has(.market-table-head a[href="/cho-thue-lumi-hanoi/"]) td:nth-child(1){width:18%}
+.market-table-card:has(.market-table-head a[href="/cho-thue-lumi-hanoi/"]) th:nth-child(2),.market-table-card:has(.market-table-head a[href="/cho-thue-lumi-hanoi/"]) td:nth-child(2){width:14%}
+.market-table-card:has(.market-table-head a[href="/cho-thue-lumi-hanoi/"]) th:nth-child(3),.market-table-card:has(.market-table-head a[href="/cho-thue-lumi-hanoi/"]) td:nth-child(3){width:38%}
+.market-table-card:has(.market-table-head a[href="/cho-thue-lumi-hanoi/"]) th:nth-child(4),.market-table-card:has(.market-table-head a[href="/cho-thue-lumi-hanoi/"]) td:nth-child(4){width:30%}
+.market-table-card:has(.market-table-head a[href="/cho-thue-lumi-hanoi/"]) th:nth-child(5),.market-table-card:has(.market-table-head a[href="/cho-thue-lumi-hanoi/"]) td:nth-child(5){display:none}
 .shop-market-box{display:grid;grid-template-columns:1fr 1fr;gap:42px;margin-top:28px;padding:28px;border:1px solid #2b332f;background:#171a18;color:#fff}
 .shop-market-box p{color:#c9c6bf}
 .shop-market-box dl{margin:0}
@@ -78,6 +85,8 @@
   .market-data-warning,.shop-market-box{grid-template-columns:1fr}
   .shop-market-box{gap:16px;padding:22px}
   .price-factor-grid,.price-unit-grid{grid-template-columns:1fr}
+  .market-table-card:has(.market-table-head a[href="/cho-thue-lumi-hanoi/"]) th,.market-table-card:has(.market-table-head a[href="/cho-thue-lumi-hanoi/"]) td{padding:13px 10px;font-size:.8rem;overflow-wrap:anywhere}
+  .market-table-card:has(.market-table-head a[href="/cho-thue-lumi-hanoi/"]) thead th{font-size:.64rem}
 }
 @media(max-width:430px){
   .market-kpis{grid-template-columns:1fr}
