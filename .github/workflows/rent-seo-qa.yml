@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - "scripts/generate_rent_category_seo.py"
+      - "scripts/strengthen_rent_hub_seo.py"
       - ".github/workflows/sync-marketplace-seo.yml"
       - ".github/workflows/rent-seo-qa.yml"
 
@@ -20,9 +21,13 @@ jobs:
         with:
           python-version: "3.11"
       - name: Validate generator syntax
-        run: python -m py_compile scripts/generate_rent_category_seo.py
+        run: |
+          python -m py_compile scripts/generate_rent_category_seo.py
+          python -m py_compile scripts/strengthen_rent_hub_seo.py
       - name: Generate rental intent pages
-        run: python scripts/generate_rent_category_seo.py
+        run: |
+          python scripts/generate_rent_category_seo.py
+          python scripts/strengthen_rent_hub_seo.py
       - name: Validate generated pages and sitemap
         run: |
           python - <<'PY'
@@ -36,6 +41,9 @@ jobs:
               "cho-thue-can-ho-4-phong-ngu-lumi-hanoi/index.html",
               "cho-thue-duplex-lumi-hanoi/index.html",
               "cho-thue-penthouse-lumi-hanoi/index.html",
+              "cho-thue-lumi-signature/index.html",
+              "cho-thue-lumi-prestige/index.html",
+              "cho-thue-lumi-elite/index.html",
           ]
           for page in pages:
               raw = Path(page).read_text(encoding="utf-8")
@@ -45,9 +53,22 @@ jobs:
                   raise SystemExit(f"missing canonical: {page}")
               if 'application/ld+json' not in raw:
                   raise SystemExit(f"missing schema: {page}")
+
           ET.parse("sitemap.xml")
           hub = Path("cho-thue-lumi-hanoi/index.html").read_text(encoding="utf-8")
           if "RENT-SEO-CLUSTER:START" not in hub:
-              raise SystemExit("rental hub is missing SEO cluster")
-          print("Rental SEO pages: OK")
+              raise SystemExit("rental hub is missing unit-type SEO cluster")
+          if "RENT-PHASE-CLUSTER:START" not in hub:
+              raise SystemExit("rental hub is missing phase SEO cluster")
+          if "<title>Thuê Lumi Hanoi |" not in hub:
+              raise SystemExit("rental hub title does not lead with Thuê Lumi Hanoi")
+          if '<meta name="robots" content="index,follow,max-image-preview:large">' not in hub:
+              raise SystemExit("rental hub is missing large image preview robots")
+
+          for guide in ["lumi-signature/index.html", "lumi-prestige/index.html", "lumi-elite/index.html"]:
+              raw = Path(guide).read_text(encoding="utf-8")
+              if "RENT-PHASE-GUIDE-CTA:START" not in raw:
+                  raise SystemExit(f"missing rental CTA in phase guide: {guide}")
+
+          print("Rental SEO pages and authority cluster: OK")
           PY
