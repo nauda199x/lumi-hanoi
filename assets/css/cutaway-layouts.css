@@ -16,7 +16,7 @@
 .cutaway-page .cutaway-jump b{font-size:1.15rem;color:var(--bronze-dark);font-weight:500}
 .cutaway-page .cutaway-note{padding:18px 22px;border-left:3px solid var(--bronze);background:#f1eee7;color:#535a54;font-size:.88rem;line-height:1.8;margin:0 0 18px}
 .cutaway-page .cutaway-note strong{color:var(--ink)}
-.cutaway-page .cutaway-collection{margin:0}
+.cutaway-page .cutaway-collection{margin:0 auto}
 .cutaway-page .cutaway-unit{padding-block:48px 24px;border-bottom:1px solid var(--cutaway-border);scroll-margin-top:96px}
 .cutaway-page .cutaway-unit-heading{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:start;gap:20px;margin-bottom:22px}
 .cutaway-page .cutaway-index{font-size:2.5rem;line-height:1;color:#ad8e69;letter-spacing:-.06em;padding-top:5px}
