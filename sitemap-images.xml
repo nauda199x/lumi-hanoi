@@ -327,4 +327,11 @@
     <image:image><image:loc>https://lumi-hanoi.com/assets/media/elite/lumi-elite-lobby-e1.webp</image:loc></image:image>
     <image:image><image:loc>https://lumi-hanoi.com/assets/media/prestige/lumi-prestige-hero.webp</image:loc></image:image>
   </url>
+  <url>
+    <loc>https://lumi-hanoi.com/tin-tuc/mat-bang-3d-can-ho-lumi-hanoi/</loc>
+    <image:image><image:loc>https://lumi-hanoi.com/assets/media/apartment-3d/lumi-prestige-1pn-layout-22-3d.webp</image:loc></image:image>
+    <image:image><image:loc>https://lumi-hanoi.com/assets/media/apartment-3d/lumi-prestige-2pn-layout-21-3d.webp</image:loc></image:image>
+    <image:image><image:loc>https://lumi-hanoi.com/assets/media/apartment-3d/lumi-prestige-3pn-layout-17-3d.webp</image:loc></image:image>
+    <image:image><image:loc>https://lumi-hanoi.com/assets/media/apartment-3d/lumi-prestige-4pn-layout-02-3d.webp</image:loc></image:image>
+  </url>
 </urlset>
