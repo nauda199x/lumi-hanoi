@@ -18,10 +18,16 @@ const FLOOR_H = 3.25;   // typical floor-to-floor used for the massing
 const GROUND_H = 5.2;   // taller ground/lobby level
 const PODIUM_H = 7.4;
 
+/**
+ * Facade tones follow the "Thiết kế mặt đứng" palette in the project brochure —
+ * a charcoal glass field behind a light frame, with the second tone changing per
+ * building group (stone, copper, bronze). Which swatch belongs to which tower is
+ * not stated in the documents, so the mapping here is indicative.
+ */
 const ZONES = {
-  signature: { name: "Lumi Signature", tone: 0xf4ecdc, accent: 0x9c7951, chip: "#9c7951" },
-  prestige: { name: "Lumi Prestige", tone: 0xe6d2b2, accent: 0x705335, chip: "#705335" },
-  elite: { name: "Lumi Elite", tone: 0xdae2e2, accent: 0x41565a, chip: "#41565a" }
+  signature: { name: "Lumi Signature", frame: 0xbdb3a1, chip: "#9c7951" },
+  prestige: { name: "Lumi Prestige", frame: 0xa8703f, chip: "#705335" },
+  elite: { name: "Lumi Elite", frame: 0x8a7358, chip: "#41565a" }
 };
 
 /** seg = [centreX, centreZ, lengthX, lengthZ] */
@@ -134,20 +140,22 @@ function pointInPolygon(x, z, polygon) {
   return inside;
 }
 
-/** One tile of facade: a floor band plus light vertical mullions. */
+/**
+ * One storey of facade, seen behind the vertical fins: a bright slab edge over a
+ * dark recessed glass field. The material colour supplies the frame tone, so the
+ * texture only has to darken the glass band.
+ */
 function makeFacadeTexture() {
   const canvas = document.createElement("canvas");
-  canvas.width = 64;
-  canvas.height = 64;
+  canvas.width = 16;
+  canvas.height = 32;
   const ctx = canvas.getContext("2d");
+  ctx.fillStyle = "#272b2d";
+  ctx.fillRect(0, 0, 16, 32);
+  ctx.fillStyle = "#15181a";
+  ctx.fillRect(0, 3, 16, 21);
   ctx.fillStyle = "#ffffff";
-  ctx.fillRect(0, 0, 64, 64);
-  ctx.fillStyle = "#8b8171";
-  ctx.fillRect(0, 57, 64, 5);
-  ctx.globalAlpha = 0.4;
-  ctx.fillRect(0, 0, 3, 64);
-  ctx.globalAlpha = 0.2;
-  ctx.fillRect(31, 0, 2, 64);
+  ctx.fillRect(0, 26, 16, 6);
   const texture = new THREE.CanvasTexture(canvas);
   texture.wrapS = THREE.RepeatWrapping;
   texture.wrapT = THREE.RepeatWrapping;
@@ -515,74 +523,119 @@ function buildTrees(scene, palette, shadows) {
   scene.add(foliage, trunk);
 }
 
-/** Each tower owns its materials so filtering and highlighting stay isolated. */
+/**
+ * Each tower owns its materials so filtering and highlighting stay isolated.
+ *
+ * The massing follows the brochure facade language rather than a plain slab:
+ * a dark recessed glass shell, deep vertical fins on every face, bright slab
+ * edges once per storey, planted sky-garden bands and a taller crown frame.
+ */
 function buildTower(tower, scene, palette, shadows) {
   const zone = ZONES[tower.zone];
   const group = new THREE.Group();
   const height = towerHeight(tower.floors);
   const owned = [];
   const picks = [];
+  const fins = [];
 
-  const facadeFor = (faceWidth) => {
-    const columns = Math.max(2, Math.round(faceWidth / 3.6));
-    const key = `${columns}x${tower.floors}`;
-    let texture = palette.facadeCache.get(key);
-    if (!texture) {
-      texture = palette.facadeTexture.clone();
-      texture.needsUpdate = true;
-      texture.wrapS = THREE.RepeatWrapping;
-      texture.wrapT = THREE.RepeatWrapping;
-      texture.repeat.set(columns, tower.floors);
-      palette.facadeCache.set(key, texture);
-    }
-    const material = new THREE.MeshLambertMaterial({ color: zone.tone, map: texture });
-    owned.push(material);
-    return material;
+  const shellMaterial = new THREE.MeshStandardMaterial({
+    color: zone.frame,
+    metalness: 0.18,
+    roughness: 0.62,
+    map: palette.facadeFor(tower.floors)
+  });
+  const frameMaterial = new THREE.MeshStandardMaterial({
+    color: zone.frame,
+    metalness: 0.22,
+    roughness: 0.55
+  });
+  const roofMaterial = new THREE.MeshStandardMaterial({
+    color: palette.roofTone,
+    metalness: 0.1,
+    roughness: 0.8
+  });
+  const gardenMaterial = new THREE.MeshLambertMaterial({ color: 0x6f8f5b });
+  const podiumMaterial = new THREE.MeshStandardMaterial({
+    color: palette.podiumTone,
+    metalness: 0.1,
+    roughness: 0.78
+  });
+  owned.push(shellMaterial, frameMaterial, roofMaterial, gardenMaterial, podiumMaterial);
+
+  // Sky gardens sit on the transfer-style levels the brochure renders show
+  // planted; heights are indicative, spread evenly up the shaft.
+  const gardenLevels = tower.floors > 32 ? [0.33, 0.58, 0.82] : [0.38, 0.68];
+  const finStep = 4.1;
+  const finBase = PODIUM_H - 0.4;
+
+  const addBox = (w, h, d, x, y, z, material, pickable) => {
+    const mesh = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), material);
+    mesh.position.set(x, y, z);
+    mesh.castShadow = shadows;
+    mesh.receiveShadow = true;
+    mesh.userData.towerId = tower.id;
+    group.add(mesh);
+    if (pickable !== false) picks.push(mesh);
+    return mesh;
   };
 
   tower.segs.forEach(([cx, cz, lx, lz]) => {
-    const podiumMaterial = palette.podium.clone();
-    owned.push(podiumMaterial);
-    const podium = new THREE.Mesh(new THREE.BoxGeometry(lx + 8, PODIUM_H, lz + 8), podiumMaterial);
-    podium.position.set(cx, PODIUM_H / 2, cz);
-    podium.castShadow = shadows;
-    podium.receiveShadow = true;
-    podium.userData.towerId = tower.id;
-    group.add(podium);
-    picks.push(podium);
+    addBox(lx + 8, PODIUM_H, lz + 8, cx, PODIUM_H / 2, cz, podiumMaterial);
+    // Glazed retail recess with a light frame edge above it.
+    addBox(lx + 7.2, 3.8, lz + 7.2, cx, 2.4, cz, shellMaterial, false);
+    addBox(lx + 8.3, 1, lz + 8.3, cx, 4.8, cz, frameMaterial, false);
 
-    const roofMaterial = new THREE.MeshLambertMaterial({ color: palette.roofTone });
-    owned.push(roofMaterial);
-    const shell = new THREE.Mesh(
-      new THREE.BoxGeometry(lx, height, lz),
-      [facadeFor(lz), facadeFor(lz), roofMaterial, roofMaterial, facadeFor(lx), facadeFor(lx)]
-    );
-    shell.position.set(cx, height / 2 + 0.6, cz);
-    shell.castShadow = shadows;
-    shell.receiveShadow = true;
-    shell.userData.towerId = tower.id;
-    group.add(shell);
-    picks.push(shell);
+    const shellHeight = height - PODIUM_H;
+    addBox(lx, shellHeight, lz, cx, PODIUM_H + shellHeight / 2, cz, shellMaterial);
 
-    const crownMaterial = new THREE.MeshLambertMaterial({ color: zone.accent });
-    owned.push(crownMaterial);
-    const crown = new THREE.Mesh(new THREE.BoxGeometry(lx + 1.4, 2.4, lz + 1.4), crownMaterial);
-    crown.position.set(cx, height - 0.8, cz);
-    crown.castShadow = shadows;
-    crown.userData.towerId = tower.id;
-    group.add(crown);
-    picks.push(crown);
+    // Corner posts read as the structural frame between the glazed bays.
+    [[-1, -1], [1, -1], [-1, 1], [1, 1]].forEach(([sx, sz]) => {
+      addBox(1.5, shellHeight, 1.5, cx + (sx * lx) / 2, PODIUM_H + shellHeight / 2, cz + (sz * lz) / 2, frameMaterial, false);
+    });
 
-    // Small rooftop plant enclosure, so the tops do not read as bare slabs.
-    const plantMaterial = palette.podium.clone();
-    owned.push(plantMaterial);
-    const plant = new THREE.Mesh(new THREE.BoxGeometry(lx * 0.36, 3.4, lz * 0.42), plantMaterial);
-    plant.position.set(cx, height + 2.3, cz);
-    plant.castShadow = shadows;
-    plant.userData.towerId = tower.id;
-    group.add(plant);
-    picks.push(plant);
+    // Vertical fins on all four faces — the strongest cue in the real facade.
+    const finTop = height - 4.5;
+    const finHeight = finTop - finBase;
+    const finY = finBase + finHeight / 2;
+    const along = Math.max(2, Math.round(lx / finStep));
+    const across = Math.max(2, Math.round(lz / finStep));
+    for (let i = 1; i < along; i += 1) {
+      const x = cx - lx / 2 + (i * lx) / along;
+      fins.push([x, finY, cz - lz / 2 - 0.55, 0.6, finHeight, 1.9]);
+      fins.push([x, finY, cz + lz / 2 + 0.55, 0.6, finHeight, 1.9]);
+    }
+    for (let i = 1; i < across; i += 1) {
+      const z = cz - lz / 2 + (i * lz) / across;
+      fins.push([cx - lx / 2 - 0.55, finY, z, 1.9, finHeight, 0.6]);
+      fins.push([cx + lx / 2 + 0.55, finY, z, 1.9, finHeight, 0.6]);
+    }
+
+    gardenLevels.forEach((ratio) => {
+      const y = PODIUM_H + shellHeight * ratio;
+      addBox(lx + 1.1, 1.1, lz + 1.1, cx, y, cz, gardenMaterial, false);
+      addBox(lx + 1.4, 0.7, lz + 1.4, cx, y - 1.2, cz, frameMaterial, false);
+    });
+
+    // Crown: a taller frame band, then the dark roof deck and its plant room.
+    addBox(lx + 1.5, 3.8, lz + 1.5, cx, height - 1.1, cz, frameMaterial);
+    addBox(lx + 0.6, 0.7, lz + 0.6, cx, height + 1.1, cz, roofMaterial, false);
+    addBox(lx * 0.22, 2.4, lz * 0.3, cx, height + 2.6, cz, roofMaterial, false);
   });
+
+  if (fins.length) {
+    const finMesh = new THREE.InstancedMesh(new THREE.BoxGeometry(1, 1, 1), frameMaterial, fins.length);
+    const dummy = new THREE.Object3D();
+    fins.forEach(([x, y, z, w, h, d], index) => {
+      dummy.position.set(x, y, z);
+      dummy.scale.set(w, h, d);
+      dummy.updateMatrix();
+      finMesh.setMatrixAt(index, dummy.matrix);
+    });
+    finMesh.castShadow = shadows;
+    finMesh.userData.towerId = tower.id;
+    group.add(finMesh);
+    picks.push(finMesh);
+  }
 
   scene.add(group);
   const anchorX = tower.segs.reduce((sum, seg) => sum + seg[0], 0) / tower.segs.length;
@@ -592,7 +645,7 @@ function buildTower(tower, scene, palette, shadows) {
     materials: owned,
     picks,
     height,
-    anchor: new THREE.Vector3(anchorX, height + 14, anchorZ),
+    anchor: new THREE.Vector3(anchorX, height + 16, anchorZ),
     focus: new THREE.Vector3(anchorX, height * 0.35, anchorZ)
   };
 }
@@ -663,9 +716,9 @@ function boot() {
 
   const controls = new Orbit(camera, stage, VIEWS.overview);
 
-  scene.add(new THREE.HemisphereLight(0xf7f3e8, 0x99a089, 1.0));
-  scene.add(new THREE.AmbientLight(0xffffff, 0.24));
-  const sun = new THREE.DirectionalLight(0xfff2da, 1.55);
+  scene.add(new THREE.HemisphereLight(0xeaf1f6, 0x9aa189, 1.25));
+  scene.add(new THREE.AmbientLight(0xffffff, 0.42));
+  const sun = new THREE.DirectionalLight(0xfff4e2, 2.05);
   sun.position.set(-230, 320, 200);
   if (shadows) {
     sun.castShadow = true;
@@ -680,10 +733,23 @@ function boot() {
   }
   scene.add(sun);
 
+  const facadeTexture = makeFacadeTexture();
+  const facadeCache = new Map();
   const palette = {
-    facadeTexture: makeFacadeTexture(),
-    roofTone: 0xb5afa1,
-    facadeCache: new Map(),
+    /** One texture per storey count, shared across towers of the same height. */
+    facadeFor(floors) {
+      if (!facadeCache.has(floors)) {
+        const texture = facadeTexture.clone();
+        texture.needsUpdate = true;
+        texture.wrapS = THREE.RepeatWrapping;
+        texture.wrapT = THREE.RepeatWrapping;
+        texture.repeat.set(1, floors - 2);
+        facadeCache.set(floors, texture);
+      }
+      return facadeCache.get(floors);
+    },
+    roofTone: 0x74776f,
+    podiumTone: 0x8f8676,
     surrounds: new THREE.MeshLambertMaterial({ color: 0xc2cbb0 }),
     parkland: new THREE.MeshLambertMaterial({ color: 0xb6c7a1 }),
     plate: new THREE.MeshLambertMaterial({ color: 0xe8e1d0 }),
@@ -697,7 +763,6 @@ function boot() {
     court: new THREE.MeshLambertMaterial({ color: 0x2e6d8d }),
     retail: new THREE.MeshLambertMaterial({ color: 0xd9cfb9 }),
     parking: new THREE.MeshLambertMaterial({ color: 0xc6c1b2 }),
-    podium: new THREE.MeshLambertMaterial({ color: 0xd7ccb5 }),
     foliage: new THREE.MeshLambertMaterial({ color: 0x6e8e5b }),
     trunk: new THREE.MeshLambertMaterial({ color: 0x6c5943 })
   };
