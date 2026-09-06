@@ -12,6 +12,30 @@ from statistics import mean
 import generate_marketplace_seo as gen
 
 
+def allow_short_descriptions_for_indexing() -> None:
+    """Keep approved listings indexable even when the description is short.
+
+    The public form intentionally accepts any non-empty description. SEO indexing
+    must follow the same rule instead of silently dropping listings below 40 chars.
+    All other quality requirements (image, price, area, tower and unit type) remain.
+    """
+    def indexable(listing: dict) -> bool:
+        images = listing.get("listing_images") or []
+        return all(
+            [
+                len(gen.compact_text(listing.get("title", ""))) >= 12,
+                bool(gen.compact_text(listing.get("description", ""))),
+                bool(images),
+                bool(listing.get("price_vnd")),
+                bool(listing.get("area_sqm")),
+                bool(listing.get("tower")),
+                bool(listing.get("unit_type")),
+            ]
+        )
+
+    gen.indexable = indexable
+
+
 def update_price_methodology_copy() -> None:
     path = gen.PRICE_PAGE
     if not path.exists():
@@ -85,6 +109,10 @@ def remove_rental_ppsm_display() -> None:
 
 
 def main() -> None:
+    # The public posting form allows short descriptions. Keep the SEO generator in
+    # sync so approved listings are not excluded from indexability by text length.
+    allow_short_descriptions_for_indexing()
+
     # generate_marketplace_seo imports `median` into module scope. Rebinding that
     # symbol makes all price-page aggregate calculations use arithmetic mean,
     # including overall, unit-type, phase and shop statistics.
