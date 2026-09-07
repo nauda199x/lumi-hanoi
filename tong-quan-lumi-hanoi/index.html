@@ -26,7 +26,7 @@
     .overview-page .breadcrumb{position:absolute;z-index:4;left:0;right:0;color:rgba(255,255,255,.74)}
     .overview-page .breadcrumb a{color:#fff}
     .overview-hero{position:relative;isolation:isolate;min-height:min(820px,calc(100svh - 82px));display:flex;align-items:flex-end;background:#111;color:#fff}
-    .overview-hero>img{position:absolute;z-index:-3;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 58%}
+    .overview-hero-media{position:absolute;z-index:-3;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 58%;pointer-events:none}
     .overview-hero:before{content:"";position:absolute;z-index:-2;inset:0;background:linear-gradient(90deg,rgba(10,12,10,.91) 0%,rgba(10,12,10,.58) 44%,rgba(10,12,10,.15) 76%),linear-gradient(0deg,rgba(10,12,10,.74) 0%,transparent 58%)}
     .overview-hero .container{padding-block:clamp(8rem,16vh,11rem) clamp(3.5rem,7vh,5.5rem)}
     .overview-hero h1{max-width:12ch;font-size:clamp(3.3rem,7.2vw,7.2rem);line-height:.94}
@@ -124,7 +124,7 @@
     @media(max-width:760px){
       .overview-page .breadcrumb{position:relative;background:#171a18;padding-block:12px}
       .overview-hero{min-height:630px}
-      .overview-hero>img{object-position:57% center}
+      .overview-hero-media{object-position:57% center}
       .overview-hero:before{background:linear-gradient(0deg,rgba(10,12,10,.94) 0%,rgba(10,12,10,.48) 74%,rgba(10,12,10,.24))}
       .overview-hero .container{padding-block:5rem 3rem}
       .overview-hero h1{font-size:clamp(3rem,15vw,4.7rem)}
@@ -205,7 +205,7 @@
     <div class="container breadcrumb"><a href="/">Trang chủ</a><span aria-hidden="true">/</span>Tổng quan Lumi Hanoi</div>
 
     <section class="overview-hero">
-      <picture class="responsive-photo"><source type="image/avif" srcset="/assets/media/responsive/lumi-hanoi-overview-640.avif 640w, /assets/media/responsive/lumi-hanoi-overview-960.avif 960w, /assets/media/responsive/lumi-hanoi-overview-1600.avif 1600w" sizes="(max-width: 900px) calc(100vw - 32px), 985px"><img src="/assets/media/responsive/lumi-hanoi-overview-1600.webp" alt="Phối cảnh tổng thể dự án Lumi Hanoi tại phía Tây Hà Nội" fetchpriority="high" decoding="async" srcset="/assets/media/responsive/lumi-hanoi-overview-640.webp 640w, /assets/media/responsive/lumi-hanoi-overview-960.webp 960w, /assets/media/responsive/lumi-hanoi-overview-1600.webp 1600w" sizes="(max-width: 900px) calc(100vw - 32px), 985px" width="1600" height="900"></picture>
+      <picture class="responsive-photo"><source type="image/avif" srcset="/assets/media/responsive/lumi-hanoi-overview-640.avif 640w, /assets/media/responsive/lumi-hanoi-overview-960.avif 960w, /assets/media/responsive/lumi-hanoi-overview-1600.avif 1600w" sizes="100vw"><img class="overview-hero-media" src="/assets/media/responsive/lumi-hanoi-overview-1600.webp" alt="Phối cảnh tổng thể dự án Lumi Hanoi tại phía Tây Hà Nội" fetchpriority="high" decoding="async" srcset="/assets/media/responsive/lumi-hanoi-overview-640.webp 640w, /assets/media/responsive/lumi-hanoi-overview-960.webp 960w, /assets/media/responsive/lumi-hanoi-overview-1600.webp 1600w" sizes="100vw" width="1600" height="900"></picture>
       <div class="container">
         <p class="eyebrow section-kicker">Tổng quan dự án Lumi Hanoi</p>
         <h1>Lumi Hanoi – không gian sống cao cấp phía Tây Hà Nội</h1>

@@ -73,7 +73,7 @@ class PhotoMarkup(HTMLParser):
         original = self.get_starttag_text()
         photo = self.manifests[data["src"]]
         variants = photo["sources"]
-        sizes = "100vw" if any(c in data.get("class", "") for c in ("home-hero-media", "article-hero-media")) else "(max-width: 900px) calc(100vw - 32px), 985px"
+        sizes = "100vw" if any(c in data.get("class", "") for c in ("home-hero-media", "article-hero-media", "overview-hero-media")) else "(max-width: 900px) calc(100vw - 32px), 985px"
         srcsets = {fmt: ", ".join(f"{url} {width}w" for url, width in values) for fmt, values in variants.items()}
         # The fallback is an optimized WebP; links to the original stay intact.
         fallback = variants["webp"][-1][0]
@@ -103,7 +103,7 @@ def apply_markup(root=ROOT):
             updated = updated.replace(old, new)
         updated = re.sub(r'<picture class="responsive-photo">.*?</picture>',
                          lambda m: re.sub(r'sizes="[^"]*"', 'sizes="100vw"', m[0])
-                         if re.search(r'class="[^"]*(?:home|article)-hero-media', m[0]) else m[0], updated, flags=re.S)
+                         if re.search(r'class="[^"]*(?:home|article|overview)-hero-media', m[0]) else m[0], updated, flags=re.S)
         for asset in ["assets/css/site.css", "assets/js/site.js", "assets/css/marketplace-inventory.css", "assets/js/marketplace-inventory.js"]:
             updated = re.sub(re.escape('/' + asset) + r'(?:\?v=[\w.-]+)?(?=["\x27])', '/' + asset + '?v=20260907-performance1', updated)
         if 'data-inventory' in updated and 'document.documentElement.classList.add("js")' not in updated:
