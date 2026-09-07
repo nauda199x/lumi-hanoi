@@ -129,7 +129,7 @@ assert "service-role" in config.lower() and "supabasePublishableKey" in config
 assert "service_role" not in config
 assert home.index('href="/tong-quan-lumi-hanoi/">Tổng quan</a>') < home.index("<summary>Giao dịch</summary>") < home.index('href="/mat-bang-lumi-hanoi/">Mặt bằng</a>')
 assert '<a class="btn" href="/giao-dich-lumi-hanoi/">Giao dịch</a>' in home
-assert 'site.css?v=20260907-performance1' in home, "Homepage must bust the stale hero stylesheet cache"
+assert 'site.css?v=20260907-layoutfix1' in home, "Homepage must use the current shared stylesheet cache key"
 assert ".home-hero-media,.home-hero:before,.home-hero:after{pointer-events:none}" in site_css
 assert ".home-hero .container{z-index:2}" in site_css, "Hero actions must stay above decorative overlays"
 assert 'href="/mua-ban-lumi-hanoi/"' in transaction_hub
