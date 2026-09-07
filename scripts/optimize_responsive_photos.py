@@ -105,7 +105,8 @@ def apply_markup(root=ROOT):
                          lambda m: re.sub(r'sizes="[^"]*"', 'sizes="100vw"', m[0])
                          if re.search(r'class="[^"]*(?:home|article|overview)-hero-media', m[0]) else m[0], updated, flags=re.S)
         for asset in ["assets/css/site.css", "assets/js/site.js", "assets/css/marketplace-inventory.css", "assets/js/marketplace-inventory.js"]:
-            updated = re.sub(re.escape('/' + asset) + r'(?:\?v=[\w.-]+)?(?=["\x27])', '/' + asset + '?v=20260907-performance1', updated)
+            version = "20260907-layoutfix1" if asset == "assets/css/site.css" else "20260907-performance1"
+            updated = re.sub(re.escape('/' + asset) + r'(?:\?v=[\w.-]+)?(?=["\x27])', '/' + asset + '?v=' + version, updated)
         if 'data-inventory' in updated and 'document.documentElement.classList.add("js")' not in updated:
             updated = updated.replace('<head>', '<head>\n  <script>document.documentElement.classList.add("js");</script>', 1)
         if updated != original:
