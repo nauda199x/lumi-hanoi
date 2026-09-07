@@ -44,7 +44,7 @@ Create an evergreen, human-readable directory under `tin-tuc/`, for example `tin
   <link rel="canonical" href="https://lumi-hanoi.com/tin-tuc/[slug]/">
   <!-- Add matching Open Graph and Twitter metadata. -->
   <!-- Add BreadcrumbList + Article JSON-LD with truthful dates. -->
-  <link rel="stylesheet" href="/assets/css/site.css">
+  <link rel="stylesheet" href="/assets/css/site.css?v=20260907-layoutfix1">
 </head>
 <body>
   <!-- Reuse the accessible global header. -->
