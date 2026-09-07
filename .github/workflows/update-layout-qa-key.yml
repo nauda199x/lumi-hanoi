@@ -1,0 +1,43 @@
+name: Update layout QA cache key
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/update-layout-qa-key.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  update-qa-key:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Update stale stylesheet cache-key assertion
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          path = Path('scripts/qa_marketplace_v1.py')
+          text = path.read_text(encoding='utf-8')
+          old = 'site.css?v=20260907-performance1'
+          new = 'site.css?v=20260907-layoutfix1'
+          count = text.count(old)
+          if count != 1:
+              raise SystemExit(f'Expected exactly one stale QA cache key, found {count}')
+          text = text.replace(old, new)
+          text = text.replace('Homepage must bust the stale hero stylesheet cache', 'Homepage must use the current shared stylesheet cache key')
+          path.write_text(text, encoding='utf-8')
+          PY
+      - name: Commit QA maintenance
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add scripts/qa_marketplace_v1.py
+          git commit -m "Update marketplace QA for layout cache key"
+          git pull --rebase origin main
+          git push origin HEAD:main
