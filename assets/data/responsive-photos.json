@@ -1,0 +1,376 @@
+{
+  "/assets/media/home/lumi-hanoi-overview.webp": {
+    "sources": {
+      "webp": [
+        [
+          "/assets/media/responsive/lumi-hanoi-overview-640.webp",
+          640
+        ],
+        [
+          "/assets/media/responsive/lumi-hanoi-overview-960.webp",
+          960
+        ],
+        [
+          "/assets/media/responsive/lumi-hanoi-overview-1600.webp",
+          1600
+        ]
+      ],
+      "avif": [
+        [
+          "/assets/media/responsive/lumi-hanoi-overview-640.avif",
+          640
+        ],
+        [
+          "/assets/media/responsive/lumi-hanoi-overview-960.avif",
+          960
+        ],
+        [
+          "/assets/media/responsive/lumi-hanoi-overview-1600.avif",
+          1600
+        ]
+      ]
+    },
+    "width": 1600,
+    "height": 900
+  },
+  "/assets/media/home/lumi-hanoi-streetscape.webp": {
+    "sources": {
+      "webp": [
+        [
+          "/assets/media/responsive/lumi-hanoi-streetscape-640.webp",
+          640
+        ],
+        [
+          "/assets/media/responsive/lumi-hanoi-streetscape-960.webp",
+          960
+        ],
+        [
+          "/assets/media/responsive/lumi-hanoi-streetscape-1600.webp",
+          1600
+        ]
+      ],
+      "avif": [
+        [
+          "/assets/media/responsive/lumi-hanoi-streetscape-640.avif",
+          640
+        ],
+        [
+          "/assets/media/responsive/lumi-hanoi-streetscape-960.avif",
+          960
+        ],
+        [
+          "/assets/media/responsive/lumi-hanoi-streetscape-1600.avif",
+          1600
+        ]
+      ]
+    },
+    "width": 1600,
+    "height": 1067
+  },
+  "/assets/media/signature/lumi-signature-landscape.webp": {
+    "sources": {
+      "webp": [
+        [
+          "/assets/media/responsive/lumi-signature-landscape-640.webp",
+          640
+        ],
+        [
+          "/assets/media/responsive/lumi-signature-landscape-960.webp",
+          960
+        ],
+        [
+          "/assets/media/responsive/lumi-signature-landscape-1600.webp",
+          1600
+        ]
+      ],
+      "avif": [
+        [
+          "/assets/media/responsive/lumi-signature-landscape-640.avif",
+          640
+        ],
+        [
+          "/assets/media/responsive/lumi-signature-landscape-960.avif",
+          960
+        ],
+        [
+          "/assets/media/responsive/lumi-signature-landscape-1600.avif",
+          1600
+        ]
+      ]
+    },
+    "width": 1600,
+    "height": 1067
+  },
+  "/assets/media/prestige/lumi-prestige-hero.webp": {
+    "sources": {
+      "webp": [
+        [
+          "/assets/media/responsive/lumi-prestige-hero-640.webp",
+          640
+        ],
+        [
+          "/assets/media/responsive/lumi-prestige-hero-960.webp",
+          960
+        ],
+        [
+          "/assets/media/responsive/lumi-prestige-hero-1600.webp",
+          1600
+        ]
+      ],
+      "avif": [
+        [
+          "/assets/media/responsive/lumi-prestige-hero-640.avif",
+          640
+        ],
+        [
+          "/assets/media/responsive/lumi-prestige-hero-960.avif",
+          960
+        ],
+        [
+          "/assets/media/responsive/lumi-prestige-hero-1600.avif",
+          1600
+        ]
+      ]
+    },
+    "width": 1600,
+    "height": 900
+  },
+  "/assets/media/elite/lumi-elite-facade.webp": {
+    "sources": {
+      "webp": [
+        [
+          "/assets/media/responsive/lumi-elite-facade-640.webp",
+          640
+        ],
+        [
+          "/assets/media/responsive/lumi-elite-facade-960.webp",
+          960
+        ],
+        [
+          "/assets/media/responsive/lumi-elite-facade-1600.webp",
+          1600
+        ]
+      ],
+      "avif": [
+        [
+          "/assets/media/responsive/lumi-elite-facade-640.avif",
+          640
+        ],
+        [
+          "/assets/media/responsive/lumi-elite-facade-960.avif",
+          960
+        ],
+        [
+          "/assets/media/responsive/lumi-elite-facade-1600.avif",
+          1600
+        ]
+      ]
+    },
+    "width": 1600,
+    "height": 901
+  },
+  "/assets/media/signature/lumi-signature-water-garden.webp": {
+    "sources": {
+      "webp": [
+        [
+          "/assets/media/responsive/lumi-signature-water-garden-640.webp",
+          640
+        ],
+        [
+          "/assets/media/responsive/lumi-signature-water-garden-960.webp",
+          960
+        ],
+        [
+          "/assets/media/responsive/lumi-signature-water-garden-1600.webp",
+          1600
+        ]
+      ],
+      "avif": [
+        [
+          "/assets/media/responsive/lumi-signature-water-garden-640.avif",
+          640
+        ],
+        [
+          "/assets/media/responsive/lumi-signature-water-garden-960.avif",
+          960
+        ],
+        [
+          "/assets/media/responsive/lumi-signature-water-garden-1600.avif",
+          1600
+        ]
+      ]
+    },
+    "width": 1600,
+    "height": 900
+  },
+  "/assets/media/signature/lumi-signature-pool.webp": {
+    "sources": {
+      "webp": [
+        [
+          "/assets/media/responsive/lumi-signature-pool-640.webp",
+          640
+        ],
+        [
+          "/assets/media/responsive/lumi-signature-pool-960.webp",
+          960
+        ],
+        [
+          "/assets/media/responsive/lumi-signature-pool-1500.webp",
+          1500
+        ]
+      ],
+      "avif": [
+        [
+          "/assets/media/responsive/lumi-signature-pool-640.avif",
+          640
+        ],
+        [
+          "/assets/media/responsive/lumi-signature-pool-960.avif",
+          960
+        ],
+        [
+          "/assets/media/responsive/lumi-signature-pool-1500.avif",
+          1500
+        ]
+      ]
+    },
+    "width": 1500,
+    "height": 844
+  },
+  "/assets/media/prestige/lumi-prestige-garden.webp": {
+    "sources": {
+      "webp": [
+        [
+          "/assets/media/responsive/lumi-prestige-garden-640.webp",
+          640
+        ],
+        [
+          "/assets/media/responsive/lumi-prestige-garden-960.webp",
+          960
+        ],
+        [
+          "/assets/media/responsive/lumi-prestige-garden-1600.webp",
+          1600
+        ]
+      ],
+      "avif": [
+        [
+          "/assets/media/responsive/lumi-prestige-garden-640.avif",
+          640
+        ],
+        [
+          "/assets/media/responsive/lumi-prestige-garden-960.avif",
+          960
+        ],
+        [
+          "/assets/media/responsive/lumi-prestige-garden-1600.avif",
+          1600
+        ]
+      ]
+    },
+    "width": 1600,
+    "height": 900
+  },
+  "/assets/media/prestige/lumi-prestige-aurora-pool.webp": {
+    "sources": {
+      "webp": [
+        [
+          "/assets/media/responsive/lumi-prestige-aurora-pool-640.webp",
+          640
+        ],
+        [
+          "/assets/media/responsive/lumi-prestige-aurora-pool-960.webp",
+          960
+        ],
+        [
+          "/assets/media/responsive/lumi-prestige-aurora-pool-1600.webp",
+          1600
+        ]
+      ],
+      "avif": [
+        [
+          "/assets/media/responsive/lumi-prestige-aurora-pool-640.avif",
+          640
+        ],
+        [
+          "/assets/media/responsive/lumi-prestige-aurora-pool-960.avif",
+          960
+        ],
+        [
+          "/assets/media/responsive/lumi-prestige-aurora-pool-1600.avif",
+          1600
+        ]
+      ]
+    },
+    "width": 1600,
+    "height": 900
+  },
+  "/assets/media/elite/lumi-elite-aurora-pool.webp": {
+    "sources": {
+      "webp": [
+        [
+          "/assets/media/responsive/lumi-elite-aurora-pool-640.webp",
+          640
+        ],
+        [
+          "/assets/media/responsive/lumi-elite-aurora-pool-960.webp",
+          960
+        ],
+        [
+          "/assets/media/responsive/lumi-elite-aurora-pool-1600.webp",
+          1600
+        ]
+      ],
+      "avif": [
+        [
+          "/assets/media/responsive/lumi-elite-aurora-pool-640.avif",
+          640
+        ],
+        [
+          "/assets/media/responsive/lumi-elite-aurora-pool-960.avif",
+          960
+        ],
+        [
+          "/assets/media/responsive/lumi-elite-aurora-pool-1600.avif",
+          1600
+        ]
+      ]
+    },
+    "width": 1600,
+    "height": 1236
+  },
+  "/assets/media/progress/lumi-hanoi-tien-do-thang-07-2026-tong-the.webp": {
+    "sources": {
+      "webp": [
+        [
+          "/assets/media/responsive/lumi-hanoi-tien-do-thang-07-2026-tong-the-640.webp",
+          640
+        ],
+        [
+          "/assets/media/responsive/lumi-hanoi-tien-do-thang-07-2026-tong-the-960.webp",
+          960
+        ],
+        [
+          "/assets/media/responsive/lumi-hanoi-tien-do-thang-07-2026-tong-the-1600.webp",
+          1600
+        ]
+      ],
+      "avif": [
+        [
+          "/assets/media/responsive/lumi-hanoi-tien-do-thang-07-2026-tong-the-640.avif",
+          640
+        ],
+        [
+          "/assets/media/responsive/lumi-hanoi-tien-do-thang-07-2026-tong-the-960.avif",
+          960
+        ],
+        [
+          "/assets/media/responsive/lumi-hanoi-tien-do-thang-07-2026-tong-the-1600.avif",
+          1600
+        ]
+      ]
+    },
+    "width": 1600,
+    "height": 1200
+  }
+}

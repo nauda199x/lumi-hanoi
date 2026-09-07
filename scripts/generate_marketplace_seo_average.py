@@ -120,6 +120,8 @@ def main() -> None:
     gen.main()
     update_price_methodology_copy()
     remove_rental_ppsm_display()
+    from optimize_responsive_photos import apply_markup
+    apply_markup()
     print("Market price page: arithmetic-average methodology applied; rental price/m² hidden")
 
 

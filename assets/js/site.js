@@ -250,8 +250,10 @@
 
   const reveals=[...document.querySelectorAll('[data-reveal]')];
   if(reveals.length&&'IntersectionObserver' in window&&!matchMedia('(prefers-reduced-motion: reduce)').matches){
+    // Content already in view must paint immediately, especially the LCP hero.
+    reveals.forEach(element=>{if(element.getBoundingClientRect().top<window.innerHeight)element.classList.add('is-visible');});
     document.documentElement.classList.add('reveal-ready');
-    const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('is-visible');observer.unobserve(entry.target);}}),{rootMargin:'0px 0px -8%'});
+    const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('is-visible');observer.unobserve(entry.target);}}),{rootMargin:'0px 0px 64px 0px'});
     reveals.forEach(element=>observer.observe(element));
   }
 
@@ -330,3 +332,58 @@
   }
 })();
 if(document.querySelector('.tower-floor-index')||document.querySelector('[data-floor-plan-app]')){const floorPickerScript=document.createElement('script');floorPickerScript.src='/assets/js/floor-plan-mobile.js';document.head.append(floorPickerScript)}
+
+/* Small, intent-based navigation hints; never prefetch forms or live APIs. */
+(()=>{
+  const routes=new Set(['/mat-bang-lumi-hanoi/','/gia-can-ho-lumi-hanoi/','/giao-dich-lumi-hanoi/','/mua-ban-lumi-hanoi/','/cho-thue-lumi-hanoi/']);
+  const prefetched=new Set();
+  const pendingLinks=new Set();
+  let hoverTimer,clearTimer,ready=document.readyState==='complete';
+  window.addEventListener('load',()=>{ready=true;},{once:true});
+  const targetFor=target=>{
+    const link=target?.closest?.('a[href]');
+    if(!link||link.hasAttribute('download')||(link.target&&link.target!=='_self'))return null;
+    try{
+      const url=new URL(link.href,location.href);
+      if(url.origin!==location.origin||!routes.has(url.pathname)||url.search||url.pathname===location.pathname)return null;
+      return {link,url};
+    }catch{return null;}
+  };
+  const prefetch=target=>{
+    const candidate=targetFor(target),connection=navigator.connection;
+    if(!ready||!candidate||document.visibilityState==='hidden'||connection?.saveData||/^(slow-2g|2g|3g)$/.test(connection?.effectiveType||''))return;
+    const href=candidate.url.origin+candidate.url.pathname;
+    if(prefetched.size>=3||prefetched.has(href))return;
+    const hint=document.createElement('link');
+    if(hint.relList?.supports&&!hint.relList.supports('prefetch'))return;
+    hint.rel='prefetch';hint.as='document';hint.href=href;
+    prefetched.add(href);document.head.append(hint);
+  };
+  document.addEventListener('pointerover',event=>{
+    clearTimeout(hoverTimer);
+    const candidate=targetFor(event.target);
+    if(candidate)hoverTimer=setTimeout(()=>prefetch(candidate.link),100);
+  },{passive:true});
+  document.addEventListener('pointerout',event=>{
+    const candidate=targetFor(event.target);
+    if(candidate&&!candidate.link.contains(event.relatedTarget))clearTimeout(hoverTimer);
+  },{passive:true});
+  document.addEventListener('focusin',event=>prefetch(event.target));
+  document.addEventListener('pointerdown',event=>{if(event.pointerType==='touch')prefetch(event.target);},{passive:true});
+  const clearPending=()=>{
+    clearTimeout(clearTimer);
+    pendingLinks.forEach(link=>{link.removeAttribute('data-navigation-pending');link.removeAttribute('aria-busy');});
+    pendingLinks.clear();
+  };
+  document.addEventListener('click',event=>{
+    if(event.defaultPrevented||event.button||event.ctrlKey||event.metaKey||event.shiftKey||event.altKey)return;
+    const candidate=targetFor(event.target);
+    if(!candidate||!candidate.link.closest('.inventory-tabs'))return;
+    clearPending();
+    candidate.link.setAttribute('data-navigation-pending','');
+    candidate.link.setAttribute('aria-busy','true');pendingLinks.add(candidate.link);
+    // Native navigation is preserved; also recover if a navigation is cancelled.
+    clearTimer=setTimeout(clearPending,10000);
+  });
+  window.addEventListener('pageshow',clearPending);
+})();

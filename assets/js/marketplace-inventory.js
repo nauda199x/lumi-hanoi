@@ -17,7 +17,7 @@
   const quick=root.querySelector("[data-inventory-quick]");
   const towers={Signature:["S1","S2","S3","S5","S6"],Prestige:["P1","P2"],Elite:["E1","E2"]};
   const keys=["keyword","phase","tower","bedroom","max_price","area","sort"];
-  let page=1,version=0,timer,controller,total=0,initial=true;
+  let page=1,version=0,timer,controller,total=0;
   const el=(tag,cls,text)=>{const n=document.createElement(tag);n.className=cls||"";if(text!==undefined)n.textContent=text;return n;};
   const values=()=>Object.fromEntries(new FormData(form));
   const filters=()=>{const v=values();return {...v,maxPrice:v.max_price};};
@@ -135,25 +135,47 @@
     state.querySelector("[data-state-copy]").textContent=copy;
     state.querySelector("[data-inventory-retry]").hidden=!retry;
   };
+  const skeletonRow=()=>{
+    const row=el("div","inventory-row inventory-skeleton-row");
+    row.setAttribute("aria-hidden","true");
+    for(const name of ["media","info","price","poster","actions"]){
+      const part=el("div",`inventory-${name}`);
+      const lines=name==="info"?3:name==="media"?1:2;
+      for(let i=0;i<lines;i++)part.append(el("span","inventory-skeleton-line"));
+      row.append(part);
+    }
+    return row;
+  };
+  const setLoading=loading=>{
+    root.setAttribute("aria-busy",String(loading));
+    grid.inert=loading;
+    pager.inert=loading;
+    grid.classList.toggle("is-updating",loading);
+    if(loading){
+      state.hidden=true;
+      summary.textContent="Đang cập nhật kết quả…";
+      // Keep the previous layout while the request runs. Its links are inert
+      // and the pending state is explicit, so it cannot act as filtered data.
+      if(!grid.querySelector(".inventory-row")){
+        grid.replaceChildren(...Array.from({length:3},skeletonRow));
+      }
+    }
+  };
+  grid.addEventListener("click",event=>{
+    if(root.getAttribute("aria-busy")==="true")event.preventDefault();
+  },true);
   const load=async({scroll=false}={})=>{
     const requestVersion=++version;controller?.abort();controller=new AbortController();
-    root.setAttribute("aria-busy","true");
+    setLoading(true);
     const requestController=controller;
     const timeout=setTimeout(()=>requestController.abort(),15000);
-    // Never leave stale cards visible under a newly selected filter.
-    const keepStatic=initial&&grid.querySelector("[data-static-listing-card]")&&!keys.some(k=>values()[k]&&!(k==="sort"&&values()[k]==="newest"))&&!new URLSearchParams(location.search).has("page");
-    initial=false;
-    if(!keepStatic){
-      grid.replaceChildren(...Array.from({length:3},()=>el("div","inventory-skeleton")));
-      state.hidden=true;pager.hidden=true;summary.textContent="Đang tải quỹ căn…";
-    }
     try{
       const result=await api.listPublicPage(type,filters(),page,{signal:controller.signal});
       if(requestVersion!==version)return;
       total=result.total;
       const last=Math.max(1,Math.ceil(total/10));
       if(page>last){page=last;updateUrl(true);return load({scroll});}
-      grid.replaceChildren(...result.rows.map(rowFor));count.textContent=`${total} tin đăng`;
+      grid.replaceChildren(...result.rows.map(rowFor));state.hidden=true;count.textContent=`${total} tin đăng`;
       const schema=document.querySelector("[data-inventory-schema]");
       if(schema)schema.textContent=JSON.stringify({"@context":"https://schema.org","@type":"ItemList",numberOfItems:result.rows.length,itemListElement:result.rows.map((row,i)=>({"@type":"ListItem",position:(page-1)*10+i+1,url:`https://lumi-hanoi.com${api.listingUrl(row)}`,name:row.title}))});
       if(!total){
@@ -166,11 +188,11 @@
       if(requestVersion!==version)return;
       count.textContent="Chưa tải được dữ liệu";summary.textContent="";
       showState("Chưa thể tải quỹ căn","Vui lòng kiểm tra kết nối và thử lại.",true);
-    }finally{clearTimeout(timeout);if(requestVersion===version)root.setAttribute("aria-busy","false");}
+    }finally{clearTimeout(timeout);if(requestVersion===version)setLoading(false);}
   };
   const changed=(delay=0)=>{
     clearTimeout(timer);++version;controller?.abort();page=1;updateUrl(delay>0);
-    count.textContent="Đang tải…";grid.replaceChildren();pager.hidden=true;state.hidden=true;
+    count.textContent="Đang tải…";setLoading(true);
     syncControls();
     timer=setTimeout(()=>load(),delay);
   };
@@ -188,6 +210,7 @@
   });
   form.addEventListener("keydown",e=>{if(e.key==="Escape"&&toggle.getAttribute("aria-expanded")==="true"){toggle.click();toggle.focus();}});
   pager.addEventListener("click",e=>{
+    if(root.getAttribute("aria-busy")==="true"){e.preventDefault();return;}
     const a=e.target.closest("a[data-page]");if(!a||e.button||e.ctrlKey||e.metaKey||e.shiftKey||e.altKey)return;
     e.preventDefault();clearTimeout(timer);page=Number(a.dataset.page);updateUrl();load({scroll:true});
   });

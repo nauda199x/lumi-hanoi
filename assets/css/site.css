@@ -532,3 +532,12 @@ h3{font-weight:600;line-height:1.2;letter-spacing:-.02em}
 /* Keep the homepage CTA links above non-interactive hero artwork. */
 .home-hero-media,.home-hero:before,.home-hero:after{pointer-events:none}
 .home-hero .container{z-index:2}
+
+/* Performance and restrained motion, September 2026. */
+picture.responsive-photo{display:contents}
+.reveal-ready [data-reveal]{transform:translateY(10px);transition:opacity .28s ease,transform .28s ease}
+.reveal-ready [data-reveal].is-visible{transform:none}
+:where(.btn,.nav-links a,.journey-card,.collection-feature):focus-visible{outline:2px solid var(--bronze,#956536);outline-offset:4px}
+.btn:active{transform:translateY(0) scale(.985)}
+@media(hover:hover) and (pointer:fine){.btn:hover{box-shadow:0 4px 12px #17221c12}}
+@media(prefers-reduced-motion:reduce){.reveal-ready [data-reveal]{opacity:1;transform:none;transition:none}.btn:active{transform:none}}

@@ -326,6 +326,8 @@ def main() -> None:
     phase_modified = sync_phase_pages(listings, today)
     sync_phase_guide_ctas()
     sync_sitemap(phase_modified, hub_modified)
+    from optimize_responsive_photos import apply_markup
+    apply_markup()
     counts = {item["phase"]: len(phase_rows(listings, item["phase"])) for item in PHASES}
     print("Rental hub authority cluster synced:", counts)
 

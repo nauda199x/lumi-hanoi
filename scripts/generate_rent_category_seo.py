@@ -427,6 +427,8 @@ def main() -> None:
     category_modified = sync_categories(listings, today)
     hub_modified = sync_hub(listings, today)
     sync_sitemap(category_modified, hub_modified)
+    from optimize_responsive_photos import apply_markup
+    apply_markup()
     counts = {item["unit"]: sum(1 for row in listings if clean(row.get("unit_type")) == item["unit"]) for item in CATEGORIES}
     print("Rental SEO cluster synced:", counts)
 
