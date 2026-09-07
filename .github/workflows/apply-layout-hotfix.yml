@@ -1,0 +1,86 @@
+name: Apply global layout hotfix
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/apply-layout-hotfix.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  update-shared-css-version:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Audit and update shared layout stylesheet references
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          root = Path('.')
+          token = '20260907-layoutfix1'
+          exts = {'.html', '.js', '.mjs', '.cjs', '.json', '.xml', '.md'}
+          changed = []
+          html_count = 0
+          shared_css_pages = 0
+          sidebar_pages = []
+          pattern = re.compile(r'/assets/css/site\.css(?:\?v=[^"\'<>\s]+)?')
+
+          for path in root.rglob('*'):
+              if not path.is_file() or path.suffix.lower() not in exts:
+                  continue
+              if any(part in {'.git', 'node_modules'} for part in path.parts):
+                  continue
+              try:
+                  text = path.read_text(encoding='utf-8')
+              except UnicodeDecodeError:
+                  continue
+
+              if path.suffix.lower() == '.html':
+                  html_count += 1
+                  if '/assets/css/site.css' in text:
+                      shared_css_pages += 1
+                  if 'article-layout--with-sidebar' in text:
+                      sidebar_pages.append(path.as_posix())
+
+              new_text = pattern.sub(f'/assets/css/site.css?v={token}', text)
+              if new_text != text:
+                  path.write_text(new_text, encoding='utf-8')
+                  changed.append(path.as_posix())
+
+          stale = []
+          for path in root.rglob('*.html'):
+              if any(part in {'.git', 'node_modules'} for part in path.parts):
+                  continue
+              text = path.read_text(encoding='utf-8')
+              if '/assets/css/site.css' in text and f'/assets/css/site.css?v={token}' not in text:
+                  stale.append(path.as_posix())
+
+          print(f'HTML audited: {html_count}')
+          print(f'HTML pages using shared site.css: {shared_css_pages}')
+          print(f'Pages using article layout with sidebar: {len(sidebar_pages)}')
+          for p in sidebar_pages:
+              print(f'  sidebar-layout: {p}')
+          print(f'Files cache-busted: {len(changed)}')
+          if stale:
+              raise SystemExit('Stale shared stylesheet references remain:\n' + '\n'.join(stale))
+          PY
+      - name: Commit cache-bust across generated and source pages
+        shell: bash
+        run: |
+          if git diff --quiet; then
+            echo "No stylesheet references needed updating."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Apply layout stylesheet cache-bust across site"
+          git pull --rebase origin main
+          git push origin HEAD:main
