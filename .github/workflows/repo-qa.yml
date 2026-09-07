@@ -64,6 +64,8 @@ jobs:
           python scripts/qa_inventory.py
           node --test scripts/qa_inventory_api.cjs
           node --check assets/js/marketplace-inventory.js
+      - name: Admin pagination, moderation and access QA
+        run: node --test scripts/qa_admin_api.cjs scripts/qa_admin_ui.cjs
       - name: Validate data and JavaScript syntax
         run: |
           python -m json.tool assets/data/floor-plans.json >/dev/null
