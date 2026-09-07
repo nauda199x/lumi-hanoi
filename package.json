@@ -3,8 +3,8 @@
   "private": true,
   "scripts": {
     "dev": "vite",
-    "test": "node --test scripts/qa_inventory_api.cjs && python scripts/qa_inventory.py",
-    "build": "npm test && node --check assets/js/marketplace-inventory.js && node --check assets/js/marketplace-list.js"
+    "test": "node --test scripts/qa_inventory_api.cjs scripts/qa_admin_api.cjs scripts/qa_admin_ui.cjs && python scripts/qa_inventory.py",
+    "build": "npm test && node --check assets/js/marketplace-inventory.js && node --check assets/js/marketplace-list.js && node --check assets/js/marketplace-admin.js && node --check assets/js/marketplace-api.js"
   },
   "devDependencies": {
     "vite": "8.2.2"

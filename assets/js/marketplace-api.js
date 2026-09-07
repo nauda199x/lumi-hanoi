@@ -67,21 +67,25 @@
     try{return JSON.parse(sessionStorage.getItem(sessionKey)||"null");}catch{return null;}
   };
   const saveSession=session=>{
-    if(session)sessionStorage.setItem(sessionKey,JSON.stringify(session));
+    if(session)sessionStorage.setItem(sessionKey,JSON.stringify({...session,expires_at:session.expires_at||(Math.floor(Date.now()/1000)+Number(session.expires_in||3600))}));
     else sessionStorage.removeItem(sessionKey);
   };
+  let refreshInFlight=null;
   const refreshSession=async session=>{
     if(!session?.refresh_token)return null;
-    try{
+    if(refreshInFlight)return refreshInFlight;
+    refreshInFlight=(async()=>{try{
       const refreshed=await request("/auth/v1/token?grant_type=refresh_token",{method:"POST",body:{refresh_token:session.refresh_token}});
       saveSession(refreshed);
       return refreshed;
-    }catch{saveSession(null);return null;}
+    }catch{saveSession(null);return null;}})();
+    try{return await refreshInFlight;}finally{refreshInFlight=null;}
   };
   const validSession=async()=>{
     let session=getSession();
     if(!session)return null;
-    const expiresAt=Number(session.expires_at||0);
+    let expiresAt=Number(session.expires_at||0);
+    if(!expiresAt){saveSession(session);session=getSession();expiresAt=Number(session.expires_at);}
     if(expiresAt&&expiresAt-Date.now()/1000<90)session=await refreshSession(session);
     return session;
   };
@@ -214,10 +218,104 @@
     if(!session)throw new MarketplaceError("Phiên quản trị đã hết hạn.",401);
     return request(restPath("listings",{select:"*,listing_images(*),listing_reports(id,reason,details,created_at)",order:"created_at.desc",limit:"300"}),{token:session.access_token});
   };
-  const updateListing=async(id,patch)=>{
+  const updateListing=async(id,patch,expectedUpdatedAt)=>{
     const session=await requireAdmin();
     if(!session)throw new MarketplaceError("Phiên quản trị đã hết hạn.",401);
-    return request(restPath("listings",{id:`eq.${id}`}),{method:"PATCH",body:patch,token:session.access_token,headers:{Prefer:"return=minimal"}});
+    const params={id:`eq.${id}`};
+    if(expectedUpdatedAt)params.updated_at=`eq.${expectedUpdatedAt}`;
+    const result=await request(restPath("listings",params),{method:"PATCH",body:patch,token:session.access_token,headers:{Prefer:"return=representation"}});
+    if(!Array.isArray(result)||result.length!==1)throw new MarketplaceError("Tin đã thay đổi hoặc không còn tồn tại. Tải lại tin để kiểm tra trước khi lưu.",409);
+    return result[0];
+  };
+
+  // Admin queries filter the entire inventory before paging. List payloads only
+  // include one thumbnail and one open-report marker; full content is on demand.
+  const adminParams=(filters={},now=new Date())=>{
+    const params={};const clauses=[];const stamp=now.toISOString();
+    const status=filters.status||"";
+    if(status==="approved")clauses.push("status.eq.approved",`or(expires_at.is.null,expires_at.gt.${stamp})`);
+    else if(status==="expired")clauses.push(`or(status.eq.expired,and(status.eq.approved,expires_at.lte.${stamp}))`);
+    else if(status==="expiring")clauses.push("status.eq.approved",`expires_at.gt.${stamp}`,`expires_at.lte.${new Date(now.getTime()+7*86400000).toISOString()}`);
+    else if(["pending","rejected","sold","rented"].includes(status))params.status=`eq.${status}`;
+    if(["sale","rent"].includes(filters.type))params.listing_type=`eq.${filters.type}`;
+    if(["Signature","Prestige","Elite"].includes(filters.phase))params.phase=`eq.${filters.phase}`;
+    if(["S1","S2","S3","S5","S6","P1","P2","E1","E2"].includes(filters.tower))params.tower=`eq.${filters.tower}`;
+    if(["1PN","2PN","3PN","4PN","Duplex","Penthouse","Shop chân đế"].includes(filters.unit_type))params.unit_type=`eq.${filters.unit_type}`;
+    if(filters.featured==="yes")params.is_featured="eq.true";
+    const keyword=cleanText(filters.keyword,100);
+    if(keyword){
+      const quoted=value=>JSON.stringify(`%${value.replace(/[\\%_*]/g,"\\$&")}%`);
+      const terms=["title","slug","listing_code","poster_name","contact_phone","tower"].map(field=>`${field}.ilike.${quoted(keyword)}`);
+      const phone=keyword.replace(/[\s().-]/g,"");
+      if(/^\+?\d{6,15}$/.test(phone)&&phone!==keyword)terms.push(`contact_phone.ilike.${quoted(phone)}`);
+      clauses.push(`or(${terms.join(",")})`);
+    }
+    if(clauses.length)params.and=`(${clauses.join(",")})`;
+    return params;
+  };
+  const adminToken=async()=>{
+    const session=await requireAdmin();
+    if(!session)throw new MarketplaceError("Phiên quản trị đã hết hạn. Vui lòng đăng nhập lại.",401);
+    return session;
+  };
+  const listAdminPage=async(filters={},page=1,{pageSize=20,signal}={})=>{
+    const session=await adminToken();
+    const size=[20,50,100].includes(Number(pageSize))?Number(pageSize):20;
+    const orders={newest:"created_at.desc,id.desc",oldest:"created_at.asc,id.asc",updated:"updated_at.desc,id.desc",expiry:"expires_at.asc.nullslast,id.desc"};
+    const params={...adminParams(filters),
+      select:"id,listing_code,slug,listing_type,status,title,phase,tower,unit_type,area_sqm,price_vnd,poster_name,contact_phone,contact_public,is_featured,sort_priority,approved_at,expires_at,created_at,updated_at,listing_images(storage_path,sort_order),open_reports:listing_reports(id)",
+      order:orders[filters.sort]||orders.newest,limit:String(size),offset:String((Math.max(1,Math.min(100000,Math.floor(Number(page)||1)))-1)*size),
+      "listing_images.order":"sort_order.asc,id.asc","listing_images.limit":"1","open_reports.resolved_at":"is.null","open_reports.limit":"1"
+    };
+    if(filters.status==="reported")params.open_reports="not.is.null";
+    return request(restPath("listings",params),{token:session.access_token,signal,withCount:true,headers:{Prefer:"count=exact"}});
+  };
+  const adminCounts=async({signal}={})=>{
+    const session=await adminToken();const now=new Date();
+    const entries=await Promise.all(["all","pending","approved","expiring","reported"].map(async key=>{
+      const params={...adminParams({status:key},now),select:"id",limit:"1"};
+      if(key==="reported")Object.assign(params,{select:"id,open_reports:listing_reports()","open_reports.resolved_at":"is.null",open_reports:"not.is.null"});
+      const result=await request(restPath("listings",params),{method:"HEAD",token:session.access_token,signal,withCount:true,headers:{Prefer:"count=exact"}});
+      return [key,result.total];
+    }));
+    return Object.fromEntries(entries);
+  };
+  const getAdminListing=async(id,{signal}={})=>{
+    const session=await adminToken();
+    const result=await request(restPath("listings",{id:`eq.${cleanText(id,50)}`,select:"*,listing_images(*),listing_reports(id,reason,details,created_at,resolved_at)","listing_images.order":"sort_order.asc,id.asc","listing_reports.order":"created_at.desc",limit:"1"}),{token:session.access_token,signal});
+    if(!result?.length)throw new MarketplaceError("Tin không còn tồn tại hoặc bạn không có quyền truy cập.",404);
+    return result[0];
+  };
+  const applyAdminAction=async(items,action,{onProgress}={})=>{
+    if(!Array.isArray(items)||!items.length||items.length>100)throw new MarketplaceError("Chọn từ 1 đến 100 tin trên trang hiện tại.",400);
+    if(!["approve","hide","reject","done","feature","unfeature"].includes(action))throw new MarketplaceError("Thao tác không hợp lệ.",400);
+    const session=await adminToken();const success=[];const failed=[];
+    const stamp=new Date().toISOString();
+    const expiry=new Date(Date.now()+Number(config.listingLifetimeDays||45)*86400000).toISOString();
+    const queue=[...new Map(items.map(item=>[item.id,item])).values()];
+    let next=0;
+    const work=async()=>{while(next<queue.length){
+      const row=queue[next++];
+      try{
+        if(!row.updated_at)throw new MarketplaceError("Cần tải lại tin trước khi thao tác.",409);
+        if(action==="approve"&&!row.contact_public)throw new MarketplaceError("Người đăng chưa đồng ý công khai liên hệ.",400);
+        if(action==="feature"&&(row.status!=="approved"||(row.expires_at&&new Date(row.expires_at)<=new Date())))throw new MarketplaceError("Chỉ ghim tin đang hiển thị.",400);
+        const patches={approve:{status:"approved",approved_at:row.approved_at||stamp,expires_at:expiry},hide:{status:"expired",expires_at:stamp,is_featured:false,sort_priority:0},reject:{status:"rejected",is_featured:false,sort_priority:0},done:{status:row.listing_type==="rent"?"rented":"sold",is_featured:false,sort_priority:0},feature:{is_featured:true,sort_priority:100},unfeature:{is_featured:false,sort_priority:0}};
+        const changed=await request(restPath("listings",{id:`eq.${row.id}`,updated_at:`eq.${row.updated_at}`,select:"id"}),{method:"PATCH",body:patches[action],token:session.access_token,headers:{Prefer:"return=representation"}});
+        if(!Array.isArray(changed)||changed.length!==1)throw new MarketplaceError("Tin đã thay đổi. Tải lại để kiểm tra.",409);
+        success.push(row.id);
+      }catch(error){failed.push({id:row.id,code:row.listing_code,message:error.message});}
+      onProgress?.({done:success.length+failed.length,total:queue.length});
+    }};
+    await Promise.all(Array.from({length:Math.min(3,queue.length)},work));
+    return {success,failed};
+  };
+  const resolveAdminReports=async(listingId,reportIds)=>{
+    const ids=[...new Set(reportIds)].filter(id=>/^\d+$/.test(String(id)));
+    if(!ids.length)return 0;
+    const session=await adminToken();
+    const changed=await request(restPath("listing_reports",{listing_id:`eq.${listingId}`,id:`in.(${ids.join(",")})`,resolved_at:"is.null",select:"id"}),{method:"PATCH",body:{resolved_at:new Date().toISOString(),resolved_by:session.user.id},token:session.access_token,headers:{Prefer:"return=representation"}});
+    return changed?.length||0;
   };
   const deleteListing=async listing=>{
     const session=await requireAdmin();
@@ -250,6 +348,7 @@
   window.LumiMarketplace={
     config,configured,MarketplaceError,cleanText,slugify,formatCurrency,imageUrl,listingUrl,
     listPublic,listPublicPage,getPublicListing,createListing,uploadImage,addListingImage,createReport,
-    signIn,signOut,requireAdmin,listAdmin,updateListing,deleteListing,requestSeoSync
+    signIn,signOut,requireAdmin,listAdmin,updateListing,deleteListing,requestSeoSync,
+    listAdminPage,adminCounts,getAdminListing,applyAdminAction,resolveAdminReports
   };
 })();
