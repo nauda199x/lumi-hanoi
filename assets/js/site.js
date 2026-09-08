@@ -54,7 +54,7 @@
   if(!document.querySelector('link[data-lumi-premium-ui]')){
     const premiumStyles=document.createElement('link');
     premiumStyles.rel='stylesheet';
-    premiumStyles.href='/assets/css/lumi-premium-ui.css?v=20260903-marketplace-mobile1';
+    premiumStyles.href='/assets/css/lumi-premium-ui.css?v=20260908-navmarket1';
     premiumStyles.dataset.lumiPremiumUi='true';
     document.head.append(premiumStyles);
   }
@@ -94,6 +94,7 @@
       }
     }
     const transactionDropdown=[...nav.querySelectorAll('.nav-dropdown')].find(item=>item.querySelector('summary')?.textContent.trim()==='Giao dịch');
+    transactionDropdown?.classList.add('nav-market');
     if(transactionDropdown&&!transactionDropdown.querySelector('a[href="/dang-tin-lumi-hanoi/"]')){
       const submitLink=document.createElement('a');
       submitLink.href='/dang-tin-lumi-hanoi/';
@@ -156,14 +157,16 @@
       if(window.innerWidth>1000&&nav.getAttribute('data-open')==='true')setMenuOpen(false);
     },{passive:true});
 
-    if(!nav.querySelector('.nav-direct-cta')){
-      const directCta=document.createElement('a');
+    let directCta=nav.querySelector('.nav-direct-cta');
+    if(!directCta){
+      directCta=document.createElement('a');
       directCta.className='nav-direct-cta';
       directCta.href='/dang-tin-lumi-hanoi/';
       directCta.textContent='Đăng tin';
       if(location.pathname==='/dang-tin-lumi-hanoi/')directCta.setAttribute('aria-current','page');
       nav.append(directCta);
     }
+    if(overviewLink&&directCta)overviewLink.after(directCta);
   }
 
   const siteHeader=document.querySelector('.site-header');
