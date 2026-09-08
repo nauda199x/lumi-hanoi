@@ -13,6 +13,8 @@ FORBIDDEN_TEXT = (
     "nguồn kiểm chứng",
     "bản nguồn",
 )
+# Phase masterplan generation strips legacy source-credit markup before commit;
+# keep this public-output guard strict so those credits cannot regress.
 FORBIDDEN_MARKUP = (
     'class="source-list"',
     'class="figure-source"',
