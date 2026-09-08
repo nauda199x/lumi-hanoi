@@ -58,6 +58,13 @@
     premiumStyles.dataset.lumiPremiumUi='true';
     document.head.append(premiumStyles);
   }
+  if(!document.querySelector('link[data-market-nav-priority]')){
+    const marketNavStyles=document.createElement('link');
+    marketNavStyles.rel='stylesheet';
+    marketNavStyles.href='/assets/css/nav-marketplace-priority.css?v=20260908-1';
+    marketNavStyles.dataset.marketNavPriority='true';
+    document.head.append(marketNavStyles);
+  }
 
   const button=document.querySelector('[data-nav-toggle]');
   const nav=document.querySelector('[data-nav-links]');
