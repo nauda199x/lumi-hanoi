@@ -86,3 +86,11 @@ items, banking charges, private brokerage/service fees and other legitimate
 separate services. It does not infer fee-free treatment for every Lumi Hanoi
 transaction. Current notarization and administrative amounts must be checked at
 the actual transaction date rather than frozen into the editorial copy.
+
+## Handover photo article — published 2026-09-08
+
+- Existing article: `/tin-tuc/lumi-hanoi-ban-giao-khi-nao/`.
+- Source: 11 real photos supplied by the site owner in this task; the owner explicitly approved publishing the article and all photos to the public `nauda199x/lumi-hanoi` repository for lumi-hanoi.com on 2026-09-08.
+- Detailed source-to-asset mapping: [handover-photos-20260907.md](handover-photos-20260907.md). Original compositions are preserved; WebP derivatives only resize and compress.
+- Capture dates and tower/phase attributions are unverified. The editorial update date is not a photo capture date, and the images do not establish whole-project handover or amenity opening.
+- Construction-status reference: https://www.capitaland.com/sites/lumihanoi/vn/progress/, reviewed 2026-09-07, latest entry observed July 2026.
