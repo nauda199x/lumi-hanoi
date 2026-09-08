@@ -1,0 +1,110 @@
+name: Sync phase masterplans
+
+on:
+  push:
+    paths:
+      - '.github/workflows/sync-phase-masterplans.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync-masterplans:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Prepare image tools
+        run: python -m pip install --disable-pip-version-check pillow gdown
+
+      - name: Download source plans from Drive
+        run: |
+          mkdir -p /tmp/lumi-plans assets/media/floor-plans
+          gdown --id 1FvjlIjErGhvMP7kjbfUm1EmxKT9mNBMJ -O /tmp/lumi-plans/prestige.jpg
+          gdown --id 1CsOkA0Hmz2fsFshdjFEhhUHsqqsWFO5Z -O /tmp/lumi-plans/elite.jpg
+          test -s /tmp/lumi-plans/prestige.jpg
+          test -s /tmp/lumi-plans/elite.jpg
+
+      - name: Optimize plans for web
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from PIL import Image, ImageEnhance
+
+          jobs = [
+              (Path('/tmp/lumi-plans/prestige.jpg'), Path('assets/media/floor-plans/lumi-prestige-masterplan.webp')),
+              (Path('/tmp/lumi-plans/elite.jpg'), Path('assets/media/floor-plans/lumi-elite-masterplan.webp')),
+          ]
+          for src, dst in jobs:
+              im = Image.open(src).convert('RGB')
+              if im.width > 1800:
+                  height = round(im.height * 1800 / im.width)
+                  im = im.resize((1800, height), Image.Resampling.LANCZOS)
+              im = ImageEnhance.Contrast(im).enhance(1.03)
+              im = ImageEnhance.Sharpness(im).enhance(1.12)
+              im.save(dst, 'WEBP', quality=80, method=6)
+              print(dst, im.size, dst.stat().st_size)
+          PY
+
+      - name: Add masterplans to Prestige and Elite pages
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          pages = [
+              {
+                  'path': Path('mat-bang-lumi-hanoi/lumi-prestige/index.html'),
+                  'needle': '</header><section class="section"><div class="container"><div class="section-head">',
+                  'image': '/assets/media/floor-plans/lumi-prestige-masterplan.webp',
+                  'alt': 'Mặt bằng tổng Lumi Prestige gồm hai tòa P1 và P2 tại Lumi Hanoi',
+                  'eyebrow': 'Mặt bằng tổng · Lumi Prestige',
+                  'title': 'Mặt bằng tổng khu P — Lumi Prestige',
+                  'text': 'Bản mặt bằng tổng giúp định vị P1, P2, cảnh quan và hệ tiện ích của phân khu Prestige trước khi đi sâu vào mặt bằng từng tòa và từng nhóm tầng.',
+                  'width': '1800', 'height': '1013'
+              },
+              {
+                  'path': Path('mat-bang-lumi-hanoi/lumi-elite/index.html'),
+                  'needle': '</header><section class="section"><div class="container"><div class="section-head">',
+                  'image': '/assets/media/floor-plans/lumi-elite-masterplan.webp',
+                  'alt': 'Mặt bằng tổng Lumi Elite gồm hai tòa E1 và E2 tại Lumi Hanoi',
+                  'eyebrow': 'Mặt bằng tổng · Lumi Elite',
+                  'title': 'Mặt bằng tổng khu E — Lumi Elite',
+                  'text': 'Bản mặt bằng tổng giúp định vị E1, E2 trong toàn khu, hướng Bắc và tương quan với các tòa Signature trước khi tra cứu mặt bằng chi tiết từng tòa.',
+                  'width': '1800', 'height': '1350'
+              },
+          ]
+
+          for cfg in pages:
+              html = cfg['path'].read_text(encoding='utf-8')
+              if cfg['image'] in html:
+                  print(cfg['path'], 'already updated')
+                  continue
+              section = (
+                  '</header><section class="section floor-hub-intro"><div class="container">'
+                  '<div class="masterplan-compact">'
+                  '<div><p class="eyebrow">' + cfg['eyebrow'] + '</p><h2>' + cfg['title'] + '</h2>'
+                  '<p>' + cfg['text'] + '</p><p class="figure-source">Nguồn bản vẽ: tài liệu Lumi Hanoi / chủ đầu tư. Ảnh đã được tối ưu WebP để giữ độ nét nhưng không làm trang nặng.</p></div>'
+                  '<a class="masterplan-thumb" href="' + cfg['image'] + '" target="_blank" rel="noopener" aria-label="Mở mặt bằng tổng kích thước lớn">'
+                  '<img src="' + cfg['image'] + '" alt="' + cfg['alt'] + '" loading="eager" decoding="async" width="' + cfg['width'] + '" height="' + cfg['height'] + '">'
+                  '</a></div></div></section><section class="section"><div class="container"><div class="section-head">'
+              )
+              if cfg['needle'] not in html:
+                  raise SystemExit(f'Insertion point not found in {cfg["path"]}')
+              html = html.replace(cfg['needle'], section, 1)
+              cfg['path'].write_text(html, encoding='utf-8')
+              print('updated', cfg['path'])
+          PY
+
+      - name: Commit updated web assets
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add assets/media/floor-plans/lumi-prestige-masterplan.webp assets/media/floor-plans/lumi-elite-masterplan.webp mat-bang-lumi-hanoi/lumi-prestige/index.html mat-bang-lumi-hanoi/lumi-elite/index.html
+          if git diff --cached --quiet; then
+            echo 'No changes to commit'
+            exit 0
+          fi
+          git commit -m 'Add optimized Prestige and Elite masterplans'
+          git push
