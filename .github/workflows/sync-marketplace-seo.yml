@@ -13,6 +13,7 @@ on:
       - "scripts/generate_marketplace_seo_average.py"
       - "scripts/generate_rent_category_seo.py"
       - "scripts/strengthen_rent_hub_seo.py"
+      - "scripts/consolidate_rent_hub_serp.py"
       - "scripts/normalize_marketplace_snippet_text.py"
       - ".github/workflows/sync-marketplace-seo.yml"
 
@@ -40,6 +41,7 @@ jobs:
           python scripts/generate_rent_category_seo.py
           python scripts/strengthen_rent_hub_seo.py
           python scripts/normalize_marketplace_snippet_text.py
+          python scripts/consolidate_rent_hub_serp.py
       - name: Validate rental SEO generator syntax
         run: |
           python -m py_compile scripts/generate_marketplace_seo_average.py
@@ -47,6 +49,7 @@ jobs:
           python -m py_compile scripts/generate_rent_category_seo.py
           python -m py_compile scripts/strengthen_rent_hub_seo.py
           python -m py_compile scripts/normalize_marketplace_snippet_text.py
+          python -m py_compile scripts/consolidate_rent_hub_serp.py
       - name: Commit generated SEO pages
         run: |
           PATHS="tin-dang-lumi-hanoi mua-ban-lumi-hanoi cho-thue-lumi-hanoi cho-thue-shop-chan-de-lumi-hanoi gia-can-ho-lumi-hanoi cho-thue-can-ho-1-phong-ngu-lumi-hanoi cho-thue-can-ho-2-phong-ngu-lumi-hanoi cho-thue-can-ho-3-phong-ngu-lumi-hanoi cho-thue-can-ho-4-phong-ngu-lumi-hanoi cho-thue-duplex-lumi-hanoi cho-thue-penthouse-lumi-hanoi cho-thue-lumi-signature cho-thue-lumi-prestige cho-thue-lumi-elite lumi-signature lumi-prestige lumi-elite assets/js/marketplace-list.js sitemap.xml sitemap-tin-dang.xml"
