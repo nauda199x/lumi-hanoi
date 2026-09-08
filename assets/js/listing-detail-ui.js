@@ -36,7 +36,6 @@
       images.forEach((image,index)=>{const button=document.createElement("button");button.type="button";button.className="ld-thumb";button.setAttribute("aria-label",`Xem ảnh ${index+1}`);const thumb=document.createElement("img");thumb.src=image.src;thumb.alt="";thumb.width=88;thumb.height=66;thumb.loading="lazy";thumb.decoding="async";button.append(thumb);button.addEventListener("click",()=>go(index));buttons.push(button);thumbs.append(button);});
       stage.append(previous,next);gallery.append(thumbs);previous.addEventListener("click",()=>go(active-1));next.addEventListener("click",()=>go(active+1));
     }
-    const expand=document.createElement("button");expand.type="button";expand.className="ld-gallery-expand";expand.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M9 3H3v6m12-6h6v6M3 15v6h6m12-6v6h-6"/></svg> Xem toàn màn hình';expand.addEventListener("click",()=>images[active]?.click());stage.append(expand);
     track.addEventListener("keydown",event=>{if(event.key==="ArrowLeft"||event.key==="ArrowRight"){event.preventDefault();go(active+(event.key==="ArrowRight"?1:-1));}});
     track.addEventListener("scroll",()=>{cancelAnimationFrame(frame);frame=requestAnimationFrame(()=>update(Math.round(track.scrollLeft/(track.clientWidth||1))));},{passive:true});
     if(window.ResizeObserver)new ResizeObserver(()=>{if(width===track.clientWidth||!track.clientWidth)return;width=track.clientWidth;track.scrollTo({left:active*width,behavior:"instant"});update(active);}).observe(track);
