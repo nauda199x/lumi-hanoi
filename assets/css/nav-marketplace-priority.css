@@ -65,3 +65,450 @@
     width:58px;
   }
 }
+
+/* =========================================================
+   PREMIUM V10 — DISTINCTIVE EDITORIAL + MARKETPLACE POLISH
+   CSS-only final layer. No extra framework, WebGL or runtime dependency.
+   Goals: stronger identity, clearer hierarchy, richer depth, better mobile feel.
+   ========================================================= */
+
+:root{
+  --lumi-v10-gold:#c49a62;
+  --lumi-v10-gold-soft:#efe2d1;
+  --lumi-v10-green:#11251f;
+  --lumi-v10-green-2:#1c342c;
+  --lumi-v10-glass:rgba(255,255,255,.78);
+  --lumi-v10-hairline:rgba(17,37,31,.11);
+  --lumi-v10-shadow:0 24px 70px rgba(17,37,31,.12);
+  --lumi-v10-shadow-soft:0 14px 42px rgba(17,37,31,.08);
+}
+
+/* Sharper global composition and premium surface rhythm. */
+body.lumi-premium-portal{
+  background:
+    radial-gradient(circle at 8% 0%,rgba(196,154,98,.055),transparent 24rem),
+    var(--lumi-bg,#f6f7f5);
+}
+.lumi-premium-portal .container{isolation:isolate}
+.lumi-premium-portal .section{position:relative}
+.lumi-premium-portal .section-head h2{
+  text-wrap:balance;
+  letter-spacing:-.05em!important;
+}
+.lumi-premium-portal .section-head>p{
+  max-width:56ch;
+  line-height:1.72;
+}
+.lumi-premium-portal .lead{text-wrap:pretty}
+
+/* Header feels lighter at rest, more anchored after scroll. */
+.lumi-premium-portal .site-header{
+  border-bottom-color:rgba(17,37,31,.075)!important;
+}
+.lumi-premium-portal .site-header.is-scrolled{
+  box-shadow:0 12px 36px rgba(17,37,31,.085)!important;
+}
+.lumi-premium-portal .nav-links>a,
+.lumi-premium-portal .nav-dropdown>summary{
+  transition:background .18s ease,color .18s ease,transform .18s ease!important;
+}
+.lumi-premium-portal .nav-links>a:hover,
+.lumi-premium-portal .nav-dropdown>summary:hover{
+  transform:translateY(-1px);
+}
+
+/* Cinematic homepage hero without extra JS. */
+.lumi-premium-portal:has(.home-hero) .home-hero{
+  min-height:min(860px,calc(100svh - var(--lumi-header,74px)))!important;
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+.lumi-premium-portal:has(.home-hero) .home-hero:before{
+  background:
+    linear-gradient(90deg,rgba(7,17,14,.94) 0%,rgba(7,17,14,.72) 35%,rgba(7,17,14,.30) 67%,rgba(7,17,14,.06) 100%),
+    linear-gradient(0deg,rgba(7,17,14,.84) 0%,rgba(7,17,14,.10) 58%)!important;
+}
+.lumi-premium-portal:has(.home-hero) .home-hero .container{
+  max-width:1280px;
+  padding-bottom:clamp(4rem,8vh,6.5rem)!important;
+}
+.lumi-premium-portal:has(.home-hero) .home-hero .container:before{
+  content:"LUMI HANOI · WEST HANOI";
+  display:block;
+  width:max-content;
+  max-width:100%;
+  margin-bottom:1.15rem;
+  padding:7px 11px;
+  border:1px solid rgba(231,203,165,.33);
+  border-radius:999px;
+  background:rgba(12,30,24,.28);
+  color:#ead0ad;
+  font-size:.65rem;
+  font-weight:800;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  backdrop-filter:blur(8px);
+}
+.lumi-premium-portal:has(.home-hero) .home-hero h1{
+  max-width:6.4ch!important;
+  text-wrap:balance;
+  text-shadow:0 16px 50px rgba(0,0,0,.24)!important;
+}
+.lumi-premium-portal:has(.home-hero) .home-hero .lead{
+  max-width:620px!important;
+  margin-top:1.5rem!important;
+  color:rgba(247,249,247,.88)!important;
+}
+.lumi-premium-portal:has(.home-hero) .home-hero .hero-actions{
+  margin-top:1.7rem!important;
+}
+.lumi-premium-portal:has(.home-hero) .home-hero .btn{
+  min-height:50px;
+  padding-inline:20px!important;
+  border-radius:12px!important;
+}
+.lumi-premium-portal:has(.home-hero) .home-hero .btn-market-post{
+  box-shadow:0 14px 34px rgba(215,176,116,.18)!important;
+}
+
+/* Editorial section numbering creates a recognisable Lumi rhythm. */
+.lumi-premium-portal:has(.home-hero) main{counter-reset:lumi-section}
+.lumi-premium-portal:has(.home-hero) main>section.section{
+  counter-increment:lumi-section;
+}
+.lumi-premium-portal:has(.home-hero) main>section.section>.container{
+  position:relative;
+}
+@media(min-width:1180px){
+  .lumi-premium-portal:has(.home-hero) main>section.section>.container:before{
+    content:"0" counter(lumi-section);
+    position:absolute;
+    top:.15rem;
+    left:-48px;
+    color:rgba(17,37,31,.28);
+    font-size:.66rem;
+    font-weight:850;
+    letter-spacing:.14em;
+    writing-mode:vertical-rl;
+  }
+}
+
+/* Marketplace spotlight: the posting path becomes the visual anchor. */
+.lumi-premium-portal .marketplace-spotlight{
+  position:relative;
+  overflow:hidden;
+  background:
+    radial-gradient(circle at 83% 12%,rgba(196,154,98,.16),transparent 25rem),
+    linear-gradient(180deg,#f2efe8 0%,#f7f6f2 100%)!important;
+}
+.lumi-premium-portal .marketplace-spotlight:before{
+  content:"";
+  position:absolute;
+  width:520px;
+  height:520px;
+  right:-300px;
+  top:-250px;
+  border:1px solid rgba(168,121,67,.18);
+  border-radius:50%;
+  box-shadow:0 0 0 72px rgba(168,121,67,.035),0 0 0 145px rgba(168,121,67,.025);
+  pointer-events:none;
+}
+.lumi-premium-portal .marketplace-intro h2{max-width:12ch!important}
+.lumi-premium-portal .marketplace-grid{gap:16px!important}
+.lumi-premium-portal .market-card{
+  position:relative;
+  overflow:hidden;
+  min-height:210px!important;
+  padding:25px!important;
+  border-radius:20px!important;
+  box-shadow:0 12px 34px rgba(17,37,31,.065);
+  transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease!important;
+}
+.lumi-premium-portal .market-card:after{
+  content:"↗";
+  position:absolute;
+  top:20px;
+  right:21px;
+  width:34px;
+  height:34px;
+  display:grid;
+  place-items:center;
+  border:1px solid currentColor;
+  border-radius:50%;
+  font-size:.9rem;
+  opacity:.55;
+  transition:transform .2s ease,opacity .2s ease;
+}
+.lumi-premium-portal .market-card:hover{
+  transform:translateY(-5px)!important;
+  box-shadow:var(--lumi-v10-shadow)!important;
+}
+.lumi-premium-portal .market-card:hover:after{transform:rotate(45deg);opacity:.95}
+.lumi-premium-portal .market-card-post{
+  transform:translateY(-8px);
+  border-color:#cda56f!important;
+  background:linear-gradient(145deg,#d9b57f 0%,#c99755 100%)!important;
+  box-shadow:0 22px 52px rgba(157,108,49,.20)!important;
+}
+.lumi-premium-portal .market-card-post:hover{transform:translateY(-13px)!important}
+
+/* Homepage destination cards: asymmetry makes the site less template-like. */
+@media(min-width:920px){
+  .lumi-premium-portal:has(.home-hero) .product-grid{
+    grid-template-columns:repeat(4,minmax(0,1fr))!important;
+    grid-auto-flow:dense;
+  }
+  .lumi-premium-portal:has(.home-hero) .product-grid .product-card:nth-child(1),
+  .lumi-premium-portal:has(.home-hero) .product-grid .product-card:nth-child(2){
+    grid-column:span 2;
+    min-height:220px!important;
+  }
+  .lumi-premium-portal:has(.home-hero) .product-grid .product-card:nth-child(1) strong,
+  .lumi-premium-portal:has(.home-hero) .product-grid .product-card:nth-child(2) strong{
+    max-width:10ch;
+    font-size:clamp(1.65rem,2.5vw,2.25rem)!important;
+  }
+}
+.lumi-premium-portal .product-card,
+.lumi-premium-portal .journey-card,
+.lumi-premium-portal .editorial-card{
+  position:relative;
+  overflow:hidden;
+  border-color:rgba(17,37,31,.105)!important;
+}
+.lumi-premium-portal .product-card:before,
+.lumi-premium-portal .journey-card:before,
+.lumi-premium-portal .editorial-card:before{
+  content:"";
+  position:absolute;
+  inset:0 auto 0 0;
+  width:3px;
+  background:linear-gradient(180deg,transparent,var(--lumi-v10-gold),transparent);
+  opacity:0;
+  transform:scaleY(.45);
+  transition:opacity .2s ease,transform .2s ease;
+}
+.lumi-premium-portal .product-card:hover:before,
+.lumi-premium-portal .journey-card:hover:before,
+.lumi-premium-portal .editorial-card:hover:before{
+  opacity:1;
+  transform:scaleY(1);
+}
+
+/* Images feel more architectural and intentional. */
+.lumi-premium-portal .figure,
+.lumi-premium-portal .collection-media,
+.lumi-premium-portal .visual-tile{
+  position:relative;
+  overflow:hidden;
+  border-radius:20px!important;
+  box-shadow:var(--lumi-v10-shadow-soft);
+}
+.lumi-premium-portal .figure img,
+.lumi-premium-portal .collection-media img,
+.lumi-premium-portal .visual-tile img{
+  transition:transform .55s cubic-bezier(.2,.75,.2,1),filter .35s ease!important;
+}
+@media(hover:hover){
+  .lumi-premium-portal .figure:hover img,
+  .lumi-premium-portal .collection-media:hover img,
+  .lumi-premium-portal .visual-tile:hover img{
+    transform:scale(1.022);
+    filter:saturate(1.035) contrast(1.015);
+  }
+}
+.lumi-premium-portal .figure-caption{
+  padding:.85rem .1rem 0;
+  color:#4b5651;
+  font-family:var(--font-sans,"Be Vietnam Pro",sans-serif)!important;
+  font-size:.84rem!important;
+  font-weight:600!important;
+  letter-spacing:-.015em;
+}
+
+/* Editorial / article pages get a cleaner magazine feel. */
+.lumi-premium-portal .article-hero{
+  position:relative;
+  overflow:hidden;
+  background:
+    radial-gradient(circle at 85% 0%,rgba(196,154,98,.15),transparent 22rem),
+    linear-gradient(180deg,#f7f4ee 0%,#f2f3f0 100%);
+}
+.lumi-premium-portal .article-hero:after{
+  content:"";
+  position:absolute;
+  left:0;
+  bottom:0;
+  width:min(34vw,460px);
+  height:3px;
+  background:linear-gradient(90deg,var(--lumi-v10-gold),transparent);
+}
+.lumi-premium-portal .article-hero h1{
+  max-width:17ch;
+  text-wrap:balance;
+}
+.lumi-premium-portal .article>p:first-of-type{
+  font-size:1.08em;
+  color:#414d48;
+}
+.lumi-premium-portal .article h2{
+  text-wrap:balance;
+}
+.lumi-premium-portal .article blockquote,
+.lumi-premium-portal .notice{
+  border-left:3px solid var(--lumi-v10-gold)!important;
+  border-radius:0 14px 14px 0;
+  background:#f2ece3!important;
+}
+.lumi-premium-portal .article table{
+  overflow:hidden;
+  border:1px solid var(--lumi-v10-hairline);
+  border-radius:14px;
+  background:#fff;
+  box-shadow:0 8px 26px rgba(17,37,31,.045);
+}
+.lumi-premium-portal .article th{background:#f1f3f0}
+
+/* Marketplace inventory: clearer comparison hierarchy with less visual noise. */
+.lumi-premium-portal [data-marketplace-list] .listing-card,
+.lumi-premium-portal [data-marketplace-list] [data-listing-card]{
+  border-color:rgba(17,37,31,.10)!important;
+  box-shadow:0 8px 26px rgba(17,37,31,.055)!important;
+  transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease!important;
+}
+@media(hover:hover){
+  .lumi-premium-portal [data-marketplace-list] .listing-card:hover,
+  .lumi-premium-portal [data-marketplace-list] [data-listing-card]:hover{
+    transform:translateY(-2px);
+    border-color:rgba(168,121,67,.34)!important;
+    box-shadow:0 18px 42px rgba(17,37,31,.10)!important;
+  }
+}
+.lumi-premium-portal [data-marketplace-list] .listing-card-price strong{
+  color:#986a34!important;
+  letter-spacing:-.045em!important;
+}
+.lumi-premium-portal [data-marketplace-list] .inventory-toolbar,
+.lumi-premium-portal [data-marketplace-list] .marketplace-filter-bar,
+.lumi-premium-portal [data-marketplace-list] [data-filter-panel]{
+  border-color:rgba(17,37,31,.10)!important;
+  background:rgba(255,255,255,.88)!important;
+  backdrop-filter:blur(14px);
+}
+
+/* Detail pages: make price and primary facts feel more premium. */
+.lumi-premium-portal .detail-price,
+.lumi-premium-portal .listing-detail-price{
+  color:#936331!important;
+  letter-spacing:-.055em!important;
+}
+.lumi-premium-portal .detail-specs,
+.lumi-premium-portal .detail-contact,
+.lumi-premium-portal .listing-detail-panel{
+  border-color:rgba(17,37,31,.10)!important;
+  box-shadow:0 10px 34px rgba(17,37,31,.06);
+}
+
+/* Bottom mobile navigation: frosted floating dock instead of a generic tab bar. */
+@media(max-width:700px){
+  .lumi-premium-portal.has-mobile-property-nav{
+    padding-bottom:calc(82px + env(safe-area-inset-bottom));
+  }
+  .lumi-premium-portal .mobile-property-nav{
+    left:10px!important;
+    right:10px!important;
+    bottom:calc(8px + env(safe-area-inset-bottom))!important;
+    width:auto!important;
+    min-height:62px!important;
+    border:1px solid rgba(255,255,255,.64)!important;
+    border-radius:20px!important;
+    background:rgba(252,252,250,.90)!important;
+    box-shadow:0 18px 50px rgba(17,37,31,.20)!important;
+    backdrop-filter:blur(20px) saturate(1.15);
+    overflow:hidden;
+  }
+  .lumi-premium-portal .mobile-property-nav a{
+    min-height:60px!important;
+    border-radius:14px;
+  }
+  .lumi-premium-portal .mobile-property-nav__post{
+    margin:5px 2px!important;
+    min-height:50px!important;
+    border-radius:15px!important;
+    background:linear-gradient(145deg,#1a332a,#10241e)!important;
+    color:#fff!important;
+    box-shadow:0 8px 20px rgba(17,37,31,.22)!important;
+  }
+  .lumi-premium-portal:has(.home-hero) .home-hero{
+    min-height:680px!important;
+  }
+  .lumi-premium-portal:has(.home-hero) .home-hero .container{
+    padding-top:6.4rem!important;
+    padding-bottom:3.4rem!important;
+  }
+  .lumi-premium-portal:has(.home-hero) .home-hero .container:before{
+    margin-bottom:.9rem;
+    font-size:.59rem;
+    letter-spacing:.12em;
+  }
+  .lumi-premium-portal:has(.home-hero) .home-hero h1{
+    font-size:clamp(3.7rem,18vw,5.15rem)!important;
+    line-height:.86!important;
+  }
+  .lumi-premium-portal:has(.home-hero) .home-hero .lead{
+    margin-top:1.15rem!important;
+    font-size:.98rem!important;
+    line-height:1.6!important;
+  }
+  .lumi-premium-portal:has(.home-hero) .home-hero .hero-actions{
+    display:grid!important;
+    grid-template-columns:1fr 1fr;
+    gap:8px!important;
+  }
+  .lumi-premium-portal:has(.home-hero) .home-hero .hero-actions .btn{
+    width:100%;
+    min-height:48px;
+    padding-inline:12px!important;
+    font-size:.86rem;
+  }
+  .lumi-premium-portal:has(.home-hero) .home-hero .hero-actions .btn-market-post{
+    grid-column:1/-1;
+    grid-row:1;
+  }
+  .lumi-premium-portal .marketplace-grid{gap:12px!important}
+  .lumi-premium-portal .market-card,
+  .lumi-premium-portal .market-card-post{
+    min-height:156px!important;
+    transform:none!important;
+    padding:20px!important;
+    border-radius:17px!important;
+  }
+  .lumi-premium-portal .market-card:hover,
+  .lumi-premium-portal .market-card-post:hover{transform:none!important}
+  .lumi-premium-portal .product-card{
+    min-height:150px!important;
+    padding:20px!important;
+    border-radius:17px!important;
+  }
+  .lumi-premium-portal .section-head h2{max-width:none!important}
+  .lumi-premium-portal .figure,
+  .lumi-premium-portal .collection-media,
+  .lumi-premium-portal .visual-tile{border-radius:16px!important}
+}
+
+/* Motion remains subtle and fully respects reduced-motion users. */
+@media(prefers-reduced-motion:no-preference){
+  .lumi-premium-portal .btn,
+  .lumi-premium-portal .product-card,
+  .lumi-premium-portal .market-card,
+  .lumi-premium-portal .journey-card,
+  .lumi-premium-portal .editorial-card{
+    transition-duration:.22s!important;
+    transition-timing-function:cubic-bezier(.2,.75,.2,1)!important;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  .lumi-premium-portal .market-card-post{transform:none!important}
+  .lumi-premium-portal .figure img,
+  .lumi-premium-portal .collection-media img,
+  .lumi-premium-portal .visual-tile img{transition:none!important}
+}
