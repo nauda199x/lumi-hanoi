@@ -21,7 +21,15 @@ IMPORTANT = ["", "tong-quan-lumi-hanoi", "vi-tri-lumi-hanoi", "mat-bang-lumi-han
  "can-ho-4-phong-ngu-lumi-hanoi", "duplex-penthouse-lumi-hanoi", "tin-tuc"]
 COMPETITORS = ("vinhomes.vn", "batdongsan.com.vn", "onehousing.vn")
 PROHIBITED = ("đăng ký ngay", "nhận bảng giá sốc", "chỉ còn ")
-INTENTIONAL_NOINDEX = {Path("admin/index.html"), Path("tin-dang-lumi-hanoi/index.html"), Path("tin-dang-khong-con-hien-thi/index.html")}
+INTENTIONAL_NOINDEX = {
+    Path("admin/index.html"),
+    Path("tin-dang-lumi-hanoi/index.html"),
+    Path("tin-dang-khong-con-hien-thi/index.html"),
+    Path("cho-thue-lumi-signature/index.html"),
+}
+INTENTIONAL_CANONICAL_CONSOLIDATIONS = {
+    Path("cho-thue-lumi-signature/index.html"): "https://lumi-hanoi.com/cho-thue-lumi-hanoi/",
+}
 
 
 def trusted_drive_ids() -> set[str]:
@@ -108,7 +116,15 @@ def main() -> int:
         if path.name != "404.html" and parser.noindex and not intentional_noindex: errors.append(f"noindex found: {relative}")
         if intentional_noindex and not parser.noindex: errors.append(f"expected noindex missing: {relative}")
         if parser.legacy_redirect: continue
-        if path.name == "404.html" or intentional_noindex: pass
+        if path.name == "404.html":
+            pass
+        elif intentional_noindex:
+            expected_canonical = INTENTIONAL_CANONICAL_CONSOLIDATIONS.get(relative)
+            if expected_canonical:
+                if len(parser.canonicals) != 1:
+                    errors.append(f"canonical count {len(parser.canonicals)}: {relative}")
+                elif parser.canonicals[0] != expected_canonical:
+                    errors.append(f"intentional canonical changed: {relative} -> {parser.canonicals[0]}")
         elif len(parser.canonicals) != 1: errors.append(f"canonical count {len(parser.canonicals)}: {path.relative_to(ROOT)}")
         elif path.name == "index.html":
             rel=path.parent.relative_to(ROOT).as_posix(); expected=f"https://{HOST}/" + (f"{rel}/" if rel != "." else "")
