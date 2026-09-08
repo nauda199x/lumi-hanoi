@@ -85,7 +85,7 @@ jobs:
                   '</header><section class="section floor-hub-intro"><div class="container">'
                   '<div class="masterplan-compact">'
                   '<div><p class="eyebrow">' + cfg['eyebrow'] + '</p><h2>' + cfg['title'] + '</h2>'
-                  '<p>' + cfg['text'] + '</p><p class="figure-source">Nguồn bản vẽ: tài liệu Lumi Hanoi / chủ đầu tư. Ảnh đã được tối ưu WebP để giữ độ nét nhưng không làm trang nặng.</p></div>'
+                  '<p>' + cfg['text'] + '</p></div>'
                   '<a class="masterplan-thumb" href="' + cfg['image'] + '" target="_blank" rel="noopener" aria-label="Mở mặt bằng tổng kích thước lớn">'
                   '<img src="' + cfg['image'] + '" alt="' + cfg['alt'] + '" loading="eager" decoding="async" width="' + cfg['width'] + '" height="' + cfg['height'] + '">'
                   '</a></div></div></section><section class="section"><div class="container"><div class="section-head">'
@@ -95,6 +95,24 @@ jobs:
               html = html.replace(cfg['needle'], section, 1)
               cfg['path'].write_text(html, encoding='utf-8')
               print('updated', cfg['path'])
+          PY
+
+      - name: Remove legacy public source credits
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          for relative in (
+              'mat-bang-lumi-hanoi/lumi-prestige/index.html',
+              'mat-bang-lumi-hanoi/lumi-elite/index.html',
+          ):
+              path = Path(relative)
+              html = path.read_text(encoding='utf-8')
+              cleaned = re.sub(r'<p class="figure-source">.*?</p>', '', html, flags=re.S)
+              if cleaned != html:
+                  path.write_text(cleaned, encoding='utf-8')
+                  print('removed legacy source credit from', path)
           PY
 
       - name: Commit updated web assets
