@@ -1,0 +1,54 @@
+/* Scoped styles for the handover photo article. */
+.handover-story .handover-hero h1{max-width:21ch!important;font-size:clamp(2.3rem,5.1vw,4.8rem)!important;line-height:1.12!important}
+.handover-story .handover-hero .lead{max-width:680px!important}
+.handover-story .handover-hero .article-hero-media{opacity:.85;object-position:center 48%}
+.handover-story .handover-hero .hero-actions{gap:10px}
+.handover-story .handover-hero .btn-primary{background:#f5ede0!important;color:#17251e!important;border-color:#f5ede0!important}
+.handover-story .handover-hero .btn:not(.btn-primary){background:transparent!important;color:#fff!important;border-color:#8c918a!important}
+.handover-story .handover-byline{display:flex;flex-wrap:wrap;gap:6px 18px;padding-bottom:20px;border-bottom:1px solid var(--line);font-size:.78rem;color:#647169}
+.handover-story .handover-toc{display:grid;grid-template-columns:1fr 1fr;gap:6px 20px;margin:28px 0;padding:22px 24px;background:#f1f3ef;border:1px solid #dfe4dc;border-radius:12px}
+.handover-story .handover-toc strong{grid-column:1/-1;font-size:.87rem;margin-bottom:5px}
+.handover-story .handover-toc a{display:flex;align-items:center;min-height:44px;font-size:.88rem;text-decoration:underline;text-underline-offset:4px}
+.handover-story .article h2[id],.handover-story .article h3{scroll-margin-top:105px}
+.handover-story .article h3{margin-top:32px;line-height:1.35!important}
+.handover-story .handover-photo-tip{color:#647169;font-size:.85rem}
+.handover-story .handover-photo-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;margin:24px 0 28px;align-items:start}
+.handover-story .handover-photo-grid--recreation{grid-template-columns:1.45fr 1fr}
+.handover-story .handover-photo{margin:24px 0 28px}
+.handover-story .handover-photo-grid .handover-photo{margin:0}
+.handover-story .handover-photo a{display:block;position:relative;border-radius:10px;overflow:hidden;background:#eceee9;cursor:zoom-in}
+.handover-story .handover-photo img{width:100%;height:auto;object-fit:contain;border:0}
+.handover-story .handover-photo-open{position:absolute;right:10px;bottom:10px;padding:6px 10px;border:1px solid rgba(255,255,255,.45);border-radius:5px;background:rgba(15,25,20,.82);color:#fff;font-size:.72rem;line-height:1.4;pointer-events:none}
+.handover-story .handover-photo .figure-caption{margin-top:10px;font-family:inherit;font-size:.82rem;line-height:1.65;color:#606b64}
+.handover-story .handover-photo-number{font-variant-numeric:tabular-nums;font-weight:700;color:#967548;margin-right:5px}
+.handover-story .handover-table-wrap{max-width:100%;margin:24px 0;overflow-x:auto}
+.handover-story .handover-table-wrap table{display:table;width:100%;margin:0;min-width:580px;font-size:.88rem;border-collapse:collapse}
+.handover-story .handover-table-wrap caption{text-align:left;color:#647169;font-size:.82rem;padding:0 0 10px}
+.handover-story .handover-table-wrap th[scope=row]{background:#f0f3ee;color:#273d30;min-width:130px}
+.handover-story .handover-checklist{padding-left:24px}
+.handover-story .handover-checklist li{padding-left:4px;margin-bottom:14px}
+.handover-story .handover-cta{margin-top:32px;padding:28px;border:1px solid #d8e0d5;border-radius:14px;background:#eef3eb}
+.handover-story .handover-cta h3{margin-top:0!important}
+.handover-story .handover-cta .eyebrow{font-size:.72rem}
+.handover-story .handover-cta .hero-actions{margin-top:20px;gap:10px}
+.handover-story .handover-cta .btn{min-height:48px}
+.handover-story .handover-faq{border-bottom:1px solid #dfe3dc;padding:16px 0}
+.handover-story .handover-faq summary{cursor:pointer;font-weight:650;line-height:1.55;min-height:44px;display:list-item;padding:10px 2px}
+.handover-story .handover-faq p{margin:8px 0 12px}
+.handover-story .handover-side-label{display:block;margin-top:26px!important}
+@media(max-width:700px){
+ .handover-story .handover-hero{min-height:440px!important;padding:42px 0 34px!important}
+ .handover-story .handover-hero h1{font-size:clamp(2rem,8.5vw,2.8rem)!important;max-width:22ch!important}
+ .handover-story .handover-hero .eyebrow{font-size:.63rem;letter-spacing:.12em}
+ .handover-story .handover-hero .lead{font-size:.95rem!important;line-height:1.6!important;margin-top:18px}
+ .handover-story .handover-hero .hero-actions{margin-top:24px}
+ .handover-story .handover-toc{grid-template-columns:1fr;padding:18px 20px}
+ .handover-story .handover-toc a{min-height:42px}
+ .handover-story .handover-photo-grid,.handover-story .handover-photo-grid--recreation{grid-template-columns:1fr;gap:24px}
+ .handover-story .handover-photo .figure-caption{font-size:.83rem}
+ .handover-story .handover-table-wrap{border:1px solid #e0e5dd;border-radius:8px}
+ .handover-story .handover-table-wrap caption{padding:10px 12px}
+ .handover-story .handover-cta{padding:22px 18px}
+ .handover-story .handover-cta .btn{width:100%}
+ .handover-story .article h2[id]{scroll-margin-top:85px}
+}
