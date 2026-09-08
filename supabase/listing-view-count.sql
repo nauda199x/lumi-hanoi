@@ -1,5 +1,6 @@
 -- Lumi Hanoi marketplace: privacy-preserving listing view counts.
--- Production migration names: add_listing_view_count + fix_listing_view_count_rpc.
+-- Production migration names: add_listing_view_count + fix_listing_view_count_rpc
+-- + restrict_listing_view_rpc_to_anon.
 
 alter table public.listings
   add column if not exists view_count bigint not null default 0
@@ -110,6 +111,6 @@ comment on function public.record_listing_view(uuid) is
   'Intentional anonymous RPC for deduplicated marketplace listing view counts. Stores only a per-listing SHA-256 fingerprint; no raw IP address.';
 
 revoke all on function public.record_listing_view(uuid) from public, anon, authenticated;
-grant execute on function public.record_listing_view(uuid) to anon, authenticated;
+grant execute on function public.record_listing_view(uuid) to anon;
 
 notify pgrst, 'reload schema';
