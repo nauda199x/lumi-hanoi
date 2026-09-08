@@ -35,15 +35,15 @@ for label, (source, token) in exact_checks.items():
         errors.append(f"{label} is not aligned with the GSC keyword map")
 
 sale_title = title_of(sale)
-if not sale_title.startswith("Mua bán căn hộ Lumi Hanoi"):
-    errors.append("sale title must preserve the 'Mua bán căn hộ Lumi Hanoi' search intent")
+if not re.fullmatch(r"Mua Bán Căn Hộ Chung Cư Lumi Hanoi Giá Tốt T(?:[1-9]|1[0-2])/\d{4}", sale_title):
+    errors.append("sale title must preserve the approved 'Mua Bán Căn Hộ Chung Cư Lumi Hanoi Giá Tốt' SERP intent and month")
 
 rent_title = title_of(rent)
-if not re.fullmatch(r"(?:Cho Thuê Chung Cư Lumi Hanoi Mới Nhất|Thuê Lumi Hanoi \| Căn Hộ Cho Thuê Mới Nhất) T(?:[1-9]|1[0-2])/\d{4}", rent_title):
-    errors.append("rent title must preserve Lumi Hanoi rental intent and the current month")
+if not re.fullmatch(r"Cho Thuê Căn Hộ Chung Cư Lumi Hanoi Giá Tốt T(?:[1-9]|1[0-2])/\d{4}", rent_title):
+    errors.append("rent title must preserve the approved 'Cho Thuê Căn Hộ Chung Cư Lumi Hanoi Giá Tốt' SERP intent and month")
 
-if "<h1>Cho thuê chung cư Lumi Hanoi</h1>" not in rent:
-    errors.append("rental H1 must target 'Cho thuê chung cư Lumi Hanoi'")
+if "<h1>Cho thuê căn hộ chung cư Lumi Hanoi giá tốt</h1>" not in rent:
+    errors.append("rental H1 must target the approved broad Lumi Hanoi rental intent")
 if '"@type":"CollectionPage"' not in sale or '"@type":"CollectionPage"' not in rent:
     errors.append("marketplace hubs must use CollectionPage schema")
 
