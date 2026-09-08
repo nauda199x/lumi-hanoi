@@ -10,8 +10,8 @@
     if(!meta)return;
     let node=meta.querySelector("[data-detail-views]");
     if(!node){node=document.createElement("span");node.setAttribute("data-detail-views","");meta.append(node);}
-    node.hidden=value<10;
-    if(value>=10){node.textContent=`${new Intl.NumberFormat("vi-VN").format(value)} lượt xem`;node.setAttribute("aria-label",`${value} lượt xem tin`);}
+    node.hidden=value<1;
+    if(value>=1){node.textContent=`${new Intl.NumberFormat("vi-VN").format(value)} lượt xem`;node.setAttribute("aria-label",`${value} lượt xem tin`);}
   };
   const recordView=async()=>{
     const id=root.dataset.listingId||"",config=window.LUMI_MARKETPLACE_CONFIG||{};
