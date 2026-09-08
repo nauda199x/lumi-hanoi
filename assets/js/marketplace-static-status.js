@@ -3,6 +3,24 @@
   if(!root||!window.LumiMarketplace)return;
   const slug=root.dataset.listingSlug||"";
   if(!slug)return;
+  const showViewCount=count=>{
+    const value=Math.max(0,Math.floor(Number(count)||0)),meta=root.querySelector(".ld-meta");
+    if(!meta)return;
+    let node=meta.querySelector("[data-detail-views]");
+    if(!node){node=document.createElement("span");node.setAttribute("data-detail-views","");meta.append(node);}
+    node.hidden=value<10;
+    if(value>=10){node.textContent=`${new Intl.NumberFormat("vi-VN").format(value)} lượt xem`;node.setAttribute("aria-label",`${value} lượt xem tin`);}
+  };
+  const recordView=async()=>{
+    const id=root.dataset.listingId||"",config=window.LUMI_MARKETPLACE_CONFIG||{};
+    const base=String(config.supabaseUrl||"").replace(/\/$/,""),key=String(config.supabasePublishableKey||config.supabaseAnonKey||"");
+    if(!id||!base||!key||base.includes("YOUR_PROJECT"))return;
+    try{
+      const response=await fetch(`${base}/rest/v1/rpc/record_listing_view`,{method:"POST",headers:{apikey:key,"Content-Type":"application/json"},body:JSON.stringify({target_listing_id:id})});
+      if(!response.ok)return;
+      showViewCount(await response.json());
+    }catch{}
+  };
   const markUnavailable=()=>{
     let robots=document.querySelector('meta[name="robots"]');
     if(!robots){robots=document.createElement("meta");robots.name="robots";document.head.append(robots);}
@@ -14,6 +32,6 @@
     const badge=root.querySelector("[data-detail-type]");if(badge)badge.textContent="Tin ngừng hiển thị";
   };
   window.LumiMarketplace.getPublicListing(slug)
-    .then(listing=>{if(!listing)markUnavailable();else window.LumiListingDetail?.hydrate(root,listing);})
+    .then(listing=>{if(!listing)markUnavailable();else{window.LumiListingDetail?.hydrate(root,listing);recordView();}})
     .catch(()=>{}); // Keep the crawlable snapshot when the public API is offline.
 })();
