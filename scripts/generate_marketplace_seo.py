@@ -187,22 +187,23 @@ def date_only(value) -> str:
 
 
 def render_gallery(listing: dict) -> str:
-    images = sorted(listing.get("listing_images") or [], key=lambda item: int(item.get("sort_order") or 0))
+    images = sorted([item for item in listing.get("listing_images") or [] if item.get("storage_path")], key=lambda item: int(item.get("sort_order") or 0))
     if not images:
-        return '<div class="marketplace-state"><span class="marketplace-state-mark">LH</span><div><h3>Tin chưa có ảnh</h3><p>Liên hệ người đăng để kiểm tra hiện trạng căn.</p></div></div>'
+        return '<div class="ld-empty-gallery"><strong>Hình ảnh đang được bổ sung</strong><p>Liên hệ người đăng để xem hình ảnh và hiện trạng căn.</p></div>'
     figures = []
     for index, item in enumerate(images):
         src = storage_url(item.get("storage_path", ""))
         alt = item.get("alt_text") or f"{listing.get('title')} — ảnh {index + 1}"
         loading = "eager" if index == 0 else "lazy"
+        priority = ' fetchpriority="high"' if index == 0 else ''
         figures.append(
-            f'<figure><img src="{esc(src)}" alt="{esc(alt)}" width="1200" height="900" loading="{loading}" decoding="async"></figure>'
+            f'<figure><img src="{esc(src)}" alt="{esc(alt)}" width="1200" height="900" loading="{loading}"{priority} decoding="async"></figure>'
         )
     return (
-        '<div class="detail-gallery">'
-        '<div class="detail-gallery-track">'
+        '<div class="ld-gallery-stage">'
+        '<div class="ld-gallery-track" tabindex="0" aria-label="Ảnh tin đăng, dùng phím trái và phải để chuyển ảnh">'
         + "".join(figures)
-        + '</div><span class="detail-gallery-counter" data-static-gallery-counter>1/'
+        + '</div><span class="ld-gallery-counter" data-gallery-counter>1 / '
         + str(len(images))
         + "</span></div>"
     )
@@ -537,6 +538,65 @@ def sync_shop_landing(listings: list[dict]) -> None:
     SHOP_LANDING.write_text(raw, encoding="utf-8")
 
 
+def render_detail_content(listing: dict | None = None) -> str:
+    """Compile the same accessible template for static URLs and the dynamic shell."""
+    dynamic = listing is None
+    listing = listing or {}
+    rent = listing.get("listing_type") == "rent"
+    category_url = "/cho-thue-lumi-hanoi/" if rent else "/mua-ban-lumi-hanoi/"
+    action = "Cho thuê" if rent else "Mua bán"
+    phone = clean(listing.get("contact_phone"))
+    tel = re.sub(r"[^+\d]", "", phone)
+    zalo = re.sub(r"\D", "", phone)
+    posted = date_only(listing.get("approved_at") or listing.get("created_at"))
+    poster = clean(listing.get("poster_name")) or "Người đăng"
+    area = numeric(listing.get("area_sqm"))
+    price = numeric(listing.get("price_vnd"))
+    ppsm = ""
+    if not rent and price and area:
+        ppsm = "~" + f"{price / area / 1_000_000:,.1f}".replace(",", "X").replace(".", ",").replace("X", ".") + " tr/m²"
+    tower = clean(listing.get("tower"))
+    values = {
+        "title": compact_text(listing.get("title")), "action": action,
+        "category": action + " Lumi Hanoi", "category_url": category_url,
+        "code": listing.get("listing_code", ""), "posted": posted,
+        "posted_label": vi_date(posted), "phase": listing.get("phase") or "Chưa cập nhật",
+        "tower": tower or "Chưa cập nhật", "unit": listing.get("unit_type") or "Chưa cập nhật",
+        "area": f"{format_area(area)} m²" if area else "Chưa cập nhật",
+        "price": format_price(listing), "price_per_sqm": ppsm,
+        "price_label": "cho thuê" if rent else "bán",
+        "floor": listing.get("floor_label") or "Chưa cập nhật",
+        "furnishing": listing.get("furnishing") or "Chưa cập nhật",
+        "description": "\n".join(line.rstrip() for line in clean(listing.get("description")).splitlines()) or "Người đăng chưa bổ sung mô tả.",
+        "poster": poster, "initials": "".join(word[0] for word in poster.split()[-2:]).upper(),
+        "phone": phone, "phone_url": f"tel:{tel}" if tel else "",
+        "zalo_url": f"https://zalo.me/{zalo}" if zalo else "",
+        "floorplan_url": tower_link(tower) if re.fullmatch(r"[Ss][12356]|[PpEe][12]", tower) else "/mat-bang-lumi-hanoi/",
+        "unit_url": UNIT_LINKS.get(clean(listing.get("unit_type")), ""),
+        "same_tower_url": category_url + "#" + urllib.parse.urlencode({"tower": tower}),
+        "same_unit_url": category_url + "#" + urllib.parse.urlencode({"bedroom": clean(listing.get("unit_type"))}),
+    }
+    fields = {key: esc(value) for key, value in values.items()}
+    fields.update({
+        "gallery": "" if dynamic else render_gallery(listing),
+        "content_hidden": "hidden" if dynamic else "",
+        "phone_hidden": "hidden" if not tel else "",
+        "contact_empty_hidden": "hidden" if tel else "",
+        "date_hidden": "hidden" if not posted else "",
+        "report_hidden": "hidden" if not listing.get("id") else "",
+        "unit_guide_hidden": "" if clean(listing.get("unit_type")) in UNIT_LINKS else "hidden",
+    })
+    template = (ROOT / "scripts/templates/listing-detail.html.tpl").read_text(encoding="utf-8")
+    return re.sub(r"\{\{([a-z_]+)\}\}", lambda match: fields[match.group(1)], template)
+
+
+def sync_detail_shell() -> None:
+    path = ROOT / "tin-dang-lumi-hanoi/index.html"
+    raw = path.read_text(encoding="utf-8")
+    raw = replace_marked_block(raw, "<!-- LISTING-DETAIL:START -->", "<!-- LISTING-DETAIL:END -->", render_detail_content())
+    path.write_text(raw, encoding="utf-8")
+
+
 def render_page(listing: dict) -> str:
     segment, action = CATEGORY[listing["listing_type"]]
     rel_url = listing_url(listing)
@@ -609,26 +669,7 @@ def render_page(listing: dict) -> str:
             return [prune(v) for v in value if v is not None]
         return value
 
-    legal_note = (
-        "Tin đăng được người đăng cung cấp và đã qua bước duyệt hiển thị. "
-        "Người xem cần tự kiểm tra danh tính, quyền giao dịch, hiện trạng căn và hồ sơ trước khi đặt cọc."
-    )
     schema_json = json.dumps(prune(schema), ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
-    related_html = "".join(related)
-    description_html = esc(listing.get("description")).replace("\n", "<br>")
-    poster_name = clean(listing.get("poster_name")) or "Người đăng"
-    phone = clean(listing.get("contact_phone"))
-    phone_href = re.sub(r"[^+\\d]", "", phone)
-    zalo_number = re.sub(r"\\D", "", phone)
-    zalo_href = f"https://zalo.me/{zalo_number}" if zalo_number else "#"
-    zalo_hidden = "" if zalo_number else " hidden"
-    price_per_sqm = ""
-    if listing.get("listing_type") == "sale" and listing.get("price_vnd") and listing.get("area_sqm"):
-        try:
-            ppm = float(listing.get("price_vnd")) / float(listing.get("area_sqm")) / 1_000_000
-            price_per_sqm = f"~{ppm:,.1f}".replace(",", "X").replace(".", ",").replace("X", ".") + " tr/m²"
-        except (TypeError, ValueError, ZeroDivisionError):
-            price_per_sqm = ""
     return f"""<!doctype html>
 <html lang="vi">
 <head>
@@ -647,74 +688,24 @@ def render_page(listing: dict) -> str:
   <meta property="og:url" content="{esc(canonical)}">
   <meta property="og:image" content="{esc(hero_image)}">
   <meta name="twitter:card" content="summary_large_image">
-  <link rel="stylesheet" href="/assets/css/site.css?v=20260829-type">
+  <link rel="stylesheet" href="/assets/css/site.css?v=20260907-layoutfix1">
   <link rel="stylesheet" href="/assets/css/marketplace.css?v=20260829-detail5">
+  <link rel="stylesheet" href="/assets/css/listing-detail.css?v=20260908-detail1">
   <script type="application/ld+json">{schema_json}</script>
 </head>
 <body class="listing-detail-page">
   <a class="skip-link" href="#main">Bỏ qua điều hướng</a>
   <header class="site-header"><div class="container nav"><a class="brand" href="/" aria-label="Lumi Hanoi – Trang chủ"><span class="brand-mark" aria-hidden="true">LH</span><span>LUMI HANOI</span></a><button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="primary-nav">Menu</button><nav id="primary-nav" class="nav-links" data-nav-links data-open="false" aria-label="Điều hướng chính"><a href="/tong-quan-lumi-hanoi/">Tổng quan</a><a href="/mat-bang-lumi-hanoi/">Mặt bằng</a><details class="nav-dropdown"><summary>Phân khu</summary><div class="nav-dropdown-menu"><a href="/lumi-signature/">Lumi Signature</a><a href="/lumi-prestige/">Lumi Prestige</a><a href="/lumi-elite/">Lumi Elite</a></div></details><a href="/tien-do-lumi-hanoi/">Tiến độ</a><a href="/tin-tuc/">Tin tức</a><details class="nav-dropdown"><summary>Giao dịch</summary><div class="nav-dropdown-menu nav-dropdown-menu--right"><a href="/mua-ban-lumi-hanoi/">Mua bán</a><a href="/cho-thue-lumi-hanoi/">Cho thuê</a><a href="/dang-tin-lumi-hanoi/">Đăng tin</a></div></details></nav></div></header>
-  <main id="main" data-static-listing data-listing-slug="{esc(listing.get('slug'))}">
-    <div class="container breadcrumb"><a href="/">Trang chủ</a><span aria-hidden="true">/</span><a href="/{segment}/">{action} Lumi Hanoi</a><span aria-hidden="true">/</span>{esc(listing.get('listing_code'))}</div>
-    <div class="container detail-shell detail-shell--portal">
-      <article class="detail-main">
-        <div class="detail-gallery-wrap">{render_gallery(listing)}</div>
-        <div class="detail-mobile-summary">
-          <div class="detail-mobile-price"><strong>{esc(price)}</strong><span>{esc(price_per_sqm)}</span></div>
-          <div class="detail-quickfacts"><span><b>{esc(listing.get('unit_type'))}</b></span><span><b>{esc(area)} m²</b></span><span>Tầng <b>{esc(listing.get('floor_label') or 'Liên hệ')}</b></span></div>
-        </div>
-        <div class="detail-copy">
-          <p class="eyebrow">{esc(listing.get('listing_code'))} · {action}</p>
-          <h1>{esc(title)}</h1>
-          <div class="detail-location"><strong>Lumi Hanoi</strong><span>Đại lộ Thăng Long, Tây Mỗ, Hà Nội</span></div>
-          <div class="marketplace-live-note" data-live-status hidden></div>
-          <h2>Mô tả</h2>
-          <p class="detail-description">{description_html}</p>
-          <h2>Đặc điểm bất động sản</h2>
-          <dl class="detail-feature-list">
-            <div><dt>Mức giá</dt><dd>{esc(price)}</dd></div>
-            <div><dt>Diện tích</dt><dd>{esc(area)} m²</dd></div>
-            <div><dt>Loại căn</dt><dd>{esc(listing.get('unit_type'))}</dd></div>
-            <div><dt>Tầng</dt><dd>{esc(listing.get('floor_label') or 'Liên hệ')}</dd></div>
-            <div><dt>Phân khu</dt><dd>{esc(listing.get('phase'))}</dd></div>
-            <div><dt>Tòa</dt><dd>{esc(listing.get('tower'))}</dd></div>
-            <div><dt>Nội thất</dt><dd>{esc(listing.get('furnishing') or 'Liên hệ')}</dd></div>
-          </dl>
-          <h2>Tham khảo thêm</h2>
-          <nav class="detail-related" aria-label="Liên kết liên quan">{related_html}</nav>
-          <p class="notice"><strong>Lưu ý:</strong> {esc(legal_note)}</p>
-        </div>
-      </article>
-      <aside><div class="detail-panel">
-        <p class="eyebrow">{action} Lumi Hanoi</p>
-        <strong class="detail-price">{esc(price)}</strong>
-        <dl class="detail-specs">
-          <div><dt>Phân khu</dt><dd>{esc(listing.get('phase'))}</dd></div>
-          <div><dt>Tòa</dt><dd>{esc(listing.get('tower'))}</dd></div>
-          <div><dt>Loại căn</dt><dd>{esc(listing.get('unit_type'))}</dd></div>
-          <div><dt>Diện tích</dt><dd>{esc(area)} m²</dd></div>
-          <div><dt>Tầng</dt><dd>{esc(listing.get('floor_label') or 'Liên hệ')}</dd></div>
-          <div><dt>Nội thất</dt><dd>{esc(listing.get('furnishing') or 'Liên hệ')}</dd></div>
-        </dl>
-        <div class="detail-poster" data-static-poster><span>Người đăng</span><strong>{esc(poster_name)}</strong></div>
-        <div class="detail-contact">
-          <a class="btn btn-primary" data-static-phone href="tel:{esc(phone_href)}">{esc(phone) or "Gọi người đăng"}</a>
-          <a class="btn" data-static-zalo href="{esc(zalo_href)}" target="_blank" rel="noopener"{zalo_hidden}>Nhắn Zalo</a>
-        </div>
-        <p class="detail-note">Không chuyển tiền chỉ dựa trên nội dung tin đăng hoặc trao đổi qua điện thoại.</p>
-      </div></aside>
-    </div>
-    <div class="detail-mobile-contact">
-      <a class="detail-zalo-fab" data-static-zalo href="{esc(zalo_href)}" target="_blank" rel="noopener"{zalo_hidden} aria-label="Nhắn Zalo">Zalo</a>
-      <a class="detail-call-bar" data-static-phone href="tel:{esc(phone_href)}">{esc(phone) or "Gọi người đăng"}</a>
-    </div>
+  <main id="main" data-static-listing data-listing-slug="{esc(listing.get('slug'))}" data-listing-id="{esc(listing.get('id'))}">
+    {render_detail_content(listing)}
   </main>
   <footer class="site-footer"><div class="container footer-grid"><div><a class="brand" href="/"><span class="brand-mark" aria-hidden="true">LH</span><span>LUMI HANOI</span></a><p>Cổng thông tin dự án &amp; thị trường căn hộ.</p></div><div><nav class="footer-links" aria-label="Điều hướng cuối trang"><a href="/mua-ban-lumi-hanoi/">Mua bán</a><a href="/cho-thue-lumi-hanoi/">Cho thuê</a><a href="/dang-tin-lumi-hanoi/">Đăng tin</a><a href="/tin-tuc/">Tin tức</a></nav><p class="disclaimer">Website thông tin và giao dịch độc lập, không phải website chính thức của CapitaLand Development.</p></div></div></footer>
-  <script src="/assets/js/site.js" defer></script>
+  <script src="/assets/js/site.js?v=20260907-performance1" defer></script>
   <script src="/assets/js/marketplace-config.js"></script>
   <script src="/assets/js/marketplace-api.js?v=20260829-poster"></script>
-  <script src="/assets/js/marketplace-lightbox.js?v=20260902-fullimage" defer></script>
-  <script src="/assets/js/marketplace-static-status.js?v=20260829-detail4" defer></script>
+  <script src="/assets/js/marketplace-lightbox.js?v=20260908-detail1" defer></script>
+  <script src="/assets/js/listing-detail-ui.js?v=20260908-detail1" defer></script>
+  <script src="/assets/js/marketplace-static-status.js?v=20260908-detail1" defer></script>
 </body>
 </html>
 """
@@ -731,6 +722,7 @@ def clear_generated() -> None:
 
 
 def write_pages(listings: list[dict]) -> list[dict]:
+    sync_detail_shell()
     clear_generated()
     generated = []
     for listing in listings:

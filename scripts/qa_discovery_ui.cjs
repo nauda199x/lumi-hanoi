@@ -34,7 +34,7 @@ class Node {
 }
 const tick=()=>new Promise(resolve=>setImmediate(resolve));
 const row=(id,title=id)=>({id,title,slug:id,listing_type:'rent',unit_type:'2PN',phase:'Signature',tower:'S3',price_vnd:10000000,area_sqm:54,listing_images:[]});
-function fixture({staticCards=true}={}){
+function fixture({staticCards=true,hash=""}={}){
   const nodes=new Map(),timers=new Map(),requests=[];let timerId=0;
   const get=selector=>{if(!nodes.has(selector))nodes.set(selector,new Node());return nodes.get(selector);};
   const root=new Node();root.dataset={listingType:'rent',inventoryStaticPages:'1'};root.querySelector=get;
@@ -46,7 +46,7 @@ function fixture({staticCards=true}={}){
   const staticRow=new Node('article');staticRow.className='inventory-row';staticRow.setAttribute('data-static-listing-card','');
   if(staticCards)grid.append(staticRow);
   const state=get('[data-listing-state]');state.hidden=true;state.querySelector=get;
-  const location={href:'https://lumi-hanoi.com/cho-thue-lumi-hanoi/',origin:'https://lumi-hanoi.com',pathname:'/cho-thue-lumi-hanoi/',search:'',hash:''};
+  const location={href:'https://lumi-hanoi.com/cho-thue-lumi-hanoi/',origin:'https://lumi-hanoi.com',pathname:'/cho-thue-lumi-hanoi/',search:'',hash};
   const history={pushState(a,b,url){const u=new URL(url,location.href);Object.assign(location,{href:u.href,pathname:u.pathname,search:u.search});}};history.replaceState=history.pushState;
   const api={listPublicPage:(type,filters,page,options)=>new Promise((resolve,reject)=>requests.push({type,filters,page,options,resolve,reject})),listingUrl:r=>'/cho-thue-lumi-hanoi/'+r.id+'/',formatCurrency:()=> '10 triệu/tháng',imageUrl:p=>p};
   const window={LumiMarketplace:api,addEventListener(){}};
@@ -122,4 +122,11 @@ test('tab navigation stays native and clears loading when returning with browser
   let prevented=false;await f.document.emit('click',{target:link,preventDefault(){prevented=true;}});
   assert.equal(prevented,false);assert.equal(link.getAttribute('aria-busy'),'true');
   await f.window.emit('pageshow');assert.equal(link.hasAttribute('aria-busy'),false);assert.equal(link.hasAttribute('data-navigation-pending'),false);
+});
+
+test('related-listing hash links select exact unit type and tower before the first API request',()=>{
+  const f=fixture({hash:'#tower=S3&bedroom=2PN'});
+  assert.equal(f.requests[0].filters.tower,'S3');
+  assert.equal(f.requests[0].filters.bedroom,'2PN');
+  assert.equal(f.requests[0].filters.phase,'Signature');
 });

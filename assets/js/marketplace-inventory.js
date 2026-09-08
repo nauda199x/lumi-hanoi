@@ -32,7 +32,7 @@
     const candidate=params.get("page")||location.pathname.match(/\/page\/(\d+)\//)?.[1]||1;
     page=Math.max(1,Math.min(100000,Math.floor(Number(candidate)||1)));
     for(const key of keys){
-      if(key!=="tower")form.elements[key].value=params.get(key)||(key==="sort"?"newest":"");
+      if(key!=="tower")form.elements[key].value=params.get(key)||(key==="bedroom"?hashParams.get("bedroom"):"")||(key==="sort"?"newest":"");
     }
     const tower=(params.get("tower")||hashParams.get("tower")||"").toUpperCase();
     if(tower&&!form.elements.phase.value)form.elements.phase.value=Object.entries(towers).find(([,list])=>list.includes(tower))?.[0]||"";

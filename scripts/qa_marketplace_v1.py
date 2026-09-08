@@ -67,20 +67,23 @@ assert 'Đang tối ưu ảnh' in form_js and 'isSubmitting' in form_js, "Submis
 assert 'data-legal-field' in submit and '.field[hidden]{display:none}' in market_css, "Rental legal status must really stay hidden"
 assert 'data-marketplace-admin' in admin and 'noindex,nofollow' in admin
 assert 'data-listing-detail' in detail and 'noindex,follow' in detail
-assert 'detail-shell--portal' in detail and 'detail-mobile-contact' in detail, "Dynamic listing detail must use the portal layout and mobile CTA"
-assert 'data-detail-price-per-sqm' in detail, "Sale detail should expose price per sqm when available"
-assert 'detail-gallery-track' in detail_js and 'detail-gallery-counter' in detail_js, "Dynamic detail gallery must support horizontal swiping with a counter"
-assert 'detail-gallery-nav--prev' in detail_js and 'detail-gallery-nav--next' in detail_js, "Desktop detail gallery needs previous/next controls"
-assert 'ArrowLeft' in detail_js and 'ArrowRight' in detail_js, "Desktop gallery should support keyboard arrow navigation"
-assert 'detail-gallery-nav--prev' in market_css and 'detail-gallery-nav--next' in market_css, "Desktop gallery arrows need visible styling"
-assert 'detail-gallery-nav--prev' in (ROOT / "assets/js/marketplace-static-status.js").read_text(encoding="utf-8"), "Static SEO listings need desktop gallery controls"
-assert 'marketplace-detail.js?v=20260902-procopy' in detail, "Dynamic detail page must use the current detail script cache key"
-assert 'marketplace-lightbox.js?v=20260902-fullimage' in detail and 'marketplace-lightbox.js?v=20260902-fullimage' in seo_generator, "Dynamic and generated detail pages must use the current full-image lightbox cache key"
-assert 'DETAIL PORTAL UX 2026-08-29' in market_css and 'scroll-snap-type:x mandatory' in market_css, "Marketplace detail CSS must keep swipe-first gallery behavior"
-assert 'detail-shell detail-shell--portal' in seo_generator and 'detail-mobile-contact' in seo_generator, "Generated SEO listing pages must share the same portal layout"
-assert 'detail-gallery-track' in seo_generator and 'data-static-gallery-counter' in seo_generator, "Generated listing pages must include swipe gallery markup"
+detail_ui = (ROOT / "assets/js/listing-detail-ui.js").read_text(encoding="utf-8")
+detail_css = (ROOT / "assets/css/listing-detail.css").read_text(encoding="utf-8")
+detail_template = (ROOT / "scripts/templates/listing-detail.html.tpl").read_text(encoding="utf-8")
+assert 'ld-layout' in detail and 'data-detail-mobile-contact' in detail, "Dynamic detail needs responsive layout and mobile contact"
+assert 'data-detail-price-per-sqm' in detail, "Sale detail exposes price per sqm"
+assert 'ld-gallery-track' in detail_ui and 'data-gallery-counter' in detail_ui, "Shared gallery needs horizontal scrolling and count"
+assert 'ld-gallery-nav--prev' in detail_ui and 'ld-gallery-nav--next' in detail_ui, "Shared gallery needs desktop arrow controls"
+assert 'ArrowLeft' in detail_ui and 'ArrowRight' in detail_ui, "Gallery needs keyboard navigation"
+assert 'ld-gallery-nav--prev' in detail_css and 'ld-gallery-nav--next' in detail_css
+assert 'LumiListingDetail' in detail_js and 'LumiListingDetail' in (ROOT / "assets/js/marketplace-static-status.js").read_text(), "Both routes must hydrate through the same controller"
+assert 'marketplace-detail.js?v=20260908-detail1' in detail
+assert 'marketplace-lightbox.js?v=20260908-detail1' in detail and 'marketplace-lightbox.js?v=20260908-detail1' in seo_generator
+assert 'scroll-snap-type:x mandatory' in detail_css and 'object-fit:contain' in detail_css
+assert 'render_detail_content(listing)' in seo_generator and 'ld-layout' in detail_template
+assert 'ld-gallery-track' in seo_generator and 'data-gallery-counter' in seo_generator
 assert 'data-detail-direction' not in detail
-assert 'data-detail-poster' in detail and 'poster_name' in detail_js, "Approved listing detail must show the poster name entered in the form"
+assert 'data-detail-poster' in detail and 'poster_name' in detail_ui, "Approved listing detail must show the poster name entered in the form"
 assert 'listing.contact_zalo' not in detail_js, "Public Zalo link must reuse the contact phone"
 assert "enable row level security" in schema.lower()
 assert "listings_anon_submit_pending" in schema and "listings_admin_manage" in schema

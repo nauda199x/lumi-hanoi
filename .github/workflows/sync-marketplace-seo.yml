@@ -8,6 +8,7 @@ on:
     branches: [main]
     paths:
       - "scripts/generate_marketplace_seo.py"
+      - "scripts/templates/listing-detail.html.tpl"
       - "scripts/marketplace_inventory.py"
       - "scripts/generate_marketplace_seo_average.py"
       - "scripts/generate_rent_category_seo.py"
@@ -48,7 +49,7 @@ jobs:
           python -m py_compile scripts/normalize_marketplace_snippet_text.py
       - name: Commit generated SEO pages
         run: |
-          PATHS="mua-ban-lumi-hanoi cho-thue-lumi-hanoi cho-thue-shop-chan-de-lumi-hanoi gia-can-ho-lumi-hanoi cho-thue-can-ho-1-phong-ngu-lumi-hanoi cho-thue-can-ho-2-phong-ngu-lumi-hanoi cho-thue-can-ho-3-phong-ngu-lumi-hanoi cho-thue-can-ho-4-phong-ngu-lumi-hanoi cho-thue-duplex-lumi-hanoi cho-thue-penthouse-lumi-hanoi cho-thue-lumi-signature cho-thue-lumi-prestige cho-thue-lumi-elite lumi-signature lumi-prestige lumi-elite assets/js/marketplace-list.js sitemap.xml sitemap-tin-dang.xml"
+          PATHS="tin-dang-lumi-hanoi mua-ban-lumi-hanoi cho-thue-lumi-hanoi cho-thue-shop-chan-de-lumi-hanoi gia-can-ho-lumi-hanoi cho-thue-can-ho-1-phong-ngu-lumi-hanoi cho-thue-can-ho-2-phong-ngu-lumi-hanoi cho-thue-can-ho-3-phong-ngu-lumi-hanoi cho-thue-can-ho-4-phong-ngu-lumi-hanoi cho-thue-duplex-lumi-hanoi cho-thue-penthouse-lumi-hanoi cho-thue-lumi-signature cho-thue-lumi-prestige cho-thue-lumi-elite lumi-signature lumi-prestige lumi-elite assets/js/marketplace-list.js sitemap.xml sitemap-tin-dang.xml"
           if [ -z "$(git status --porcelain -- $PATHS)" ]; then
             echo "Marketplace SEO pages are already current."
             exit 0

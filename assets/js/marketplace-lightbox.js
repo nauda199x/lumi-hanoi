@@ -1,5 +1,5 @@
 (()=>{
-  const TRACK_SELECTOR=".detail-gallery-track";
+  const TRACK_SELECTOR=".detail-gallery-track,.ld-gallery-track";
   const bound=new WeakSet();
   let overlay=null;
   let stage=null;
@@ -250,6 +250,13 @@
 
     document.addEventListener("keydown",event=>{
       if(!overlay||overlay.hidden)return;
+      if(event.key==="Tab"){
+        const buttons=[...overlay.querySelectorAll("button:not([disabled])")];
+        const first=buttons[0],last=buttons[buttons.length-1];
+        if(event.shiftKey&&(document.activeElement===first||!overlay.contains(document.activeElement))){event.preventDefault();last?.focus();}
+        else if(!event.shiftKey&&(document.activeElement===last||!overlay.contains(document.activeElement))){event.preventDefault();first?.focus();}
+        return;
+      }
       if(event.key==="Escape"){event.preventDefault();close();}
       else if(event.key==="ArrowLeft"){event.preventDefault();go(-1);}
       else if(event.key==="ArrowRight"){event.preventDefault();go(1);}
