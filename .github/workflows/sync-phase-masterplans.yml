@@ -22,8 +22,8 @@ jobs:
       - name: Download source plans from Drive
         run: |
           mkdir -p /tmp/lumi-plans assets/media/floor-plans
-          gdown --id 1FvjlIjErGhvMP7kjbfUm1EmxKT9mNBMJ -O /tmp/lumi-plans/prestige.jpg
-          gdown --id 1CsOkA0Hmz2fsFshdjFEhhUHsqqsWFO5Z -O /tmp/lumi-plans/elite.jpg
+          gdown 1FvjlIjErGhvMP7kjbfUm1EmxKT9mNBMJ -O /tmp/lumi-plans/prestige.jpg
+          gdown 1CsOkA0Hmz2fsFshdjFEhhUHsqqsWFO5Z -O /tmp/lumi-plans/elite.jpg
           test -s /tmp/lumi-plans/prestige.jpg
           test -s /tmp/lumi-plans/elite.jpg
 
