@@ -1,0 +1,67 @@
+/* Marketplace-first navigation emphasis — 2026-09-08
+   Keep Mua bán / Cho thuê inside Giao dịch; make Đăng tin the standout top-level action. */
+.nav-market>summary{
+  position:relative;
+  color:var(--lumi-ink,#18201d)!important;
+  font-weight:800!important;
+}
+.nav-market>summary:before{
+  content:"";
+  position:absolute;
+  left:10px;
+  right:10px;
+  bottom:3px;
+  height:2px;
+  border-radius:999px;
+  background:var(--lumi-accent,#a87943);
+  opacity:.9;
+}
+.nav-direct-cta{
+  position:relative;
+  gap:8px!important;
+  margin-left:2px!important;
+  padding:0 15px 0 11px!important;
+  border:1px solid #c8a16b!important;
+  background:var(--lumi-dark,#17231f)!important;
+  color:#fff!important;
+  box-shadow:0 6px 18px rgba(23,35,31,.14)!important;
+  font-weight:800!important;
+}
+.nav-direct-cta:before{
+  content:"+";
+  width:22px;
+  height:22px;
+  flex:0 0 22px;
+  display:grid;
+  place-items:center;
+  border-radius:999px;
+  background:#d7b074;
+  color:#17231f;
+  font-size:.92rem;
+  font-weight:900;
+  line-height:1;
+}
+.nav-direct-cta:hover,
+.nav-direct-cta[aria-current="page"]{
+  border-color:#d7b074!important;
+  background:#20342c!important;
+  color:#fff!important;
+  box-shadow:0 8px 22px rgba(23,35,31,.18)!important;
+}
+
+/* In the hamburger menu the primary posting action remains visible and easy to tap. */
+@media(max-width:1000px){
+  .nav-direct-cta{
+    width:100%!important;
+    min-height:46px!important;
+    display:flex!important;
+    justify-content:flex-start!important;
+    margin:4px 0 2px!important;
+    padding:0 13px!important;
+  }
+  .nav-market>summary:before{
+    left:12px;
+    right:auto;
+    width:58px;
+  }
+}
