@@ -1,3 +1,16 @@
+# Consolidate broad Lumi Hanoi rental search signals on the primary hub.
+# Force the narrower Signature rental landing page to the main rental URL.
+[[redirects]]
+  from = "/cho-thue-lumi-signature"
+  to = "/cho-thue-lumi-hanoi/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/cho-thue-lumi-signature/"
+  to = "/cho-thue-lumi-hanoi/"
+  status = 301
+  force = true
 
 # Removed/expired marketplace listings: serve a helpful real 404 without
 # redirecting crawlers to the noindex dynamic fallback. Existing static listing
@@ -85,7 +98,6 @@
   to = "/mat-bang-lumi-hanoi/lumi-prestige/p2/:splat"
   status = 301
   force = true
-
 
 [[redirects]]
   from = "/toa-signature-1-lumi-hanoi/*"
