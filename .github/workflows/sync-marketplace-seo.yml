@@ -4,6 +4,12 @@ on:
   schedule:
     - cron: "*/5 * * * *"
   workflow_dispatch:
+    inputs:
+      reason:
+        description: "Reason for the immediate marketplace SEO sync"
+        required: false
+        default: "manual"
+        type: string
   push:
     branches: [main]
     paths:
@@ -11,6 +17,7 @@ on:
       - "scripts/templates/listing-detail.html.tpl"
       - "scripts/marketplace_inventory.py"
       - "scripts/generate_marketplace_seo_average.py"
+      - "scripts/finalize_marketplace_sitemap.py"
       - "scripts/generate_rent_category_seo.py"
       - "scripts/strengthen_rent_hub_seo.py"
       - "scripts/consolidate_rent_hub_serp.py"
@@ -28,11 +35,12 @@ concurrency:
 jobs:
   sync:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 8
     steps:
       - uses: actions/checkout@v4
         with:
           ref: main
+          fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
@@ -44,10 +52,12 @@ jobs:
           python scripts/normalize_marketplace_snippet_text.py
           python scripts/consolidate_rent_hub_serp.py
           python scripts/strengthen_sale_hub_seo.py
+          python scripts/finalize_marketplace_sitemap.py
       - name: Validate marketplace SEO generator syntax
         run: |
           python -m py_compile scripts/generate_marketplace_seo_average.py
           python -m py_compile scripts/marketplace_inventory.py
+          python -m py_compile scripts/finalize_marketplace_sitemap.py
           python -m py_compile scripts/generate_rent_category_seo.py
           python -m py_compile scripts/strengthen_rent_hub_seo.py
           python -m py_compile scripts/normalize_marketplace_snippet_text.py
@@ -57,11 +67,12 @@ jobs:
         run: |
           PATHS="tin-dang-lumi-hanoi mua-ban-lumi-hanoi cho-thue-lumi-hanoi cho-thue-shop-chan-de-lumi-hanoi gia-can-ho-lumi-hanoi cho-thue-can-ho-1-phong-ngu-lumi-hanoi cho-thue-can-ho-2-phong-ngu-lumi-hanoi cho-thue-can-ho-3-phong-ngu-lumi-hanoi cho-thue-can-ho-4-phong-ngu-lumi-hanoi cho-thue-duplex-lumi-hanoi cho-thue-penthouse-lumi-hanoi cho-thue-lumi-signature cho-thue-lumi-prestige cho-thue-lumi-elite lumi-signature lumi-prestige lumi-elite assets/js/marketplace-list.js sitemap.xml sitemap-tin-dang.xml"
           if [ -z "$(git status --porcelain -- $PATHS)" ]; then
-            echo "Marketplace SEO pages are already current."
+            echo "Marketplace SEO pages and sitemap are already current."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add $PATHS
           git commit -m "Sync approved marketplace SEO pages"
+          git pull --rebase origin main
           git push origin HEAD:main
