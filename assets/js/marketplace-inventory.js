@@ -81,7 +81,6 @@
       image.addEventListener("error",()=>image.remove(),{once:true});media.append(image);
       const counter=el("span","inventory-image-count");counter.append(icon("image"),document.createTextNode(`${images.length} ảnh`));media.append(counter);
     }
-    media.append(el("span","inventory-status",type==="rent"?"CHO THUÊ":"MUA BÁN"));
     const info=el("div","inventory-info");
     const place=[listing.phase,listing.tower].filter(Boolean).join(" · ");
     if(place){const location=el("p","inventory-location");location.title=place;location.append(icon("pin"),el("span","",place));info.append(location);}
