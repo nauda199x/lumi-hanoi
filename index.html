@@ -26,7 +26,7 @@
       .home-hero-media{object-position:center 64%;opacity:.86}
       .home-hero:before{background:linear-gradient(90deg,rgba(11,14,12,.90) 0%,rgba(11,14,12,.62) 36%,rgba(11,14,12,.25) 66%,rgba(11,14,12,.08) 100%),linear-gradient(0deg,rgba(11,14,12,.58) 0%,rgba(11,14,12,.05) 58%)}
       .nav-market>summary{font-weight:800;text-decoration:underline;text-decoration-color:#b99156;text-decoration-thickness:2px;text-underline-offset:6px}
-      .marketplace-spotlight{padding:38px 0 42px;background:#f5f2ea;border-bottom:1px solid rgba(16,38,31,.12)}
+      .marketplace-spotlight{padding:38px 0 42px;background:#f5f2ea;border-bottom:1px solid rgba(16,38,31,.12);scroll-margin-top:96px}
       .marketplace-intro{display:flex;align-items:end;justify-content:space-between;gap:32px;margin-bottom:22px}
       .marketplace-intro h2{margin:.25rem 0 0;font-size:clamp(2rem,4vw,3.7rem);line-height:.98;letter-spacing:-.04em}
       .marketplace-intro>p{max-width:520px;margin:0;color:#54615d;font-size:1.02rem}
@@ -44,9 +44,9 @@
         .home-hero-media{height:122%;top:-11%;bottom:auto;object-position:53% center;opacity:.79}
         .home-hero:before{background:linear-gradient(0deg,rgba(11,14,12,.92) 0%,rgba(11,14,12,.50) 72%,rgba(11,14,12,.30) 100%)}
         .home-hero .home-market-actions{display:flex!important;flex-direction:column!important;align-items:stretch!important;gap:10px!important;width:100%!important}
-        .home-hero .home-market-actions>.home-market-post{display:flex!important;width:100%!important;max-width:none!important;min-width:0!important;min-height:56px!important;margin:0!important;padding:0 18px!important;background:#d7b074!important;border:1px solid #d7b074!important;color:#10261f!important;border-radius:16px!important;font-size:1rem!important;font-weight:800!important;line-height:1.15!important;text-align:center!important;box-shadow:0 8px 24px rgba(0,0,0,.12)!important}
+        .home-hero .home-market-actions>.home-market-post{display:flex!important;width:100%!important;max-width:none!important;min-width:0!important;min-height:56px!important;margin:0!important;padding:0 18px!important;background:#d7b074!important;border:1px solid #d7b074!important;color:#10261f!important;border-radius:16px!important;font-size:1rem!important;font-weight:800!important;line-height:1.15!important;text-align:center!important;box-shadow:0 8px 24px rgba(0,0,0,.12)!important;justify-content:center!important}
         .home-hero .home-market-secondary{display:flex!important;align-items:stretch!important;gap:10px!important;width:100%!important;min-width:0!important}
-        .home-hero .home-market-secondary>.btn{display:flex!important;flex:1 1 0!important;width:0!important;max-width:none!important;min-width:0!important;min-height:54px!important;margin:0!important;padding:0 8px!important;border-radius:16px!important;font-size:.94rem!important;font-weight:800!important;line-height:1.15!important;text-align:center!important;white-space:nowrap!important;overflow:hidden!important}
+        .home-hero .home-market-secondary>.btn{display:flex!important;flex:1 1 0!important;width:0!important;max-width:none!important;min-width:0!important;min-height:54px!important;margin:0!important;padding:0 8px!important;border-radius:16px!important;font-size:.94rem!important;font-weight:800!important;line-height:1.15!important;text-align:center!important;white-space:normal!important;overflow:visible!important;justify-content:center!important}
         .home-hero .home-market-secondary>.home-market-buy{background:#10261f!important;border:1px solid rgba(255,255,255,.14)!important;color:#fff!important}
         .home-hero .home-market-secondary>.home-market-rent{background:rgba(251,249,243,.97)!important;border:1px solid rgba(251,249,243,.92)!important;color:#10261f!important}
         .marketplace-spotlight{padding:28px 0 32px}.marketplace-grid{gap:10px}.market-card{padding:20px;border-radius:15px}.marketplace-intro h2{font-size:2.2rem}
@@ -97,11 +97,11 @@
           <p class="eyebrow section-kicker">Sàn giao dịch căn hộ Lumi Hanoi</p>
           <h1>LUMI<br>HANOI</h1>
           <p class="lead">Tìm tin mua bán, chuyển nhượng và cho thuê căn hộ Lumi Hanoi đang cập nhật. Chủ căn có thể đăng tin trực tiếp để tiếp cận người đang tìm mua hoặc thuê tại dự án.</p>
-          <div class="hero-actions home-market-actions"><a class="btn btn-market-post home-market-post" href="/dang-tin-lumi-hanoi/">Đăng tin căn hộ</a><div class="home-market-secondary"><a class="btn btn-primary home-market-buy" href="/mua-ban-lumi-hanoi/">Xem căn mua bán</a><a class="btn home-market-rent" href="/cho-thue-lumi-hanoi/">Xem căn cho thuê</a></div></div>
+          <div class="hero-actions home-market-actions"><a class="btn btn-market-post home-market-post" href="/dang-tin-lumi-hanoi/">Đăng tin căn hộ</a><div class="home-market-secondary"><a class="btn btn-primary home-market-buy" href="/mat-bang-lumi-hanoi/">Xem mặt bằng</a><a class="btn home-market-rent" href="#giao-dich">Giao dịch</a></div></div>
         </div>
       </section>
 
-      <section class="marketplace-spotlight" aria-labelledby="marketplace-title">
+      <section id="giao-dich" class="marketplace-spotlight" aria-labelledby="marketplace-title">
         <div class="container">
           <div class="marketplace-intro" data-reveal>
             <div><p class="eyebrow section-kicker">Marketplace Lumi Hanoi</p><h2 id="marketplace-title">Giao dịch căn hộ ngay từ trang chủ</h2></div>
