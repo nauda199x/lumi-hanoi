@@ -20,6 +20,7 @@ on:
       - "scripts/enhance_market_index.py"
       - "scripts/generate_sale_phase_seo.py"
       - "scripts/generate_sale_tower_seo.py"
+      - "scripts/generate_floorplan_marketplace_bridge.py"
       - "scripts/finalize_marketplace_sitemap.py"
       - "scripts/generate_rent_category_seo.py"
       - "scripts/strengthen_rent_hub_seo.py"
@@ -62,6 +63,7 @@ jobs:
           python scripts/finalize_marketplace_sitemap.py
           python scripts/generate_sale_phase_seo.py
           python scripts/generate_sale_tower_seo.py
+          python scripts/generate_floorplan_marketplace_bridge.py
           python scripts/update_home_social_preview.py
       - name: Validate marketplace SEO generator syntax
         run: |
@@ -69,6 +71,7 @@ jobs:
           python -m py_compile scripts/enhance_market_index.py
           python -m py_compile scripts/generate_sale_phase_seo.py
           python -m py_compile scripts/generate_sale_tower_seo.py
+          python -m py_compile scripts/generate_floorplan_marketplace_bridge.py
           python -m py_compile scripts/marketplace_inventory.py
           python -m py_compile scripts/finalize_marketplace_sitemap.py
           python -m py_compile scripts/generate_rent_category_seo.py
@@ -80,9 +83,9 @@ jobs:
           python -m py_compile scripts/update_home_social_preview.py
       - name: Commit generated SEO pages
         run: |
-          PATHS="index.html tin-dang-lumi-hanoi mua-ban-lumi-hanoi mua-ban-lumi-signature mua-ban-lumi-prestige mua-ban-lumi-elite mua-ban-toa-s1-lumi-hanoi mua-ban-toa-s2-lumi-hanoi mua-ban-toa-s3-lumi-hanoi mua-ban-toa-s5-lumi-hanoi mua-ban-toa-s6-lumi-hanoi mua-ban-toa-p1-lumi-hanoi mua-ban-toa-p2-lumi-hanoi mua-ban-toa-e1-lumi-hanoi mua-ban-toa-e2-lumi-hanoi cho-thue-lumi-hanoi cho-thue-shop-chan-de-lumi-hanoi gia-can-ho-lumi-hanoi cho-thue-can-ho-1-phong-ngu-lumi-hanoi cho-thue-can-ho-2-phong-ngu-lumi-hanoi cho-thue-can-ho-3-phong-ngu-lumi-hanoi cho-thue-can-ho-4-phong-ngu-lumi-hanoi cho-thue-duplex-lumi-hanoi cho-thue-penthouse-lumi-hanoi cho-thue-lumi-signature cho-thue-lumi-prestige cho-thue-lumi-elite lumi-signature lumi-prestige lumi-elite assets/js/marketplace-list.js sitemap.xml sitemap-tin-dang.xml"
+          PATHS="index.html tin-dang-lumi-hanoi mua-ban-lumi-hanoi mua-ban-lumi-signature mua-ban-lumi-prestige mua-ban-lumi-elite mua-ban-toa-s1-lumi-hanoi mua-ban-toa-s2-lumi-hanoi mua-ban-toa-s3-lumi-hanoi mua-ban-toa-s5-lumi-hanoi mua-ban-toa-s6-lumi-hanoi mua-ban-toa-p1-lumi-hanoi mua-ban-toa-p2-lumi-hanoi mua-ban-toa-e1-lumi-hanoi mua-ban-toa-e2-lumi-hanoi cho-thue-lumi-hanoi cho-thue-shop-chan-de-lumi-hanoi gia-can-ho-lumi-hanoi cho-thue-can-ho-1-phong-ngu-lumi-hanoi cho-thue-can-ho-2-phong-ngu-lumi-hanoi cho-thue-can-ho-3-phong-ngu-lumi-hanoi cho-thue-can-ho-4-phong-ngu-lumi-hanoi cho-thue-duplex-lumi-hanoi cho-thue-penthouse-lumi-hanoi cho-thue-lumi-signature cho-thue-lumi-prestige cho-thue-lumi-elite lumi-signature lumi-prestige lumi-elite mat-bang-lumi-hanoi/lumi-signature/s1/index.html mat-bang-lumi-hanoi/lumi-signature/s2/index.html mat-bang-lumi-hanoi/lumi-signature/s3/index.html mat-bang-lumi-hanoi/lumi-signature/s5/index.html mat-bang-lumi-hanoi/lumi-signature/s6/index.html mat-bang-lumi-hanoi/lumi-prestige/p1/index.html mat-bang-lumi-hanoi/lumi-prestige/p2/index.html mat-bang-lumi-hanoi/lumi-elite/e1/index.html mat-bang-lumi-hanoi/lumi-elite/e2/index.html assets/js/marketplace-list.js sitemap.xml sitemap-tin-dang.xml"
           if [ -z "$(git status --porcelain -- $PATHS)" ]; then
-            echo "Marketplace SEO pages, sitemap and homepage social preview are already current."
+            echo "Marketplace SEO pages, floor-plan bridges, sitemap and homepage social preview are already current."
             exit 0
           fi
           git config user.name "github-actions[bot]"

@@ -44,6 +44,9 @@ MARKETPLACE_LISTING_PATH = re.compile(
 RENTAL_INTENT_PATH = re.compile(
     r"^/cho-thue-(?:can-ho-[1-4]-phong-ngu-lumi-hanoi|duplex-lumi-hanoi|penthouse-lumi-hanoi)/$"
 )
+SALE_TOWER_INTENT_PATH = re.compile(
+    r"^/mua-ban-toa-(?:s1|s2|s3|s5|s6|p1|p2|e1|e2)-lumi-hanoi/$"
+)
 
 
 class PageParser(HTMLParser):
@@ -187,16 +190,18 @@ def main() -> int:
         elif parsed.path not in pages:
             errors.append(f"sitemap URL is unexpectedly noindexed: {url}")
 
-    # Tower lookup pages, generated marketplace detail pages and the rental-intent
-    # landing cluster deliberately form named entity/search-intent clusters. Exact
-    # titles, descriptions and canonicals are still required to be unique above,
-    # but their shared suffixes are not doorway-page evidence by themselves.
+    # Named tower pages, generated marketplace detail pages and controlled
+    # commercial intent clusters deliberately share entity/search-intent suffixes.
+    # Exact titles, descriptions and canonicals are still required to be unique
+    # above; only the finite, explicitly enumerated clusters are exempted from the
+    # generic doorway-template fingerprint check.
     fingerprints = Counter(
         title_fingerprint(parser.title)
         for path, parser in pages.items()
         if not TOWER_LOOKUP_PATH.match(path)
         and not MARKETPLACE_LISTING_PATH.match(path)
         and not RENTAL_INTENT_PATH.match(path)
+        and not SALE_TOWER_INTENT_PATH.match(path)
     )
     for template, count in fingerprints.items():
         if template and count >= 4:
