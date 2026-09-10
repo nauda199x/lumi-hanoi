@@ -93,8 +93,9 @@ def update_html():
     for path in (HUB, ELITE):
         s = path.read_text(encoding='utf-8')
         s = s.replace(old, new)
-        # Correct intrinsic/meta dimensions for the new 3:2 render.
-        s = s.replace('width="1800" height="1350" alt="Mặt bằng tổng Lumi Elite', 'width="1800" height="1200" alt="Mặt bằng tổng Lumi Elite')
+        # Correct intrinsic/meta dimensions for the new 3:2 render, including reruns.
+        s = s.replace('src="/assets/media/floor-plans/lumi-elite-masterplan-v2.webp" alt="Mặt bằng tổng Lumi Elite gồm hai tòa E1 và E2 tại Lumi Hanoi" loading="lazy" decoding="async" width="1800" height="1350"', 'src="/assets/media/floor-plans/lumi-elite-masterplan-v2.webp" alt="Mặt bằng tổng Lumi Elite gồm hai tòa E1 và E2 tại Lumi Hanoi" loading="lazy" decoding="async" width="1800" height="1200"')
+        s = s.replace('src="/assets/media/floor-plans/lumi-elite-masterplan-v2.webp" alt="Mặt bằng tổng Lumi Elite gồm hai tòa E1 và E2 tại Lumi Hanoi" loading="eager" decoding="async" width="1800" height="1350"', 'src="/assets/media/floor-plans/lumi-elite-masterplan-v2.webp" alt="Mặt bằng tổng Lumi Elite gồm hai tòa E1 và E2 tại Lumi Hanoi" loading="eager" decoding="async" width="1800" height="1200"')
         if path == ELITE:
             s = s.replace('<meta property="og:image:height" content="1350">', '<meta property="og:image:height" content="1200">')
             s = s.replace('"width":1800,"height":1350}', '"width":1800,"height":1200}')
