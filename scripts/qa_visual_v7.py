@@ -25,6 +25,7 @@ INTENTIONAL_NOINDEX = {
     Path("admin/index.html"),
     Path("tin-dang-lumi-hanoi/index.html"),
     Path("tin-dang-khong-con-hien-thi/index.html"),
+    Path("tin-da-luu-lumi-hanoi/index.html"),
     Path("cho-thue-lumi-signature/index.html"),
 }
 INTENTIONAL_CANONICAL_CONSOLIDATIONS = {
@@ -35,14 +36,39 @@ CONTROLLED_SALE_PHASES = {
     Path("mua-ban-lumi-prestige/index.html"),
     Path("mua-ban-lumi-elite/index.html"),
 }
+CONTROLLED_SALE_UNITS = {
+    Path("mua-ban-can-ho-1-phong-ngu-lumi-hanoi/index.html"),
+    Path("mua-ban-can-ho-2-phong-ngu-lumi-hanoi/index.html"),
+    Path("mua-ban-can-ho-3-phong-ngu-lumi-hanoi/index.html"),
+}
+CONTROLLED_RENT_UNITS = {
+    Path("cho-thue-can-ho-1-phong-ngu-lumi-hanoi/index.html"),
+    Path("cho-thue-can-ho-2-phong-ngu-lumi-hanoi/index.html"),
+    Path("cho-thue-can-ho-3-phong-ngu-lumi-hanoi/index.html"),
+    Path("cho-thue-can-ho-4-phong-ngu-lumi-hanoi/index.html"),
+    Path("cho-thue-duplex-lumi-hanoi/index.html"),
+    Path("cho-thue-penthouse-lumi-hanoi/index.html"),
+}
+CONTROLLED_RENT_PHASES = {
+    Path("cho-thue-lumi-prestige/index.html"),
+    Path("cho-thue-lumi-elite/index.html"),
+}
+SALE_TOWER_RE = re.compile(r"^mua-ban-toa-(?:s1|s2|s3|s5|s6|p1|p2|e1|e2)-lumi-hanoi/index\.html$")
+RENT_TOWER_RE = re.compile(r"^cho-thue-toa-(?:s1|s2|s3|s5|s6|p1|p2|e1|e2)-lumi-hanoi/index\.html$")
 
 
 def is_controlled_sale_landing(relative: Path) -> bool:
-    """Sale phase/tower pages may deliberately flip noindex with live inventory."""
-    if relative in CONTROLLED_SALE_PHASES:
+    """Finite sale phase/tower/unit pages may flip noindex with live inventory."""
+    if relative in CONTROLLED_SALE_PHASES or relative in CONTROLLED_SALE_UNITS:
         return True
-    value = relative.as_posix()
-    return value.startswith("mua-ban-toa-") and value.endswith("-lumi-hanoi/index.html")
+    return bool(SALE_TOWER_RE.fullmatch(relative.as_posix()))
+
+
+def is_controlled_rent_landing(relative: Path) -> bool:
+    """Finite rental phase/tower/unit pages may flip noindex with live inventory."""
+    if relative in CONTROLLED_RENT_PHASES or relative in CONTROLLED_RENT_UNITS:
+        return True
+    return bool(RENT_TOWER_RE.fullmatch(relative.as_posix()))
 
 
 def trusted_drive_ids() -> set[str]:
@@ -126,7 +152,8 @@ def main() -> int:
         relative=path.relative_to(ROOT)
         generated_marketplace=(path.parent / ".marketplace-generated").is_file()
         controlled_sale_noindex=is_controlled_sale_landing(relative) and parser.noindex
-        intentional_noindex=relative in INTENTIONAL_NOINDEX or (generated_marketplace and parser.noindex) or controlled_sale_noindex
+        controlled_rent_noindex=is_controlled_rent_landing(relative) and parser.noindex
+        intentional_noindex=relative in INTENTIONAL_NOINDEX or (generated_marketplace and parser.noindex) or controlled_sale_noindex or controlled_rent_noindex
         if path.name != "404.html" and parser.noindex and not intentional_noindex: errors.append(f"noindex found: {relative}")
         if relative in INTENTIONAL_NOINDEX and not parser.noindex: errors.append(f"expected noindex missing: {relative}")
         if parser.legacy_redirect: continue
