@@ -102,6 +102,11 @@ def main() -> None:
                 fail(f"{tower}: {label} check failed")
 
         primary_pos = raw.find("data-primary-floor-plan")
+        if primary_pos < 0:
+            # Elite pages render all authoritative floor groups directly rather
+            # than designating one group as the primary plan. The semantic
+            # floor-plan section itself is therefore the correct content marker.
+            primary_pos = raw.find("floor-plan-section")
         bridge_pos = raw.find(bridge.BRIDGE_START)
         article_end = raw.find("</article>")
         if primary_pos < 0 or not (primary_pos < bridge_pos < article_end):
