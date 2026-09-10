@@ -1,0 +1,20 @@
+/* Marketplace conversion layer 3F. Lightweight, scoped and non-blocking. */
+.mp-conversion-strip,.mp-conversion-inline,.mp-conversion-detail,.mp-conversion-market{box-sizing:border-box}
+.mp-conversion-strip{width:min(1180px,calc(100% - 40px));margin:18px auto 4px;padding:16px 18px;border:1px solid #e1e6e2;border-radius:14px;background:#f7f8f6;display:flex;align-items:center;justify-content:space-between;gap:18px}
+.mp-conversion-copy{display:grid;gap:3px;min-width:0}.mp-conversion-copy strong{font-size:.95rem;line-height:1.45}.mp-conversion-copy span{color:#68716c;font-size:.82rem;line-height:1.55}
+.mp-conversion-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.mp-conversion-link{display:inline-flex;align-items:center;justify-content:center;gap:5px;min-height:42px;padding:8px 12px;border:1px solid #ccd4ce;border-radius:9px;background:#fff;color:#19251f;text-decoration:none;font-size:.84rem;font-weight:650;white-space:nowrap}
+.mp-conversion-link--primary{background:#19251f;border-color:#19251f;color:#fff}
+.mp-saved-count{display:inline-grid;place-items:center;min-width:20px;height:20px;padding:0 5px;border-radius:999px;background:#e7ece8;color:#33483a;font-size:.72rem;font-weight:750}
+.mp-conversion-link--primary .mp-saved-count{background:#ffffff24;color:#fff}
+.mp-fresh-badge{display:inline-flex;width:max-content;align-items:center;margin:0 0 8px;padding:4px 8px;border-radius:999px;background:#edf4ee;color:#315b3d;font-size:.7rem;font-weight:750;letter-spacing:.02em}
+.mp-conversion-inline{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin:22px 0 4px;padding:15px 16px;border:1px solid #dfe5e0;border-radius:12px;background:#f7f9f7}
+.mp-conversion-inline>div{display:grid;gap:2px}.mp-conversion-inline strong{font-size:.92rem}.mp-conversion-inline span{font-size:.78rem;color:#69736c}
+.mp-conversion-detail{display:grid;grid-template-columns:1fr;gap:8px;margin-top:16px;padding-top:16px;border-top:1px solid #e4e8e5}
+.mp-conversion-detail .mp-conversion-link{width:100%}
+.mp-conversion-market{margin:18px 0 0;padding:16px;border:1px solid #dfe5e0;border-radius:12px;background:#f7f9f7;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.mp-conversion-market .mp-conversion-copy{max-width:600px}
+.saved-listings-page main{min-height:56vh}.saved-listings-shell{width:min(980px,calc(100% - 40px));margin:0 auto;padding:36px 0 70px}.saved-listings-intro{max-width:720px;color:#626c66;line-height:1.75}.saved-listings-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:26px}.saved-listing-card{border:1px solid #e1e6e2;border-radius:14px;padding:18px;background:#fff;display:grid;gap:10px}.saved-listing-card h2{font-size:1.05rem!important;line-height:1.5!important;margin:0!important}.saved-listing-meta{display:flex;flex-wrap:wrap;gap:6px 12px;color:#68716c;font-size:.82rem}.saved-listing-actions{display:flex;gap:8px;flex-wrap:wrap}.saved-listing-empty{margin-top:26px;padding:28px;border:1px dashed #cfd7d1;border-radius:14px;background:#f8faf8;text-align:center}.saved-listing-empty p{color:#68716c}.saved-legacy-note{font-size:.8rem;color:#7b6552}
+@media(hover:hover){.mp-conversion-link:hover{background:#eef2ef;border-color:#9eaea2}.mp-conversion-link--primary:hover{background:#30483a;color:#fff}.saved-listing-card a:hover{color:#326944}}
+@media(max-width:760px){.mp-conversion-strip{width:calc(100% - 28px);margin-top:12px;padding:14px;align-items:stretch;flex-direction:column}.mp-conversion-actions{display:grid;grid-template-columns:1fr 1fr}.mp-conversion-link{white-space:normal;text-align:center}.mp-conversion-market{align-items:stretch;flex-direction:column}.mp-conversion-market .mp-conversion-actions{width:100%;grid-template-columns:1fr}.mp-conversion-inline{align-items:stretch;flex-direction:column}.mp-conversion-inline .mp-conversion-actions{width:100%;grid-template-columns:1fr}.saved-listings-shell{width:calc(100% - 28px);padding-top:24px}.saved-listings-grid{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){.mp-conversion-link{scroll-behavior:auto}}
