@@ -18,6 +18,7 @@ on:
       - "scripts/marketplace_inventory.py"
       - "scripts/generate_marketplace_seo_average.py"
       - "scripts/enhance_market_index.py"
+      - "scripts/generate_sale_phase_seo.py"
       - "scripts/finalize_marketplace_sitemap.py"
       - "scripts/generate_rent_category_seo.py"
       - "scripts/strengthen_rent_hub_seo.py"
@@ -58,11 +59,13 @@ jobs:
           python scripts/strengthen_sale_hub_seo.py
           python scripts/dedupe_marketplace_seo.py
           python scripts/finalize_marketplace_sitemap.py
+          python scripts/generate_sale_phase_seo.py
           python scripts/update_home_social_preview.py
       - name: Validate marketplace SEO generator syntax
         run: |
           python -m py_compile scripts/generate_marketplace_seo_average.py
           python -m py_compile scripts/enhance_market_index.py
+          python -m py_compile scripts/generate_sale_phase_seo.py
           python -m py_compile scripts/marketplace_inventory.py
           python -m py_compile scripts/finalize_marketplace_sitemap.py
           python -m py_compile scripts/generate_rent_category_seo.py
@@ -74,7 +77,7 @@ jobs:
           python -m py_compile scripts/update_home_social_preview.py
       - name: Commit generated SEO pages
         run: |
-          PATHS="index.html tin-dang-lumi-hanoi mua-ban-lumi-hanoi cho-thue-lumi-hanoi cho-thue-shop-chan-de-lumi-hanoi gia-can-ho-lumi-hanoi cho-thue-can-ho-1-phong-ngu-lumi-hanoi cho-thue-can-ho-2-phong-ngu-lumi-hanoi cho-thue-can-ho-3-phong-ngu-lumi-hanoi cho-thue-can-ho-4-phong-ngu-lumi-hanoi cho-thue-duplex-lumi-hanoi cho-thue-penthouse-lumi-hanoi cho-thue-lumi-signature cho-thue-lumi-prestige cho-thue-lumi-elite lumi-signature lumi-prestige lumi-elite assets/js/marketplace-list.js sitemap.xml sitemap-tin-dang.xml"
+          PATHS="index.html tin-dang-lumi-hanoi mua-ban-lumi-hanoi mua-ban-lumi-signature mua-ban-lumi-prestige mua-ban-lumi-elite cho-thue-lumi-hanoi cho-thue-shop-chan-de-lumi-hanoi gia-can-ho-lumi-hanoi cho-thue-can-ho-1-phong-ngu-lumi-hanoi cho-thue-can-ho-2-phong-ngu-lumi-hanoi cho-thue-can-ho-3-phong-ngu-lumi-hanoi cho-thue-can-ho-4-phong-ngu-lumi-hanoi cho-thue-duplex-lumi-hanoi cho-thue-penthouse-lumi-hanoi cho-thue-lumi-signature cho-thue-lumi-prestige cho-thue-lumi-elite lumi-signature lumi-prestige lumi-elite assets/js/marketplace-list.js sitemap.xml sitemap-tin-dang.xml"
           if [ -z "$(git status --porcelain -- $PATHS)" ]; then
             echo "Marketplace SEO pages, sitemap and homepage social preview are already current."
             exit 0
