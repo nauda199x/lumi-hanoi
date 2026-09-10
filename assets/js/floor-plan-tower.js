@@ -162,7 +162,7 @@
       const lookup=app.querySelector('[data-floor-lookup]');
       const lookupResult=app.querySelector('[data-floor-lookup-result]');
 
-      const activate=(anchor,{scroll=false,replaceHash=false,source='selector'}={})=>{
+      const activate=(anchor,{scroll=false,updateHash=true,replaceHash=false,source='selector'}={})=>{
         const section=sections.find(node=>node.id===anchor)||sections[0];
         if(!section)return;
         sections.forEach(node=>node.classList.toggle('is-active',node===section));
@@ -172,8 +172,10 @@
         const index=sections.indexOf(section);
         if(prev)prev.disabled=index<=0;
         if(next)next.disabled=index>=sections.length-1;
-        if(replaceHash&&history.replaceState)history.replaceState(null,'',`#${section.id}`);
-        else if(!replaceHash&&location.hash!==`#${section.id}`&&history.pushState)history.pushState(null,'',`#${section.id}`);
+        if(updateHash){
+          if(replaceHash&&history.replaceState)history.replaceState(null,'',`#${section.id}`);
+          else if(!replaceHash&&location.hash!==`#${section.id}`&&history.pushState)history.pushState(null,'',`#${section.id}`);
+        }
         if(scroll)app.querySelector('.floor-viewer-status')?.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});
         track('floor_plan_select',{floor_group:label,source});
       };
@@ -199,7 +201,7 @@
         event.preventDefault();
         const value=Number(new FormData(lookup).get('floor'));
         if(!Number.isFinite(value)||value<1){
-          lookupResult.textContent='Anh nhập số tầng cần xem, ví dụ 27.';
+          lookupResult.textContent='Nhập số tầng cần xem, ví dụ 27.';
           return;
         }
         const match=item.plans.find(plan=>planFloors(plan.label).has(value));
@@ -215,10 +217,10 @@
 
       const hashAnchor=location.hash.replace(/^#/,'');
       const initial=item.plans.some(p=>p.anchor===hashAnchor)?hashAnchor:item.plans[0]?.anchor;
-      activate(initial,{replaceHash:!hashAnchor,source:'initial'});
+      activate(initial,{updateHash:false,source:'initial'});
       window.addEventListener('hashchange',()=>{
         const anchor=location.hash.replace(/^#/,'');
-        if(item.plans.some(p=>p.anchor===anchor))activate(anchor,{source:'hash'});
+        if(item.plans.some(p=>p.anchor===anchor))activate(anchor,{updateHash:false,source:'hash'});
       });
       bindLightbox();
     })
