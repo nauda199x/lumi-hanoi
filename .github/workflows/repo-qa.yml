@@ -1,6 +1,7 @@
 name: Repository QA
 
 on:
+  workflow_dispatch:
   pull_request:
   push:
     branches: [main]
@@ -77,6 +78,7 @@ jobs:
           python -m json.tool assets/data/floor-plans.json >/dev/null
           python -m json.tool assets/data/visual-library-v8.7.json >/dev/null
           python -m py_compile scripts/generate_marketplace_seo.py
+          python -m py_compile scripts/dedupe_marketplace_seo.py
           python - <<'PY'
           import xml.etree.ElementTree as ET
           from pathlib import Path
