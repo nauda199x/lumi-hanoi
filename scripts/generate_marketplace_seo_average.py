@@ -223,7 +223,15 @@ def normalize_generated_listing_metadata(listings: list[dict]) -> int:
         expected_title = f"<title>{escaped_title}</title>"
         if expected_title not in raw:
             raise RuntimeError(f"SEO title normalization failed for {path}")
-        if f'data-detail-title>{gen.esc(listing.get("title"))}<' not in raw:
+        headline_match = re.search(
+            r'<h1\b[^>]*\bdata-detail-title\b[^>]*>(.*?)</h1>',
+            raw,
+            flags=re.S | re.I,
+        )
+        visible_title = ""
+        if headline_match:
+            visible_title = html_lib.unescape(re.sub(r"<[^>]+>", "", headline_match.group(1))).strip()
+        if visible_title != _compact(listing.get("title")):
             raise RuntimeError(f"Visible listing headline changed unexpectedly for {path}")
         canonical = gen.SITE + gen.listing_url(listing)
         if f'<link rel="canonical" href="{gen.esc(canonical)}">' not in raw:
