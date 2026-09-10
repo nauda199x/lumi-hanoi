@@ -149,10 +149,12 @@
           primaryPlan.dataset.floorLabel=primaryMeta.label;
           primaryPlan.dataset.planIndex=String(item.plans.findIndex(p=>p.anchor===primaryAnchor));
         }
+        primaryPlan.querySelectorAll('[data-lightbox]').forEach(link=>{link.dataset.dynamicLightboxBound='true';});
         app.querySelector('.floor-viewer-status')?.insertAdjacentElement('afterend',primaryPlan);
       }
 
-      const sections=[...app.querySelectorAll('.floor-plan-section')];
+      const sectionNodes=[...app.querySelectorAll('.floor-plan-section')];
+      const sections=item.plans.map(plan=>sectionNodes.find(node=>node.id===plan.anchor)).filter(Boolean);
       const navLinks=[...app.querySelectorAll('[data-floor-target]')];
       const status=app.querySelector('[data-floor-viewer-status] strong');
       const prev=app.querySelector('[data-floor-prev]');
