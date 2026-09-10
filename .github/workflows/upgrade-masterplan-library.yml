@@ -1,0 +1,49 @@
+name: Upgrade Masterplan Library
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "scripts/upgrade_masterplan_library.py"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: masterplan-library-upgrade
+  cancel-in-progress: true
+
+jobs:
+  upgrade:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Upgrade masterplan library
+        run: python scripts/upgrade_masterplan_library.py
+      - name: Validate generated changes
+        run: |
+          git diff --check
+          python -m py_compile scripts/upgrade_masterplan_library.py
+          grep -q "masterplan-library" mat-bang-lumi-hanoi/index.html
+          grep -q "lumi-prestige-masterplan.webp" mat-bang-lumi-hanoi/lumi-prestige/index.html
+          grep -q "lumi-elite-masterplan.webp" mat-bang-lumi-hanoi/lumi-elite/index.html
+      - name: Commit upgrade
+        run: |
+          PATHS="mat-bang-lumi-hanoi/index.html mat-bang-lumi-hanoi/lumi-prestige/index.html mat-bang-lumi-hanoi/lumi-elite/index.html lumi-prestige/index.html lumi-elite/index.html assets/css/floor-plan-hub.css sitemap.xml"
+          if [ -z "$(git status --porcelain -- $PATHS)" ]; then
+            echo "Masterplan library already current."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add $PATHS
+          git commit -m "feat: surface full Lumi Hanoi masterplan library"
+          git pull --rebase origin main
+          git push origin HEAD:main
