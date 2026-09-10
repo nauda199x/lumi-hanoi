@@ -5,6 +5,7 @@ on:
     paths:
       - "scripts/generate_rent_category_seo.py"
       - "scripts/strengthen_rent_hub_seo.py"
+      - "scripts/consolidate_rent_hub_serp.py"
       - "scripts/generate_rent_tower_seo.py"
       - "scripts/strengthen_rent_cluster_3h.py"
       - "scripts/qa_rent_cluster_3h.py"
@@ -28,6 +29,7 @@ jobs:
         run: |
           python -m py_compile scripts/generate_rent_category_seo.py
           python -m py_compile scripts/strengthen_rent_hub_seo.py
+          python -m py_compile scripts/consolidate_rent_hub_serp.py
           python -m py_compile scripts/generate_rent_tower_seo.py
           python -m py_compile scripts/strengthen_rent_cluster_3h.py
           python -m py_compile scripts/qa_rent_cluster_3h.py
@@ -39,7 +41,7 @@ jobs:
           python - <<'PY'
           from pathlib import Path
           hub=Path('cho-thue-lumi-hanoi/index.html').read_text(encoding='utf-8')
-          for token in ('<title>Thuê Lumi Hanoi |','RENT-SEO-CLUSTER:START','RENT-PHASE-CLUSTER:START','RENT-TOWER-CLUSTER:START','<meta name="robots" content="index,follow,max-image-preview:large">'):
+          for token in ('<title>Cho Thuê Căn Hộ Chung Cư Lumi Hanoi Giá Tốt ','RENT-SEO-CLUSTER:START','RENT-PHASE-CLUSTER:START','RENT-TOWER-CLUSTER:START','<meta name="robots" content="index,follow,max-image-preview:large">'):
               if token not in hub:
                   raise SystemExit(f'rental hub regression: {token}')
           print('Primary rental hub intent: OK')
