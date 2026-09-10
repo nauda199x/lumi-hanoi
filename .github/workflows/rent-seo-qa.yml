@@ -5,6 +5,10 @@ on:
     paths:
       - "scripts/generate_rent_category_seo.py"
       - "scripts/strengthen_rent_hub_seo.py"
+      - "scripts/generate_rent_tower_seo.py"
+      - "scripts/strengthen_rent_cluster_3h.py"
+      - "scripts/qa_rent_cluster_3h.py"
+      - "assets/js/marketplace-entity-loop.js"
       - ".github/workflows/sync-marketplace-seo.yml"
       - ".github/workflows/rent-seo-qa.yml"
 
@@ -14,61 +18,29 @@ permissions:
 jobs:
   rental-seo:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 6
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - name: Validate generator syntax
+      - name: Validate rental SEO syntax
         run: |
           python -m py_compile scripts/generate_rent_category_seo.py
           python -m py_compile scripts/strengthen_rent_hub_seo.py
-      - name: Generate rental intent pages
-        run: |
-          python scripts/generate_rent_category_seo.py
-          python scripts/strengthen_rent_hub_seo.py
-      - name: Validate generated pages and sitemap
+          python -m py_compile scripts/generate_rent_tower_seo.py
+          python -m py_compile scripts/strengthen_rent_cluster_3h.py
+          python -m py_compile scripts/qa_rent_cluster_3h.py
+          node --check assets/js/marketplace-entity-loop.js
+      - name: Run 3H rental SEO QA
+        run: python scripts/qa_rent_cluster_3h.py
+      - name: Keep primary rental hub intent stable
         run: |
           python - <<'PY'
-          import xml.etree.ElementTree as ET
           from pathlib import Path
-
-          pages = [
-              "cho-thue-can-ho-1-phong-ngu-lumi-hanoi/index.html",
-              "cho-thue-can-ho-2-phong-ngu-lumi-hanoi/index.html",
-              "cho-thue-can-ho-3-phong-ngu-lumi-hanoi/index.html",
-              "cho-thue-can-ho-4-phong-ngu-lumi-hanoi/index.html",
-              "cho-thue-duplex-lumi-hanoi/index.html",
-              "cho-thue-penthouse-lumi-hanoi/index.html",
-              "cho-thue-lumi-signature/index.html",
-              "cho-thue-lumi-prestige/index.html",
-              "cho-thue-lumi-elite/index.html",
-          ]
-          for page in pages:
-              raw = Path(page).read_text(encoding="utf-8")
-              if '<meta name="robots" content="index,follow,max-image-preview:large">' not in raw:
-                  raise SystemExit(f"missing index robots: {page}")
-              if '<link rel="canonical" href="https://lumi-hanoi.com/' not in raw:
-                  raise SystemExit(f"missing canonical: {page}")
-              if 'application/ld+json' not in raw:
-                  raise SystemExit(f"missing schema: {page}")
-
-          ET.parse("sitemap.xml")
-          hub = Path("cho-thue-lumi-hanoi/index.html").read_text(encoding="utf-8")
-          if "RENT-SEO-CLUSTER:START" not in hub:
-              raise SystemExit("rental hub is missing unit-type SEO cluster")
-          if "RENT-PHASE-CLUSTER:START" not in hub:
-              raise SystemExit("rental hub is missing phase SEO cluster")
-          if "<title>Thuê Lumi Hanoi |" not in hub:
-              raise SystemExit("rental hub title does not lead with Thuê Lumi Hanoi")
-          if '<meta name="robots" content="index,follow,max-image-preview:large">' not in hub:
-              raise SystemExit("rental hub is missing large image preview robots")
-
-          for guide in ["lumi-signature/index.html", "lumi-prestige/index.html", "lumi-elite/index.html"]:
-              raw = Path(guide).read_text(encoding="utf-8")
-              if "RENT-PHASE-GUIDE-CTA:START" not in raw:
-                  raise SystemExit(f"missing rental CTA in phase guide: {guide}")
-
-          print("Rental SEO pages and authority cluster: OK")
+          hub=Path('cho-thue-lumi-hanoi/index.html').read_text(encoding='utf-8')
+          for token in ('<title>Thuê Lumi Hanoi |','RENT-SEO-CLUSTER:START','RENT-PHASE-CLUSTER:START','RENT-TOWER-CLUSTER:START','<meta name="robots" content="index,follow,max-image-preview:large">'):
+              if token not in hub:
+                  raise SystemExit(f'rental hub regression: {token}')
+          print('Primary rental hub intent: OK')
           PY
