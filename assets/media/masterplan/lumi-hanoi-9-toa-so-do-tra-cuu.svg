@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1200" viewBox="0 0 1600 1200" role="img" aria-labelledby="title desc">
+  <title id="title">Sơ đồ tra cứu mặt bằng tổng thể Lumi Hanoi gồm 9 tòa</title>
+  <desc id="desc">Sơ đồ biên tập thể hiện ba phân khu Lumi Signature, Lumi Prestige và Lumi Elite cùng các tòa S1, S2, S3, S5, S6, P1, P2, E1, E2. Không phải bản vẽ kỹ thuật.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#faf8f2"/><stop offset="1" stop-color="#f1ede3"/></linearGradient>
+    <linearGradient id="sig" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ead8b7"/><stop offset="1" stop-color="#d7b074"/></linearGradient>
+    <linearGradient id="pre" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#dce8dc"/><stop offset="1" stop-color="#aec7b1"/></linearGradient>
+    <linearGradient id="eli" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e6e1f3"/><stop offset="1" stop-color="#c2b7df"/></linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="18" stdDeviation="28" flood-color="#10261f" flood-opacity=".12"/></filter>
+    <style>
+      text{font-family:Arial,"Helvetica Neue",sans-serif;fill:#10261f}.kicker{font-size:22px;font-weight:700;letter-spacing:5px}.title{font-size:66px;font-weight:800;letter-spacing:-2px}.sub{font-size:25px;fill:#5e6964}.zone-title{font-size:29px;font-weight:800}.zone-copy{font-size:18px;fill:#61706a}.tower{font-size:28px;font-weight:800}.label{font-size:17px;font-weight:700;letter-spacing:1px}.small{font-size:15px;fill:#6b746f}.line{stroke:#10261f;stroke-opacity:.12;stroke-width:2}.road{stroke:#aeb5b0;stroke-width:34;stroke-linecap:round}.walk{stroke:#c7cec8;stroke-width:9;stroke-linecap:round;fill:none}.water{fill:#cce5e3}.green{fill:#cfdfc7}.tree{fill:#789274}.tower-block{fill:#fbfaf6;stroke:#10261f;stroke-opacity:.18;stroke-width:2}.chip{fill:#fff;stroke:#10261f;stroke-opacity:.12;stroke-width:2}.note{font-size:16px;fill:#6a746e}
+    </style>
+  </defs>
+  <rect width="1600" height="1200" fill="url(#bg)"/>
+  <g transform="translate(72 70)">
+    <text class="kicker" x="0" y="0">LUMI HANOI · THƯ VIỆN MẶT BẰNG</text>
+    <text class="title" x="0" y="86">Mặt bằng tổng thể · 9 tòa</text>
+    <text class="sub" x="0" y="132">Sơ đồ tra cứu nhanh: Signature · Prestige · Elite</text>
+  </g>
+
+  <g transform="translate(72 248)">
+    <rect x="0" y="0" width="1456" height="760" rx="42" fill="#fff" filter="url(#shadow)"/>
+    <path class="road" d="M100 653 C360 610 580 665 830 625 C1070 588 1240 615 1360 570"/>
+    <path class="walk" d="M170 188 C390 245 495 330 665 360 C845 393 1010 338 1260 265"/>
+    <path class="walk" d="M225 510 C410 475 522 495 685 470 C875 440 1010 455 1220 490"/>
+    <ellipse class="water" cx="735" cy="435" rx="170" ry="72"/>
+    <ellipse class="water" cx="1160" cy="386" rx="105" ry="52"/>
+    <ellipse class="green" cx="456" cy="394" rx="130" ry="76"/>
+    <ellipse class="green" cx="1030" cy="590" rx="145" ry="58"/>
+
+    <g transform="translate(96 70)">
+      <rect width="760" height="512" rx="34" fill="url(#sig)" fill-opacity=".28" stroke="#b99156" stroke-opacity=".38" stroke-width="2"/>
+      <text class="zone-title" x="32" y="52">Lumi Signature</text>
+      <text class="zone-copy" x="32" y="82">5 tòa · S1 · S2 · S3 · S5 · S6</text>
+      <g transform="translate(56 132)">
+        <g transform="translate(0 0)"><rect class="tower-block" width="118" height="172" rx="20"/><circle cx="59" cy="70" r="32" fill="#f1dfbf"/><text class="tower" x="59" y="79" text-anchor="middle">S1</text><text class="small" x="59" y="138" text-anchor="middle">Signature</text></g>
+        <g transform="translate(150 0)"><rect class="tower-block" width="118" height="172" rx="20"/><circle cx="59" cy="70" r="32" fill="#f1dfbf"/><text class="tower" x="59" y="79" text-anchor="middle">S2</text><text class="small" x="59" y="138" text-anchor="middle">Signature</text></g>
+        <g transform="translate(300 0)"><rect class="tower-block" width="118" height="172" rx="20"/><circle cx="59" cy="70" r="32" fill="#f1dfbf"/><text class="tower" x="59" y="79" text-anchor="middle">S3</text><text class="small" x="59" y="138" text-anchor="middle">Signature</text></g>
+        <g transform="translate(118 214)"><rect class="tower-block" width="118" height="172" rx="20"/><circle cx="59" cy="70" r="32" fill="#f1dfbf"/><text class="tower" x="59" y="79" text-anchor="middle">S5</text><text class="small" x="59" y="138" text-anchor="middle">Signature</text></g>
+        <g transform="translate(268 214)"><rect class="tower-block" width="118" height="172" rx="20"/><circle cx="59" cy="70" r="32" fill="#f1dfbf"/><text class="tower" x="59" y="79" text-anchor="middle">S6</text><text class="small" x="59" y="138" text-anchor="middle">Signature</text></g>
+        <g transform="translate(450 75)"><rect x="0" y="0" width="206" height="232" rx="28" fill="#ffffff" fill-opacity=".72"/><text class="label" x="28" y="48">TRA CỨU</text><text class="small" x="28" y="82">Tòa → nhóm tầng</text><text class="small" x="28" y="112">→ mã căn → layout</text><circle class="tree" cx="55" cy="168" r="18"/><circle class="tree" cx="104" cy="188" r="15"/><circle class="tree" cx="151" cy="160" r="20"/><path d="M32 214 C78 190 140 195 178 213" stroke="#7da58e" stroke-width="7" fill="none" stroke-linecap="round"/></g>
+      </g>
+    </g>
+
+    <g transform="translate(900 70)">
+      <rect width="460" height="248" rx="34" fill="url(#pre)" fill-opacity=".55" stroke="#79957d" stroke-opacity=".35" stroke-width="2"/>
+      <text class="zone-title" x="30" y="50">Lumi Prestige</text><text class="zone-copy" x="30" y="80">2 tòa · P1 · P2</text>
+      <g transform="translate(44 112)"><g><rect class="tower-block" width="154" height="100" rx="18"/><circle cx="49" cy="50" r="28" fill="#d7e5d7"/><text class="tower" x="49" y="59" text-anchor="middle">P1</text><text class="small" x="92" y="46">Prestige</text><text class="small" x="92" y="68">1</text></g><g transform="translate(190 0)"><rect class="tower-block" width="154" height="100" rx="18"/><circle cx="49" cy="50" r="28" fill="#d7e5d7"/><text class="tower" x="49" y="59" text-anchor="middle">P2</text><text class="small" x="92" y="46">Prestige</text><text class="small" x="92" y="68">2</text></g></g>
+    </g>
+
+    <g transform="translate(900 348)">
+      <rect width="460" height="248" rx="34" fill="url(#eli)" fill-opacity=".55" stroke="#8c7db1" stroke-opacity=".35" stroke-width="2"/>
+      <text class="zone-title" x="30" y="50">Lumi Elite</text><text class="zone-copy" x="30" y="80">2 tòa · E1 · E2</text>
+      <g transform="translate(44 112)"><g><rect class="tower-block" width="154" height="100" rx="18"/><circle cx="49" cy="50" r="28" fill="#e2dcf2"/><text class="tower" x="49" y="59" text-anchor="middle">E1</text><text class="small" x="92" y="46">Elite</text><text class="small" x="92" y="68">1</text></g><g transform="translate(190 0)"><rect class="tower-block" width="154" height="100" rx="18"/><circle cx="49" cy="50" r="28" fill="#e2dcf2"/><text class="tower" x="49" y="59" text-anchor="middle">E2</text><text class="small" x="92" y="46">Elite</text><text class="small" x="92" y="68">2</text></g></g>
+    </g>
+
+    <g transform="translate(1000 636)"><rect class="chip" x="0" y="0" width="324" height="76" rx="20"/><text class="label" x="22" y="30">9 TÒA · 3 PHÂN KHU</text><text class="small" x="22" y="54">Mở từng mặt bằng thật trên website</text></g>
+  </g>
+
+  <g transform="translate(72 1050)">
+    <text class="note" x="0" y="0">Sơ đồ tra cứu do lumi-hanoi.com biên tập từ cấu trúc tòa đã công bố; không thay thế bản vẽ kỹ thuật, HĐMB hoặc phụ lục căn hộ.</text>
+    <text class="label" x="0" y="50">lumi-hanoi.com/mat-bang-lumi-hanoi/</text>
+  </g>
+</svg>
