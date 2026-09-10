@@ -30,6 +30,19 @@ INTENTIONAL_NOINDEX = {
 INTENTIONAL_CANONICAL_CONSOLIDATIONS = {
     Path("cho-thue-lumi-signature/index.html"): "https://lumi-hanoi.com/cho-thue-lumi-hanoi/",
 }
+CONTROLLED_SALE_PHASES = {
+    Path("mua-ban-lumi-signature/index.html"),
+    Path("mua-ban-lumi-prestige/index.html"),
+    Path("mua-ban-lumi-elite/index.html"),
+}
+
+
+def is_controlled_sale_landing(relative: Path) -> bool:
+    """Sale phase/tower pages may deliberately flip noindex with live inventory."""
+    if relative in CONTROLLED_SALE_PHASES:
+        return True
+    value = relative.as_posix()
+    return value.startswith("mua-ban-toa-") and value.endswith("-lumi-hanoi/index.html")
 
 
 def trusted_drive_ids() -> set[str]:
@@ -112,9 +125,10 @@ def main() -> int:
         text=path.read_text(encoding="utf-8"); parser=PageParser(); parser.feed(text); pages[path]=parser
         relative=path.relative_to(ROOT)
         generated_marketplace=(path.parent / ".marketplace-generated").is_file()
-        intentional_noindex=relative in INTENTIONAL_NOINDEX or (generated_marketplace and parser.noindex)
+        controlled_sale_noindex=is_controlled_sale_landing(relative) and parser.noindex
+        intentional_noindex=relative in INTENTIONAL_NOINDEX or (generated_marketplace and parser.noindex) or controlled_sale_noindex
         if path.name != "404.html" and parser.noindex and not intentional_noindex: errors.append(f"noindex found: {relative}")
-        if intentional_noindex and not parser.noindex: errors.append(f"expected noindex missing: {relative}")
+        if relative in INTENTIONAL_NOINDEX and not parser.noindex: errors.append(f"expected noindex missing: {relative}")
         if parser.legacy_redirect: continue
         if path.name == "404.html":
             pass
@@ -139,8 +153,6 @@ def main() -> int:
             verified_drive = is_verified_drive_thumbnail(src)
             marketplace_storage = is_marketplace_storage_image(src)
             if "alt" not in img: errors.append(f"image missing alt: {path.relative_to(ROOT)} {src}")
-            # Verified Drive thumbnails are manifest-gated delivery exceptions.
-            # Local media still requires intrinsic dimensions.
             if (not img.get("width") or not img.get("height")) and not verified_drive:
                 errors.append(f"image missing dimensions: {path.relative_to(ROOT)} {src}")
             parsed=urlparse(src)

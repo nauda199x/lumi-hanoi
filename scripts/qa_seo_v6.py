@@ -82,6 +82,28 @@ def schema_types(data) -> set[str]:
     return found
 
 
+def scrub_marketplace_listing_content(raw: str) -> str:
+    """Remove user-generated listing copy before editorial competitor/contact scans.
+
+    Marketplace cards legitimately contain the poster's phone/contact text. The
+    guardrail must continue scanning editorial copy while not flagging approved
+    listing cards rendered on hub, phase or tower landing pages.
+    """
+    raw = re.sub(
+        r"<!-- MARKETPLACE-STATIC-LISTINGS:START -->.*?<!-- MARKETPLACE-STATIC-LISTINGS:END -->",
+        "",
+        raw,
+        flags=re.S,
+    )
+    raw = re.sub(
+        r'<article\b(?=[^>]*\bdata-static-listing-card\b)[^>]*>.*?</article>',
+        "",
+        raw,
+        flags=re.S | re.I,
+    )
+    return raw
+
+
 def main() -> int:
     errors: list[str] = []
     pages: dict[str, Parser] = {}
@@ -122,10 +144,9 @@ def main() -> int:
             if path not in links: errors.append(f"{owner} does not link to {path}")
     for path in V5_REQUIRED:
         if not file_for(path).is_file(): errors.append(f"V5/V5.1 required page missing: {path}")
+
     public = "\n".join(
-        # Public listing blocks legitimately include each poster's contact.
-        # Keep the competitor/contact check on editorial content outside them.
-        re.sub(r"<!-- MARKETPLACE-STATIC-LISTINGS:START -->.*?<!-- MARKETPLACE-STATIC-LISTINGS:END -->", "", p.read_text(encoding="utf-8", errors="ignore"), flags=re.S)
+        scrub_marketplace_listing_content(p.read_text(encoding="utf-8", errors="ignore"))
         for p in ROOT.rglob("*.html")
         if not (p.parent / ".marketplace-generated").is_file()
     )
