@@ -1,0 +1,33 @@
+name: Sale Unit SEO QA
+
+on:
+  pull_request:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "scripts/generate_sale_unit_seo.py"
+      - "scripts/qa_sale_unit_seo.py"
+      - "assets/js/marketplace-entity-loop.js"
+      - ".github/workflows/sale-unit-seo-qa.yml"
+      - ".github/workflows/sync-marketplace-seo.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  sale-unit-seo:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Validate sale unit generator
+        run: |
+          python -m py_compile scripts/generate_sale_unit_seo.py
+          python -m py_compile scripts/qa_sale_unit_seo.py
+          node --check assets/js/marketplace-entity-loop.js
+      - name: Run sale unit SEO QA
+        run: python scripts/qa_sale_unit_seo.py
