@@ -17,6 +17,7 @@ on:
       - "scripts/templates/listing-detail.html.tpl"
       - "scripts/marketplace_inventory.py"
       - "scripts/generate_marketplace_seo_average.py"
+      - "scripts/enhance_market_index.py"
       - "scripts/finalize_marketplace_sitemap.py"
       - "scripts/generate_rent_category_seo.py"
       - "scripts/strengthen_rent_hub_seo.py"
@@ -49,6 +50,7 @@ jobs:
       - name: Generate approved listing pages
         run: |
           python scripts/generate_marketplace_seo_average.py
+          python scripts/enhance_market_index.py
           python scripts/generate_rent_category_seo.py
           python scripts/strengthen_rent_hub_seo.py
           python scripts/normalize_marketplace_snippet_text.py
@@ -60,6 +62,7 @@ jobs:
       - name: Validate marketplace SEO generator syntax
         run: |
           python -m py_compile scripts/generate_marketplace_seo_average.py
+          python -m py_compile scripts/enhance_market_index.py
           python -m py_compile scripts/marketplace_inventory.py
           python -m py_compile scripts/finalize_marketplace_sitemap.py
           python -m py_compile scripts/generate_rent_category_seo.py
