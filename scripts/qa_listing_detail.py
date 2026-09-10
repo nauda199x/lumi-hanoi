@@ -7,7 +7,7 @@ import json
 
 sys.path.insert(0,str(Path(__file__).resolve().parent))
 import generate_marketplace_seo as gen
-from generate_marketplace_seo_average import allow_short_descriptions_for_indexing
+from generate_marketplace_seo_average import allow_short_descriptions_for_indexing, build_listing_seo
 
 class Document(HTMLParser):
     def __init__(self, raw):
@@ -38,6 +38,17 @@ for listing_type in ['rent','sale']:
     assert parse_qs(urlparse(same_tower['href']).fragment)=={'tower':['S3']}
     assert gen.render_page(data)==raw, 'Generating the same record must be stable'
 
+# Seller copy may be expressive on-page, but crawler metadata must come from facts.
+spam_title='LUMIHANOI bàn giao XỊN XÒ - ĐẸP - RẺ quá cả nhà ơi'
+seo=build_listing_seo({**row,'title':spam_title,'floor_label':'cao'})
+assert spam_title not in seo['title']
+assert seo['title'].startswith('Cho thuê căn 2PN Lumi Signature S3 54m²')
+assert seo['title'].endswith(' | Lumi Hanoi') and len(seo['title'])<=70
+assert 'giá 10 triệu/tháng' in seo['description'] and len(seo['description'])<=158
+sale_seo=build_listing_seo({**row,'listing_type':'sale','title':spam_title,'price_vnd':5400000000,'floor_label':'trung'})
+assert sale_seo['title'].startswith('Bán căn 2PN Lumi Signature S3 54m²')
+assert '5,4 tỷ' in sale_seo['description']
+
 for count in [0,1,12]:
     raw=gen.render_detail_content({**row,'listing_images':[dict(storage_path=f'{i}.jpg') for i in range(count)],'contact_phone':'','floor_label':None})
     doc=Document(raw);assert len(doc.find('img'))==count
@@ -61,4 +72,4 @@ for marker in gen.ROOT.glob('*lumi-hanoi/*/.marketplace-generated'):
             if value.startswith('/') and not value.startswith('//'):
                 local=gen.ROOT/urlparse(value).path.lstrip('/')
                 assert local.exists(), f'Missing local link or asset: {value}'
-print('Listing detail: shared template, rent/sale, missing data, 0/1/12 images, escaped input, canonicals, assets and contact links: PASS')
+print('Listing detail: shared template, structured SEO metadata, rent/sale, missing data, 0/1/12 images, escaped input, canonicals, assets and contact links: PASS')
