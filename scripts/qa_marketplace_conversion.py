@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
 from __future__ import annotations
-import re
-from pathlib import Path
 import enhance_marketplace_conversion as conv
 import generate_marketplace_seo as gen
 import generate_sale_tower_seo as sale
@@ -22,7 +20,7 @@ def main():
     if market.count(conv.MARKET_START)!=1 or 'data-conversion-surface="market-index"' not in market: fail('Market Index conversion block missing')
     for item in sale.TOWERS:
         raw=read(gen.ROOT/gen.tower_link(item['tower']).lstrip('/')/'index.html')
-        if raw.count(conv.FLOOR_START)!=1 or f'Dăng căn {item["tower"]}' not in raw: fail(f'floorplan conversion missing {item["tower"]}')
+        if raw.count(conv.FLOOR_START)!=1 or f'Đăng căn {item["tower"]}' not in raw: fail(f'floorplan conversion missing {item["tower"]}')
     checked=0
     for root_name in ('mua-ban-lumi-hanoi','cho-thue-lumi-hanoi'):
         root=gen.ROOT/root_name
