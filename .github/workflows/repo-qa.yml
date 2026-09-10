@@ -64,10 +64,6 @@ jobs:
         run: python scripts/qa_sale_tower_seo.py
       - name: Floor-plan marketplace bridge QA
         run: python scripts/qa_floorplan_marketplace_bridge.py
-      - name: Marketplace entity-loop QA
-        run: |
-          python scripts/qa_marketplace_entity_loop.py
-          node --check assets/js/marketplace-entity-loop.js
       - name: Marketplace QA
         run: python scripts/qa_marketplace_v1.py
       - name: Sale inventory pagination and API QA
@@ -83,6 +79,10 @@ jobs:
           node --test scripts/qa_listing_detail.cjs
           node --check assets/js/listing-detail-ui.js
           node --check assets/js/marketplace-lightbox.js
+      - name: Marketplace entity-loop QA
+        run: |
+          python scripts/qa_marketplace_entity_loop.py
+          node --check assets/js/marketplace-entity-loop.js
       - name: Validate data and JavaScript syntax
         run: |
           python -m json.tool assets/data/floor-plans.json >/dev/null
