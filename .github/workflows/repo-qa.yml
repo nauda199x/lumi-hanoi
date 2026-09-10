@@ -79,6 +79,10 @@ jobs:
           node --test scripts/qa_listing_detail.cjs
           node --check assets/js/listing-detail-ui.js
           node --check assets/js/marketplace-lightbox.js
+      - name: Marketplace entity-loop QA
+        run: |
+          python scripts/qa_marketplace_entity_loop.py
+          node --check assets/js/marketplace-entity-loop.js
       - name: Validate data and JavaScript syntax
         run: |
           python -m json.tool assets/data/floor-plans.json >/dev/null
@@ -90,6 +94,8 @@ jobs:
           python -m py_compile scripts/qa_sale_tower_seo.py
           python -m py_compile scripts/generate_floorplan_marketplace_bridge.py
           python -m py_compile scripts/qa_floorplan_marketplace_bridge.py
+          python -m py_compile scripts/strengthen_marketplace_entity_loop.py
+          python -m py_compile scripts/qa_marketplace_entity_loop.py
           python -m py_compile scripts/dedupe_marketplace_seo.py
           python - <<'PY'
           import xml.etree.ElementTree as ET
@@ -146,3 +152,4 @@ jobs:
           node --check assets/js/marketplace-detail.js
           node --check assets/js/marketplace-admin.js
           node --check assets/js/marketplace-static-status.js
+          node --check assets/js/marketplace-entity-loop.js
