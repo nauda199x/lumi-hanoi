@@ -1,0 +1,48 @@
+name: Finalize Masterplan SEO
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "scripts/finalize_masterplan_seo.py"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: finalize-masterplan-seo
+  cancel-in-progress: true
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Finalize masterplan metadata
+        run: python scripts/finalize_masterplan_seo.py
+      - name: Validate
+        run: |
+          git diff --check
+          python -m py_compile scripts/finalize_masterplan_seo.py
+          grep -q "lumi-hanoi-mat-bang-tong-the-og-1200x630.webp" mat-bang-lumi-hanoi/index.html
+          test "$(grep -o 'primaryImageOfPage' mat-bang-lumi-hanoi/lumi-elite/index.html | wc -l)" -eq 1
+      - name: Commit fixes
+        run: |
+          PATHS="mat-bang-lumi-hanoi/index.html mat-bang-lumi-hanoi/lumi-elite/index.html"
+          if [ -z "$(git status --porcelain -- $PATHS)" ]; then
+            echo "Masterplan metadata already final."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add $PATHS
+          git commit -m "fix: finalize masterplan social and image schema"
+          git pull --rebase origin main
+          git push origin HEAD:main
