@@ -5,7 +5,8 @@ Runs after the existing rental generators, rental-tower generator and 3D entity
 loop. It keeps only inventory-backed rental intent pages indexable, enriches
 unit/phase landings with live asking-price/tower context, and replaces hash-only
 navigation with clean tower/unit landings when the corresponding page is
-eligible for indexing.
+eligible for indexing. The legacy Signature phase landing remains consolidated
+to the primary rental hub to avoid broad-query cannibalization.
 """
 from __future__ import annotations
 
@@ -28,6 +29,7 @@ BRIDGE_START = "<!-- TOWER-MARKETPLACE-BRIDGE:START -->"
 BRIDGE_END = "<!-- TOWER-MARKETPLACE-BRIDGE:END -->"
 UNIT_TO_SLUG = {item["unit"]: item["slug"] for item in rent.CATEGORIES}
 TOWER_TO_ITEM = {item["tower"]: item for item in towers.TOWERS}
+CONSOLIDATED_PHASES = {"Signature"}
 
 
 def clean(value) -> str:
@@ -68,6 +70,12 @@ def set_robots(raw: str, indexable: bool) -> str:
     canonical=re.search(r'(<link\s+rel="canonical"\s+href="[^"]+">)',raw,flags=re.I)
     if not canonical: raise RuntimeError("Cannot locate canonical while setting robots")
     return raw[:canonical.end()]+f'\n<meta name="robots" content="{value}">'+raw[canonical.end():]
+
+
+def set_canonical(raw: str, canonical: str) -> str:
+    raw=re.sub(r'<link\s+rel="canonical"\s+href="[^"]+">',f'<link rel="canonical" href="{canonical}">',raw,count=1,flags=re.I)
+    raw=re.sub(r'<meta\s+property="og:url"\s+content="[^"]+">',f'<meta property="og:url" content="{canonical}">',raw,count=1,flags=re.I)
+    return raw
 
 
 def upsert_block(raw: str, block: str) -> str:
@@ -120,8 +128,11 @@ def unit_block(unit: str, rows: list[dict], indexable: bool) -> str:
     )
 
 
-def phase_block(item: dict, rows: list[dict], indexable: bool) -> str:
-    status=(f"Trang đủ điều kiện index với {len(rows)} tin thuê công khai." if indexable else f"Trang tạm noindex vì mới có {len(rows)} tin; cần tối thiểu {INDEX_THRESHOLD} tin công khai.")
+def phase_block(item: dict, rows: list[dict], indexable: bool, consolidated: bool) -> str:
+    if consolidated:
+        status=f"Landing {item['label']} được giữ noindex và canonical về hub cho thuê chính để tránh cạnh tranh với truy vấn rộng; các landing tòa bên dưới vẫn có thể index độc lập khi đủ quỹ."
+    else:
+        status=(f"Trang đủ điều kiện index với {len(rows)} tin thuê công khai." if indexable else f"Trang tạm noindex vì mới có {len(rows)} tin; cần tối thiểu {INDEX_THRESHOLD} tin công khai.")
     return (
         f'{BLOCK_START}\n<section class="section" data-rent-3h="phase"><div class="container"><div class="section-heading"><div><p class="eyebrow">Dữ liệu thuê theo phân khu</p><h2>Quỹ thuê {gen.esc(item["label"])}</h2></div></div>'
         f'<p>Hiện có <strong>{len(rows)} căn hộ</strong> cho thuê đã duyệt tại {gen.esc(item["label"])}; giá chào trung bình là <strong>{gen.esc(avg_price(rows))}</strong>.</p>'
@@ -150,8 +161,12 @@ def gate_pages(listings: list[dict], today: date) -> tuple[dict[str,int],dict[st
         url=f'{SITE}/{item["slug"]}/'; sitemap=remove_sitemap(sitemap,url)
         if indexable: sitemap=add_sitemap(sitemap,url,latest(rows,today),"0.8")
     for item in phases.PHASES:
-        rows=phase_rows(listings,item["phase"]); phase_counts[item["phase"]]=len(rows); indexable=len(rows)>=INDEX_THRESHOLD
-        path=ROOT/item["slug"]/"index.html"; raw=path.read_text(encoding="utf-8"); raw=set_robots(raw,indexable); raw=upsert_block(raw,phase_block(item,rows,indexable)); path.write_text(raw,encoding="utf-8")
+        rows=phase_rows(listings,item["phase"]); phase_counts[item["phase"]]=len(rows)
+        consolidated=item["phase"] in CONSOLIDATED_PHASES
+        indexable=(len(rows)>=INDEX_THRESHOLD) and not consolidated
+        path=ROOT/item["slug"]/"index.html"; raw=path.read_text(encoding="utf-8"); raw=set_robots(raw,indexable)
+        if consolidated: raw=set_canonical(raw,f"{SITE}/cho-thue-lumi-hanoi/")
+        raw=upsert_block(raw,phase_block(item,rows,indexable,consolidated)); path.write_text(raw,encoding="utf-8")
         url=f'{SITE}/{item["slug"]}/'; sitemap=remove_sitemap(sitemap,url)
         if indexable: sitemap=add_sitemap(sitemap,url,latest(rows,today),"0.85")
     SITEMAP.write_text(sitemap.rstrip()+"\n",encoding="utf-8")
