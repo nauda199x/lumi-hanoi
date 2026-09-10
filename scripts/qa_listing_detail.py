@@ -60,10 +60,10 @@ unsafe='<script>alert(1)</script><img src=x onerror=alert(1)>'
 raw=gen.render_detail_content({**row,'title':unsafe,'description':unsafe,'poster_name':unsafe})
 assert not Document(raw).find('script') and '&lt;script&gt;' in raw
 
-# The dynamic shell is generated from the shared detail template, then the
-# marketplace entity-loop postprocessor may inject one Market Index anchor.
-# Compare the marked shell block to the base template after removing only that
-# deliberate enrichment so future real template drift still fails loudly.
+# The dynamic shell is generated from the shared detail template, then finite
+# postprocessors may add the 3D Market Index anchor and the 3F conversion block.
+# Scrub only those explicitly marked enrichments before comparing with the base
+# template; any other shell/template drift must still fail loudly.
 shell=(gen.ROOT/'tin-dang-lumi-hanoi/index.html').read_text()
 match=re.search(
     re.escape('<!-- LISTING-DETAIL:START -->')+r'\s*(.*?)\s*'+re.escape('<!-- LISTING-DETAIL:END -->'),
@@ -76,6 +76,12 @@ market_index_pattern=r'<a\s+data-detail-market-index\b[^>]*>.*?</a>'
 market_index_links=re.findall(market_index_pattern,shell_detail,flags=re.S)
 assert len(market_index_links)<=1, 'Dynamic listing shell must contain at most one entity-loop Market Index link'
 shell_base=re.sub(market_index_pattern,'',shell_detail,count=1,flags=re.S)
+conversion_start='<!-- MARKETPLACE-CONVERSION:DETAIL-START -->'
+conversion_end='<!-- MARKETPLACE-CONVERSION:DETAIL-END -->'
+conversion_pattern=re.escape(conversion_start)+r'.*?'+re.escape(conversion_end)
+conversion_blocks=re.findall(conversion_pattern,shell_base,flags=re.S)
+assert len(conversion_blocks)<=1, 'Dynamic listing shell must contain at most one conversion detail block'
+shell_base=re.sub(conversion_pattern,'',shell_base,count=1,flags=re.S)
 assert gen.render_detail_content().strip()==shell_base.strip(), 'Dynamic listing shell drifted from the shared detail template'
 
 for marker in gen.ROOT.glob('*lumi-hanoi/*/.marketplace-generated'):
