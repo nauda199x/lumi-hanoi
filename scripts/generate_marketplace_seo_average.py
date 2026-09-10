@@ -5,11 +5,19 @@ The base marketplace generator remains responsible for listing pages, sitemaps a
 market aggregation. For the price page, its statistics function is switched from
 median to arithmetic mean before generation, then the explanatory copy is kept in
 sync with that methodology.
+
+Approved listing pages are also post-processed so user-written promotional headlines
+stay visible on-page without becoming the SEO title/meta shown to search engines.
 """
+import html as html_lib
+import json
 import re
 from statistics import mean
 
 import generate_marketplace_seo as gen
+
+SEO_TITLE_MAX = 70
+SEO_DESCRIPTION_MAX = 158
 
 
 def allow_short_descriptions_for_indexing() -> None:
@@ -34,6 +42,199 @@ def allow_short_descriptions_for_indexing() -> None:
         )
 
     gen.indexable = indexable
+
+
+def _compact(value) -> str:
+    return gen.compact_text(value)
+
+
+def _floor_phrase(value) -> str:
+    floor = _compact(value)
+    if not floor:
+        return ""
+    floor = re.sub(r"^tầng\s+", "", floor, flags=re.I).strip()
+    return f"tầng {floor}" if floor else ""
+
+
+def _location(listing: dict, *, compact: bool = False) -> str:
+    phase = _compact(listing.get("phase"))
+    tower = _compact(listing.get("tower"))
+    if compact and tower:
+        return f"Lumi Hanoi {tower}"
+    if phase:
+        base = phase if phase.lower().startswith("lumi ") else f"Lumi {phase}"
+    else:
+        base = "Lumi Hanoi"
+    if tower and tower.lower() not in base.lower().split():
+        base = f"{base} {tower}"
+    return base
+
+
+def _subject(listing: dict) -> str:
+    unit = _compact(listing.get("unit_type")) or "căn hộ"
+    if unit.lower() == "shop chân đế":
+        return "shop chân đế"
+    if unit.lower() in {"căn hộ", "can ho"}:
+        return "căn hộ"
+    return f"căn {unit}"
+
+
+def _trim_with_suffix(text: str, suffix: str, max_length: int) -> str:
+    text = _compact(text)
+    candidate = text + suffix
+    if len(candidate) <= max_length:
+        return candidate
+    room = max_length - len(suffix) - 1
+    shortened = text[: max(1, room)].rsplit(" ", 1)[0].rstrip(" ,.-")
+    return shortened + suffix
+
+
+def build_listing_seo(listing: dict) -> dict[str, str]:
+    """Build deterministic SEO text from structured fields, never the UGC headline."""
+    action = "Cho thuê" if listing.get("listing_type") == "rent" else "Bán"
+    subject = _subject(listing)
+    location = _location(listing)
+    area = gen.format_area(listing.get("area_sqm"))
+    floor = _floor_phrase(listing.get("floor_label"))
+
+    seo_name = f"{action} {subject} {location}"
+    if area:
+        seo_name += f" {area}m²"
+    full_name = f"{seo_name}, {floor}" if floor else seo_name
+    suffix = " | Lumi Hanoi"
+
+    # Keep the strongest entities (intent, unit, phase/tower, area) before optional floor.
+    title = full_name + suffix
+    if len(title) > SEO_TITLE_MAX:
+        title = seo_name + suffix
+    if len(title) > SEO_TITLE_MAX:
+        compact_name = f"{action} {subject} {_location(listing, compact=True)}"
+        if area:
+            compact_name += f" {area}m²"
+        title = compact_name + suffix
+        seo_name = compact_name
+    if len(title) > SEO_TITLE_MAX:
+        title = _trim_with_suffix(seo_name, suffix, SEO_TITLE_MAX)
+        seo_name = title[: -len(suffix)]
+
+    facts = []
+    if area:
+        facts.append(f"diện tích {area}m²")
+    if floor:
+        facts.append(floor)
+    price = gen.format_price(listing)
+    if price and price != "Liên hệ":
+        facts.append(f"giá {price}")
+    intro = f"{action} {subject} tại {location}"
+    if facts:
+        intro += ", " + ", ".join(facts)
+    description = intro + ". Xem hình ảnh, thông tin căn và liên hệ người đăng trên Lumi Hanoi."
+    if len(description) > SEO_DESCRIPTION_MAX:
+        description = intro + ". Xem hình ảnh và liên hệ người đăng trên Lumi Hanoi."
+    if len(description) > SEO_DESCRIPTION_MAX:
+        description = intro + ". Xem thông tin chi tiết trên Lumi Hanoi."
+    if len(description) > SEO_DESCRIPTION_MAX:
+        description = description[: SEO_DESCRIPTION_MAX - 1].rsplit(" ", 1)[0].rstrip(" ,.-") + "…"
+
+    return {"title": title, "name": seo_name, "description": description}
+
+
+def _replace_meta(raw: str, *, key: str, value: str, attr: str = "name") -> str:
+    escaped = html_lib.escape(value, quote=True)
+    pattern = rf'<meta\s+{attr}="{re.escape(key)}"\s+content="[^"]*"\s*/?>'
+    replacement = f'<meta {attr}="{key}" content="{escaped}">'
+    return re.sub(pattern, replacement, raw, count=1, flags=re.I)
+
+
+def _rewrite_schema(raw: str, seo: dict[str, str]) -> str:
+    pattern = r'(<script\s+type="application/ld\+json">)(.*?)(</script>)'
+    match = re.search(pattern, raw, flags=re.S | re.I)
+    if not match:
+        return raw
+    try:
+        schema = json.loads(match.group(2))
+    except json.JSONDecodeError:
+        return raw
+
+    graph = schema.get("@graph", []) if isinstance(schema, dict) else []
+    for node in graph:
+        if not isinstance(node, dict):
+            continue
+        if node.get("@type") == "BreadcrumbList":
+            for item in node.get("itemListElement", []):
+                if isinstance(item, dict) and item.get("position") == 3:
+                    item["name"] = seo["name"]
+        if node.get("@type") == "WebPage":
+            node["name"] = seo["name"]
+            node["description"] = seo["description"]
+            offer = node.get("mainEntity")
+            if isinstance(offer, dict):
+                offered = offer.get("itemOffered")
+                if isinstance(offered, dict):
+                    offered["name"] = seo["name"]
+
+    schema_json = json.dumps(schema, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
+    return raw[: match.start(2)] + schema_json + raw[match.end(2) :]
+
+
+def normalize_generated_listing_metadata(listings: list[dict]) -> int:
+    """Rewrite crawler-visible metadata while preserving H1, slug and canonical URL."""
+    changed = 0
+    checked = 0
+    for listing in listings:
+        listing_type = listing.get("listing_type")
+        slug = _compact(listing.get("slug"))
+        if listing_type not in gen.CATEGORY or not slug:
+            continue
+        segment = gen.CATEGORY[listing_type][0]
+        path = gen.ROOT / segment / slug / "index.html"
+        if not path.exists():
+            continue
+
+        checked += 1
+        seo = build_listing_seo(listing)
+        raw = path.read_text(encoding="utf-8")
+        original = raw
+        escaped_title = html_lib.escape(seo["title"], quote=False)
+        raw = re.sub(r"<title>.*?</title>", f"<title>{escaped_title}</title>", raw, count=1, flags=re.S | re.I)
+        raw = _replace_meta(raw, key="description", value=seo["description"])
+        raw = _replace_meta(raw, key="og:title", value=seo["title"], attr="property")
+        raw = _replace_meta(raw, key="og:description", value=seo["description"], attr="property")
+
+        raw = _replace_meta(raw, key="twitter:title", value=seo["title"])
+        raw = _replace_meta(raw, key="twitter:description", value=seo["description"])
+        if 'name="twitter:title"' not in raw:
+            twitter = (
+                '<meta name="twitter:card" content="summary_large_image">\n'
+                f'  <meta name="twitter:title" content="{html_lib.escape(seo["title"], quote=True)}">\n'
+                f'  <meta name="twitter:description" content="{html_lib.escape(seo["description"], quote=True)}">'
+            )
+            raw = re.sub(
+                r'<meta\s+name="twitter:card"\s+content="summary_large_image"\s*/?>',
+                twitter,
+                raw,
+                count=1,
+                flags=re.I,
+            )
+
+        raw = _rewrite_schema(raw, seo)
+
+        # Hard guards: metadata must be normalized; visible UGC title/canonical stay untouched.
+        expected_title = f"<title>{escaped_title}</title>"
+        if expected_title not in raw:
+            raise RuntimeError(f"SEO title normalization failed for {path}")
+        if f'data-detail-title>{gen.esc(listing.get("title"))}<' not in raw:
+            raise RuntimeError(f"Visible listing headline changed unexpectedly for {path}")
+        canonical = gen.SITE + gen.listing_url(listing)
+        if f'<link rel="canonical" href="{gen.esc(canonical)}">' not in raw:
+            raise RuntimeError(f"Canonical changed unexpectedly for {path}")
+
+        if raw != original:
+            path.write_text(raw, encoding="utf-8")
+            changed += 1
+
+    print(f"Listing SEO metadata: normalized {checked} generated pages ({changed} changed)")
+    return changed
 
 
 def update_price_methodology_copy() -> None:
@@ -117,7 +318,24 @@ def main() -> None:
     # symbol makes all price-page aggregate calculations use arithmetic mean,
     # including overall, unit-type, phase and shop statistics.
     gen.median = mean
-    gen.main()
+
+    # Capture the same approved rows used by the generator so metadata normalization
+    # does not need a second Supabase request every five minutes.
+    approved_rows: list[dict] = []
+    original_fetch = gen.fetch_approved
+
+    def fetch_and_capture() -> list[dict]:
+        rows = original_fetch()
+        approved_rows[:] = rows
+        return rows
+
+    gen.fetch_approved = fetch_and_capture
+    try:
+        gen.main()
+    finally:
+        gen.fetch_approved = original_fetch
+
+    normalize_generated_listing_metadata(approved_rows)
     update_price_methodology_copy()
     remove_rental_ppsm_display()
     from optimize_responsive_photos import apply_markup
