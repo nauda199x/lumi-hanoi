@@ -32,6 +32,15 @@
     const badge=root.querySelector("[data-detail-type]");if(badge)badge.textContent="Tin ngừng hiển thị";
   };
   window.LumiMarketplace.getPublicListing(slug)
-    .then(listing=>{if(!listing)markUnavailable();else{window.LumiListingDetail?.hydrate(root,listing);recordView();}})
+    .then(listing=>{
+      if(!listing){markUnavailable();return;}
+      // Static listing HTML already contains crawler-first normalized metadata.
+      // Hydration refreshes live data, but must never replace that SEO title with
+      // the seller's free-form promotional headline.
+      const seoTitle=document.title;
+      window.LumiListingDetail?.hydrate(root,listing);
+      document.title=seoTitle;
+      recordView();
+    })
     .catch(()=>{}); // Keep the crawlable snapshot when the public API is offline.
 })();
