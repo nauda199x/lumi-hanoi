@@ -623,3 +623,10 @@ picture.responsive-photo{display:contents}
     grid-template-columns:minmax(0,1fr);
   }
 }
+
+
+/* SERP-INTENT-HERO:START */
+/* Visual-intent SEO pages show a real plan/layout first instead of a generic render. */
+.article-hero .serp-intent-hero{object-fit:contain;object-position:center;background:#f7f4ed;opacity:.44}
+@media(max-width:700px){.article-hero .serp-intent-hero{object-fit:contain;opacity:.40}}
+/* SERP-INTENT-HERO:END */
