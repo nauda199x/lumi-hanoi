@@ -29,12 +29,12 @@ REQUIRED_PATHS = {
     "/can-ho-3-phong-ngu-lumi-hanoi/", "/can-ho-4-phong-ngu-lumi-hanoi/",
     "/duplex-penthouse-lumi-hanoi/", "/mua-ban-lumi-hanoi/",
     "/cho-thue-lumi-hanoi/", "/ky-gui-lumi-hanoi/", "/tin-tuc/",
-    "/cho-thue-can-ho-1-phong-ngu-lumi-hanoi/",
-    "/cho-thue-can-ho-2-phong-ngu-lumi-hanoi/",
-    "/cho-thue-can-ho-3-phong-ngu-lumi-hanoi/",
-    "/cho-thue-can-ho-4-phong-ngu-lumi-hanoi/",
-    "/cho-thue-duplex-lumi-hanoi/", "/cho-thue-penthouse-lumi-hanoi/",
 }
+# The finite rental intent cluster is inventory-gated by strengthen_rent_cluster_3h.py:
+# unit, phase and tower pages may legitimately be noindex when approved inventory is
+# below the threshold. scripts/qa_rent_cluster_3h.py owns existence, robots,
+# canonical and sitemap validation for that cluster, so these pages must not be
+# treated as permanently indexable REQUIRED_PATHS here.
 TOWER_LOOKUP_PATH = re.compile(
     r"^/toa-(?:signature-(?:1|2|3|5|6)|prestige-(?:1|2)|elite-(?:1|2))-lumi-hanoi/$"
 )
@@ -43,6 +43,12 @@ MARKETPLACE_LISTING_PATH = re.compile(
 )
 RENTAL_INTENT_PATH = re.compile(
     r"^/cho-thue-(?:can-ho-[1-4]-phong-ngu-lumi-hanoi|duplex-lumi-hanoi|penthouse-lumi-hanoi)/$"
+)
+RENT_TOWER_INTENT_PATH = re.compile(
+    r"^/cho-thue-toa-(?:s1|s2|s3|s5|s6|p1|p2|e1|e2)-lumi-hanoi/$"
+)
+RENT_PHASE_INTENT_PATH = re.compile(
+    r"^/cho-thue-lumi-(?:signature|prestige|elite)/$"
 )
 SALE_TOWER_INTENT_PATH = re.compile(
     r"^/mua-ban-toa-(?:s1|s2|s3|s5|s6|p1|p2|e1|e2)-lumi-hanoi/$"
@@ -190,17 +196,19 @@ def main() -> int:
         elif parsed.path not in pages:
             errors.append(f"sitemap URL is unexpectedly noindexed: {url}")
 
-    # Named tower pages, generated marketplace detail pages and controlled
+    # Named tower pages, generated marketplace detail pages and finite controlled
     # commercial intent clusters deliberately share entity/search-intent suffixes.
     # Exact titles, descriptions and canonicals are still required to be unique
-    # above; only the finite, explicitly enumerated clusters are exempted from the
-    # generic doorway-template fingerprint check.
+    # above. Inventory-gated rental units/phases/towers are validated by the
+    # dedicated 3H QA, including robots + sitemap eligibility from live inventory.
     fingerprints = Counter(
         title_fingerprint(parser.title)
         for path, parser in pages.items()
         if not TOWER_LOOKUP_PATH.match(path)
         and not MARKETPLACE_LISTING_PATH.match(path)
         and not RENTAL_INTENT_PATH.match(path)
+        and not RENT_TOWER_INTENT_PATH.match(path)
+        and not RENT_PHASE_INTENT_PATH.match(path)
         and not SALE_TOWER_INTENT_PATH.match(path)
     )
     for template, count in fingerprints.items():
