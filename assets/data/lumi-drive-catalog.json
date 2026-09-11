@@ -1,0 +1,84 @@
+{
+  "version": "2026-09-11",
+  "purpose": "Canonical source map for Lumi Hanoi website assets. Google Drive source is authoritative; local optimized assets are derived copies for web delivery.",
+  "phases": {
+    "signature": {
+      "label": "Lumi Signature",
+      "rootFolderId": "13_2w8figPE3k3alZhcZAere8RT_2le9K",
+      "masterplanFolderId": "176CFkgekR1kcRxWGQF3XtkzkAOG_oG9C",
+      "typicalFloorAndUnitRootId": "1s7tTLpFESM-xRr_-hWLhUL0dd3gxBm0J",
+      "floorPlanFolderId": "19AeERyT50Rz9Ka1cgF5P-OlmdCyhvCYX",
+      "unitLayoutRootId": "1DoOLE_C7hRfwr7YUksF6RzTRL0PBTx8E",
+      "unitLayoutS1S2S3S5FolderId": "1LKPhAbACl4Otxdz5zFuEhiwslrUrDXpf",
+      "unitLayoutS6FolderId": "14qY_dw-W_YW6iKd5oEjL-NP1DW74ZZSr",
+      "penthouseLayoutFolderId": "16qpFZoiiUnQ-2dcqTFEwaaXwmUETBj3Z",
+      "renderFolderId": "1N6XAde6Z3xVehWQy_fkcI2BZx2F9WmEL",
+      "verified1br": [
+        {
+          "driveId": "1VZbSx3BtdXb-pxIV6L_jbbFbuW817nuf",
+          "sourceName": "01-Lumi_1BR-A1 (Updated).jpg",
+          "layout": "A1",
+          "towers": ["S1", "S2", "S3", "S5"],
+          "nfaSqm": 42.2,
+          "gfaSqm": 46.2,
+          "localAsset": "/assets/media/signature/unit-layouts/signature-s1-s5-1br-a1.webp"
+        },
+        {
+          "driveId": "1-yVjxIGgAkTEaPU7gloMgACX9lfRCXDt",
+          "sourceName": "02-Lumi_1BR-A1M (Updated).jpg",
+          "layout": "A1M",
+          "towers": ["S1", "S2", "S3", "S5"],
+          "nfaSqm": 42.2,
+          "gfaSqm": 46.2,
+          "localAsset": "/assets/media/signature/unit-layouts/signature-s1-s5-1br-a1m.webp"
+        },
+        {
+          "driveId": "1LjizpX5y6ge4Ua-csmq1sn1sp9Ac4c9B",
+          "sourceName": "1. S6-1BR-A1.png",
+          "layout": "A1",
+          "towers": ["S6"],
+          "nfaSqm": 42.2,
+          "gfaSqm": 46.2,
+          "localAsset": "/assets/media/signature/unit-layouts/signature-s6-1br-a1.webp"
+        },
+        {
+          "driveId": "1dWdpun6bOGVkdvttUAn949y64YLjRH3W",
+          "sourceName": "2. S6-1BR-A1M.png",
+          "layout": "A1M",
+          "towers": ["S6"],
+          "nfaSqm": 42.2,
+          "gfaSqm": 46.2,
+          "localAsset": "/assets/media/signature/unit-layouts/signature-s6-1br-a1m.webp"
+        }
+      ]
+    },
+    "prestige": {
+      "label": "Lumi Prestige",
+      "rootFolderId": "1YSxDXWwCUIFT6EE4ChOTXH0C7JOv62d4",
+      "masterplanFolderId": "1woZm0pruDuANNlPXmoNulP4lbvv-VKHm",
+      "typicalFloorFolderId": "1RGW-MYTgGKTFOGWLUCfIDmIqpLnpD8bJ",
+      "unitLayoutFolderId": "1kRyHJ2hrz7zwC0hTdWgnU6-yheXeA3HH",
+      "renderFolderId": "1MMhA0adTxE3zQ6Y1iEBIDif3UIkENhTm",
+      "handoverFolderId": "1cqa9N8KOk5c0SlbeWYne2d7F7TYzcrfx",
+      "localUnitLayoutManifest": "/assets/media/prestige/unit-layouts/manifest.v8.1b.json"
+    },
+    "elite": {
+      "label": "Lumi Elite",
+      "rootFolderId": "1atZNW5JhRQyM9j0LRBac3HePP371KAU7",
+      "masterplanFolderId": "1C-pxWNPcDQ3IhYpQ-poO2Ej0qIN0NI6U",
+      "typicalFloorFolderId": "1a4qiHTQBQHBAv8B__sXHu4Yb9bvWkfeP",
+      "unitLayoutFolderId": "1fC8zfe86W2lZi9oW4FgL6_9VTDB8sos_",
+      "renderFolderId": "1tHIXhZT_-a9KrKbzlDDRi9PDQ_dyoXGi",
+      "handoverFolderId": "1U0CEynQgqB375J5qWbIXD3ulqWP9oKVT"
+    }
+  },
+  "sharedProjectDocuments": {
+    "bookletPdfDriveId": "1KyzXJ5p44eoFmilkUBIH7lkSXRR4lRWz",
+    "amenitiesPdfDriveId": "11uqmzjSlig4w15Pwo_wXzFo9W-QbiDW7"
+  },
+  "rules": [
+    "Never use a Prestige unit layout as the illustration for Signature or Elite unless the caption explicitly says it is a comparison.",
+    "Every layout page must declare phase, tower scope, layout code and source folder before publication.",
+    "Prefer local optimized WebP/AVIF for frontend delivery while retaining Drive IDs here for provenance."
+  ]
+}
