@@ -7,6 +7,7 @@ on:
     paths:
       - '.github/workflows/import-signature-layouts.yml'
       - 'assets/data/drive-unit-layout-import.json'
+      - 'assets/data/drive-unit-layout-import-extra.json'
 
 permissions:
   contents: write
@@ -37,8 +38,18 @@ jobs:
           from pathlib import Path
           from PIL import Image
 
-          registry = json.loads(Path('assets/data/drive-unit-layout-import.json').read_text())
-          items = registry['items']
+          registry_paths = [
+              Path('assets/data/drive-unit-layout-import.json'),
+              Path('assets/data/drive-unit-layout-import-extra.json'),
+          ]
+          items = []
+          for path in registry_paths:
+              items.extend(json.loads(path.read_text())['items'])
+
+          target_paths = [item['localAsset'] for item in items]
+          if len(target_paths) != len(set(target_paths)):
+              raise SystemExit('Duplicate localAsset path in import registry')
+
           tmp = Path('.tmp/lumi-drive')
           failures = []
 
@@ -73,12 +84,19 @@ jobs:
           python - <<'PY'
           import json
           from pathlib import Path
-          items = json.loads(Path('assets/data/drive-unit-layout-import.json').read_text())['items']
+          registry_paths = [Path('assets/data/drive-unit-layout-import.json'), Path('assets/data/drive-unit-layout-import-extra.json')]
+          items = []
+          for path in registry_paths:
+              items.extend(json.loads(path.read_text())['items'])
           missing = [i['localAsset'] for i in items if not Path(i['localAsset']).is_file() or Path(i['localAsset']).stat().st_size < 10000]
           phases = {}
           for i in items:
               phases[i['phase']] = phases.get(i['phase'], 0) + 1
+          signature_count = sum(1 for i in items if i['phase'] == 'signature')
           print('Registered:', len(items), 'assets', phases)
+          print('Signature layouts:', signature_count)
+          if signature_count != 51:
+              raise SystemExit(f'Expected 51 Signature layouts, got {signature_count}')
           if missing:
               print('Missing:', *missing, sep='\n- ')
               raise SystemExit(1)
