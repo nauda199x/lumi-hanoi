@@ -1,0 +1,68 @@
+name: Fix floor hub gateway position
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/fix-floor-hub-gateway-position-once.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Move two-path gateway directly below floor hub hero
+        run: |
+          python - <<'PY'
+          import re
+          from pathlib import Path
+
+          path = Path('mat-bang-lumi-hanoi/index.html')
+          html = path.read_text(encoding='utf-8')
+
+          gateway_re = re.compile(r'<!-- TWO-PATH-GATEWAY:START -->.*?<!-- TWO-PATH-GATEWAY:END -->', re.S)
+          match = gateway_re.search(html)
+          if not match:
+              raise SystemExit('Two-path gateway block not found')
+          gateway = match.group(0)
+          html = html[:match.start()] + html[match.end():]
+
+          hero_re = re.compile(r'(<header class="article-hero floor-hub-hero">.*?</nav></div></header>)', re.S)
+          hero = hero_re.search(html)
+          if not hero:
+              raise SystemExit('Floor hub hero not found')
+          html = html[:hero.end()] + gateway + html[hero.end():]
+
+          main_pos = html.index('<main id="main">')
+          hero_pos = html.index('<header class="article-hero floor-hub-hero">')
+          gateway_pos = html.index('<!-- TWO-PATH-GATEWAY:START -->')
+          phase_pos = html.index('<!-- PHASE-UNIT-LAYOUTS:START -->')
+          if not (main_pos < hero_pos < gateway_pos < phase_pos):
+              raise SystemExit('Unexpected final page ordering')
+          if html.count('id="layout-all"') != 1 or html.count('id="tower-all"') != 1:
+              raise SystemExit('Gateway IDs are not unique')
+
+          path.write_text(html, encoding='utf-8')
+          PY
+
+      - name: Run full repository QA
+        run: npm test
+
+      - name: Commit corrected gateway position
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add mat-bang-lumi-hanoi/index.html
+          git commit -m 'fix: place floor hub choices directly below hero'
+          git pull --rebase origin main
+          git push origin HEAD:main
