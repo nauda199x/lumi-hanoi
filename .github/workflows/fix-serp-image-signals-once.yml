@@ -7,6 +7,7 @@ on:
     paths:
       - '.github/workflows/fix-serp-image-signals-once.yml'
       - 'scripts/fix_floorplan_serp_images.py'
+      - 'scripts/fix_project_serp_metadata.py'
       - 'scripts/qa_serp_image_signals.py'
 
 permissions:
@@ -25,8 +26,11 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Align floor-plan SERP image signals
+      - name: Align tower floor-plan SERP image signals
         run: python scripts/fix_floorplan_serp_images.py
+
+      - name: Sweep project OG and social image metadata
+        run: python scripts/fix_project_serp_metadata.py
 
       - name: Audit SERP image signals across project
         run: python scripts/qa_serp_image_signals.py
@@ -38,21 +42,11 @@ jobs:
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add \
-            mat-bang-lumi-hanoi/lumi-signature/s1/index.html \
-            mat-bang-lumi-hanoi/lumi-signature/s2/index.html \
-            mat-bang-lumi-hanoi/lumi-signature/s3/index.html \
-            mat-bang-lumi-hanoi/lumi-signature/s5/index.html \
-            mat-bang-lumi-hanoi/lumi-signature/s6/index.html \
-            mat-bang-lumi-hanoi/lumi-prestige/p1/index.html \
-            mat-bang-lumi-hanoi/lumi-prestige/p2/index.html \
-            mat-bang-lumi-hanoi/lumi-elite/e1/index.html \
-            mat-bang-lumi-hanoi/lumi-elite/e2/index.html \
-            assets/css/floor-plan-hub.css
+          git add -u
           if git diff --cached --quiet; then
             echo 'No generated changes to commit.'
             exit 0
           fi
-          git commit -m 'fix: use exact floor plans for tower SERP previews'
+          git commit -m 'fix: align project SERP image metadata'
           git pull --rebase origin fix/serp-image-signals
           git push origin HEAD:fix/serp-image-signals
