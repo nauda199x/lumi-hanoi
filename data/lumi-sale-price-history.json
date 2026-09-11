@@ -1,0 +1,15 @@
+{
+  "metric": "average_asking_price_per_sqm",
+  "unit": "VND/m2",
+  "source": "Approved public apartment sale listings on lumi-hanoi.com",
+  "series": [
+    {
+      "month": "2026-09",
+      "average_ppsm": 77154958,
+      "average_price": 4792357143,
+      "listing_count": 14,
+      "captured_at": "2026-09-11"
+    }
+  ],
+  "updated_at": "2026-09-11"
+}

@@ -68,10 +68,92 @@
     </header>
 
 <!-- MARKET-PRICE-STATS:START -->
+<!-- SALE-PRICE-HISTORY:START -->
+    <section class="sale-history-card" aria-labelledby="sale-history-title">
+      <style>
+        .sale-history-card{margin:0 0 24px;padding:24px;border:1px solid rgba(18,24,36,.1);border-radius:24px;background:linear-gradient(180deg,#fff 0%,#fafafa 100%);box-shadow:0 18px 50px rgba(18,24,36,.06);overflow:hidden}
+        .sale-history-head{display:flex;justify-content:space-between;gap:24px;align-items:flex-end;margin-bottom:18px}
+        .sale-history-head .eyebrow{margin:0 0 6px}
+        .sale-history-head h3{margin:0;font-size:clamp(1.35rem,2.4vw,2rem);letter-spacing:-.035em}
+        .sale-history-head p:last-child{max-width:620px;margin:8px 0 0;color:#667085;line-height:1.6}
+        .sale-history-badge{flex:0 0 auto;padding:8px 12px;border:1px solid rgba(18,24,36,.1);border-radius:999px;background:#fff;font-size:.82rem;font-weight:700;color:#344054}
+        .sale-history-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:18px 0}
+        .sale-history-kpi{padding:14px 16px;border:1px solid rgba(18,24,36,.08);border-radius:16px;background:#fff}
+        .sale-history-kpi span{display:block;margin-bottom:5px;font-size:.76rem;color:#667085}
+        .sale-history-kpi strong{display:block;font-size:1rem;letter-spacing:-.02em}
+        .sale-history-kpi small{display:block;margin-top:4px;color:#98a2b3;font-size:.72rem}
+        .sale-history-plot{min-height:250px;padding:8px 4px 0;border-radius:18px;background:radial-gradient(circle at 80% 10%,rgba(18,24,36,.04),transparent 38%)}
+        .sale-history-svg{display:block;width:100%;height:auto;color:#111827;overflow:visible}
+        .sale-history-grid{stroke:#e5e7eb;stroke-width:1;stroke-dasharray:4 7}
+        .sale-history-axis,.sale-history-unit{fill:#98a2b3;font-size:11px;font-family:inherit}
+        .sale-history-line{fill:none;stroke:currentColor;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 5px 8px rgba(17,24,39,.12))}
+        .sale-history-area{fill:url(#saleHistoryFill);stroke:none}
+        .sale-history-dot{fill:#fff;stroke:#111827;stroke-width:3}
+        .sale-history-dot--latest{fill:#111827;stroke:#fff;filter:drop-shadow(0 3px 6px rgba(17,24,39,.28))}
+        .sale-history-single{fill:#667085;font-size:12px;font-family:inherit;font-weight:700}
+        .sale-history-note{margin:10px 0 0;color:#667085;font-size:.82rem;line-height:1.55}
+        .sale-history-note strong{color:#344054}
+        .sale-history-empty{min-height:210px;display:grid;place-content:center;text-align:center;gap:6px;color:#667085}
+        .sale-history-empty strong{color:#344054}
+        .sale-history-data{margin-top:14px;border-top:1px solid rgba(18,24,36,.08);padding-top:12px}
+        .sale-history-data summary{cursor:pointer;font-weight:700;color:#344054}
+        .sale-history-data .market-table-scroll{margin-top:10px}
+        @media(max-width:760px){
+          .sale-history-card{padding:18px 14px;border-radius:20px;margin-left:-2px;margin-right:-2px}
+          .sale-history-head{display:block}
+          .sale-history-badge{display:inline-flex;margin-top:12px}
+          .sale-history-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+          .sale-history-kpi{padding:12px}
+          .sale-history-plot{overflow-x:auto}
+          .sale-history-svg{min-width:680px}
+        }
+      </style>
+      <div class="sale-history-head">
+        <div>
+          <p class="eyebrow">Lịch sử giá bán</p>
+          <h3 id="sale-history-title">Giá bán trung bình Lumi Hanoi theo thời gian</h3>
+          <p>Biểu đồ theo dõi <strong>giá chào bán trung bình trên mỗi m²</strong> của căn hộ đã duyệt đang công khai. Đường cong được làm mượt để dễ nhìn nhưng mọi điểm dữ liệu đều là số ghi nhận thực tế.</p>
+        </div>
+        <span class="sale-history-badge">Chỉ giá bán · Không vẽ giá thuê</span>
+      </div>
+      <div class="sale-history-kpis">
+        <div class="sale-history-kpi"><span>Giá bán TB hiện tại</span><strong>77,2 tr/m²</strong><small>trên mỗi m²</small></div>
+        <div class="sale-history-kpi"><span>Biến động gần nhất</span><strong>Đang tích lũy</strong><small>cần thêm tháng để tính biến động</small></div>
+        <div class="sale-history-kpi"><span>Số tin trong mẫu</span><strong>14 tin</strong><small>căn bán hợp lệ</small></div>
+        <div class="sale-history-kpi"><span>Bắt đầu ghi nhận</span><strong>T9/2026</strong><small>tự cập nhật theo tháng</small></div>
+      </div>
+      <div class="sale-history-plot"><svg class="sale-history-svg" viewBox="0 0 920 300" role="img" aria-labelledby="sale-history-svg-title sale-history-svg-desc">
+      <title id="sale-history-svg-title">Lịch sử giá chào bán trung bình Lumi Hanoi</title>
+      <desc id="sale-history-svg-desc">Đường giá bán trung bình theo mét vuông, tính từ các tin căn hộ bán đã duyệt và đang công khai.</desc>
+      <defs>
+        <linearGradient id="saleHistoryFill" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="currentColor" stop-opacity=".18"/>
+          <stop offset="100%" stop-color="currentColor" stop-opacity=".015"/>
+        </linearGradient>
+      </defs>
+      <line x1="74" y1="26.0" x2="894" y2="26.0" class="sale-history-grid"/><line x1="74" y1="80.5" x2="894" y2="80.5" class="sale-history-grid"/><line x1="74" y1="135.0" x2="894" y2="135.0" class="sale-history-grid"/><line x1="74" y1="189.5" x2="894" y2="189.5" class="sale-history-grid"/><line x1="74" y1="244.0" x2="894" y2="244.0" class="sale-history-grid"/>
+      <text x="62" y="30.0" text-anchor="end" class="sale-history-axis">82</text><text x="62" y="84.5" text-anchor="end" class="sale-history-axis">80</text><text x="62" y="139.0" text-anchor="end" class="sale-history-axis">77</text><text x="62" y="193.5" text-anchor="end" class="sale-history-axis">75</text><text x="62" y="248.0" text-anchor="end" class="sale-history-axis">72</text>
+      <text x="484.0" y="282" text-anchor="middle" class="sale-history-axis">T9/2026</text>
+      
+      <path d="M 484.0 135.0" class="sale-history-line"/>
+      <circle cx="484.0" cy="135.0" r="6" class="sale-history-dot sale-history-dot--latest"><title>T9/2026: 77,2 tr/m² · 14 tin</title></circle>
+      <text x="484.0" y="115.0" text-anchor="middle" class="sale-history-single">Mốc dữ liệu đầu tiên</text>
+      <text x="18" y="135.0" transform="rotate(-90 18 135.0)" text-anchor="middle" class="sale-history-unit">Triệu đồng/m²</text>
+    </svg></div>
+      <p class="sale-history-note"><strong>Cách tính:</strong> trung bình giá rao bán/m² từ các tin căn hộ bán đã duyệt có đủ giá và diện tích. Mỗi tháng lưu một snapshot; trong tháng hiện tại, snapshot được cập nhật theo quỹ tin mới nhất. Đây là giá chào tham khảo, không phải giá giao dịch công chứng.</p>
+      <details class="sale-history-data">
+          <summary>Xem dữ liệu từng tháng</summary>
+          <div class="market-table-scroll"><table>
+            <thead><tr><th>Tháng</th><th>Giá bán TB/m²</th><th>Mẫu tin</th></tr></thead>
+            <tbody><tr><th>T9/2026</th><td>77,2 tr/m²</td><td>14 tin</td></tr></tbody>
+          </table></div>
+        </details>
+    </section>
+<!-- SALE-PRICE-HISTORY:END -->
 <section class="section market-price-snapshot" aria-labelledby="market-snapshot-title">
   <div class="container">
     <div class="market-price-heading">
-      <div><p class="eyebrow">Lumi Hanoi Market Index</p><h2 id="market-snapshot-title">Giá chào và nguồn cung đang công khai</h2></div>
+      <div><p class="eyebrow">Lumi Hanoi Market Index</p><h2 id="market-snapshot-title">Giá bán Lumi Hanoi và nguồn cung đang công khai</h2></div>
       <p class="market-price-updated">Tin đăng được đồng bộ tự động. Cập nhật dữ liệu gần nhất: <strong>11/09/2026</strong>.</p>
     </div>
     <div class="market-kpis">
