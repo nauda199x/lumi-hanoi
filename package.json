@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "dev": "vite",
-    "test": "node --test scripts/qa_inventory_api.cjs scripts/qa_admin_api.cjs scripts/qa_admin_ui.cjs scripts/qa_discovery_ui.cjs scripts/qa_listing_detail.cjs && python scripts/qa_inventory.py && python scripts/qa_listing_detail.py",
+    "test": "node --test scripts/qa_inventory_api.cjs scripts/qa_admin_api.cjs scripts/qa_admin_ui.cjs scripts/qa_discovery_ui.cjs scripts/qa_listing_detail.cjs && python scripts/qa_inventory.py && python scripts/qa_listing_detail.py && python scripts/qa_layout_phase_integrity.py",
     "build": "npm test && node --check assets/js/marketplace-inventory.js && node --check assets/js/marketplace-list.js && node --check assets/js/marketplace-admin.js && node --check assets/js/marketplace-api.js && node --check assets/js/site.js && node --check assets/js/listing-detail-ui.js && node --check assets/js/marketplace-detail.js && node --check assets/js/marketplace-static-status.js && node --check assets/js/marketplace-lightbox.js"
   },
   "devDependencies": {
