@@ -1,0 +1,56 @@
+name: Fix SERP image signals
+
+on:
+  push:
+    branches:
+      - fix/serp-image-signals
+    paths:
+      - '.github/workflows/fix-serp-image-signals-once.yml'
+      - 'scripts/fix_floorplan_serp_images.py'
+      - 'scripts/fix_signature_overview_serp_image.py'
+      - 'scripts/fix_project_serp_metadata.py'
+      - 'scripts/qa_serp_image_signals.py'
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/serp-image-signals
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Align tower floor-plan SERP image signals
+        run: python scripts/fix_floorplan_serp_images.py
+
+      - name: Align Signature overview SERP image
+        run: python scripts/fix_signature_overview_serp_image.py
+
+      - name: Sweep project OG and social image metadata
+        run: python scripts/fix_project_serp_metadata.py
+
+      - name: Audit SERP image signals across project
+        run: python scripts/qa_serp_image_signals.py
+
+      - name: Run repository QA
+        run: npm test
+
+      - name: Commit generated page fixes
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -u
+          if git diff --cached --quiet; then
+            echo 'No generated changes to commit.'
+            exit 0
+          fi
+          git commit -m 'fix: align project SERP image metadata'
+          git pull --rebase origin fix/serp-image-signals
+          git push origin HEAD:fix/serp-image-signals

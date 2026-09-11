@@ -57,3 +57,10 @@
 @media(max-width:900px){.hub-jump--two,.floor-route-grid{grid-template-columns:1fr}.floor-route-desc{min-height:0}.route-chip-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.route-chip-grid a:last-child{grid-column:span 2}}
 @media(max-width:560px){.floor-hub-gateway{padding-top:2rem}.gateway-intro h2{font-size:2rem}.floor-route-card{border-radius:18px;padding:1rem}.floor-route-head h3{font-size:1.7rem}.route-layout-visual,.route-tower-visual{aspect-ratio:4/3}.route-chip-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.route-chip-grid a:last-child{grid-column:1/-1}.tower-picker-phase{grid-template-columns:1fr}.tower-picker-phase>strong{margin-top:.2rem}.hub-jump--two .hub-route{min-height:70px}.hub-route small{font-size:.68rem}}
 /* TWO-PATH-GATEWAY:END */
+
+
+/* TOWER-SERP-PLAN:START */
+/* The first crawlable tower image is the exact floor plan used by OG/Twitter/schema. */
+.tower-hero .tower-serp-plan{object-fit:contain;object-position:center;background:#f7f4ed;opacity:.42}
+@media(max-width:700px){.tower-hero .tower-serp-plan{object-fit:contain;opacity:.38}}
+/* TOWER-SERP-PLAN:END */
