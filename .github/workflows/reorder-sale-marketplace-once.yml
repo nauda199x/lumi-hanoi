@@ -1,0 +1,54 @@
+name: Reorder sale marketplace sections once
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/reorder-sale-marketplace-once.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  reorder:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Move discovery clusters below marketplace
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('mua-ban-lumi-hanoi/index.html')
+          text = path.read_text(encoding='utf-8')
+
+          start_marker = '<!-- SALE-PHASE-CLUSTER:START -->'
+          end_marker = '<!-- SALE-UNIT-CLUSTER:END -->'
+          marketplace_marker = '<section id="quy-can"'
+          guide_marker = '<div class="container article-layout reading-shell article-layout--with-sidebar"><article class="article">'
+
+          start = text.index(start_marker)
+          end = text.index(end_marker, start) + len(end_marker)
+          clusters = text[start:end]
+          without_clusters = text[:start] + text[end:]
+          insert_at = without_clusters.index(guide_marker)
+          updated = without_clusters[:insert_at] + clusters + '\n' + without_clusters[insert_at:]
+
+          assert updated.index(marketplace_marker) < updated.index(start_marker)
+          assert updated.index(end_marker) < updated.index(guide_marker)
+          path.write_text(updated, encoding='utf-8')
+          PY
+
+      - name: Commit page update
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add mua-ban-lumi-hanoi/index.html
+          git commit -m "Move sale discovery sections below marketplace"
+          git push origin main
