@@ -5,10 +5,10 @@
     {"phase":"signature","scope":"S6","driveId":"1W-1MO_BRXqpc_RaX2Nl788CdA8L9SYDT","sourceName":"S6-3BR-C7G.jpg","localAsset":"assets/media/signature/unit-layouts/signature-s6-3br-c7g.webp"},
     {"phase":"signature","scope":"S6","driveId":"1k-tpG-6Z4Lmu8CGayNnCOADWTMbPGNev","sourceName":"S6-3BR-C7AG.jpg","localAsset":"assets/media/signature/unit-layouts/signature-s6-3br-c7ag.webp"},
     {"phase":"signature","scope":"S1,S2,S3,S5","driveId":"1NKiqH4j0-kvzSXh4WrRW96ARyoEYt1pC","sourceName":"DL-01.jpg","localAsset":"assets/media/signature/unit-layouts/signature-duplex-dl-01.webp"},
-    {"phase":"signature","scope":"S1,S2,S3,S5","driveId":"1WhI-eQ0wqQHQNaWCf2kHQz22mw4qyQOU","sourceName":"DL-02.jpg","localAsset":"assets/media/signature/unit-layouts/signature-duplex-dl-02.webp"},
-    {"phase":"signature","scope":"S1,S2,S3,S5","driveId":"1pFteMLW6thVK-mT_Ob-_xX_oNd0jFFZp","sourceName":"DL-03.jpg","localAsset":"assets/media/signature/unit-layouts/signature-duplex-dl-03.webp"},
-    {"phase":"signature","scope":"S1,S2,S3,S5","driveId":"1jIoln6tyghhuuLe1lU3nhOYK7pfTAIuJ","sourceName":"DL-04.jpg","localAsset":"assets/media/signature/unit-layouts/signature-duplex-dl-04.webp"},
-    {"phase":"signature","scope":"S1,S2,S3,S5","driveId":"1zpnH-M1PwuWFtWxTyFfwHMWZdKyxTlfn","sourceName":"DL-05.jpg","localAsset":"assets/media/signature/unit-layouts/signature-duplex-dl-05.webp"},
-    {"phase":"signature","scope":"S1,S2,S3,S5","driveId":"12lX9bCKfNAwgRq0kcflLhsGZoJOsa31t","sourceName":"DL-06.jpg","localAsset":"assets/media/signature/unit-layouts/signature-duplex-dl-06.webp"}
+    {"phase":"signature","scope":"S1,S2,S3,S5","driveId":"1WhI-eQ0wqQHQNaWCf2kHQz22mw4qyQOU","sourceName":"DL-02.jpg","localAsset":"assets/media/signature/unit-layouts/signature-duplex-dl-02.webp","authRequired":true},
+    {"phase":"signature","scope":"S1,S2,S3,S5","driveId":"1pFteMLW6thVK-mT_Ob-_xX_oNd0jFFZp","sourceName":"DL-03.jpg","localAsset":"assets/media/signature/unit-layouts/signature-duplex-dl-03.webp","authRequired":true},
+    {"phase":"signature","scope":"S1,S2,S3,S5","driveId":"1jIoln6tyghhuuLe1lU3nhOYK7pfTAIuJ","sourceName":"DL-04.jpg","localAsset":"assets/media/signature/unit-layouts/signature-duplex-dl-04.webp","authRequired":true},
+    {"phase":"signature","scope":"S1,S2,S3,S5","driveId":"1zpnH-M1PwuWFtWxTyFfwHMWZdKyxTlfn","sourceName":"DL-05.jpg","localAsset":"assets/media/signature/unit-layouts/signature-duplex-dl-05.webp","authRequired":true},
+    {"phase":"signature","scope":"S1,S2,S3,S5","driveId":"12lX9bCKfNAwgRq0kcflLhsGZoJOsa31t","sourceName":"DL-06.jpg","localAsset":"assets/media/signature/unit-layouts/signature-duplex-dl-06.webp","authRequired":true}
   ]
 }
