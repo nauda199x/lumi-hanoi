@@ -1,0 +1,57 @@
+name: Fix SERP image signals
+
+on:
+  push:
+    branches:
+      - fix/serp-image-signals
+    paths:
+      - '.github/workflows/fix-serp-image-signals-once.yml'
+      - 'scripts/fix_floorplan_serp_images.py'
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/serp-image-signals
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Align floor-plan SERP image signals
+        run: python scripts/fix_floorplan_serp_images.py
+
+      - name: Audit SERP image signals across project
+        run: python scripts/qa_serp_image_signals.py
+
+      - name: Run repository QA
+        run: npm test
+
+      - name: Commit generated page fixes
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add \
+            mat-bang-lumi-hanoi/lumi-signature/s1/index.html \
+            mat-bang-lumi-hanoi/lumi-signature/s2/index.html \
+            mat-bang-lumi-hanoi/lumi-signature/s3/index.html \
+            mat-bang-lumi-hanoi/lumi-signature/s5/index.html \
+            mat-bang-lumi-hanoi/lumi-signature/s6/index.html \
+            mat-bang-lumi-hanoi/lumi-prestige/p1/index.html \
+            mat-bang-lumi-hanoi/lumi-prestige/p2/index.html \
+            mat-bang-lumi-hanoi/lumi-elite/e1/index.html \
+            mat-bang-lumi-hanoi/lumi-elite/e2/index.html \
+            assets/css/floor-plan-hub.css
+          if git diff --cached --quiet; then
+            echo 'No generated changes to commit.'
+            exit 0
+          fi
+          git commit -m 'fix: use exact floor plans for tower SERP previews'
+          git pull --rebase origin fix/serp-image-signals
+          git push origin HEAD:fix/serp-image-signals
