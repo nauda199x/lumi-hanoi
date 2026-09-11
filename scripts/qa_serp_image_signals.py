@@ -45,6 +45,15 @@ def local_asset(url: str) -> Path | None:
     return ROOT / parsed.path.lstrip('/')
 
 
+def local_src(url: str | None) -> str | None:
+    if not url:
+        return None
+    parsed = urlparse(url)
+    if parsed.netloc and parsed.netloc not in SITE_HOSTS:
+        return None
+    return parsed.path if parsed.path.startswith('/') else '/' + parsed.path
+
+
 def primary_floorplan(doc: str) -> str | None:
     section = re.search(r'<section\b[^>]*data-primary-floor-plan[^>]*>.*?</section>', doc, re.I | re.S)
     if not section:
@@ -100,18 +109,23 @@ def main() -> None:
 
         if rel in TOWER_PAGES:
             primary = primary_floorplan(doc)
+            # Elite pages predate the explicit data-primary marker. Their verified
+            # local OG/schema image is the canonical floor-plan image to align to.
+            expected_src = primary or local_src(og)
             hero = hero_media(doc)
-            expected = f'https://lumi-hanoi.com{primary}' if primary else None
-            if not primary:
-                errors.append(f'{rel}: no primary floor-plan image')
+            expected = f'https://lumi-hanoi.com{expected_src}' if expected_src else None
+            if not expected_src:
+                errors.append(f'{rel}: no verified local floor-plan image')
+            elif not (ROOT / expected_src.lstrip('/')).is_file():
+                errors.append(f'{rel}: expected floor-plan asset is not local')
             if expected and og != expected:
-                errors.append(f'{rel}: og:image does not equal primary floor plan')
+                errors.append(f'{rel}: og:image does not equal verified floor plan')
             if expected and twitter != expected:
-                errors.append(f'{rel}: twitter:image does not equal primary floor plan')
-            if primary and hero != primary:
-                errors.append(f'{rel}: first tower hero image does not equal primary floor plan')
+                errors.append(f'{rel}: twitter:image does not equal verified floor plan')
+            if expected_src and hero != expected_src:
+                errors.append(f'{rel}: first tower hero image does not equal verified floor plan')
             if expected and expected not in doc.split('</head>', 1)[0]:
-                errors.append(f'{rel}: primary image is absent from head/schema')
+                errors.append(f'{rel}: verified floor-plan image is absent from head/schema')
             if 'max-image-preview:large' not in robots:
                 errors.append(f'{rel}: large image preview is not enabled')
 
