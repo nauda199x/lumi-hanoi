@@ -50,10 +50,8 @@ for item in signature_items:
 if missing_assets:
     raise SystemExit("Missing Signature local assets:\n- " + "\n- ".join(missing_assets))
 
-# 1) Signature library: keep the 51-item source catalog, but render every card
-# from the committed local WebP rather than a Drive thumbnail. This is required
-# for private source files such as DL-02..DL-06 and also removes a third-party
-# availability dependency from the public page.
+# Signature library: keep the 51-item source catalog but render every card from
+# committed local WebP files. Private source files must never be skipped.
 library_path = "layout-can-ho-lumi-signature/index.html"
 library = load(library_path)
 match = re.search(r"const signatureLayouts=(\[.*?\]);const esc=", library, flags=re.S)
@@ -82,12 +80,10 @@ library = replace_once(
     "const src=x.asset;",
     label="local Signature image source",
 )
-library = replace_once(
-    library,
-    '<img src="'+"'"+'+src+'+"'"+'" loading="lazy" decoding="async" alt="'+"'"+'+esc(alt)+'+"'"+'">',
-    '<img src="'+"'"+'+src+'+"'"+'" loading="'+"'"+'+(i===0?\'eager\':\'lazy\')+'+"'"+'" decoding="async" width="'+"'"+'+x.width+'+"'"+'" height="'+"'"+'+x.height+'+"'"+'" alt="'+"'"+'+esc(alt)+'+"'"+'">',
-    label="Signature image intrinsic dimensions",
-)
+old_img = """<img src="'+src+'" loading="lazy" decoding="async" alt="'+esc(alt)+'">"""
+new_img = """<img src="'+src+'" loading="'+(i===0?'eager':'lazy')+'" decoding="async" width="'+x.width+'" height="'+x.height+'" alt="'+esc(alt)+'">"""
+library = replace_once(library, old_img, new_img, label="Signature image intrinsic dimensions")
+
 for value, anchor in (("1", "one-bedroom"), ("2", "two-bedroom"), ("3", "three-bedroom"), ("4", "duplex")):
     token = f'data-layout-filter="bedrooms" data-value="{value}"'
     anchored = f'id="{anchor}" data-layout-filter="bedrooms" data-value="{value}"'
@@ -109,9 +105,7 @@ if new_side not in library:
     library = replace_once(library, old_side, new_side, label="Signature library internal links")
 save(library_path, library)
 
-# 2) 3BR guide: the three S6 G variants are now committed assets, so present
-# them as first-class Signature layouts rather than describing them as separate
-# Drive-only source files.
+# 3BR guide: the S6 G variants are committed local assets, not Drive-only data.
 three_path = "can-ho-3-phong-ngu-lumi-hanoi/index.html"
 three = load(three_path)
 three = three.replace(
@@ -123,13 +117,15 @@ if "signature-s6-3br-c8g.webp" not in three:
     marker = '          <figure class="figure"><a href="/assets/media/signature/unit-layouts/signature-s6-3br-c10c.webp"'
     if marker not in three:
         raise SystemExit("Could not find insertion marker for S6 G layouts")
-    g_figures = '''          <figure class="figure"><a href="/assets/media/signature/unit-layouts/signature-s6-3br-c7g.webp" data-lightbox data-lightbox-alt="Layout 3BR C7G Lumi Signature S6" data-lightbox-caption="Lumi Signature · S6 · 3BR C7G"><img class="figure-image" src="/assets/media/signature/unit-layouts/signature-s6-3br-c7g.webp" loading="lazy" decoding="async" alt="Mặt bằng căn hộ 3 phòng ngủ C7G tòa S6 Lumi Signature" width="1800" height="2400"></a><figcaption class="figure-caption">Signature S6 — C7G</figcaption></figure>\n          <figure class="figure"><a href="/assets/media/signature/unit-layouts/signature-s6-3br-c7ag.webp" data-lightbox data-lightbox-alt="Layout 3BR C7AG Lumi Signature S6" data-lightbox-caption="Lumi Signature · S6 · 3BR C7AG"><img class="figure-image" src="/assets/media/signature/unit-layouts/signature-s6-3br-c7ag.webp" loading="lazy" decoding="async" alt="Mặt bằng căn hộ 3 phòng ngủ C7AG tòa S6 Lumi Signature" width="1800" height="2400"></a><figcaption class="figure-caption">Signature S6 — C7AG</figcaption></figure>\n          <figure class="figure"><a href="/assets/media/signature/unit-layouts/signature-s6-3br-c8g.webp" data-lightbox data-lightbox-alt="Layout 3BR C8G Lumi Signature S6" data-lightbox-caption="Lumi Signature · S6 · 3BR C8G"><img class="figure-image" src="/assets/media/signature/unit-layouts/signature-s6-3br-c8g.webp" loading="lazy" decoding="async" alt="Mặt bằng căn hộ 3 phòng ngủ C8G tòa S6 Lumi Signature" width="1800" height="2400"></a><figcaption class="figure-caption">Signature S6 — C8G</figcaption></figure>\n'''
+    g_figures = '''          <figure class="figure"><a href="/assets/media/signature/unit-layouts/signature-s6-3br-c7g.webp" data-lightbox data-lightbox-alt="Layout 3BR C7G Lumi Signature S6" data-lightbox-caption="Lumi Signature · S6 · 3BR C7G"><img class="figure-image" src="/assets/media/signature/unit-layouts/signature-s6-3br-c7g.webp" loading="lazy" decoding="async" alt="Mặt bằng căn hộ 3 phòng ngủ C7G tòa S6 Lumi Signature" width="1800" height="2400"></a><figcaption class="figure-caption">Signature S6 — C7G</figcaption></figure>
+          <figure class="figure"><a href="/assets/media/signature/unit-layouts/signature-s6-3br-c7ag.webp" data-lightbox data-lightbox-alt="Layout 3BR C7AG Lumi Signature S6" data-lightbox-caption="Lumi Signature · S6 · 3BR C7AG"><img class="figure-image" src="/assets/media/signature/unit-layouts/signature-s6-3br-c7ag.webp" loading="lazy" decoding="async" alt="Mặt bằng căn hộ 3 phòng ngủ C7AG tòa S6 Lumi Signature" width="1800" height="2400"></a><figcaption class="figure-caption">Signature S6 — C7AG</figcaption></figure>
+          <figure class="figure"><a href="/assets/media/signature/unit-layouts/signature-s6-3br-c8g.webp" data-lightbox data-lightbox-alt="Layout 3BR C8G Lumi Signature S6" data-lightbox-caption="Lumi Signature · S6 · 3BR C8G"><img class="figure-image" src="/assets/media/signature/unit-layouts/signature-s6-3br-c8g.webp" loading="lazy" decoding="async" alt="Mặt bằng căn hộ 3 phòng ngủ C8G tòa S6 Lumi Signature" width="1800" height="2400"></a><figcaption class="figure-caption">Signature S6 — C8G</figcaption></figure>
+'''
     three = three.replace(marker, g_figures + marker, 1)
 save(three_path, three)
 
-# 3) Duplex/Penthouse guide: Signature has six verified source layouts in the
-# registry. Keep them separate from Elite and avoid inventing NFA/GFA values
-# that are not encoded in the current registry.
+# Duplex/Penthouse guide: expose all six verified Signature source layouts and
+# keep them clearly separated from the existing Elite Duplex data.
 duplex_path = "duplex-penthouse-lumi-hanoi/index.html"
 duplex = load(duplex_path)
 duplex = duplex.replace(
@@ -163,14 +159,20 @@ if "signature-duplex-dl-06.webp" not in duplex:
         figures.append(
             f'          <figure class="figure"><a href="{asset}" data-lightbox data-lightbox-alt="Layout Duplex {code} Lumi Signature" data-lightbox-caption="Lumi Signature · Duplex {code} · nguồn S1/S2/S3/S5"><img class="figure-image" src="{asset}" loading="{loading}" decoding="async" alt="Mặt bằng Duplex {code} Lumi Signature, bộ nguồn S1 S2 S3 S5" width="1800" height="2400"></a><figcaption class="figure-caption">Signature — Duplex {code}</figcaption></figure>'
         )
-    signature_section = '''        <h2 id="signature-duplex">Duplex Lumi Signature — đủ 6 layout DL-01 → DL-06</h2>\n        <p>Bộ nguồn Signature hiện có đủ sáu bản <strong>DL-01, DL-02, DL-03, DL-04, DL-05 và DL-06</strong>, được registry gắn với nhóm S1/S2/S3/S5. Website hiển thị trực tiếp bản WebP đã lưu local; với từng giao dịch vẫn cần quay lại mặt bằng đúng tòa, tầng và mã căn trước khi kết luận phạm vi áp dụng.</p>\n        <div class="media-gallery">\n''' + "\n".join(figures) + '''\n        </div>\n        <p><a class="btn" href="/layout-can-ho-lumi-signature/#duplex">Mở thư viện 51 layout Signature</a> <a class="btn" href="/mat-bang-lumi-hanoi/lumi-signature/">Đối chiếu mặt bằng Signature</a></p>\n\n'''
+    signature_section = '''        <h2 id="signature-duplex">Duplex Lumi Signature — đủ 6 layout DL-01 → DL-06</h2>
+        <p>Bộ nguồn Signature hiện có đủ sáu bản <strong>DL-01, DL-02, DL-03, DL-04, DL-05 và DL-06</strong>, được registry gắn với nhóm S1/S2/S3/S5. Website hiển thị trực tiếp bản WebP đã lưu local; với từng giao dịch vẫn cần quay lại mặt bằng đúng tòa, tầng và mã căn trước khi kết luận phạm vi áp dụng.</p>
+        <div class="media-gallery">
+''' + "\n".join(figures) + '''
+        </div>
+        <p><a class="btn" href="/layout-can-ho-lumi-signature/#duplex">Mở thư viện 51 layout Signature</a> <a class="btn" href="/mat-bang-lumi-hanoi/lumi-signature/">Đối chiếu mặt bằng Signature</a></p>
+
+'''
     duplex = duplex.replace(marker, signature_section + marker, 1)
 if '"Duplex Lumi Signature"' not in duplex:
     duplex = duplex.replace('"about":["Duplex Lumi Hanoi",', '"about":["Duplex Lumi Hanoi","Duplex Lumi Signature",', 1)
 save(duplex_path, duplex)
 
-# 4) Small SEO/accessibility cleanup on the three phase guides: their hero
-# photos were decorative-looking only because alt="" had been left behind.
+# Fix empty hero alt text on the three phase guides and refresh Signature schema.
 phase_alt = {
     "lumi-signature/index.html": ("lumi-signature-landscape-1600.webp", "Phối cảnh tổng thể Lumi Signature tại Lumi Hanoi"),
     "lumi-prestige/index.html": ("lumi-prestige-hero-1600.webp", "Phối cảnh Lumi Prestige tại Lumi Hanoi"),
@@ -186,7 +188,7 @@ for page_path, (filename, alt) in phase_alt.items():
         page = page.replace('"dateModified":"2026-08-23"', f'"dateModified":"{TODAY}"', 1)
     save(page_path, page)
 
-# 5) Validate the public information architecture and key on-page SEO fields.
+# Validate phase order, SEO markers and local asset coverage.
 for page_path in (
     "can-ho-1-phong-ngu-lumi-hanoi/index.html",
     "can-ho-2-phong-ngu-lumi-hanoi/index.html",
