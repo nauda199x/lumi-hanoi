@@ -111,6 +111,10 @@ jobs:
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          # Keep the data-driven market price page explicitly staged: it is
+          # generated from approved marketplace inventory and must ship in the
+          # same atomic sync as the listing pages and sitemaps.
+          git add gia-can-ho-lumi-hanoi/index.html
           # The runner starts from a clean checkout and every change before this
           # point is produced by the generators above. Stage all generated files
           # so git pull --rebase never fails because a tracked generated file was
