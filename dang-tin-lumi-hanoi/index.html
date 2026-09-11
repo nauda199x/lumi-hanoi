@@ -128,7 +128,7 @@
                 <div><p class="form-section-kicker">Nội dung hiển thị công khai</p><h2>Nội dung và hình ảnh</h2><p>Tiêu đề rõ ràng và hình ảnh thực tế giúp người xem đánh giá căn hộ đầy đủ hơn.</p></div>
                 <span class="form-section-index">03</span>
               </div>
-              <div class="field"><label for="title">Tiêu đề tin *</label><input id="title" name="title" maxlength="180" required placeholder="Ví dụ: Bán căn 2PN Lumi Prestige P1, tầng trung, view nội khu"></div>
+              <div class="field"><label for="title">Tiêu đề tin bán *</label><input id="title" name="title" maxlength="180" required placeholder="Tự nhập tiêu đề tin bán"></div>
               <div class="field"><label for="description">Mô tả chi tiết *</label><textarea id="description" name="description" maxlength="3000" minlength="30" required placeholder="Mô tả hiện trạng, ưu điểm, thời gian xem căn và các điều kiện cần biết…"></textarea><small>Không ghi số tài khoản, số giấy tờ tùy thân hoặc thông tin nhạy cảm.</small></div>
               <label class="image-drop image-drop--premium" for="images"><span class="image-drop-mark" aria-hidden="true">＋</span><span><strong>Chọn ảnh căn hộ *</strong><span>1–12 ảnh · JPG, PNG, WebP, HEIC/HEIF · ảnh lớn sẽ được tự tối ưu trước khi tải.</span><em>Chọn ảnh từ thiết bị</em></span><input id="images" name="images" type="file" accept="image/jpeg,image/png,image/webp,image/heic,image/heif,.jpg,.jpeg,.png,.webp,.heic,.heif" multiple></label>
               <div class="image-preview-grid" data-image-previews aria-live="polite"></div>
@@ -175,5 +175,25 @@
 
   <footer class="site-footer"><div class="container footer-grid"><div><a class="brand" href="/"><span class="brand-mark" aria-hidden="true">LH</span><span>LUMI HANOI</span></a><p>Cổng thông tin dự án &amp; thị trường căn hộ.</p></div><div><nav class="footer-links" aria-label="Điều hướng cuối trang"><a href="/mua-ban-lumi-hanoi/">Mua bán</a><a href="/cho-thue-lumi-hanoi/">Cho thuê</a><a href="/dang-tin-lumi-hanoi/">Đăng tin</a><a href="/ky-gui-lumi-hanoi/">Nguyên tắc ký gửi</a><a href="/tin-tuc/">Tin tức</a><a href="/gioi-thieu/">Giới thiệu</a><a href="/lien-he/">Liên hệ</a><a href="/chinh-sach-bao-mat/">Chính sách bảo mật</a><a href="/dieu-khoan-su-dung/">Điều khoản sử dụng</a></nav><p class="disclaimer">Website thông tin và giao dịch độc lập, không phải website chính thức của CapitaLand Development.</p><p class="disclaimer">© <span data-year>2026</span> Lumi Hanoi.</p></div></div></footer>
   <script src="/assets/js/site.js?v=20260907-performance1" defer></script><script src="/assets/js/marketplace-config.js"></script><script src="/assets/js/marketplace-api.js?v=20260829-form"></script><script src="/assets/js/rent-available-now.js?v=20260904" defer></script><script src="/assets/js/marketplace-form.js?v=20260902-procopy" defer></script>
+  <script>
+    document.addEventListener("DOMContentLoaded",()=>{
+      const form=document.querySelector("[data-marketplace-submit]");
+      const titleInput=form?.elements?.title;
+      if(!form||!titleInput)return;
+
+      form.querySelector("[data-smart-title]")?.remove();
+      titleInput.dispatchEvent(new Event("input",{bubbles:true}));
+
+      const syncTitleCopy=()=>{
+        const rent=form.querySelector('[name="listing_type"]:checked')?.value==="rent";
+        const label=form.querySelector('label[for="title"]');
+        if(label)label.textContent=rent?"Tiêu đề tin cho thuê *":"Tiêu đề tin bán *";
+        titleInput.placeholder=rent?"Tự nhập tiêu đề tin cho thuê":"Tự nhập tiêu đề tin bán";
+      };
+
+      syncTitleCopy();
+      form.querySelectorAll('[name="listing_type"]').forEach(input=>input.addEventListener("change",syncTitleCopy));
+    });
+  </script>
 </body>
 </html>
