@@ -1,0 +1,57 @@
+name: Remove legacy duplicate Signature Duplex section
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/fix-duplicate-signature-duplex-once.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Remove only the legacy duplicate block
+        run: |
+          python - <<'PY'
+          import re
+          from pathlib import Path
+
+          path = Path('duplex-penthouse-lumi-hanoi/index.html')
+          html = path.read_text(encoding='utf-8')
+          legacy = re.compile(
+              r'\n\s*<h2 id="signature-duplex">Duplex Lumi Signature — bộ DL</h2>.*?'
+              r'(?=\n\s*<h2 id="penthouse">)',
+              re.S,
+          )
+          html, count = legacy.subn('', html, count=1)
+          if count != 1:
+              raise SystemExit(f'Expected exactly one legacy Signature Duplex block, removed {count}')
+          if html.count('id="signature-duplex"') != 1:
+              raise SystemExit('signature-duplex id is not unique after cleanup')
+          path.write_text(html, encoding='utf-8')
+          PY
+
+      - name: Run focused and repository tests
+        run: |
+          python scripts/qa_visual_v7.py
+          npm test
+
+      - name: Commit cleanup
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add duplex-penthouse-lumi-hanoi/index.html
+          git commit -m 'fix: remove duplicate Signature Duplex section'
+          git pull --rebase origin main
+          git push origin HEAD:main
