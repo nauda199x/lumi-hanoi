@@ -65,7 +65,7 @@ jobs:
 
       - name: Commit imported assets
         run: |
-          if git diff --quiet -- assets/media/signature/unit-layouts; then
+          if [ -z "$(git status --porcelain -- assets/media/signature/unit-layouts)" ]; then
             echo 'No asset changes.'
             exit 0
           fi
