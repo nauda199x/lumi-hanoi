@@ -142,3 +142,5 @@ jobs:
                   print('-', item['sourceName'], '->', item['localAsset'])
               raise SystemExit(1)
           PY
+
+# 2026-09-11: retrigger import after recovering the interrupted layout task.
