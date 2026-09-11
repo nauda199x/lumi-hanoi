@@ -26,6 +26,33 @@ def replace_once(text: str, old: str, new: str, *, label: str) -> str:
     return text.replace(old, new, 1)
 
 
+def display_name(item: dict) -> str:
+    """Derive the public label from the registry source name, not stale page JS."""
+    name = Path(item["sourceName"]).stem
+    name = re.sub(r"^\d+[.-]\s*", "", name)
+    name = re.sub(r"^Lumi_", "", name)
+    name = re.sub(r"^S6-", "", name)
+    if name.startswith("DL-"):
+        return f"Duplex {name}"
+    return name
+
+
+def asset_dimensions(local_asset: str) -> tuple[int, int]:
+    with Image.open(ROOT / local_asset) as image:
+        return image.size
+
+
+def sync_html_dimensions(text: str, public_asset: str, local_asset: str) -> str:
+    """Set width/height from the committed image itself to avoid wrong aspect ratios."""
+    width, height = asset_dimensions(local_asset)
+    pattern = rf'(<img\b[^>]*?src="{re.escape(public_asset)}"[^>]*?)width="\d+"\s+height="\d+"'
+    replacement = rf'\1width="{width}" height="{height}"'
+    updated, count = re.subn(pattern, replacement, text, count=1)
+    if count == 0:
+        raise SystemExit(f"Could not sync intrinsic dimensions for {public_asset}")
+    return updated
+
+
 registry_paths = [
     ROOT / "assets/data/drive-unit-layout-import.json",
     ROOT / "assets/data/drive-unit-layout-import-extra.json",
@@ -50,8 +77,7 @@ for item in signature_items:
 if missing_assets:
     raise SystemExit("Missing Signature local assets:\n- " + "\n- ".join(missing_assets))
 
-# Signature library: keep the 51-item source catalog but render every card from
-# committed local WebP files. Private source files must never be skipped.
+# Signature library: all 51 cards render from committed local WebP files.
 library_path = "layout-can-ho-lumi-signature/index.html"
 library = load(library_path)
 match = re.search(r"const signatureLayouts=(\[.*?\]);const esc=", library, flags=re.S)
@@ -65,12 +91,21 @@ for layout in layouts:
     item = by_drive_id.get(layout.get("id"))
     if not item:
         raise SystemExit(f"No registry mapping for library item {layout.get('name')}")
-    asset_path = ROOT / item["localAsset"]
-    with Image.open(asset_path) as image:
-        width, height = image.size
+    width, height = asset_dimensions(item["localAsset"])
+    layout["name"] = display_name(item)
+    layout["scope"] = ", ".join(item["scope"].split(","))
     layout["asset"] = "/" + item["localAsset"]
     layout["width"] = width
     layout["height"] = height
+
+# The stale page JS had DL-04 / DL-05 labels attached to each other's Drive IDs.
+# Registry sourceName is authoritative; keep Duplex cards ordered DL-01 -> DL-06.
+non_duplex = [layout for layout in layouts if layout["bedrooms"] != "4"]
+duplex_layouts = sorted(
+    (layout for layout in layouts if layout["bedrooms"] == "4"),
+    key=lambda layout: layout["name"],
+)
+layouts = non_duplex + duplex_layouts
 
 catalog = json.dumps(layouts, ensure_ascii=False, separators=(",", ":"))
 library = library[: match.start(1)] + catalog + library[match.end(1) :]
@@ -117,11 +152,14 @@ if "signature-s6-3br-c8g.webp" not in three:
     marker = '          <figure class="figure"><a href="/assets/media/signature/unit-layouts/signature-s6-3br-c10c.webp"'
     if marker not in three:
         raise SystemExit("Could not find insertion marker for S6 G layouts")
-    g_figures = '''          <figure class="figure"><a href="/assets/media/signature/unit-layouts/signature-s6-3br-c7g.webp" data-lightbox data-lightbox-alt="Layout 3BR C7G Lumi Signature S6" data-lightbox-caption="Lumi Signature · S6 · 3BR C7G"><img class="figure-image" src="/assets/media/signature/unit-layouts/signature-s6-3br-c7g.webp" loading="lazy" decoding="async" alt="Mặt bằng căn hộ 3 phòng ngủ C7G tòa S6 Lumi Signature" width="1800" height="2400"></a><figcaption class="figure-caption">Signature S6 — C7G</figcaption></figure>
-          <figure class="figure"><a href="/assets/media/signature/unit-layouts/signature-s6-3br-c7ag.webp" data-lightbox data-lightbox-alt="Layout 3BR C7AG Lumi Signature S6" data-lightbox-caption="Lumi Signature · S6 · 3BR C7AG"><img class="figure-image" src="/assets/media/signature/unit-layouts/signature-s6-3br-c7ag.webp" loading="lazy" decoding="async" alt="Mặt bằng căn hộ 3 phòng ngủ C7AG tòa S6 Lumi Signature" width="1800" height="2400"></a><figcaption class="figure-caption">Signature S6 — C7AG</figcaption></figure>
-          <figure class="figure"><a href="/assets/media/signature/unit-layouts/signature-s6-3br-c8g.webp" data-lightbox data-lightbox-alt="Layout 3BR C8G Lumi Signature S6" data-lightbox-caption="Lumi Signature · S6 · 3BR C8G"><img class="figure-image" src="/assets/media/signature/unit-layouts/signature-s6-3br-c8g.webp" loading="lazy" decoding="async" alt="Mặt bằng căn hộ 3 phòng ngủ C8G tòa S6 Lumi Signature" width="1800" height="2400"></a><figcaption class="figure-caption">Signature S6 — C8G</figcaption></figure>
+    g_figures = '''          <figure class="figure"><a href="/assets/media/signature/unit-layouts/signature-s6-3br-c7g.webp" data-lightbox data-lightbox-alt="Layout 3BR C7G Lumi Signature S6" data-lightbox-caption="Lumi Signature · S6 · 3BR C7G"><img class="figure-image" src="/assets/media/signature/unit-layouts/signature-s6-3br-c7g.webp" loading="lazy" decoding="async" alt="Mặt bằng căn hộ 3 phòng ngủ C7G tòa S6 Lumi Signature" width="1" height="1"></a><figcaption class="figure-caption">Signature S6 — C7G</figcaption></figure>
+          <figure class="figure"><a href="/assets/media/signature/unit-layouts/signature-s6-3br-c7ag.webp" data-lightbox data-lightbox-alt="Layout 3BR C7AG Lumi Signature S6" data-lightbox-caption="Lumi Signature · S6 · 3BR C7AG"><img class="figure-image" src="/assets/media/signature/unit-layouts/signature-s6-3br-c7ag.webp" loading="lazy" decoding="async" alt="Mặt bằng căn hộ 3 phòng ngủ C7AG tòa S6 Lumi Signature" width="1" height="1"></a><figcaption class="figure-caption">Signature S6 — C7AG</figcaption></figure>
+          <figure class="figure"><a href="/assets/media/signature/unit-layouts/signature-s6-3br-c8g.webp" data-lightbox data-lightbox-alt="Layout 3BR C8G Lumi Signature S6" data-lightbox-caption="Lumi Signature · S6 · 3BR C8G"><img class="figure-image" src="/assets/media/signature/unit-layouts/signature-s6-3br-c8g.webp" loading="lazy" decoding="async" alt="Mặt bằng căn hộ 3 phòng ngủ C8G tòa S6 Lumi Signature" width="1" height="1"></a><figcaption class="figure-caption">Signature S6 — C8G</figcaption></figure>
 '''
     three = three.replace(marker, g_figures + marker, 1)
+for filename in ("signature-s6-3br-c7g.webp", "signature-s6-3br-c7ag.webp", "signature-s6-3br-c8g.webp"):
+    public_asset = f"/assets/media/signature/unit-layouts/{filename}"
+    three = sync_html_dimensions(three, public_asset, public_asset.lstrip("/"))
 save(three_path, three)
 
 # Duplex/Penthouse guide: expose all six verified Signature source layouts and
@@ -157,7 +195,7 @@ if "signature-duplex-dl-06.webp" not in duplex:
         asset = f"/assets/media/signature/unit-layouts/signature-duplex-dl-{number:02d}.webp"
         loading = "eager" if number == 1 else "lazy"
         figures.append(
-            f'          <figure class="figure"><a href="{asset}" data-lightbox data-lightbox-alt="Layout Duplex {code} Lumi Signature" data-lightbox-caption="Lumi Signature · Duplex {code} · nguồn S1/S2/S3/S5"><img class="figure-image" src="{asset}" loading="{loading}" decoding="async" alt="Mặt bằng Duplex {code} Lumi Signature, bộ nguồn S1 S2 S3 S5" width="1800" height="2400"></a><figcaption class="figure-caption">Signature — Duplex {code}</figcaption></figure>'
+            f'          <figure class="figure"><a href="{asset}" data-lightbox data-lightbox-alt="Layout Duplex {code} Lumi Signature" data-lightbox-caption="Lumi Signature · Duplex {code} · nguồn S1/S2/S3/S5"><img class="figure-image" src="{asset}" loading="{loading}" decoding="async" alt="Mặt bằng Duplex {code} Lumi Signature, bộ nguồn S1 S2 S3 S5" width="1" height="1"></a><figcaption class="figure-caption">Signature — Duplex {code}</figcaption></figure>'
         )
     signature_section = '''        <h2 id="signature-duplex">Duplex Lumi Signature — đủ 6 layout DL-01 → DL-06</h2>
         <p>Bộ nguồn Signature hiện có đủ sáu bản <strong>DL-01, DL-02, DL-03, DL-04, DL-05 và DL-06</strong>, được registry gắn với nhóm S1/S2/S3/S5. Website hiển thị trực tiếp bản WebP đã lưu local; với từng giao dịch vẫn cần quay lại mặt bằng đúng tòa, tầng và mã căn trước khi kết luận phạm vi áp dụng.</p>
@@ -170,6 +208,10 @@ if "signature-duplex-dl-06.webp" not in duplex:
     duplex = duplex.replace(marker, signature_section + marker, 1)
 if '"Duplex Lumi Signature"' not in duplex:
     duplex = duplex.replace('"about":["Duplex Lumi Hanoi",', '"about":["Duplex Lumi Hanoi","Duplex Lumi Signature",', 1)
+for number in range(1, 7):
+    filename = f"signature-duplex-dl-{number:02d}.webp"
+    public_asset = f"/assets/media/signature/unit-layouts/{filename}"
+    duplex = sync_html_dimensions(duplex, public_asset, public_asset.lstrip("/"))
 save(duplex_path, duplex)
 
 # Fix empty hero alt text on the three phase guides and refresh Signature schema.
@@ -188,7 +230,7 @@ for page_path, (filename, alt) in phase_alt.items():
         page = page.replace('"dateModified":"2026-08-23"', f'"dateModified":"{TODAY}"', 1)
     save(page_path, page)
 
-# Validate phase order, SEO markers and local asset coverage.
+# Validate phase order, SEO markers, registry-to-label integrity and local coverage.
 for page_path in (
     "can-ho-1-phong-ngu-lumi-hanoi/index.html",
     "can-ho-2-phong-ngu-lumi-hanoi/index.html",
@@ -211,15 +253,24 @@ for item in signature_items:
     if "/" + item["localAsset"] not in library:
         raise SystemExit(f"Signature library missing local asset reference {item['localAsset']}")
 
+final_match = re.search(r"const signatureLayouts=(\[.*?\]);const esc=", library, flags=re.S)
+final_layouts = json.loads(final_match.group(1)) if final_match else []
+if len(final_layouts) != 51:
+    raise SystemExit("Final Signature library does not contain 51 records")
+for layout in final_layouts:
+    item = by_drive_id[layout["id"]]
+    if layout["name"] != display_name(item):
+        raise SystemExit(f"Stale/mismatched layout label for {layout['id']}: {layout['name']} vs {display_name(item)}")
+
 three = load(three_path)
-for asset in ("signature-s6-3br-c7g.webp", "signature-s6-3br-c7ag.webp", "signature-s6-3br-c8g.webp"):
-    if asset not in three:
-        raise SystemExit(f"3BR guide missing {asset}")
+for filename in ("signature-s6-3br-c7g.webp", "signature-s6-3br-c7ag.webp", "signature-s6-3br-c8g.webp"):
+    if filename not in three:
+        raise SystemExit(f"3BR guide missing {filename}")
 
 duplex = load(duplex_path)
 for number in range(1, 7):
-    asset = f"signature-duplex-dl-{number:02d}.webp"
-    if asset not in duplex:
-        raise SystemExit(f"Duplex guide missing {asset}")
+    filename = f"signature-duplex-dl-{number:02d}.webp"
+    if filename not in duplex:
+        raise SystemExit(f"Duplex guide missing {filename}")
 
-print("Signature layout finalization OK: 51/51 local assets, 3 S6 G layouts, 6 Signature Duplex layouts, phase order and SEO markers validated.")
+print("Signature layout finalization OK: 51/51 local assets, registry labels aligned, real image dimensions applied, 3 S6 G layouts and 6 Signature Duplex layouts validated.")
