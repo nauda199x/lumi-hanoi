@@ -7,6 +7,7 @@ on:
     paths:
       - '.github/workflows/fix-serp-image-signals-once.yml'
       - 'scripts/fix_floorplan_serp_images.py'
+      - 'scripts/fix_signature_overview_serp_image.py'
       - 'scripts/fix_project_serp_metadata.py'
       - 'scripts/qa_serp_image_signals.py'
 
@@ -28,6 +29,9 @@ jobs:
 
       - name: Align tower floor-plan SERP image signals
         run: python scripts/fix_floorplan_serp_images.py
+
+      - name: Align Signature overview SERP image
+        run: python scripts/fix_signature_overview_serp_image.py
 
       - name: Sweep project OG and social image metadata
         run: python scripts/fix_project_serp_metadata.py
