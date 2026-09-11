@@ -1,0 +1,80 @@
+name: Import Signature unit layouts
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/import-signature-layouts.yml'
+      - 'assets/data/lumi-drive-catalog.json'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: import-signature-unit-layouts
+  cancel-in-progress: false
+
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install downloader and image tools
+        run: python -m pip install --disable-pip-version-check gdown pillow
+
+      - name: Download and optimize verified Signature 1BR layouts
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p assets/media/signature/unit-layouts .tmp/lumi-drive
+          python - <<'PY'
+          import json, subprocess
+          from pathlib import Path
+          from PIL import Image
+
+          catalog = json.loads(Path('assets/data/lumi-drive-catalog.json').read_text())
+          items = catalog['phases']['signature']['verified1br']
+          tmp = Path('.tmp/lumi-drive')
+
+          for item in items:
+              src = tmp / item['sourceName'].replace('/', '-')
+              subprocess.run([
+                  'gdown', '--fuzzy',
+                  f"https://drive.google.com/file/d/{item['driveId']}/view",
+                  '-O', str(src)
+              ], check=True)
+
+              out = Path(item['localAsset'].lstrip('/'))
+              out.parent.mkdir(parents=True, exist_ok=True)
+              im = Image.open(src).convert('RGB')
+              w, h = im.size
+              scale = min(1.0, 2400 / max(w, h))
+              if scale < 1:
+                  im = im.resize((round(w * scale), round(h * scale)), Image.Resampling.LANCZOS)
+              im.save(out, 'WEBP', quality=86, method=6)
+              print(f"Imported {item['sourceName']} -> {out} ({im.width}x{im.height})")
+          PY
+
+      - name: Validate imported assets
+        run: |
+          test -s assets/media/signature/unit-layouts/signature-s1-s5-1br-a1.webp
+          test -s assets/media/signature/unit-layouts/signature-s1-s5-1br-a1m.webp
+          test -s assets/media/signature/unit-layouts/signature-s6-1br-a1.webp
+          test -s assets/media/signature/unit-layouts/signature-s6-1br-a1m.webp
+
+      - name: Commit imported assets
+        run: |
+          if git diff --quiet -- assets/media/signature/unit-layouts; then
+            echo 'No asset changes.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add assets/media/signature/unit-layouts
+          git commit -m 'assets: import Signature 1BR layouts from Drive'
+          git push
