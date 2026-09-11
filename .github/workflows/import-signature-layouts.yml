@@ -43,11 +43,7 @@ jobs:
 
           for item in items:
               src = tmp / item['sourceName'].replace('/', '-')
-              subprocess.run([
-                  'gdown', '--fuzzy',
-                  f"https://drive.google.com/file/d/{item['driveId']}/view",
-                  '-O', str(src)
-              ], check=True)
+              subprocess.run(['gdown', item['driveId'], '-O', str(src)], check=True)
 
               out = Path(item['localAsset'].lstrip('/'))
               out.parent.mkdir(parents=True, exist_ok=True)
