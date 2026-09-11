@@ -1,0 +1,42 @@
+name: Apply floor hub phase layouts
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/upgrade_floor_hub_phase_layouts.py'
+      - '.github/workflows/apply-floor-hub-phase-layouts.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Apply floor hub layout upgrade
+        run: python scripts/upgrade_floor_hub_phase_layouts.py
+
+      - name: Run repository QA
+        run: npm test
+
+      - name: Commit generated page updates
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add mat-bang-lumi-hanoi/index.html assets/css/floor-plan-hub.css
+          if git diff --cached --quiet; then
+            echo 'No generated changes to commit.'
+            exit 0
+          fi
+          git commit -m 'feat: show Signature and Elite layouts on floor-plan hub'
+          git pull --rebase origin main
+          git push origin HEAD:main
