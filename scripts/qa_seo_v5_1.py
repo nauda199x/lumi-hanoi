@@ -115,9 +115,18 @@ def local_file(url_path: str) -> Path:
 
 
 def title_fingerprint(title: str) -> str:
-    """Remove the page-specific lead phrase to expose repeated templates."""
-    parts = re.split(r"\s*[|–—:]\s*", title, maxsplit=1)
-    return re.sub(r"\s+", " ", parts[-1].casefold()).strip()
+    """Detect generic repeated title suffixes without collapsing specific page titles."""
+    normalized = re.sub(r"\s+", " ", title.casefold()).strip()
+    parts = re.split(r"\s*[|–—:]\s*", normalized, maxsplit=1)
+    if len(parts) == 2:
+        lead, suffix = parts
+        # Only strip a genuinely generic/short lead. Long leads such as
+        # "Căn hộ 2 phòng ngủ Lumi Hanoi" carry the page's search intent and
+        # must remain part of the fingerprint; otherwise valid unit-type pages
+        # are incorrectly reported as a duplicated title template.
+        if len(lead.split()) <= 3 and len(suffix) >= 20:
+            return suffix.strip()
+    return normalized
 
 
 def main() -> int:
