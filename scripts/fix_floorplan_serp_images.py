@@ -4,6 +4,7 @@ from __future__ import annotations
 import html
 import re
 from pathlib import Path
+from urllib.parse import urlparse
 
 ROOT = Path(__file__).resolve().parents[1]
 SITE = "https://lumi-hanoi.com"
@@ -25,6 +26,12 @@ def get_attr(tag: str, name: str) -> str | None:
     return html.unescape(m.group(1)) if m else None
 
 
+def get_meta(doc: str, selector: str, key: str) -> str | None:
+    pattern = re.compile(rf'<meta\b(?=[^>]*\b{selector}="{re.escape(key)}")[^>]*>', re.I)
+    m = pattern.search(doc)
+    return get_attr(m.group(0), "content") if m else None
+
+
 def set_meta(doc: str, selector: str, key: str, value: str) -> str:
     pattern = re.compile(rf'<meta\b(?=[^>]*\b{selector}="{re.escape(key)}")[^>]*>', re.I)
     m = pattern.search(doc)
@@ -39,27 +46,44 @@ def set_meta(doc: str, selector: str, key: str, value: str) -> str:
     return doc.replace('</head>', f'<meta {selector}="{key}" content="{escaped}"></head>', 1)
 
 
-def get_meta(doc: str, selector: str, key: str) -> str | None:
-    pattern = re.compile(rf'<meta\b(?=[^>]*\b{selector}="{re.escape(key)}")[^>]*>', re.I)
-    m = pattern.search(doc)
-    return get_attr(m.group(0), "content") if m else None
+def local_src(url: str) -> str | None:
+    parsed = urlparse(url)
+    if parsed.netloc and parsed.netloc not in {"lumi-hanoi.com", "www.lumi-hanoi.com"}:
+        return None
+    return parsed.path if parsed.path.startswith('/') else '/' + parsed.path
 
 
-def primary_image(doc: str) -> tuple[str, str, str, str]:
-    section = re.search(r'<section\b[^>]*data-primary-floor-plan[^>]*>.*?</section>', doc, re.I | re.S)
-    if not section:
-        raise RuntimeError("missing data-primary-floor-plan section")
-    image = re.search(r'<img\b[^>]*class="[^"]*floor-plan-image[^"]*"[^>]*>', section.group(0), re.I)
-    if not image:
-        raise RuntimeError("missing primary floor-plan image")
-    tag = image.group(0)
+def image_from_tag(tag: str) -> tuple[str, str, str, str] | None:
     src = get_attr(tag, "src")
     alt = get_attr(tag, "alt")
     width = get_attr(tag, "width")
     height = get_attr(tag, "height")
-    if not all((src, alt, width, height)):
-        raise RuntimeError("primary floor-plan image is missing src/alt/width/height")
-    return src, alt, width, height
+    if all((src, alt, width, height)):
+        return src, alt, width, height
+    return None
+
+
+def primary_image(doc: str) -> tuple[str, str, str, str]:
+    # Signature/Prestige pages explicitly mark the preferred floor-plan section.
+    section = re.search(r'<section\b[^>]*data-primary-floor-plan[^>]*>.*?</section>', doc, re.I | re.S)
+    if section:
+        image = re.search(r'<img\b[^>]*class="[^"]*floor-plan-image[^"]*"[^>]*>', section.group(0), re.I)
+        if image:
+            result = image_from_tag(image.group(0))
+            if result:
+                return result
+
+    # Elite already has a verified local floor-plan as og:image/schema image, but
+    # its older HTML does not carry data-primary-floor-plan. Reuse that exact asset.
+    og = get_meta(doc, "property", "og:image")
+    og_alt = get_meta(doc, "property", "og:image:alt")
+    width = get_meta(doc, "property", "og:image:width")
+    height = get_meta(doc, "property", "og:image:height")
+    src = local_src(og) if og else None
+    if all((src, og_alt, width, height)) and (ROOT / src.lstrip('/')).is_file():
+        return src, og_alt, width, height
+
+    raise RuntimeError("no verified local primary floor-plan image")
 
 
 def replace_hero(doc: str, src: str, alt: str, width: str, height: str) -> str:
@@ -89,7 +113,7 @@ def fix_page(relative: str) -> None:
     absolute = SITE + src
     old_og = get_meta(doc, "property", "og:image")
 
-    # Keep every explicit social/search-image signal on the exact floor-plan asset.
+    # Align all explicit social/schema references with the exact floor-plan asset.
     if old_og and old_og != absolute:
         head, tail = doc.split('</head>', 1)
         doc = head.replace(old_og, absolute) + '</head>' + tail
@@ -102,8 +126,8 @@ def fix_page(relative: str) -> None:
     doc = set_meta(doc, "name", "twitter:image", absolute)
     doc = set_meta(doc, "name", "twitter:image:alt", alt)
 
-    # Google may choose the first prominent on-page image instead of og:image.
-    # Make that image the same floor plan rather than a generic project render.
+    # Google can ignore OG and pick the most prominent page image. The first hero
+    # therefore uses the same floor plan rather than a generic facade/landscape.
     doc = replace_hero(doc, src, alt, width, height)
 
     robots = get_meta(doc, "name", "robots")
