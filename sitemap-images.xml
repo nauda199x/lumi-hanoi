@@ -399,4 +399,10 @@
       <image:loc>https://lumi-hanoi.com/assets/media/prestige/floor-plans/p2-t02-12-14-19-21-28.webp</image:loc>
     </image:image>
   </url>
+  <url>
+    <loc>https://lumi-hanoi.com/mat-bang-lumi-hanoi/layout-can-ho-lumi-hanoi/</loc>
+    <image:image>
+      <image:loc>https://lumi-hanoi.com/assets/media/layouts/lumi-hanoi-layout-overview-1200x630.webp</image:loc>
+    </image:image>
+  </url>
 </urlset>
