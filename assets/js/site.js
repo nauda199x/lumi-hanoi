@@ -397,3 +397,14 @@ if(document.querySelector('.tower-floor-index')||document.querySelector('[data-f
   });
   window.addEventListener('pageshow',clearPending);
 })();
+
+/* Shared customer journey enhancements: predictable navigation, quick floor-plan lookup,
+   and a customer-first price summary generated from the page's existing data. */
+(()=>{
+  if(location.pathname.startsWith('/admin/')||document.querySelector('script[data-customer-journey-loader]'))return;
+  const script=document.createElement('script');
+  script.src='/assets/js/customer-journey.js?v=20260912a';
+  script.async=false;
+  script.dataset.customerJourneyLoader='true';
+  document.head.append(script);
+})();
