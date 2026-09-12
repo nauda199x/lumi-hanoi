@@ -23,9 +23,9 @@ TOWER_PAGES = {
     "mat-bang-lumi-hanoi/lumi-elite/e2/index.html",
 }
 VISUAL_TARGETS = {
-    "mat-bang-lumi-hanoi/lumi-signature/index.html": "/assets/media/signature/penthouse/s1-floor-35.webp",
-    "mat-bang-lumi-hanoi/lumi-prestige/index.html": "/assets/media/prestige/floor-plans/p1-t30.webp",
-    "mat-bang-lumi-hanoi/lumi-elite/index.html": "/assets/media/elite/floor-plans/e1-t29.webp",
+    "mat-bang-lumi-hanoi/lumi-signature/index.html": "/assets/media/signature/floor-plans/signature-floorplan-overview-1200x630.webp",
+    "mat-bang-lumi-hanoi/lumi-prestige/index.html": "/assets/media/prestige/floor-plans/prestige-floorplan-overview-1200x630.webp",
+    "mat-bang-lumi-hanoi/lumi-elite/index.html": "/assets/media/elite/floor-plans/elite-floorplan-overview-1200x630.webp",
     "layout-can-ho-lumi-signature/index.html": "/assets/media/signature/unit-layouts/signature-s1-s5-1br-a1.webp",
     "layout-can-ho-lumi-prestige/index.html": "/assets/media/prestige/unit-layouts/prestige-layout-22-1br-medium.webp",
     "tin-tuc/cach-doc-mat-bang-lumi-hanoi/index.html": "/assets/media/masterplan/lumi-hanoi-mat-bang-tong-the-og-1200x630.webp",
@@ -35,6 +35,23 @@ VISUAL_TARGETS = {
 VISUAL_HERO_TARGETS = {
     **{k: v for k, v in VISUAL_TARGETS.items()},
     "tin-tuc/cach-doc-mat-bang-lumi-hanoi/index.html": "/assets/media/masterplan/lumi-hanoi-masterplan-1280.webp",
+}
+PHASE_CARD_EXPECTATIONS = {
+    "mat-bang-lumi-hanoi/lumi-signature/index.html": {
+        "S1": "/assets/media/signature/floor-plans/s1-typical.webp",
+        "S2": "/assets/media/signature/floor-plans/s2-typical.webp",
+        "S3": "/assets/media/signature/floor-plans/s3-typical.webp",
+        "S5": "/assets/media/signature/floor-plans/s5-typical.webp",
+        "S6": "/assets/media/signature/floor-plans/s6-typical.webp",
+    },
+    "mat-bang-lumi-hanoi/lumi-prestige/index.html": {
+        "P1": "/assets/media/prestige/floor-plans/p1-t02-19-21-22-24-28.webp",
+        "P2": "/assets/media/prestige/floor-plans/p2-t02-12-14-19-21-28.webp",
+    },
+    "mat-bang-lumi-hanoi/lumi-elite/index.html": {
+        "E1": "/assets/media/elite/floor-plans/e1-typical.webp",
+        "E2": "/assets/media/elite/floor-plans/e2-typical.webp",
+    },
 }
 GENERIC_VISUAL_TOKENS = ("landscape", "streetscape", "lumi-hanoi-og", "-hero-")
 
@@ -146,8 +163,6 @@ def main() -> None:
 
         if rel in TOWER_PAGES:
             primary = primary_floorplan(doc)
-            # Elite pages predate the explicit data-primary marker. Their verified
-            # local OG/schema image is the canonical floor-plan image to align to.
             expected_src = primary or local_src(og)
             hero = hero_media(doc)
             expected = f'{SITE}{expected_src}' if expected_src else None
@@ -183,6 +198,17 @@ def main() -> None:
                 errors.append(f'{rel}: first hero image is not the configured intent image')
             if not og_alt:
                 errors.append(f'{rel}: intent image is missing og:image:alt')
+
+        if rel in PHASE_CARD_EXPECTATIONS:
+            if 'max-image-preview:large' not in robots:
+                errors.append(f'{rel}: phase landing does not enable large image previews')
+            for tower, expected_src in PHASE_CARD_EXPECTATIONS[rel].items():
+                if not (ROOT / expected_src.lstrip('/')).is_file():
+                    errors.append(f'{rel}: local card asset missing for {tower}: {expected_src}')
+                if f'src="{expected_src}"' not in doc:
+                    errors.append(f'{rel}: tower card {tower} does not use its representative local floor plan')
+                if f'/{tower.lower()}/' not in doc:
+                    errors.append(f'{rel}: tower card/link missing for {tower}')
 
     print(json.dumps({
         'scanned_html': scanned,
