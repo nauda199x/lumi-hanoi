@@ -66,11 +66,17 @@
   <url>
     <loc>https://lumi-hanoi.com/mat-bang-lumi-hanoi/lumi-elite/e1/</loc>
     <image:image>
+      <image:loc>https://lumi-hanoi.com/assets/media/elite/floor-plans/e1-typical.webp</image:loc>
+    </image:image>
+    <image:image>
       <image:loc>https://lumi-hanoi.com/assets/media/elite/floor-plans/e1-t29.webp</image:loc>
     </image:image>
   </url>
   <url>
     <loc>https://lumi-hanoi.com/mat-bang-lumi-hanoi/lumi-elite/e2/</loc>
+    <image:image>
+      <image:loc>https://lumi-hanoi.com/assets/media/elite/floor-plans/e2-typical.webp</image:loc>
+    </image:image>
     <image:image>
       <image:loc>https://lumi-hanoi.com/assets/media/elite/floor-plans/e2-t24.webp</image:loc>
     </image:image>
@@ -270,11 +276,17 @@
   <url>
     <loc>https://lumi-hanoi.com/mat-bang-lumi-hanoi/lumi-signature/s1/</loc>
     <image:image>
+      <image:loc>https://lumi-hanoi.com/assets/media/signature/floor-plans/s1-typical.webp</image:loc>
+    </image:image>
+    <image:image>
       <image:loc>https://lumi-hanoi.com/assets/media/signature/penthouse/s1-floor-35.webp</image:loc>
     </image:image>
   </url>
   <url>
     <loc>https://lumi-hanoi.com/mat-bang-lumi-hanoi/lumi-signature/s2/</loc>
+    <image:image>
+      <image:loc>https://lumi-hanoi.com/assets/media/signature/floor-plans/s2-typical.webp</image:loc>
+    </image:image>
     <image:image>
       <image:loc>https://lumi-hanoi.com/assets/media/signature/penthouse/s2-floor-35.webp</image:loc>
     </image:image>
@@ -282,17 +294,26 @@
   <url>
     <loc>https://lumi-hanoi.com/mat-bang-lumi-hanoi/lumi-signature/s3/</loc>
     <image:image>
+      <image:loc>https://lumi-hanoi.com/assets/media/signature/floor-plans/s3-typical.webp</image:loc>
+    </image:image>
+    <image:image>
       <image:loc>https://lumi-hanoi.com/assets/media/signature/penthouse/s3-floor-35.webp</image:loc>
     </image:image>
   </url>
   <url>
     <loc>https://lumi-hanoi.com/mat-bang-lumi-hanoi/lumi-signature/s5/</loc>
     <image:image>
+      <image:loc>https://lumi-hanoi.com/assets/media/signature/floor-plans/s5-typical.webp</image:loc>
+    </image:image>
+    <image:image>
       <image:loc>https://lumi-hanoi.com/assets/media/signature/penthouse/s5-floor-34.webp</image:loc>
     </image:image>
   </url>
   <url>
     <loc>https://lumi-hanoi.com/mat-bang-lumi-hanoi/lumi-signature/s6/</loc>
+    <image:image>
+      <image:loc>https://lumi-hanoi.com/assets/media/signature/floor-plans/s6-typical.webp</image:loc>
+    </image:image>
     <image:image>
       <image:loc>https://lumi-hanoi.com/assets/media/signature/penthouse/s6-floor-34.webp</image:loc>
     </image:image>
