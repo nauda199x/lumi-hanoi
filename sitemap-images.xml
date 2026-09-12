@@ -324,10 +324,13 @@
   <url>
     <loc>https://lumi-hanoi.com/mat-bang-lumi-hanoi/lumi-elite/</loc>
     <image:image>
-      <image:loc>https://lumi-hanoi.com/assets/media/elite/lumi-elite-facade.webp</image:loc>
+      <image:loc>https://lumi-hanoi.com/assets/media/elite/floor-plans/elite-floorplan-overview-1200x630.webp</image:loc>
     </image:image>
     <image:image>
-      <image:loc>https://lumi-hanoi.com/assets/media/layouts/lumi-elite-masterplan.webp</image:loc>
+      <image:loc>https://lumi-hanoi.com/assets/media/elite/floor-plans/e1-typical.webp</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://lumi-hanoi.com/assets/media/elite/floor-plans/e2-typical.webp</image:loc>
     </image:image>
   </url>
   <url>
@@ -362,5 +365,38 @@
     <image:image><image:loc>https://lumi-hanoi.com/assets/media/apartment-3d/lumi-prestige-2pn-layout-21-3d.webp</image:loc></image:image>
     <image:image><image:loc>https://lumi-hanoi.com/assets/media/apartment-3d/lumi-prestige-3pn-layout-17-3d.webp</image:loc></image:image>
     <image:image><image:loc>https://lumi-hanoi.com/assets/media/apartment-3d/lumi-prestige-4pn-layout-02-3d.webp</image:loc></image:image>
+  </url>
+  <url>
+    <loc>https://lumi-hanoi.com/mat-bang-lumi-hanoi/lumi-signature/</loc>
+    <image:image>
+      <image:loc>https://lumi-hanoi.com/assets/media/signature/floor-plans/signature-floorplan-overview-1200x630.webp</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://lumi-hanoi.com/assets/media/signature/floor-plans/s1-typical.webp</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://lumi-hanoi.com/assets/media/signature/floor-plans/s2-typical.webp</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://lumi-hanoi.com/assets/media/signature/floor-plans/s3-typical.webp</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://lumi-hanoi.com/assets/media/signature/floor-plans/s5-typical.webp</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://lumi-hanoi.com/assets/media/signature/floor-plans/s6-typical.webp</image:loc>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://lumi-hanoi.com/mat-bang-lumi-hanoi/lumi-prestige/</loc>
+    <image:image>
+      <image:loc>https://lumi-hanoi.com/assets/media/prestige/floor-plans/prestige-floorplan-overview-1200x630.webp</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://lumi-hanoi.com/assets/media/prestige/floor-plans/p1-t02-19-21-22-24-28.webp</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://lumi-hanoi.com/assets/media/prestige/floor-plans/p2-t02-12-14-19-21-28.webp</image:loc>
+    </image:image>
   </url>
 </urlset>
