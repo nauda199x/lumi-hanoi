@@ -12,6 +12,7 @@ on:
       - 'scripts/prioritize_floorplan_serp_images_v4.py'
       - 'scripts/prioritize_floorplan_serp_images_v5.py'
       - 'scripts/qa_serp_image_signals.py'
+      - 'scripts/qa_layout_hub_serp.py'
 
 permissions:
   contents: write
@@ -42,7 +43,9 @@ jobs:
         run: python scripts/prioritize_floorplan_serp_images_v5.py
 
       - name: Verify SERP image signals
-        run: python scripts/qa_serp_image_signals.py
+        run: |
+          python scripts/qa_serp_image_signals.py
+          python scripts/qa_layout_hub_serp.py
 
       - name: Run repository QA
         run: npm test
