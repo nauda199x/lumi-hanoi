@@ -17,10 +17,39 @@
   const quick=root.querySelector("[data-inventory-quick]");
   const towers={Signature:["S1","S2","S3","S5","S6"],Prestige:["P1","P2"],Elite:["E1","E2"]};
   const keys=["keyword","phase","tower","bedroom","max_price","area","sort"];
+  const staticPage=Number(location.pathname.match(/\/page\/(\d+)\//)?.[1]||1);
   let page=1,version=0,timer,controller,total=0;
+  let lastGood=null;
   const el=(tag,cls,text)=>{const n=document.createElement(tag);n.className=cls||"";if(text!==undefined)n.textContent=text;return n;};
   const values=()=>Object.fromEntries(new FormData(form));
   const filters=()=>{const v=values();return {...v,maxPrice:v.max_price};};
+  const inventoryKey=()=>{const v=values();return JSON.stringify([page,...keys.map(k=>String(v[k]||""))]);};
+  const rememberRows=()=>{
+    // A snapshot can only serve the exact same filters, sort order and page.
+    lastGood=grid.querySelector(".inventory-row:not(.inventory-skeleton-row)")?{
+      key:inventoryKey(),rows:[...grid.childNodes],links:[...pager.childNodes],
+      pagerHidden:pager.hidden,summary:summary.textContent
+    }:null;
+  };
+  let thumbnails={};
+  try{thumbnails=JSON.parse(document.querySelector("[data-inventory-thumbnails]")?.textContent||"{}");}catch{}
+  const imageSource=original=>{
+    const thumbnail=thumbnails?.[original];
+    return typeof thumbnail==="string"&&/^\/assets\/media\/listing-thumbnails\/[a-f0-9]{32}\.webp$/.test(thumbnail)?thumbnail:original;
+  };
+  const protectImage=(image,original)=>{
+    let triedOriginal=image.getAttribute("src")===original;
+    image.addEventListener("error",()=>{
+      if(!triedOriginal){triedOriginal=true;image.src=original;}
+      else image.remove();
+    });
+    // Static images may have failed before this deferred controller ran.
+    if(image.complete&&!image.naturalWidth){
+      if(!triedOriginal){triedOriginal=true;image.src=original;}
+      else image.remove();
+    }
+  };
+  grid.querySelectorAll("img[data-inventory-original]").forEach(image=>protectImage(image,image.dataset.inventoryOriginal));
   const refreshTowers=(selected=form.elements.tower.value)=>{
     const options=towers[form.elements.phase.value]||Object.values(towers).flat();
     form.elements.tower.replaceChildren(new Option("Tất cả tòa",""),...options.map(v=>new Option(v,v)));
@@ -76,9 +105,10 @@
     const images=[...(listing.listing_images||[])].filter(i=>i.storage_path).sort((a,b)=>Number(a.sort_order)-Number(b.sort_order));
     media.append(el("span","inventory-placeholder","Chưa có ảnh"));
     if(images.length){
-      const image=el("img");image.src=api.imageUrl(images[0].storage_path);image.alt=images[0].alt_text||listing.title||"Ảnh căn hộ Lumi Hanoi";
+      const image=el("img");const original=api.imageUrl(images[0].storage_path);
+      image.src=imageSource(original);image.alt=images[0].alt_text||listing.title||"Ảnh căn hộ Lumi Hanoi";
       image.width=560;image.height=420;image.loading=index===0?"eager":"lazy";image.decoding="async";
-      image.addEventListener("error",()=>image.remove(),{once:true});media.append(image);
+      protectImage(image,original);media.append(image);
       const counter=el("span","inventory-image-count");counter.append(icon("image"),document.createTextNode(`${images.length} ảnh`));media.append(counter);
     }
     const info=el("div","inventory-info");
@@ -182,11 +212,23 @@
         showState(active?"Không tìm thấy căn phù hợp":(type==="rent"?"Chưa có căn đang cho thuê":"Chưa có căn đang rao bán"),active?"Anh/chị có thể xóa bớt bộ lọc để xem thêm quỹ căn.":"Tin mới sẽ được hiển thị sau khi duyệt.");
       }
       renderPager();updateUrl(true);
+      rememberRows();
       if(scroll){root.querySelector("[data-inventory-results]").scrollIntoView({block:"start",behavior:"instant"});summary.focus({preventScroll:true});}
     }catch(error){
       if(requestVersion!==version)return;
-      count.textContent="Chưa tải được dữ liệu";summary.textContent="";
-      showState("Chưa thể tải quỹ căn","Vui lòng kiểm tra kết nối và thử lại.",true);
+      const status=Number(error?.status||0);
+      const temporary=!status||status===408||status===429||status>=500;
+      if(temporary&&lastGood?.key===inventoryKey()){
+        showState("Chưa cập nhật được dữ liệu mới","Đang hiển thị dữ liệu lưu sẵn. Anh/chị cần xác nhận lại giá và tình trạng căn với người đăng.",true);
+        grid.replaceChildren(...lastGood.rows);
+        pager.replaceChildren(...lastGood.links);pager.hidden=lastGood.pagerHidden;
+        count.textContent="Dữ liệu lưu sẵn";
+        summary.textContent=`${lastGood.summary} · Chưa xác nhận cập nhật mới`;
+      }else{
+        lastGood=null;
+        count.textContent="Chưa tải được dữ liệu";summary.textContent="";
+        showState("Chưa thể tải quỹ căn","Vui lòng kiểm tra kết nối và thử lại.",true);
+      }
     }finally{clearTimeout(timeout);if(requestVersion===version)setLoading(false);}
   };
   const changed=(delay=0)=>{
@@ -215,5 +257,8 @@
   });
   state.querySelector("[data-inventory-retry]").addEventListener("click",()=>load());
   window.addEventListener("popstate",()=>{clearTimeout(timer);readLocation();syncControls();load();});
-  readLocation();syncControls();load();
+  readLocation();syncControls();
+  const initial=values();
+  if(page===staticPage&&keys.every(k=>String(initial[k]||"")===(k==="sort"?"newest":"")))rememberRows();
+  load();
 })();
