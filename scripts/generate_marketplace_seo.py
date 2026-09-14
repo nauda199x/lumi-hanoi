@@ -34,6 +34,7 @@ MARKET_PRICE_START = "<!-- MARKET-PRICE-STATS:START -->"
 MARKET_PRICE_END = "<!-- MARKET-PRICE-STATS:END -->"
 APARTMENT_UNIT_TYPES = ("1PN", "2PN", "3PN", "4PN", "Duplex", "Penthouse")
 MARKET_PHASES = ("Signature", "Prestige", "Elite")
+INVENTORY_THUMBNAILS = {}
 
 CATEGORY = {
     "sale": ("mua-ban-lumi-hanoi", "Mua bán"),
@@ -800,8 +801,11 @@ def write_main_sitemap(listings: list[dict]) -> None:
     MAIN_SITEMAP.write_text(raw, encoding="utf-8")
 
 def main() -> None:
+    global INVENTORY_THUMBNAILS
     listings = fetch_approved()
     generated = write_pages(listings)
+    from marketplace_thumbnails import sync_thumbnails
+    INVENTORY_THUMBNAILS = sync_thumbnails(ROOT, generated, storage_url)
     sync_category_indexes(generated)
     sync_shop_landing(generated)
     sync_market_price_page(generated)

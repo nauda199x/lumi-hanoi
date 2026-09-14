@@ -69,8 +69,12 @@ jobs:
       - name: Sale inventory pagination and API QA
         run: |
           python scripts/qa_inventory.py
-          node --test scripts/qa_inventory_api.cjs
+          node --test scripts/qa_inventory_api.cjs scripts/qa_inventory_ui.cjs
           node --check assets/js/marketplace-inventory.js
+      - name: Inventory thumbnail safety and rendering QA
+        run: |
+          python -m pip install --quiet Pillow==12.3.0
+          python scripts/qa_inventory_thumbnails.py
       - name: Admin pagination, moderation and access QA
         run: node --test scripts/qa_admin_api.cjs scripts/qa_admin_ui.cjs
       - name: Listing detail template and interaction QA

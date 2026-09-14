@@ -42,7 +42,9 @@ def render_row(g, listing, index=0):
     images = sorted((i for i in listing.get("listing_images", []) if i.get("storage_path")), key=lambda i: i.get("sort_order") or 0)
     media = '<span class="inventory-placeholder">Chưa có ảnh</span>'
     if images:
-        media += (f'<img src="{esc(g.storage_url(images[0]["storage_path"]))}" '
+        original = g.storage_url(images[0]["storage_path"])
+        thumbnail = getattr(g, "INVENTORY_THUMBNAILS", {}).get(original, original)
+        media += (f'<img src="{esc(thumbnail)}" data-inventory-original="{esc(original)}" '
                   f'alt="{esc(images[0].get("alt_text") or listing.get("title") or "Ảnh căn hộ Lumi Hanoi")}" width="560" height="420" '
                   f'loading="{"eager" if index == 0 else "lazy"}" decoding="async">')
         media += f'<span class="inventory-image-count">{icon("image")}{len(images)} ảnh</span>'
@@ -124,6 +126,9 @@ def render_inventory_page(g, template, rows, page, pages, listing_type="sale"):
     raw = re.sub(r'(<div class="inventory-state" data-listing-state)(?: hidden)?',
                  lambda m: m[1] + (" hidden" if total else ""), raw, count=1)
     raw = re.sub(r'<script type="application/ld\+json" data-inventory-schema>.*?</script>\s*', "", raw, flags=re.S)
+    raw = re.sub(r'<script type="application/json" data-inventory-thumbnails>.*?</script>\s*', "", raw, flags=re.S)
+    thumbnails = json.dumps(getattr(g, "INVENTORY_THUMBNAILS", {}), ensure_ascii=False).replace("<", "\\u003c")
+    raw = raw.replace("</head>", f'<script type="application/json" data-inventory-thumbnails>{thumbnails}</script>\n</head>')
     itemlist = {"@context": "https://schema.org", "@type": "ItemList", "@id": g.SITE + page_url(page, listing_type) + "#inventory",
                 "numberOfItems": len(selected), "itemListElement": [
                     {"@type": "ListItem", "position": start + i + 1, "url": g.SITE + g.listing_url(row), "name": row.get("title", "")}
