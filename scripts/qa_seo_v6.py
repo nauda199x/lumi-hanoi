@@ -152,7 +152,18 @@ def main() -> int:
     )
     if "chuyennhuonglumi.vn" in public.lower(): errors.append("competitor domain found in public HTML")
     if re.search(r"(?:giá tốt nhất|cam kết lợi nhuận|còn duy nhất|suất ngoại giao)", public, re.I): errors.append("obvious fake sales CTA found")
-    if re.search(r"(?:chuyennhuonglumi[^\s<]*(?:@|tel:)|(?:0|\+84)\d{8,10})", public, re.I): errors.append("possible competitor contact data found")
+
+    # Do not treat every phone number on a marketplace as competitor data.
+    # Listing/contact numbers are legitimate user-generated content. Only flag a
+    # phone/email/tel value when it appears in close proximity to the known
+    # competitor identifier that this V6 guardrail is designed to catch.
+    competitor_contact = re.search(
+        r"chuyennhuonglumi[\s\S]{0,180}(?:@|tel:|(?:0|\+84)\d{8,10})",
+        public,
+        re.I,
+    )
+    if competitor_contact: errors.append("possible competitor contact data found")
+
     if errors:
         print("SEO V6 QA failed:\n" + "\n".join(f"- {e}" for e in errors)); return 1
     print(f"SEO V6 QA passed: {len(pages)} articles, 20 required check groups, sitemap and hub/pillar links verified.")
