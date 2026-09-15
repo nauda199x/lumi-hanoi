@@ -93,14 +93,30 @@
   .market-kpis article{min-height:120px}
 }
 
-/* Keep the generated sale-history module aligned with the site's content grid. */
+/* Keep the JS-injected quick-price and sale-history modules on one content grid. */
+.price-page .price-quick-answer,
 .price-page .sale-history-card{
   width:min(calc(100% - 32px),var(--max));
-  margin:clamp(40px,5vw,64px) auto 0;
+  margin-inline:auto;
+}
+.price-page .price-quick-answer{
+  margin-top:clamp(40px,5vw,64px);
+  margin-bottom:24px;
+}
+.price-page .sale-history-card{
+  margin-top:0;
+  margin-bottom:0;
+}
+.price-page .price-quick-answer + .sale-history-card{
+  margin-top:0;
 }
 @media(max-width:700px){
+  .price-page .price-quick-answer,
   .price-page .sale-history-card{
     width:min(calc(100% - 24px),var(--max));
+  }
+  .price-page .price-quick-answer{
     margin-top:32px;
+    margin-bottom:18px;
   }
 }
