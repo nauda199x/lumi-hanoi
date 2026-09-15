@@ -92,3 +92,15 @@
   .market-kpis{grid-template-columns:1fr}
   .market-kpis article{min-height:120px}
 }
+
+/* Keep the generated sale-history module aligned with the site's content grid. */
+.price-page .sale-history-card{
+  width:min(calc(100% - 32px),var(--max));
+  margin:clamp(40px,5vw,64px) auto 0;
+}
+@media(max-width:700px){
+  .price-page .sale-history-card{
+    width:min(calc(100% - 24px),var(--max));
+    margin-top:32px;
+  }
+}
