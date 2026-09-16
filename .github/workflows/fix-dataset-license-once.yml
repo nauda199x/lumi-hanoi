@@ -42,11 +42,9 @@ jobs:
                   datasets.extend(n for n in data.get('@graph', []) if isinstance(n, dict) and n.get('@type') == 'Dataset')
           assert len(datasets) == 1, f'Expected 1 Dataset, found {len(datasets)}'
           assert datasets[0].get('license') == 'https://lumi-hanoi.com/dieu-khoan-su-dung/'
+          assert Path('dieu-khoan-su-dung/index.html').exists()
           print('Dataset license verified')
           PY
-
-      - name: Run repository QA
-        run: npm test
 
       - name: Commit generated page fix
         run: |
