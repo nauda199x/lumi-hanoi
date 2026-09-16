@@ -1,0 +1,60 @@
+name: Fix Dataset license
+
+on:
+  push:
+    branches:
+      - fix/dataset-license
+    paths:
+      - '.github/workflows/fix-dataset-license-once.yml'
+      - 'scripts/fix_dataset_license.py'
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/dataset-license
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Add Dataset license structured data
+        run: python scripts/fix_dataset_license.py
+
+      - name: Verify Dataset license
+        run: |
+          python - <<'PY'
+          import json, re
+          from pathlib import Path
+          p = Path('gia-can-ho-lumi-hanoi/index.html')
+          raw = p.read_text(encoding='utf-8')
+          blocks = re.findall(r'<script\s+type="application/ld\+json">(.*?)</script>', raw, re.S | re.I)
+          datasets = []
+          for block in blocks:
+              data = json.loads(block)
+              if isinstance(data, dict):
+                  datasets.extend(n for n in data.get('@graph', []) if isinstance(n, dict) and n.get('@type') == 'Dataset')
+          assert len(datasets) == 1, f'Expected 1 Dataset, found {len(datasets)}'
+          assert datasets[0].get('license') == 'https://lumi-hanoi.com/dieu-khoan-su-dung/'
+          assert Path('dieu-khoan-su-dung/index.html').exists()
+          print('Dataset license verified')
+          PY
+
+      - name: Commit generated page fix
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add gia-can-ho-lumi-hanoi/index.html
+          if git diff --cached --quiet; then
+            echo 'No generated changes to commit.'
+            exit 0
+          fi
+          git commit -m 'fix: add license to Dataset structured data'
+          git pull --rebase origin fix/dataset-license
+          git push origin HEAD:fix/dataset-license
