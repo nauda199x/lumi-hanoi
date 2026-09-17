@@ -46,7 +46,6 @@ for relative, destination in REDIRECTS.items():
         'data-legacy-redirect',
         f'<link rel="canonical" href="{absolute}">',
         f'<meta http-equiv="refresh" content="0;url={absolute}">',
-        "window.location.replace(",
         f'href="{destination}"',
     )
     for token in required:
