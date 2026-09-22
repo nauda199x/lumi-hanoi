@@ -140,6 +140,13 @@
       "src": "/assets/media/listing-thumbnails/3193c90fe5ce60e35a6a5822fc6c24cc.webp",
       "width": 800
     },
+    "https://salsyqatlzapnzbcnnsr.supabase.co/storage/v1/object/public/listing-images/pending/81fca19e-b7dc-4d59-960a-3d10f7bf5097/01-4cdda837-58c4-433e-b963-2c0d4295b42a.jpg": {
+      "bytes": 58230,
+      "height": 600,
+      "source_bytes": 748764,
+      "src": "/assets/media/listing-thumbnails/7a740c5d53f28e36a4f019b40de30b60.webp",
+      "width": 800
+    },
     "https://salsyqatlzapnzbcnnsr.supabase.co/storage/v1/object/public/listing-images/pending/82f9b178-4736-4d8a-9df1-ca7a735d367a/01-5cee05ee-0d3a-460a-a35e-3a8fc827d385.png": {
       "bytes": 42560,
       "height": 800,
