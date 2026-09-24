@@ -12,6 +12,7 @@
   const phases={Signature:['S1','S2','S3','S5','S6'],Prestige:['P1','P2'],Elite:['E1','E2']};
   const statuses={pending:'Chờ duyệt',approved:'Đang hiển thị',rejected:'Từ chối',expired:'Đã ẩn / hết hạn',sold:'Đã bán',rented:'Đã cho thuê'};
   const reportLabels={already_done:'Căn đã giao dịch',wrong_info:'Thông tin chưa đúng',cannot_contact:'Không liên hệ được',other:'Phản ánh khác'};
+  const moderationLabels={price_bait:'Giá mồi / giá không đúng thực tế',wrong_images:'Ảnh không đúng căn',multiple_listings:'Gom nhiều căn / quỹ căn trong một tin',inconsistent_info:'Thông tin không thống nhất',duplicate:'Tin trùng',unavailable:'Căn không còn giao dịch',unverifiable:'Thông tin thiếu hoặc không xác thực được',other:'Lý do khác'};
   let rows=[],page=1,pageSize=20,total=0,selected=new Set(),operationErrors=new Map(),loading=false,busy=false,loggedIn=false;
   let requestId=0,controller=null,statsController=null,statsId=0,searchTimer=null,editing=null,editRequestId=0,saving=false,refreshTimer=null,confirmPending=false;
   const el=(tag,className,text)=>{const node=document.createElement(tag);if(className)node.className=className;if(text!==undefined)node.textContent=text;return node;};
@@ -63,13 +64,19 @@
     dashboard.querySelectorAll('button,input,select').forEach(node=>node.disabled=value);
     lockRows();
   };
-  const ask=({title,message,codes=[],danger=false,submit='Xác nhận'})=>{
+  const ask=({title,message,codes=[],danger=false,submit='Xác nhận',reasonPicker=false})=>{
     if(confirmPending)return Promise.resolve(false);confirmPending=true;
     $('[data-confirm-title]').textContent=title;$('[data-confirm-message]').textContent=message;
     $('[data-confirm-codes]').textContent=codes.slice(0,8).join(' · ')+(codes.length>8?` · và ${codes.length-8} tin khác`:'');
+    const reasonFields=$('[data-confirm-reason-fields]'),reasonSelect=$('[data-confirm-reason]'),noteInput=$('[data-confirm-note]');
+    reasonFields.hidden=!reasonPicker;reasonSelect.required=reasonPicker;reasonSelect.value='';noteInput.value='';
     const submitButton=$('[data-confirm-submit]');submitButton.textContent=submit;submitButton.className=`btn ${danger?'btn-danger':'btn-primary'}`;
     confirmDialog.returnValue='';confirmDialog.showModal();
-    return new Promise(resolve=>confirmDialog.addEventListener('close',()=>{confirmPending=false;resolve(confirmDialog.returnValue==='confirm');},{once:true}));
+    return new Promise(resolve=>confirmDialog.addEventListener('close',()=>{
+      confirmPending=false;
+      if(confirmDialog.returnValue!=='confirm'){resolve(false);return;}
+      resolve(reasonPicker?{reason:reasonSelect.value,note:api.cleanText(noteInput.value,500)}:true);
+    },{once:true}));
   };
   const syncSeo=async reason=>{
     try{await api.requestSeoSync(reason);}catch{if(loggedIn)status(`${$('[data-admin-status]').textContent} Chưa gửi được yêu cầu cập nhật trang công khai; hệ thống sẽ thử qua lịch đồng bộ tự động.`,true);}
@@ -108,12 +115,13 @@
     const count=items.length;
     const labels={approve:['Duyệt / gia hạn tin',`Công khai ${count} tin và đặt thời hạn mới ${Number(api.config.listingLifetimeDays||45)} ngày kể từ hôm nay.`, 'Duyệt / gia hạn'],hide:['Ẩn tin đăng',`Ẩn ${count} tin khỏi danh sách công khai. Có thể duyệt lại khi cần.`, 'Ẩn tin'],reject:['Từ chối tin đăng',`Chuyển ${count} tin sang trạng thái từ chối.`, 'Từ chối'],done:['Đánh dấu đã giao dịch',`${count} tin sẽ được chuyển sang Đã bán hoặc Đã cho thuê theo loại giao dịch và ngừng hiển thị.`, 'Đã giao dịch'],feature:['Ghim tin',`Ưu tiên ${count} tin đang hiển thị.`, 'Ghim tin'],unfeature:['Bỏ ghim tin',`Bỏ ưu tiên ${count} tin đã chọn.`, 'Bỏ ghim']};
     const [title,message,submit]=labels[action];
-    if(!await ask({title,message,submit,codes:items.map(row=>row.listing_code)}))return;
+    const confirmation=await ask({title,message,submit,codes:items.map(row=>row.listing_code),reasonPicker:action==='reject'});
+    if(!confirmation)return;
     if(busy||loading||!loggedIn)return;
     setBusy(true);status(`Đang xử lý 0/${count} tin…`);
     let changed=false;
     try{
-      const result=await api.applyAdminAction(items,action,{onProgress:progress=>status(`Đang xử lý ${progress.done}/${progress.total} tin…`)});
+      const result=await api.applyAdminAction(items,action,{onProgress:progress=>status(`Đang xử lý ${progress.done}/${progress.total} tin…`),rejectionReason:action==='reject'?confirmation.reason:null,rejectionNote:action==='reject'?confirmation.note:null});
       changed=result.success.length>0;operationErrors=new Map(result.failed.map(item=>[item.id,item.message]));clearSelection();
       await load(true);
       if(result.failed.length){
@@ -149,6 +157,7 @@
     const state=currentStatus(row),stateCell=el('td'),stack=el('div','admin-status-stack');stack.append(pill(statuses[state]||state,state));
     if(row.is_featured)stack.append(pill('Đang ghim','featured'));
     if(row.open_reports?.length)stack.append(pill('Có báo cáo','reported'));
+    if(state==='rejected'&&row.moderation_reason)stack.append(el('span','admin-moderation-reason',`Lý do: ${moderationLabels[row.moderation_reason]||'Khác'}`));
     if(operationErrors.has(row.id))stack.append(el('span','admin-operation-error',`Chưa xử lý: ${operationErrors.get(row.id)}`));
     if(state==='approved'&&row.expires_at&&new Date(row.expires_at)-Date.now()<=7*86400000)stack.append(pill('Sắp hết hạn','expiring'));
     stateCell.append(stack);
@@ -202,6 +211,14 @@
     searchTimer=setTimeout(()=>load(),delay);
   };
   const resetFilters=()=>{if(busy)return;filters.reset();updateTowers(filters,'',true);changeFilters();};
+  const renderModeration=row=>{
+    const node=$('[data-dialog-moderation]');node.replaceChildren();
+    if(!row.moderation_reason&&row.status!=='rejected'){node.hidden=true;return;}
+    node.hidden=false;node.append(el('h3','',row.status==='rejected'?'Lý do từ chối':'Lịch sử kiểm duyệt'));
+    node.append(el('strong','',moderationLabels[row.moderation_reason]||'Chưa ghi lý do'));
+    if(row.moderation_note)node.append(el('p','',row.moderation_note));
+    if(row.rejected_at)node.append(el('small','',`Từ chối ngày ${date(row.rejected_at,true)}`));
+  };
   const renderReports=row=>{
     const node=$('[data-dialog-reports]');node.replaceChildren();const reports=row.listing_reports||[];node.hidden=!reports.length;if(!reports.length)return;
     const open=reports.filter(report=>!report.resolved_at);node.append(el('h3','',`${open.length} báo cáo chưa xử lý`));
@@ -229,7 +246,7 @@
       const images=$('[data-dialog-images]');images.replaceChildren();
       (full.listing_images||[]).forEach((image,index)=>{const link=el('a');link.href=api.imageUrl(image.storage_path);link.target='_blank';link.rel='noopener';link.setAttribute('aria-label',`Mở ảnh gốc ${index+1}`);const img=el('img');img.src=link.href;img.alt=image.alt_text||`Ảnh tin đăng ${index+1}`;img.loading='lazy';img.width=145;img.height=108;link.append(img);images.append(link);});
       if(!full.listing_images?.length)images.append(el('span','muted','Tin chưa có ảnh đính kèm.'));
-      renderReports(full);$('[data-dialog-content]').hidden=false;show($('[data-dialog-status]'),'');
+      renderModeration(full);renderReports(full);$('[data-dialog-content]').hidden=false;show($('[data-dialog-status]'),'');
     }catch(error){if(id===editRequestId&&dialog.open)show($('[data-dialog-status]'),error.message,true);}
   };
   const updatePricePreview=()=>{if(editing)$('[data-price-preview]').textContent=api.formatCurrency(Math.round(Number(editForm.elements.price.value)*(editing.listing_type==='rent'?1e6:1e9)),editing.listing_type);};
@@ -271,7 +288,7 @@
   });
   $('[data-admin-logout]').addEventListener('click',async()=>{
     if(busy||saving)return;loggedIn=false;requestId++;statsId++;editRequestId++;controller?.abort();statsController?.abort();clearInterval(refreshTimer);clearTimeout(searchTimer);
-    dialog.close();confirmDialog.close();rows=[];selected.clear();list.replaceChildren();$('[data-dialog-content]').hidden=true;editForm.reset();$('[data-dialog-images]').replaceChildren();$('[data-dialog-reports]').replaceChildren();dashboard.hidden=true;loginPanel.hidden=false;show(loginStatus,'');
+    dialog.close();confirmDialog.close();rows=[];selected.clear();list.replaceChildren();$('[data-dialog-content]').hidden=true;editForm.reset();$('[data-dialog-images]').replaceChildren();$('[data-dialog-moderation]').replaceChildren();$('[data-dialog-reports]').replaceChildren();dashboard.hidden=true;loginPanel.hidden=false;show(loginStatus,'');
     try{sessionStorage.removeItem(preferenceKey);}catch{}filters.reset();page=1;pageSize=20;$('[data-admin-page-size]').value='20';await api.signOut();loginForm.elements.email.focus();
   });
   const boot=async()=>{
