@@ -195,6 +195,19 @@
     headers:{Prefer:"return=minimal"}
   });
 
+  const addListingImages=async(listingId,items)=>{
+    const rows=(Array.isArray(items)?items:[]).map(item=>({
+      listing_id:listingId,
+      storage_path:String(item.path||""),
+      sort_order:Number(item.index)||0,
+      alt_text:cleanText(item.altText,180)
+    })).filter(row=>row.storage_path);
+    if(!rows.length)return null;
+    return request(restPath("listing_images"),{
+      method:"POST",body:rows,headers:{Prefer:"return=minimal"}
+    });
+  };
+
 
   const createReport=async(listingId,reason,details)=>request(restPath("listing_reports"),{
     method:"POST",
@@ -365,7 +378,7 @@
 
   window.LumiMarketplace={
     config,configured,MarketplaceError,cleanText,slugify,formatCurrency,imageUrl,listingUrl,
-    listPublic,listPublicPage,getPublicListing,createListing,manageListing,uploadImage,addListingImage,createReport,
+    listPublic,listPublicPage,getPublicListing,createListing,manageListing,uploadImage,addListingImage,addListingImages,createReport,
     signIn,signOut,requireAdmin,listAdmin,updateListing,deleteListing,requestSeoSync,
     listAdminPage,adminCounts,getAdminListing,applyAdminAction,resolveAdminReports
   };
