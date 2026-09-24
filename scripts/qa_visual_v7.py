@@ -26,6 +26,7 @@ INTENTIONAL_NOINDEX = {
     Path("tin-dang-lumi-hanoi/index.html"),
     Path("tin-dang-khong-con-hien-thi/index.html"),
     Path("tin-da-luu-lumi-hanoi/index.html"),
+    Path("quan-ly-tin-lumi-hanoi/index.html"),
     Path("cho-thue-lumi-signature/index.html"),
 }
 INTENTIONAL_CANONICAL_CONSOLIDATIONS = {
