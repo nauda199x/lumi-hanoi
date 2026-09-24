@@ -294,7 +294,7 @@
     const size=[20,50,100].includes(Number(pageSize))?Number(pageSize):20;
     const orders={newest:"created_at.desc,id.desc",oldest:"created_at.asc,id.asc",updated:"updated_at.desc,id.desc",expiry:"expires_at.asc.nullslast,id.desc"};
     const params={...adminParams(filters),
-      select:"id,listing_code,slug,listing_type,status,title,phase,tower,unit_type,area_sqm,price_vnd,poster_name,contact_phone,contact_public,is_featured,sort_priority,approved_at,expires_at,created_at,updated_at,listing_images(storage_path,sort_order),open_reports:listing_reports(id)",
+      select:"id,listing_code,slug,listing_type,status,title,phase,tower,unit_type,area_sqm,price_vnd,poster_name,contact_phone,contact_public,is_featured,sort_priority,approved_at,expires_at,moderation_reason,moderation_note,rejected_at,created_at,updated_at,listing_images(storage_path,sort_order),open_reports:listing_reports(id)",
       order:orders[filters.sort]||orders.newest,limit:String(size),offset:String((Math.max(1,Math.min(100000,Math.floor(Number(page)||1)))-1)*size),
       "listing_images.order":"sort_order.asc,id.asc","listing_images.limit":"1","open_reports.resolved_at":"is.null","open_reports.limit":"1"
     };
@@ -317,9 +317,12 @@
     if(!result?.length)throw new MarketplaceError("Tin không còn tồn tại hoặc bạn không có quyền truy cập.",404);
     return result[0];
   };
-  const applyAdminAction=async(items,action,{onProgress}={})=>{
+  const applyAdminAction=async(items,action,{onProgress,rejectionReason,rejectionNote}={})=>{
     if(!Array.isArray(items)||!items.length||items.length>100)throw new MarketplaceError("Chọn từ 1 đến 100 tin trên trang hiện tại.",400);
     if(!["approve","hide","reject","done","feature","unfeature"].includes(action))throw new MarketplaceError("Thao tác không hợp lệ.",400);
+    const moderationReasons=new Set(["price_bait","wrong_images","multiple_listings","inconsistent_info","duplicate","unavailable","unverifiable","other"]);
+    const cleanReason=cleanText(rejectionReason,40),cleanNote=cleanText(rejectionNote,500)||null;
+    if(action==="reject"&&!moderationReasons.has(cleanReason))throw new MarketplaceError("Vui lòng chọn lý do từ chối.",400);
     const session=await adminToken();const success=[];const failed=[];
     const stamp=new Date().toISOString();
     const expiry=new Date(Date.now()+Number(config.listingLifetimeDays||45)*86400000).toISOString();
@@ -331,7 +334,7 @@
         if(!row.updated_at)throw new MarketplaceError("Cần tải lại tin trước khi thao tác.",409);
         if(action==="approve"&&!row.contact_public)throw new MarketplaceError("Người đăng chưa đồng ý công khai liên hệ.",400);
         if(action==="feature"&&(row.status!=="approved"||(row.expires_at&&new Date(row.expires_at)<=new Date())))throw new MarketplaceError("Chỉ ghim tin đang hiển thị.",400);
-        const patches={approve:{status:"approved",approved_at:row.approved_at||stamp,expires_at:expiry},hide:{status:"expired",expires_at:stamp,is_featured:false,sort_priority:0},reject:{status:"rejected",is_featured:false,sort_priority:0},done:{status:row.listing_type==="rent"?"rented":"sold",is_featured:false,sort_priority:0},feature:{is_featured:true,sort_priority:100},unfeature:{is_featured:false,sort_priority:0}};
+        const patches={approve:{status:"approved",approved_at:row.approved_at||stamp,expires_at:expiry,moderation_reason:null,moderation_note:null,rejected_at:null},hide:{status:"expired",expires_at:stamp,is_featured:false,sort_priority:0},reject:{status:"rejected",is_featured:false,sort_priority:0,moderation_reason:cleanReason,moderation_note:cleanNote,rejected_at:stamp},done:{status:row.listing_type==="rent"?"rented":"sold",is_featured:false,sort_priority:0},feature:{is_featured:true,sort_priority:100},unfeature:{is_featured:false,sort_priority:0}};
         const changed=await request(restPath("listings",{id:`eq.${row.id}`,updated_at:`eq.${row.updated_at}`,select:"id"}),{method:"PATCH",body:patches[action],token:session.access_token,headers:{Prefer:"return=representation"}});
         if(!Array.isArray(changed)||changed.length!==1)throw new MarketplaceError("Tin đã thay đổi. Tải lại để kiểm tra.",409);
         success.push(row.id);
