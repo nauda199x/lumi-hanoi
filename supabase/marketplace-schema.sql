@@ -98,6 +98,9 @@ create table if not exists public.listings (
   sort_priority integer not null default 0,
   approved_at timestamptz,
   expires_at timestamptz,
+  moderation_reason text,
+  moderation_note text,
+  rejected_at timestamptz,
   edit_token_hash text check (edit_token_hash is null or edit_token_hash ~ '^[0-9a-f]{64}$'),
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
@@ -107,6 +110,24 @@ create table if not exists public.listings (
     (phase = 'Elite' and tower in ('E1','E2'))
   )
 );
+
+-- Admin moderation metadata for rejected marketplace listings.
+alter table public.listings add column if not exists moderation_reason text;
+alter table public.listings add column if not exists moderation_note text;
+alter table public.listings add column if not exists rejected_at timestamptz;
+
+alter table public.listings drop constraint if exists listings_moderation_reason_check;
+alter table public.listings add constraint listings_moderation_reason_check
+check (moderation_reason is null or moderation_reason in (
+  'price_bait','wrong_images','multiple_listings','inconsistent_info',
+  'duplicate','unavailable','unverifiable','other'
+)) not valid;
+alter table public.listings validate constraint listings_moderation_reason_check;
+
+alter table public.listings drop constraint if exists listings_moderation_note_check;
+alter table public.listings add constraint listings_moderation_note_check
+check (moderation_note is null or char_length(moderation_note) <= 500) not valid;
+alter table public.listings validate constraint listings_moderation_note_check;
 
 -- V2 submission form: minimize seller/landlord data and normalize filters.
 alter table public.listings alter column poster_type drop not null;
