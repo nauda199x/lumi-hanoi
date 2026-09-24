@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Quản lý tin đăng | Lumi Hanoi</title>
+  <meta name="description" content="Trang riêng để người đăng chỉnh sửa và quản lý tin căn hộ Lumi Hanoi bằng link bảo mật.">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <meta name="referrer" content="no-referrer">
+  <link rel="icon" href="/favicon.svg?v=20260828" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/css/site.css?v=20260907-layoutfix1">
+  <link rel="stylesheet" href="/assets/css/marketplace.css?v=20260924-manage1">
+  <link rel="stylesheet" href="/assets/css/listing-manage.css?v=20260924-manage1">
+</head>
+<body class="manage-listing-page">
+  <a class="skip-link" href="#main">Bỏ qua điều hướng</a>
+  <header class="site-header">
+    <div class="container nav">
+      <a class="brand" href="/" aria-label="Lumi Hanoi – Trang chủ"><span class="brand-mark" aria-hidden="true">LH</span><span>LUMI HANOI</span></a>
+      <a class="btn" href="/dang-tin-lumi-hanoi/">Đăng tin mới</a>
+    </div>
+  </header>
+
+  <main id="main" data-listing-manage>
+    <section class="manage-hero">
+      <div class="container">
+        <p class="eyebrow">Link quản lý riêng</p>
+        <h1>Sửa và quản lý tin đăng</h1>
+        <p>Không cần tạo tài khoản. Chỉ người có đúng link riêng được cấp sau khi đăng tin mới có thể mở và chỉnh sửa tin này.</p>
+      </div>
+    </section>
+
+    <section class="manage-wrap">
+      <div class="container manage-shell">
+        <div class="manage-state manage-loading" data-manage-loading>Đang mở tin của anh/chị…</div>
+
+        <div class="manage-state" data-manage-error hidden>
+          <h2>Không mở được tin</h2>
+          <p data-manage-error-text>Link quản lý không hợp lệ.</p>
+          <div class="hero-actions"><a class="btn btn-primary" href="/dang-tin-lumi-hanoi/">Đăng tin mới</a><a class="btn" href="/">Về trang chủ</a></div>
+        </div>
+
+        <section class="manage-card" data-manage-content hidden>
+          <div class="manage-head">
+            <div>
+              <p class="eyebrow" data-manage-code>Tin đăng</p>
+              <h2>Thông tin đang lưu</h2>
+              <div class="manage-meta"><span data-manage-created></span><span data-manage-updated></span></div>
+            </div>
+            <span class="manage-status-badge" data-manage-status-badge>—</span>
+          </div>
+
+          <p class="manage-private-note"><strong>Hãy giữ link này riêng tư.</strong> Sau khi sửa nội dung, tin sẽ chuyển về trạng thái chờ duyệt để quản trị viên kiểm tra trước khi hiển thị lại.</p>
+          <div class="manage-link-tools"><button class="btn" type="button" data-manage-copy>Sao chép link quản lý</button><a class="btn" data-manage-view-public hidden>Xem tin đang hiển thị ↗</a><input data-manage-link readonly hidden></div>
+          <p class="manage-message" data-manage-status hidden role="status" aria-live="polite"></p>
+
+          <form class="manage-form" data-manage-form novalidate>
+            <section class="manage-section">
+              <h3>Giao dịch & căn hộ</h3>
+              <div class="manage-grid manage-grid--3">
+                <div class="field"><label for="manage-type">Loại giao dịch</label><select id="manage-type" name="listing_type" required><option value="sale">Mua bán</option><option value="rent">Cho thuê</option></select></div>
+                <div class="field"><label for="manage-phase">Phân khu</label><select id="manage-phase" name="phase" required><option value="">Chọn phân khu</option><option>Signature</option><option>Prestige</option><option>Elite</option></select></div>
+                <div class="field"><label for="manage-tower">Tòa</label><select id="manage-tower" name="tower" required><option value="">Chọn tòa</option></select></div>
+                <div class="field"><label for="manage-unit">Loại căn</label><select id="manage-unit" name="unit_type" required><option>1PN</option><option>2PN</option><option>3PN</option><option>4PN</option><option>Duplex</option><option>Penthouse</option><option>Shop chân đế</option></select></div>
+                <div class="field"><label for="manage-area">Diện tích (m²)</label><input id="manage-area" name="area_sqm" type="number" min="20" max="1000" step="0.1" required></div>
+                <div class="field"><label for="manage-floor">Tầng</label><select id="manage-floor" name="floor_label"><option value="">Chưa cập nhật</option><option>Thấp</option><option>Trung</option><option>Cao</option></select></div>
+                <div class="field"><label for="manage-price" data-manage-price-label>Giá bán (tỷ đồng)</label><input id="manage-price" name="price_display" type="number" min="0.1" step="0.01" required></div>
+                <div class="field"><label for="manage-furnishing">Nội thất</label><input id="manage-furnishing" name="furnishing" maxlength="80"></div>
+                <div class="field"><label for="manage-available">Ngày có thể vào ở</label><input id="manage-available" name="available_from" type="date"></div>
+                <div class="field field--wide"><label for="manage-legal">Tình trạng hồ sơ</label><input id="manage-legal" name="legal_status" maxlength="120" placeholder="Ví dụ: Hợp đồng mua bán"></div>
+              </div>
+            </section>
+
+            <section class="manage-section">
+              <h3>Nội dung tin</h3>
+              <div class="manage-grid">
+                <div class="field field--wide"><label for="manage-title">Tiêu đề</label><input id="manage-title" name="title" minlength="10" maxlength="180" required></div>
+                <div class="field field--wide"><label for="manage-description">Mô tả</label><textarea id="manage-description" name="description" maxlength="3000" required></textarea></div>
+              </div>
+            </section>
+
+            <section class="manage-section">
+              <h3>Liên hệ</h3>
+              <div class="manage-grid">
+                <div class="field"><label for="manage-name">Tên người đăng</label><input id="manage-name" name="poster_name" minlength="2" maxlength="120" required></div>
+                <div class="field"><label for="manage-phone">Số điện thoại / Zalo</label><input id="manage-phone" name="contact_phone" type="tel" minlength="8" maxlength="30" required></div>
+              </div>
+            </section>
+
+            <section class="manage-section">
+              <h3>Ảnh hiện tại</h3>
+              <div class="manage-images" data-manage-images></div>
+              <p class="manage-image-note">Ảnh hiện tại được giữ nguyên khi sửa tin. Nếu cần thay ảnh, quản trị viên vẫn có thể hỗ trợ trong bước duyệt.</p>
+            </section>
+
+            <div class="manage-actions">
+              <button class="btn btn-primary" type="submit" data-manage-save>Lưu thay đổi & gửi duyệt</button>
+              <button class="btn" type="button" data-manage-action="done" data-manage-done>Đánh dấu đã giao dịch</button>
+              <button class="btn btn-danger" type="button" data-manage-action="hide">Ẩn tin</button>
+            </div>
+          </form>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer"><div class="container footer-grid"><div><a class="brand" href="/"><span class="brand-mark" aria-hidden="true">LH</span><span>LUMI HANOI</span></a><p>Cổng thông tin dự án &amp; thị trường căn hộ.</p></div><div><p class="disclaimer">Link quản lý là chìa khóa truy cập tin. Không gửi link này cho người không liên quan.</p><p class="disclaimer">© <span data-year>2026</span> Lumi Hanoi.</p></div></div></footer>
+
+  <script src="/assets/js/site.js?v=20260907-performance1" defer></script>
+  <script src="/assets/js/marketplace-config.js"></script>
+  <script src="/assets/js/marketplace-api.js?v=20260924-manage1"></script>
+  <script src="/assets/js/listing-manage.js?v=20260924-manage1" defer></script>
+</body>
+</html>
