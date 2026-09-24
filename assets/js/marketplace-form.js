@@ -66,9 +66,36 @@
     status.textContent="";
     status.className="form-status";
   };
-  const showSuccessBox=(submissionType,imageNote="")=>{
+  const rememberManagementLink=(listing,url)=>{
+    if(!listing?.id||!url)return;
+    try{
+      const key="lumi_marketplace_manage_links_v1";
+      const current=JSON.parse(localStorage.getItem(key)||"[]");
+      const items=Array.isArray(current)?current:[];
+      const entry={id:listing.id,code:listing.listing_code||"",url,created_at:new Date().toISOString()};
+      localStorage.setItem(key,JSON.stringify([entry,...items.filter(item=>item?.id!==entry.id)].slice(0,20)));
+    }catch{}
+  };
+  const copyText=async(text,input)=>{
+    try{
+      if(navigator.clipboard?.writeText){
+        await navigator.clipboard.writeText(text);
+        return true;
+      }
+    }catch{}
+    try{
+      input?.focus();
+      input?.select();
+      return document.execCommand("copy");
+    }catch{return false;}
+  };
+  const showSuccessBox=(submissionType,imageNote="",listing=null)=>{
     if(!status)return;
     const rent=submissionType==="rent";
+    const managementToken=String(listing?.management_token||"");
+    const manageUrl=managementToken?`${location.origin}/quan-ly-tin-lumi-hanoi/#token=${encodeURIComponent(managementToken)}`:"";
+    if(manageUrl)rememberManagementLink(listing,manageUrl);
+
     status.hidden=false;
     status.className="form-status is-success submit-success-card";
     status.replaceChildren();
@@ -96,6 +123,40 @@
     note.textContent=imageNote||"Sau khi được duyệt, số điện thoại/Zalo đã nhập sẽ hiển thị để người quan tâm liên hệ trực tiếp.";
     copy.append(eyebrow,title,body,note);
 
+    let openManage=null;
+    if(manageUrl){
+      const manage=document.createElement("span");
+      manage.className="submit-success-manage";
+      const manageTitle=document.createElement("strong");
+      manageTitle.textContent="Lưu link sửa tin";
+      const manageText=document.createElement("span");
+      manageText.textContent="Không cần tài khoản. Hãy giữ link riêng này để sửa, ẩn hoặc đánh dấu tin đã giao dịch.";
+      const row=document.createElement("span");
+      row.className="submit-success-manage-row";
+      const input=document.createElement("input");
+      input.type="text";
+      input.readOnly=true;
+      input.value=manageUrl;
+      input.setAttribute("aria-label","Link riêng để quản lý tin");
+      const copyButton=document.createElement("button");
+      copyButton.type="button";
+      copyButton.className="btn submit-success-copy-link";
+      copyButton.textContent="Sao chép link";
+      copyButton.addEventListener("click",async()=>{
+        const ok=await copyText(manageUrl,input);
+        copyButton.textContent=ok?"Đã sao chép":"Chọn link để sao chép";
+        window.setTimeout(()=>{copyButton.textContent="Sao chép link";},1800);
+      });
+      row.append(input,copyButton);
+      manage.append(manageTitle,manageText,row);
+      copy.append(manage);
+
+      openManage=document.createElement("a");
+      openManage.className="btn btn-primary";
+      openManage.href=manageUrl;
+      openManage.textContent="Sửa / quản lý tin";
+    }
+
     const actions=document.createElement("span");
     actions.className="submit-success-actions";
     const again=document.createElement("button");
@@ -114,7 +175,8 @@
     listingLink.className="btn submit-success-secondary";
     listingLink.href=rent?"/cho-thue-lumi-hanoi/":"/mua-ban-lumi-hanoi/";
     listingLink.textContent=rent?"Xem danh sách cho thuê":"Xem danh sách mua bán";
-    actions.append(again,listingLink);
+    if(openManage)actions.append(openManage,again,listingLink);
+    else actions.append(again,listingLink);
 
     status.append(mark,copy,actions);
     status.scrollIntoView({behavior:"smooth",block:"start"});
@@ -623,7 +685,7 @@
       updatePriceHelp();
       goToStep(1,{scroll:false});
       updateSummary();
-      showSuccessBox(submissionType,imageNote);
+      showSuccessBox(submissionType,imageNote,listing);
     }catch(error){
       showStatus(error.status===429?"Yêu cầu đang được gửi liên tiếp. Vui lòng đợi trong giây lát trước khi gửi lại.":`Chưa gửi được tin: ${error.message}`,"error");
     }finally{
