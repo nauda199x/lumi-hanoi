@@ -10,3 +10,5 @@
 @media(max-width:380px){.admin-shell{width:calc(100% - 20px)}.admin-topbar{flex-wrap:wrap}.admin-toolbar-actions{max-width:none}.admin-kpi{padding:12px 8px}.admin-kpi span{font-size:.75rem}.field-row{grid-template-columns:1fr}.field-row--3 .field:last-child{grid-column:auto}.admin-table tbody tr{padding-left:40px}.admin-property{grid-template-columns:1fr}.admin-property .admin-thumb{display:none}.admin-pagination .btn{padding:8px}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
 .admin-operation-error{font-size:.8125rem;line-height:1.5;color:#a33124}
+
+.admin-moderation-reason{width:100%;font-size:.75rem;line-height:1.45;color:#96382f}.admin-moderation{border-color:#efc8c0;background:#fff8f6}.admin-moderation>p{margin:8px 0;white-space:pre-wrap;line-height:1.55}.admin-moderation>small{display:block;margin-top:8px;color:var(--muted)}.admin-confirm [data-confirm-reason-fields]{margin-top:18px;padding-top:16px;border-top:1px solid var(--line)}.admin-confirm [data-confirm-reason-fields] .field:last-child{margin-bottom:4px}
