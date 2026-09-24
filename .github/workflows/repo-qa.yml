@@ -87,6 +87,8 @@ jobs:
         run: |
           python scripts/qa_marketplace_entity_loop.py
           node --check assets/js/marketplace-entity-loop.js
+          node --check assets/js/listing-manage.js
+          node --test scripts/qa_guest_listing_management.cjs
       - name: Validate data and JavaScript syntax
         run: |
           python -m json.tool assets/data/floor-plans.json >/dev/null
