@@ -9,6 +9,10 @@ window.LUMI_MARKETPLACE_CONFIG = Object.freeze({
   storageBucket: "listing-images",
   maxImages: 12,
   maxImageBytes: 5 * 1024 * 1024,
+  targetImageBytes: 1.4 * 1024 * 1024,
+  targetImageMaxDimension: 1920,
+  imagePrepareConcurrency: 2,
+  imageUploadConcurrency: 3,
   listingLifetimeDays: 45
 });
 
