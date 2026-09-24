@@ -32,6 +32,7 @@
   const draftMaxAge=7*24*60*60*1000;
   let previewUrls=[];
   let draftTimer=0;
+  let preparedImageCache={key:"",promise:null};
   let isSubmitting=false;
   let wizardStep=1;
   let titleManuallyEdited=false;
@@ -430,6 +431,24 @@
     image.onerror=()=>{URL.revokeObjectURL(url);reject(new Error(`Không đọc được ảnh “${file.name}”. Hãy thử chọn ảnh khác hoặc lưu ảnh dưới dạng JPG.`));};
     image.src=url;
   });
+  const mapWithConcurrency=async(items,limit,worker,onProgress)=>{
+    const source=[...items];
+    const results=new Array(source.length);
+    let cursor=0;
+    let completed=0;
+    const count=Math.max(1,Math.min(source.length||1,Number(limit)||1));
+    const runners=Array.from({length:count},async()=>{
+      while(true){
+        const index=cursor++;
+        if(index>=source.length)return;
+        results[index]=await worker(source[index],index);
+        completed++;
+        onProgress?.(completed,source.length);
+      }
+    });
+    await Promise.all(runners);
+    return results;
+  };
   const convertToJpeg=async(file,maxBytes)=>{
     const loaded=await loadImage(file);
     const image=loaded.image;
@@ -437,26 +456,27 @@
       const sourceWidth=image.naturalWidth||image.width;
       const sourceHeight=image.naturalHeight||image.height;
       if(!sourceWidth||!sourceHeight)throw new Error(`Không đọc được kích thước ảnh “${file.name}”.`);
-      let maxDimension=2200;
-      let quality=.88;
+      let maxDimension=Number(api.config.targetImageMaxDimension||1920);
+      let quality=.82;
       for(let attempt=0;attempt<5;attempt++){
         const scale=Math.min(1,maxDimension/Math.max(sourceWidth,sourceHeight));
         const width=Math.max(1,Math.round(sourceWidth*scale));
         const height=Math.max(1,Math.round(sourceHeight*scale));
         const canvas=document.createElement("canvas");
         canvas.width=width;canvas.height=height;
-        const context=canvas.getContext("2d");
+        const context=canvas.getContext("2d",{alpha:false});
         if(!context)throw new Error("Trình duyệt không hỗ trợ tối ưu ảnh.");
         context.fillStyle="#fff";context.fillRect(0,0,width,height);
         context.drawImage(image,0,0,width,height);
         const blob=await blobFromCanvas(canvas,quality);
+        canvas.width=1;canvas.height=1;
         if(blob.size<=maxBytes||attempt===4){
           if(blob.size>maxBytes)throw new Error(`Ảnh “${file.name}” vẫn quá lớn sau khi tối ưu. Hãy chọn ảnh nhỏ hơn.`);
           const base=(file.name||"anh-can-ho").replace(/\.[^.]+$/,"").slice(0,80)||"anh-can-ho";
-          return new File([blob],`${base}.jpg`,{type:"image/jpeg",lastModified:Date.now()});
+          return new File([blob],`${base}.jpg`,{type:"image/jpeg",lastModified:file.lastModified||Date.now()});
         }
-        maxDimension=Math.max(1200,Math.round(maxDimension*.82));
-        quality=Math.max(.68,quality-.06);
+        maxDimension=Math.max(1280,Math.round(maxDimension*.86));
+        quality=Math.max(.68,quality-.05);
       }
       throw new Error(`Không thể tối ưu ảnh “${file.name}”.`);
     }finally{
@@ -464,16 +484,29 @@
     }
   };
   const prepareFiles=async(files,onProgress)=>{
-    const maxBytes=Number(api.config.maxImageBytes||5*1024*1024);
-    const prepared=[];
-    for(let index=0;index<files.length;index++){
-      onProgress?.(index+1,files.length);
-      const file=files[index];
+    const bucketMaxBytes=Number(api.config.maxImageBytes||5*1024*1024);
+    const targetBytes=Math.min(bucketMaxBytes,Number(api.config.targetImageBytes||1.4*1024*1024));
+    const concurrency=Number(api.config.imagePrepareConcurrency||2);
+    return mapWithConcurrency(files,concurrency,async file=>{
       const kind=fileKind(file);
-      if(kind==="direct"&&file.size<=maxBytes){prepared.push(file);continue;}
-      prepared.push(await convertToJpeg(file,maxBytes));
-    }
-    return prepared;
+      if(kind==="direct"&&file.size<=targetBytes)return file;
+      return convertToJpeg(file,targetBytes);
+    },onProgress);
+  };
+  const selectedFilesKey=files=>files.map(file=>[
+    file.name,file.size,file.lastModified,file.type
+  ].join(":")).join("|");
+  const getPreparedFiles=files=>{
+    const key=selectedFilesKey(files);
+    if(preparedImageCache.key===key&&preparedImageCache.promise)return preparedImageCache.promise;
+    const promise=prepareFiles(files);
+    preparedImageCache={key,promise};
+    promise.catch(()=>{if(preparedImageCache.promise===promise)preparedImageCache={key:"",promise:null};});
+    return promise;
+  };
+  const prewarmSelectedImages=files=>{
+    if(!files.length){preparedImageCache={key:"",promise:null};return;}
+    window.setTimeout(()=>{getPreparedFiles(files).catch(()=>{});},40);
   };
 
   const clearPreviews=()=>{previewUrls.forEach(URL.revokeObjectURL);previewUrls=[];previews?.replaceChildren();};
@@ -638,7 +671,10 @@
   form.addEventListener("change",event=>{
     if(event.target.name==="listing_type")refreshType(true);
     if(event.target===phase)refreshTowers();
-    if(event.target===filesInput)renderPreviews();
+    if(event.target===filesInput){
+      renderPreviews();
+      prewarmSelectedImages([...(filesInput?.files||[])]);
+    }
     if(["listing_type","phase","tower","unit_type","area_sqm","floor_label"].includes(event.target?.name))syncSuggestedTitle();
     updateSummary();
     if(event.target!==filesInput)scheduleDraft();
@@ -658,17 +694,37 @@
     isSubmitting=true;
     setSubmitState("Đang chuẩn bị ảnh…",true);
     try{
-      const files=await prepareFiles(selectedFiles,(current,total)=>setSubmitState(`Đang tối ưu ảnh ${current}/${total}…`,true));
+      setSubmitState("Đang tối ưu ảnh…",true);
+      const files=await getPreparedFiles(selectedFiles);
       setSubmitState("Đang tạo tin…",true);
       const listing=await api.createListing(payload());
-      let uploaded=0;
-      for(let index=0;index<files.length;index++){
+      const uploadConcurrency=navigator.connection?.saveData||/^(slow-2g|2g)$/.test(navigator.connection?.effectiveType||"")
+        ?2:Number(api.config.imageUploadConcurrency||3);
+      const uploadedItems=await mapWithConcurrency(files,uploadConcurrency,async(file,index)=>{
         try{
-          setSubmitState(`Đang tải ảnh ${index+1}/${files.length}…`,true);
-          const path=await api.uploadImage(listing.id,files[index],index);
-          await api.addListingImage(listing.id,path,index,`${listing.title} — ảnh ${index+1}`);
-          uploaded++;
-        }catch(error){console.warn("Image upload failed",error);}
+          const path=await api.uploadImage(listing.id,file,index);
+          return {path,index,altText:`${listing.title} — ảnh ${index+1}`};
+        }catch(error){
+          console.warn("Image upload failed",error);
+          return null;
+        }
+      },(completed,total)=>setSubmitState(`Đang tải ảnh ${completed}/${total}…`,true));
+      const successful=uploadedItems.filter(Boolean);
+      let uploaded=0;
+      if(successful.length){
+        setSubmitState("Đang hoàn tất ảnh…",true);
+        try{
+          await api.addListingImages(listing.id,successful);
+          uploaded=successful.length;
+        }catch(error){
+          console.warn("Bulk image metadata insert failed; falling back",error);
+          for(const item of successful){
+            try{
+              await api.addListingImage(listing.id,item.path,item.index,item.altText);
+              uploaded++;
+            }catch(metadataError){console.warn("Image metadata insert failed",metadataError);}
+          }
+        }
       }
       const imageNote=files.length&&uploaded<files.length?`Đã tải ${uploaded}/${files.length} ảnh. Quản trị viên sẽ liên hệ nếu cần bổ sung.`:"";
       clearDraft();
@@ -677,6 +733,7 @@
         image_count:uploaded
       });
       form.reset();
+      preparedImageCache={key:"",promise:null};
       titleManuallyEdited=false;
       clearPreviews();
       refreshType(false);
