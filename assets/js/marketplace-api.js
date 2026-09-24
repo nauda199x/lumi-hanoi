@@ -49,6 +49,17 @@
   const cleanText=(value,max=500)=>String(value??"").trim().slice(0,max);
   const slugify=value=>cleanText(value,150).normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/đ/g,"d").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"").slice(0,90);
   const randomCode=()=>crypto.randomUUID().replace(/-/g,"").slice(0,8).toUpperCase();
+  const randomManagementToken=()=>{
+    const bytes=new Uint8Array(32);
+    crypto.getRandomValues(bytes);
+    let binary="";
+    bytes.forEach(byte=>{binary+=String.fromCharCode(byte);});
+    return btoa(binary).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
+  };
+  const sha256Hex=async value=>{
+    const digest=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(String(value||"")));
+    return [...new Uint8Array(digest)].map(byte=>byte.toString(16).padStart(2,"0")).join("");
+  };
   const formatCurrency=(value,type="sale")=>{
     const amount=Number(value||0);
     if(!amount)return "Liên hệ";
@@ -156,10 +167,17 @@
     const id=crypto.randomUUID();
     const listingCode=`LH-${randomCode()}`;
     const slug=`${slugify(data.title)||"tin-dang-lumi-hanoi"}-${listingCode.toLowerCase()}`;
-    const payload={...data,id,listing_code:listingCode,slug};
+    const managementToken=randomManagementToken();
+    const editTokenHash=await sha256Hex(managementToken);
+    const payload={...data,id,listing_code:listingCode,slug,edit_token_hash:editTokenHash};
     await request(restPath("listings"),{method:"POST",body:payload,headers:{Prefer:"return=minimal"}});
-    return {...payload,status:"pending",is_featured:false,sort_priority:0};
+    return {...data,id,listing_code:listingCode,slug,status:"pending",is_featured:false,sort_priority:0,management_token:managementToken};
   };
+
+  const manageListing=async(action,token,payload={})=>request("/functions/v1/manage-listing",{
+    method:"POST",
+    body:{action:cleanText(action,30),token:String(token||""),...payload}
+  });
 
   const uploadImage=async(listingId,file,index)=>{
     const extension=(file.name.split(".").pop()||"jpg").toLowerCase().replace(/[^a-z0-9]/g,"").slice(0,5)||"jpg";
@@ -347,7 +365,7 @@
 
   window.LumiMarketplace={
     config,configured,MarketplaceError,cleanText,slugify,formatCurrency,imageUrl,listingUrl,
-    listPublic,listPublicPage,getPublicListing,createListing,uploadImage,addListingImage,createReport,
+    listPublic,listPublicPage,getPublicListing,createListing,manageListing,uploadImage,addListingImage,createReport,
     signIn,signOut,requireAdmin,listAdmin,updateListing,deleteListing,requestSeoSync,
     listAdminPage,adminCounts,getAdminListing,applyAdminAction,resolveAdminReports
   };
