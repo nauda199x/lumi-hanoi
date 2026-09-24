@@ -110,3 +110,7 @@
   .marketplace-form .submit-success-actions{grid-column:1;display:grid;width:100%;margin-top:4px}
   .marketplace-form .submit-success-actions .btn{width:100%;min-height:48px}
 }
+
+
+/* Guest listing management link — 2026-09-24 */
+.submit-success-manage{display:block;margin-top:14px;padding:14px;border:1px solid rgba(23,26,23,.16);border-radius:14px;background:rgba(255,255,255,.72)}.submit-success-manage>strong,.submit-success-manage>span{display:block}.submit-success-manage>strong{margin-bottom:5px}.submit-success-manage>span{font-size:13px;line-height:1.5;color:#535951}.submit-success-manage-row{display:flex!important;gap:8px;margin-top:10px}.submit-success-manage-row input{min-width:0;flex:1;height:42px;padding:0 11px;border:1px solid #d6d8d1;border-radius:10px;background:#fff;font-size:12px}.submit-success-copy-link{min-height:42px;white-space:nowrap}.submit-success-actions{flex-wrap:wrap}@media(max-width:640px){.submit-success-manage-row{display:grid!important;grid-template-columns:1fr}.submit-success-copy-link{width:100%}.submit-success-actions .btn{width:100%}}

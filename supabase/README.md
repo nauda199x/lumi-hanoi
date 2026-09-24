@@ -14,6 +14,8 @@ Never put the service-role key, database password or admin password in this repo
 ## Security model
 
 - Anonymous visitors can insert only `pending` listings.
+- New public submissions receive a private management link. Only a SHA-256 hash of its 256-bit token is stored in `listings.edit_token_hash`; the raw token stays in the visitor's URL fragment/local browser storage.
+- The `manage-listing` Edge Function validates that token server-side before returning private listing data or accepting owner edits/status changes.
 - The public form stores only the poster's name and phone/Zalo contact; role, email, separate Zalo, unit code, direction and view are not collected.
 - Floor values are normalized to `Thấp`, `Trung` or `Cao`; listing types also support `Shop chân đế`.
 - Pending/rejected listings cannot be selected by public visitors.

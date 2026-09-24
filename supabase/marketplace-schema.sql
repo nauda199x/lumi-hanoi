@@ -98,6 +98,7 @@ create table if not exists public.listings (
   sort_priority integer not null default 0,
   approved_at timestamptz,
   expires_at timestamptz,
+  edit_token_hash text check (edit_token_hash is null or edit_token_hash ~ '^[0-9a-f]{64}$'),
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
   check (
@@ -147,6 +148,7 @@ create index listings_location_idx on public.listings(listing_type,phase,tower,u
 where status = 'approved';
 create index if not exists listings_expiry_idx on public.listings(expires_at) where status = 'approved';
 create index if not exists listings_admin_created_idx on public.listings(created_at desc);
+create unique index if not exists listings_edit_token_hash_uidx on public.listings(edit_token_hash) where edit_token_hash is not null;
 create index if not exists listing_images_listing_idx on public.listing_images(listing_id,sort_order);
 create index if not exists listing_reports_listing_idx on public.listing_reports(listing_id,created_at desc);
 create index if not exists listing_reports_resolved_by_idx on public.listing_reports(resolved_by) where resolved_by is not null;
@@ -292,7 +294,7 @@ grant select (
 ) on public.listings to anon;
 grant insert (
   id,listing_code,slug,listing_type,title,description,phase,tower,unit_type,bedroom_count,
-  area_sqm,floor_label,price_vnd,furnishing,available_from,legal_status,poster_name,contact_phone,contact_public
+  area_sqm,floor_label,price_vnd,furnishing,available_from,legal_status,poster_name,contact_phone,contact_public,edit_token_hash
 ) on public.listings to anon;
 grant select (id,listing_id,storage_path,sort_order,alt_text,created_at) on public.listing_images to anon;
 grant insert (listing_id,storage_path,sort_order,alt_text) on public.listing_images to anon;
