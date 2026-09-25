@@ -25,6 +25,11 @@
     .listing-rules-warning{margin-top:15px!important;padding:12px 14px;border-radius:12px;background:#fff;border:1px solid rgba(23,26,23,.12);font-weight:700;color:#17231d!important}
     .form-consent--rules{margin-top:16px}
     .submit-rule-note{margin-top:12px!important;padding-top:12px;border-top:1px solid rgba(23,26,23,.12);font-weight:700;color:#17231d!important}
+    .submit-rules-link{margin:22px 0 0;padding:18px 20px;border:1px solid rgba(23,26,23,.14);border-radius:16px;background:#fff;display:flex;align-items:center;justify-content:space-between;gap:16px;text-decoration:none;color:#17231d;box-shadow:0 8px 24px rgba(23,26,23,.05)}
+    .submit-rules-link strong{display:block;font-size:1rem}
+    .submit-rules-link span{display:block;margin-top:4px;color:#65706a;font-size:.9rem;line-height:1.45}
+    .submit-rules-link em{font-style:normal;font-weight:800;white-space:nowrap}
+    @media (max-width:720px){.submit-rules-link{padding:16px;align-items:flex-start}.submit-rules-link em{margin-top:2px}}
     @media (max-width:720px){.listing-rules{padding:16px;border-radius:15px}.listing-rules h3{font-size:1.08rem}}
   </style>
 </head>
@@ -207,12 +212,17 @@
             </div>
           </aside>
         </div>
+
+        <a class="submit-rules-link" href="/quy-dinh-dang-tin/" aria-label="Xem quy định đăng tin Lumi Hanoi">
+          <span><strong>Quy định đăng tin</strong><span>Giá thật · ảnh thật · một tin một căn. Xem nguyên tắc duyệt trước khi gửi tin.</span></span>
+          <em>Xem quy định →</em>
+        </a>
       </div>
     </section>
   </main>
 
   <footer class="site-footer"><div class="container footer-grid"><div><a class="brand" href="/"><span class="brand-mark" aria-hidden="true">LH</span><span>LUMI HANOI</span></a><p>Cổng thông tin dự án &amp; thị trường căn hộ.</p></div><div><nav class="footer-links" aria-label="Điều hướng cuối trang"><a href="/mua-ban-lumi-hanoi/">Mua bán</a><a href="/cho-thue-lumi-hanoi/">Cho thuê</a><a href="/dang-tin-lumi-hanoi/">Đăng tin</a><a href="/ky-gui-lumi-hanoi/">Nguyên tắc ký gửi</a><a href="/tin-tuc/">Tin tức</a><a href="/gioi-thieu/">Giới thiệu</a><a href="/lien-he/">Liên hệ</a><a href="/chinh-sach-bao-mat/">Chính sách bảo mật</a><a href="/dieu-khoan-su-dung/">Điều khoản sử dụng</a></nav><p class="disclaimer">Website thông tin và giao dịch độc lập, không phải website chính thức của CapitaLand Development.</p><p class="disclaimer">© <span data-year>2026</span> Lumi Hanoi.</p></div></div></footer>
-  <script src="/assets/js/site.js?v=20260925-rules1" defer></script><script src="/assets/js/marketplace-config.js"></script><script src="/assets/js/marketplace-api.js?v=20260924-fastimg1"></script><script src="/assets/js/rent-available-now.js?v=20260904" defer></script><script src="/assets/js/marketplace-form.js?v=20260924-fastimg1" defer></script>
+  <script src="/assets/js/site.js?v=20260925-rules2" defer></script><script src="/assets/js/marketplace-config.js"></script><script src="/assets/js/marketplace-api.js?v=20260924-fastimg1"></script><script src="/assets/js/rent-available-now.js?v=20260904" defer></script><script src="/assets/js/marketplace-form.js?v=20260924-fastimg1" defer></script>
   <script>
     document.addEventListener("DOMContentLoaded",()=>{
       const form=document.querySelector("[data-marketplace-submit]");
