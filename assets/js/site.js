@@ -109,6 +109,13 @@
       if(location.pathname==='/dang-tin-lumi-hanoi/')submitLink.setAttribute('aria-current','page');
       transactionDropdown.querySelector('.nav-dropdown-menu')?.append(submitLink);
     }
+    if(transactionDropdown&&!transactionDropdown.querySelector('a[href="/quy-dinh-dang-tin/"]')){
+      const rulesLink=document.createElement('a');
+      rulesLink.href='/quy-dinh-dang-tin/';
+      rulesLink.textContent='Quy định đăng tin';
+      if(location.pathname==='/quy-dinh-dang-tin/')rulesLink.setAttribute('aria-current','page');
+      transactionDropdown.querySelector('.nav-dropdown-menu')?.append(rulesLink);
+    }
     const overviewLink=topLevelLink('/tong-quan-lumi-hanoi/');
     if(transactionDropdown&&overviewLink){
       overviewLink.after(transactionDropdown);
@@ -245,7 +252,8 @@
       ['/gioi-thieu/','Giới thiệu'],
       ['/lien-he/','Liên hệ'],
       ['/chinh-sach-bao-mat/','Chính sách bảo mật'],
-      ['/dieu-khoan-su-dung/','Điều khoản sử dụng']
+      ['/dieu-khoan-su-dung/','Điều khoản sử dụng'],
+      ['/quy-dinh-dang-tin/','Quy định đăng tin']
     ];
     trustLinks.forEach(([href,label])=>{
       if(nav.querySelector(`a[href="${href}"]`))return;
