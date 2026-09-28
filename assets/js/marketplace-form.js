@@ -199,15 +199,43 @@
     if(!amount)return null;
     return Math.round(amount*(listingType()==="rent"?1_000_000:1_000_000_000));
   };
+  let priceValidationMessage="";
+  const priceSanityMessage=()=>{
+    const amount=priceAmount();
+    if(!amount)return "";
+    const rent=listingType()==="rent";
+    const unit=String(form.elements.unit_type?.value||"");
+    const premium=/Duplex|Penthouse/i.test(unit);
+    const shop=/Shop/i.test(unit);
+
+    if(rent){
+      const max=shop?500:premium?400:200;
+      if(amount<2)return `Giá thuê ${formatNumber(amount)} triệu/tháng có vẻ quá thấp. Vui lòng kiểm tra lại đơn vị giá.`;
+      if(amount>max)return `Giá thuê ${formatNumber(amount)} triệu/tháng có vẻ cao bất thường. Vui lòng kiểm tra lại; ô này nhập theo triệu đồng/tháng.`;
+      return "";
+    }
+
+    const max=shop?300:premium?150:80;
+    if(amount<0.5)return `Giá bán ${formatNumber(amount)} tỷ có vẻ quá thấp. Vui lòng kiểm tra lại đơn vị giá.`;
+    if(amount>=1000){
+      const suggested=amount/1000;
+      return `Giá ${formatNumber(amount)} tỷ có vẻ sai đơn vị. Nếu anh/chị muốn nhập ${formatNumber(suggested)} tỷ (tức ${formatNumber(amount)} triệu), hãy nhập ${formatNumber(suggested)}.`;
+    }
+    if(amount>max)return `Giá bán ${formatNumber(amount)} tỷ có vẻ cao bất thường với loại căn này. Vui lòng kiểm tra lại; ô này nhập theo tỷ đồng, ví dụ 3,16 tỷ thì nhập 3,16.`;
+    return "";
+  };
   const updatePriceHelp=()=>{
     if(!priceInput||!priceHelp)return;
     const amount=priceAmount();
     const rent=listingType()==="rent";
     const hasValue=Boolean(priceInput.value.trim());
-    priceInput.setCustomValidity(hasValue&&!amount?"Giá chưa đúng định dạng.":"");
-    priceInput.setAttribute("aria-invalid",hasValue&&!amount?"true":"false");
-    priceHelp.classList.toggle("field-error",hasValue&&!amount);
-    if(amount){
+    priceValidationMessage=hasValue&&!amount?"Giá chưa đúng định dạng.":priceSanityMessage();
+    priceInput.setCustomValidity(priceValidationMessage);
+    priceInput.setAttribute("aria-invalid",priceValidationMessage?"true":"false");
+    priceHelp.classList.toggle("field-error",Boolean(priceValidationMessage));
+    if(priceValidationMessage){
+      priceHelp.textContent=priceValidationMessage;
+    }else if(amount){
       priceHelp.textContent=rent
         ?`Hệ thống sẽ ghi nhận ${formatNumber(amount)} triệu/tháng.`
         :`Hệ thống sẽ ghi nhận ${formatNumber(amount)} tỷ đồng.`;
@@ -281,7 +309,10 @@
     );
     if(invalid){
       invalid.setAttribute?.("aria-invalid","true");
-      showStatus(`Vui lòng kiểm tra lại mục “${stepLabel(invalid)}”.`,"error");
+      const message=invalid===priceInput&&priceValidationMessage
+        ?priceValidationMessage
+        :`Vui lòng kiểm tra lại mục “${stepLabel(invalid)}”.`;
+      showStatus(message,"error");
       try{invalid.focus({preventScroll:true});}catch{}
       invalid.scrollIntoView({behavior:"smooth",block:"center"});
       return false;
@@ -568,7 +599,10 @@
     );
     if(!invalid)return true;
     invalid.setAttribute?.("aria-invalid","true");
-    showStatus(`Vui lòng kiểm tra lại mục “${fieldLabel(invalid)}”.`,"error");
+    const message=invalid===priceInput&&priceValidationMessage
+      ?priceValidationMessage
+      :`Vui lòng kiểm tra lại mục “${fieldLabel(invalid)}”.`;
+    showStatus(message,"error");
     try{invalid.focus({preventScroll:true});}catch{}
     invalid.scrollIntoView({behavior:"smooth",block:"center"});
     return false;
