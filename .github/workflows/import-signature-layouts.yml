@@ -8,6 +8,7 @@ on:
       - '.github/workflows/import-signature-layouts.yml'
       - 'assets/data/drive-unit-layout-import.json'
       - 'assets/data/drive-unit-layout-import-extra.json'
+      - 'assets/data/drive-special-layout-import.json'
       - 'scripts/finalize_signature_layout_pages.py'
 
 permissions:
@@ -27,7 +28,7 @@ jobs:
           fetch-depth: 0
 
       - name: Install downloader and image tools
-        run: python -m pip install --disable-pip-version-check gdown pillow
+        run: python -m pip install --disable-pip-version-check gdown pillow pymupdf
 
       - name: Download missing unit layouts from Drive
         shell: bash
@@ -38,10 +39,12 @@ jobs:
           import json, subprocess
           from pathlib import Path
           from PIL import Image
+          import fitz
 
           registry_paths = [
               Path('assets/data/drive-unit-layout-import.json'),
               Path('assets/data/drive-unit-layout-import-extra.json'),
+              Path('assets/data/drive-special-layout-import.json'),
           ]
           items = []
           for path in registry_paths:
@@ -68,13 +71,21 @@ jobs:
               print(f"[{i}/{len(items)}] DOWNLOAD {item['phase']} {item['scope']} :: {item['sourceName']}")
               try:
                   subprocess.run(['gdown', item['driveId'], '-O', str(src)], check=True)
-                  with Image.open(src) as original:
-                      im = original.convert('RGB')
-                      w, h = im.size
-                      scale = min(1.0, 2400 / max(w, h))
-                      if scale < 1:
-                          im = im.resize((round(w * scale), round(h * scale)), Image.Resampling.LANCZOS)
-                      im.save(out, 'WEBP', quality=86, method=6)
+                  if src.suffix.lower() == '.pdf':
+                      doc = fitz.open(src)
+                      if doc.page_count < 1:
+                          raise RuntimeError(f'empty PDF: {src}')
+                      page = doc.load_page(0)
+                      pix = page.get_pixmap(matrix=fitz.Matrix(2.0, 2.0), alpha=False)
+                      im = Image.frombytes('RGB', [pix.width, pix.height], pix.samples)
+                  else:
+                      with Image.open(src) as original:
+                          im = original.convert('RGB')
+                  w, h = im.size
+                  scale = min(1.0, 2400 / max(w, h))
+                  if scale < 1:
+                      im = im.resize((round(w * scale), round(h * scale)), Image.Resampling.LANCZOS)
+                  im.save(out, 'WEBP', quality=86, method=6)
                   if not out.exists() or out.stat().st_size < 10_000:
                       raise RuntimeError(f'output too small: {out}')
                   downloaded += 1
@@ -93,13 +104,13 @@ jobs:
 
       - name: Commit newly imported public assets
         run: |
-          if [ -z "$(git status --porcelain -- assets/media/signature/unit-layouts assets/media/elite/unit-layouts)" ]; then
+          if [ -z "$(git status --porcelain -- assets/media/signature/unit-layouts assets/media/elite/unit-layouts assets/media/signature/special-layouts assets/media/signature/stacking assets/media/penthouse-units)" ]; then
             echo 'No asset changes.'
             exit 0
           fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add assets/media/signature/unit-layouts assets/media/elite/unit-layouts
+          git add assets/media/signature/unit-layouts assets/media/elite/unit-layouts assets/media/signature/special-layouts assets/media/signature/stacking assets/media/penthouse-units
           git commit -m 'assets: import available Lumi unit layouts from Drive'
           git pull --rebase origin main
           git push origin HEAD:main
@@ -137,12 +148,14 @@ jobs:
           registry_paths = [
               Path('assets/data/drive-unit-layout-import.json'),
               Path('assets/data/drive-unit-layout-import-extra.json'),
+              Path('assets/data/drive-special-layout-import.json'),
           ]
           items = []
           for path in registry_paths:
               items.extend(json.loads(path.read_text())['items'])
 
           signature_count = sum(1 for i in items if i['phase'] == 'signature')
+          special_count = sum(1 for i in items if i['phase'] != 'signature' and i['phase'] != 'elite')
           phases = {}
           for item in items:
               phases[item['phase']] = phases.get(item['phase'], 0) + 1
@@ -152,6 +165,7 @@ jobs:
           missing_auth = [i for i in missing if i.get('authRequired')]
 
           print('Registered:', len(items), 'assets', phases)
+          print('Special CapitaLand assets:', special_count)
           print('Signature source catalog:', signature_count, '/ 51')
           print('Local assets present:', len(items) - len(missing), '/', len(items))
 
