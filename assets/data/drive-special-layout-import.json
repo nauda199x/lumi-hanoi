@@ -72,7 +72,9 @@
       "kind": "planter",
       "driveId": "1kr1ooxCqSViOpvdu4M5czWvNlIPBEeIg",
       "sourceName": "1BR Large A4GM (02, 10).pdf",
-      "localAsset": "assets/media/signature/special-layouts/planter-s6-1br-a4gm.webp"
+      "localAsset": "assets/media/signature/special-layouts/planter-s6-1br-a4gm.webp",
+      "landscape": true,
+      "rotateClockwise": 90
     },
     {
       "phase": "signature-planter",
@@ -80,7 +82,9 @@
       "kind": "planter",
       "driveId": "1G06fFZhhqmzJC3Iz3g4L4vSJ138X6nQc",
       "sourceName": "1BR Large A4G (03, 11).pdf",
-      "localAsset": "assets/media/signature/special-layouts/planter-s6-1br-a4g.webp"
+      "localAsset": "assets/media/signature/special-layouts/planter-s6-1br-a4g.webp",
+      "landscape": true,
+      "rotateClockwise": 90
     },
     {
       "phase": "signature-planter",
@@ -88,7 +92,9 @@
       "kind": "planter",
       "driveId": "1Yfv4UtxGEykwnoyWZ0Bl0vHvR5SifFAU",
       "sourceName": "2BR Extra Large B7G, B7GM (14, 15).pdf",
-      "localAsset": "assets/media/signature/special-layouts/planter-s6-2br-b7g-b7gm.webp"
+      "localAsset": "assets/media/signature/special-layouts/planter-s6-2br-b7g-b7gm.webp",
+      "landscape": true,
+      "rotateClockwise": 90
     },
     {
       "phase": "signature-planter",
@@ -96,7 +102,9 @@
       "kind": "planter",
       "driveId": "1B1gvaqcrtsh650iDPuwiLrXne2vjYqbE",
       "sourceName": "2BR Extra Large B10AG, B10AGM (05, 08).pdf",
-      "localAsset": "assets/media/signature/special-layouts/planter-s6-2br-b10ag-b10agm.webp"
+      "localAsset": "assets/media/signature/special-layouts/planter-s6-2br-b10ag-b10agm.webp",
+      "landscape": true,
+      "rotateClockwise": 90
     },
     {
       "phase": "signature-planter",
@@ -104,7 +112,9 @@
       "kind": "planter",
       "driveId": "1qzUl0D8ESyCY7uNWvIXUhDAS_OU8dUig",
       "sourceName": "3BR Medium C6G (01).pdf",
-      "localAsset": "assets/media/signature/special-layouts/planter-s6-3br-c6g.webp"
+      "localAsset": "assets/media/signature/special-layouts/planter-s6-3br-c6g.webp",
+      "landscape": true,
+      "rotateClockwise": 90
     },
     {
       "phase": "signature-planter",
@@ -112,7 +122,9 @@
       "kind": "planter",
       "driveId": "1T2ACBn8vSiDt7rcJt2yhbF42anvQI5Yv",
       "sourceName": "3BR Medium C6AG (12).pdf",
-      "localAsset": "assets/media/signature/special-layouts/planter-s6-3br-c6ag.webp"
+      "localAsset": "assets/media/signature/special-layouts/planter-s6-3br-c6ag.webp",
+      "landscape": true,
+      "rotateClockwise": 90
     },
     {
       "phase": "signature-planter",
@@ -120,7 +132,9 @@
       "kind": "planter",
       "driveId": "13jcs5Oonw1XlzMe6iw6PsVRNOMwhycFw",
       "sourceName": "3BR Large C7G (06).pdf",
-      "localAsset": "assets/media/signature/special-layouts/planter-s6-3br-c7g-special.webp"
+      "localAsset": "assets/media/signature/special-layouts/planter-s6-3br-c7g-special.webp",
+      "landscape": true,
+      "rotateClockwise": 90
     },
     {
       "phase": "signature-planter",
@@ -128,7 +142,9 @@
       "kind": "planter",
       "driveId": "1mvSmHk2KMznew3Cl57GWi7pNTubXrccQ",
       "sourceName": "3BR Large C7AG (07).pdf",
-      "localAsset": "assets/media/signature/special-layouts/planter-s6-3br-c7ag-special.webp"
+      "localAsset": "assets/media/signature/special-layouts/planter-s6-3br-c7ag-special.webp",
+      "landscape": true,
+      "rotateClockwise": 90
     },
     {
       "phase": "signature-planter",
@@ -136,7 +152,9 @@
       "kind": "planter",
       "driveId": "1Ox_LR2QzRRvD9y30ZWkLdA6uOwvYwSGs",
       "sourceName": "3BR Large C8G, C8GM (04, 09).pdf",
-      "localAsset": "assets/media/signature/special-layouts/planter-s6-3br-c8g-c8gm.webp"
+      "localAsset": "assets/media/signature/special-layouts/planter-s6-3br-c8g-c8gm.webp",
+      "landscape": true,
+      "rotateClockwise": 90
     },
     {
       "phase": "signature-planter",
@@ -144,7 +162,9 @@
       "kind": "planter",
       "driveId": "18QRIFk2c-tXFQvwg2IQkW2kK7-EPwdTM",
       "sourceName": "3BR Large C12G, C12GM (13, 16).pdf",
-      "localAsset": "assets/media/signature/special-layouts/planter-s6-3br-c12g-c12gm.webp"
+      "localAsset": "assets/media/signature/special-layouts/planter-s6-3br-c12g-c12gm.webp",
+      "landscape": true,
+      "rotateClockwise": 90
     },
     {
       "phase": "signature-stacking",
@@ -192,7 +212,9 @@
       "kind": "penthouse",
       "driveId": "19Kqt5ETaiOD8_LKuaGeyFCk9m6WLz_J1",
       "sourceName": "Lumi Signature_penthouse_S1.35.03.pdf",
-      "localAsset": "assets/media/penthouse-units/s1-35-03.webp"
+      "localAsset": "assets/media/penthouse-units/s1-35-03.webp",
+      "landscape": true,
+      "rotateClockwise": 90
     },
     {
       "phase": "penthouse-unit",
@@ -200,7 +222,9 @@
       "kind": "penthouse",
       "driveId": "1ghenKlKRsUAdAgJ7x6IpmuInWXZvDHLA",
       "sourceName": "Lumi Signature_penthouse_S1.35.01.pdf",
-      "localAsset": "assets/media/penthouse-units/s1-35-01.webp"
+      "localAsset": "assets/media/penthouse-units/s1-35-01.webp",
+      "landscape": true,
+      "rotateClockwise": 90
     },
     {
       "phase": "penthouse-unit",
@@ -208,7 +232,9 @@
       "kind": "penthouse",
       "driveId": "1JSza-KjtHkGXcKHA_fUsh6F3ohVRvTGb",
       "sourceName": "Lumi Signature_penthouse_S2.35.04.pdf",
-      "localAsset": "assets/media/penthouse-units/s2-35-04.webp"
+      "localAsset": "assets/media/penthouse-units/s2-35-04.webp",
+      "landscape": true,
+      "rotateClockwise": 90
     },
     {
       "phase": "penthouse-unit",
@@ -216,7 +242,9 @@
       "kind": "penthouse",
       "driveId": "1yhitD_xongxYz2EDiDYc9u-80WUF_ax_",
       "sourceName": "Lumi Signature_penthouse_S2.35.02.pdf",
-      "localAsset": "assets/media/penthouse-units/s2-35-02.webp"
+      "localAsset": "assets/media/penthouse-units/s2-35-02.webp",
+      "landscape": true,
+      "rotateClockwise": 90
     },
     {
       "phase": "penthouse-unit",
@@ -224,7 +252,9 @@
       "kind": "penthouse",
       "driveId": "1q8Gvd989-Rth6Do63UcV9_HUMi690Bb6",
       "sourceName": "Lumi Signature_penthouse_S3.35.03.pdf",
-      "localAsset": "assets/media/penthouse-units/s3-35-03.webp"
+      "localAsset": "assets/media/penthouse-units/s3-35-03.webp",
+      "landscape": true,
+      "rotateClockwise": 90
     },
     {
       "phase": "penthouse-unit",
@@ -232,7 +262,9 @@
       "kind": "penthouse",
       "driveId": "1emeYgqjn2plVxmrKOIp6WOQInuHA_47t",
       "sourceName": "Lumi Signature_penthouse_S5.34.03.pdf",
-      "localAsset": "assets/media/penthouse-units/s5-34-03.webp"
+      "localAsset": "assets/media/penthouse-units/s5-34-03.webp",
+      "landscape": true,
+      "rotateClockwise": 90
     },
     {
       "phase": "penthouse-unit",
@@ -240,7 +272,9 @@
       "kind": "penthouse",
       "driveId": "1P0nyGrDvju83_c9i-A_UwkzuRzdS2Pw6",
       "sourceName": "Lumi Signature_penthouse_S6.35.02.pdf",
-      "localAsset": "assets/media/penthouse-units/s6-35-02.webp"
+      "localAsset": "assets/media/penthouse-units/s6-35-02.webp",
+      "landscape": true,
+      "rotateClockwise": 90
     },
     {
       "phase": "penthouse-unit",
@@ -248,7 +282,9 @@
       "kind": "penthouse",
       "driveId": "1kDVZdd5McH7m5ZfiNsad51w2izIVHYyd",
       "sourceName": "Lumi Signature_penthouse_S6.35.01.pdf",
-      "localAsset": "assets/media/penthouse-units/s6-35-01.webp"
+      "localAsset": "assets/media/penthouse-units/s6-35-01.webp",
+      "landscape": true,
+      "rotateClockwise": 90
     },
     {
       "phase": "penthouse-unit",
@@ -256,7 +292,9 @@
       "kind": "penthouse",
       "driveId": "1ggkY-N7uI37tGmkQKAcL6r_rfTNBhrWI",
       "sourceName": "Lumi Signature_penthouse_S6.34.14.pdf",
-      "localAsset": "assets/media/penthouse-units/s6-34-14.webp"
+      "localAsset": "assets/media/penthouse-units/s6-34-14.webp",
+      "landscape": true,
+      "rotateClockwise": 90
     },
     {
       "phase": "penthouse-unit",
@@ -264,7 +302,9 @@
       "kind": "penthouse",
       "driveId": "1fOqkIRSrwPAj9RFGviB7UDOsuvwb95gr",
       "sourceName": "Lumi Signature_penthouse_S6.34.13.pdf",
-      "localAsset": "assets/media/penthouse-units/s6-34-13.webp"
+      "localAsset": "assets/media/penthouse-units/s6-34-13.webp",
+      "landscape": true,
+      "rotateClockwise": 90
     },
     {
       "phase": "penthouse-unit",
@@ -272,7 +312,9 @@
       "kind": "penthouse",
       "driveId": "14DfVmnUSjMnoITvB7cX2fF927VR90WgO",
       "sourceName": "Lumi Prestige _penthouse _P1.30.02.pdf",
-      "localAsset": "assets/media/penthouse-units/p1-30-02.webp"
+      "localAsset": "assets/media/penthouse-units/p1-30-02.webp",
+      "landscape": true,
+      "rotateClockwise": 90
     },
     {
       "phase": "penthouse-unit",
@@ -280,7 +322,9 @@
       "kind": "penthouse",
       "driveId": "1s29AFnPrLAFTbogL84Wg1Xlt0yuh6Pb9",
       "sourceName": "Lumi Prestige _penthouse _P1.29.07.pdf",
-      "localAsset": "assets/media/penthouse-units/p1-29-07.webp"
+      "localAsset": "assets/media/penthouse-units/p1-29-07.webp",
+      "landscape": true,
+      "rotateClockwise": 90
     },
     {
       "phase": "penthouse-unit",
@@ -288,7 +332,9 @@
       "kind": "penthouse",
       "driveId": "1-C3TPKF5Ads4vc2m8oBrnG1IApaXOgfR",
       "sourceName": "Lumi Prestige _penthouse _P1.30.01.pdf",
-      "localAsset": "assets/media/penthouse-units/p1-30-01.webp"
+      "localAsset": "assets/media/penthouse-units/p1-30-01.webp",
+      "landscape": true,
+      "rotateClockwise": 90
     },
     {
       "phase": "penthouse-unit",
@@ -296,7 +342,9 @@
       "kind": "penthouse",
       "driveId": "1prsmUK9N_Yiiub9PfeNRIQqQ3G-ALLDP",
       "sourceName": "Lumi Prestige _penthouse _P1.29.06.pdf",
-      "localAsset": "assets/media/penthouse-units/p1-29-06.webp"
+      "localAsset": "assets/media/penthouse-units/p1-29-06.webp",
+      "landscape": true,
+      "rotateClockwise": 90
     },
     {
       "phase": "penthouse-unit",
@@ -304,7 +352,9 @@
       "kind": "penthouse",
       "driveId": "1bRMyGQleL69QlTRI5MlvATHamyHgpnRv",
       "sourceName": "Lumi Prestige _penthouse _P2.30.01.pdf",
-      "localAsset": "assets/media/penthouse-units/p2-30-01.webp"
+      "localAsset": "assets/media/penthouse-units/p2-30-01.webp",
+      "landscape": true,
+      "rotateClockwise": 90
     },
     {
       "phase": "penthouse-unit",
@@ -312,7 +362,9 @@
       "kind": "penthouse",
       "driveId": "1thjjt3FQdHFeHGm3NRNzrf3NyU5fP_9i",
       "sourceName": "Lumi Prestige _penthouse _P2.29.12.pdf",
-      "localAsset": "assets/media/penthouse-units/p2-29-12.webp"
+      "localAsset": "assets/media/penthouse-units/p2-29-12.webp",
+      "landscape": true,
+      "rotateClockwise": 90
     },
     {
       "phase": "penthouse-unit",
@@ -320,7 +372,9 @@
       "kind": "penthouse",
       "driveId": "1FCZoYyrH4fSToVCJAn8cTKiIMz-j69cx",
       "sourceName": "Lumi Prestige _penthouse _P2.30.02.pdf",
-      "localAsset": "assets/media/penthouse-units/p2-30-02.webp"
+      "localAsset": "assets/media/penthouse-units/p2-30-02.webp",
+      "landscape": true,
+      "rotateClockwise": 90
     },
     {
       "phase": "penthouse-unit",
@@ -328,7 +382,9 @@
       "kind": "penthouse",
       "driveId": "1OIBByjs7uskfUWYEIm4BF_nPWEE0cm-m",
       "sourceName": "Lumi Elite _penthouse _ E1.29.03.pdf",
-      "localAsset": "assets/media/penthouse-units/e1-29-03.webp"
+      "localAsset": "assets/media/penthouse-units/e1-29-03.webp",
+      "landscape": true,
+      "rotateClockwise": 90
     },
     {
       "phase": "penthouse-unit",
@@ -336,7 +392,9 @@
       "kind": "penthouse",
       "driveId": "1AtjDMgg1XVHkbH8rNuYpwf4O4zfA5UaY",
       "sourceName": "Lumi Elite _penthouse _ E1.29.01.pdf",
-      "localAsset": "assets/media/penthouse-units/e1-29-01.webp"
+      "localAsset": "assets/media/penthouse-units/e1-29-01.webp",
+      "landscape": true,
+      "rotateClockwise": 90
     },
     {
       "phase": "penthouse-unit",
@@ -344,7 +402,9 @@
       "kind": "penthouse",
       "driveId": "1nOP1_okO5edZHdD_xnpL1i-_hZ1SfQbc",
       "sourceName": "Lumi Elite _penthouse _ E2.29.02.pdf",
-      "localAsset": "assets/media/penthouse-units/e2-29-02.webp"
+      "localAsset": "assets/media/penthouse-units/e2-29-02.webp",
+      "landscape": true,
+      "rotateClockwise": 90
     }
   ]
 }
