@@ -63,9 +63,22 @@ jobs:
               out = Path(item['localAsset'])
               out.parent.mkdir(parents=True, exist_ok=True)
               if out.is_file() and out.stat().st_size >= 10_000:
-                  print(f"[{i}/{len(items)}] SKIP existing :: {out}")
-                  skipped += 1
-                  continue
+                  needs_landscape = bool(item.get('landscape'))
+                  if needs_landscape:
+                      try:
+                          with Image.open(out) as existing:
+                              already_ready = existing.width > existing.height
+                      except Exception:
+                          already_ready = False
+                      if already_ready:
+                          print(f"[{i}/{len(items)}] SKIP existing landscape :: {out}")
+                          skipped += 1
+                          continue
+                      print(f"[{i}/{len(items)}] REBUILD portrait -> landscape :: {out}")
+                  else:
+                      print(f"[{i}/{len(items)}] SKIP existing :: {out}")
+                      skipped += 1
+                      continue
 
               src = tmp / f"{i:03d}-{item['sourceName'].replace('/', '-')}"
               print(f"[{i}/{len(items)}] DOWNLOAD {item['phase']} {item['scope']} :: {item['sourceName']}")
@@ -81,6 +94,10 @@ jobs:
                   else:
                       with Image.open(src) as original:
                           im = original.convert('RGB')
+                  rotate_clockwise = int(item.get('rotateClockwise') or 0)
+                  if rotate_clockwise:
+                      im = im.rotate(-rotate_clockwise, expand=True)
+
                   w, h = im.size
                   scale = min(1.0, 2400 / max(w, h))
                   if scale < 1:
