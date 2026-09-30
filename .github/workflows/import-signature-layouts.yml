@@ -123,8 +123,13 @@ jobs:
           python -m py_compile scripts/finalize_signature_layout_pages.py
           python scripts/finalize_signature_layout_pages.py
 
-      - name: Run repository QA
-        run: npm test
+      - name: Run focused layout and SEO QA
+        run: |
+          python -m json.tool assets/data/drive-special-layout-import.json >/dev/null
+          python scripts/qa_visual_v7.py
+          python scripts/qa_floorplans_v8_2.py
+          python scripts/qa_layout_phase_integrity.py
+          python scripts/qa_public_source_cleanup.py
 
       - name: Commit finalized layout pages
         run: |
