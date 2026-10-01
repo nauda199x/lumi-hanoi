@@ -9,7 +9,14 @@
       "average_price": 4711375000,
       "listing_count": 24,
       "captured_at": "2026-09-30"
+    },
+    {
+      "month": "2026-10",
+      "average_ppsm": 76049430,
+      "average_price": 4711375000,
+      "listing_count": 24,
+      "captured_at": "2026-10-01"
     }
   ],
-  "updated_at": "2026-09-30"
+  "updated_at": "2026-10-01"
 }
