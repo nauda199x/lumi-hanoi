@@ -9,11 +9,13 @@ window.LUMI_MARKETPLACE_CONFIG = Object.freeze({
   storageBucket: "listing-images",
   maxImages: 12,
   maxImageBytes: 5 * 1024 * 1024,
-  targetImageBytes: 650 * 1024,
-  targetImageMaxDimension: 1600,
-  targetImageQuality: 0.78,
-  imagePrepareConcurrency: 2,
-  imageUploadConcurrency: 4,
+  // Fast-upload profile: keep listing photos clear on mobile while cutting
+  // transfer size to roughly one third of the previous 650 KB target.
+  targetImageBytes: 230 * 1024,
+  targetImageMaxDimension: 1280,
+  targetImageQuality: 0.70,
+  imagePrepareConcurrency: 3,
+  imageUploadConcurrency: 6,
   listingLifetimeDays: 45
 });
 
