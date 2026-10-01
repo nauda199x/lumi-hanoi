@@ -554,8 +554,8 @@
       const sourceWidth=image.naturalWidth||image.width;
       const sourceHeight=image.naturalHeight||image.height;
       if(!sourceWidth||!sourceHeight)throw new Error(`Không đọc được kích thước ảnh “${file.name}”.`);
-      let maxDimension=Number(api.config.targetImageMaxDimension||1600);
-      let quality=Math.min(.84,Math.max(.55,Number(api.config.targetImageQuality||.78)));
+      let maxDimension=Number(api.config.targetImageMaxDimension||1280);
+      let quality=Math.min(.80,Math.max(.50,Number(api.config.targetImageQuality||.70)));
       for(let attempt=0;attempt<6;attempt++){
         const scale=Math.min(1,maxDimension/Math.max(sourceWidth,sourceHeight));
         const width=Math.max(1,Math.round(sourceWidth*scale));
@@ -573,8 +573,8 @@
           const base=(file.name||"anh-can-ho").replace(/\.[^.]+$/,"").slice(0,80)||"anh-can-ho";
           return new File([blob],`${base}.jpg`,{type:"image/jpeg",lastModified:file.lastModified||Date.now()});
         }
-        maxDimension=Math.max(1080,Math.round(maxDimension*.88));
-        quality=Math.max(.58,quality-.06);
+        maxDimension=Math.max(960,Math.round(maxDimension*.88));
+        quality=Math.max(.50,quality-.06);
       }
       throw new Error(`Không thể tối ưu ảnh “${file.name}”.`);
     }finally{
@@ -583,7 +583,7 @@
   };
   const prepareFiles=async(files,onProgress)=>{
     const bucketMaxBytes=Number(api.config.maxImageBytes||5*1024*1024);
-    const targetBytes=Math.min(bucketMaxBytes,Number(api.config.targetImageBytes||650*1024));
+    const targetBytes=Math.min(bucketMaxBytes,Number(api.config.targetImageBytes||230*1024));
     const concurrency=Number(api.config.imagePrepareConcurrency||2);
     return mapWithConcurrency(files,concurrency,async file=>{
       const kind=fileKind(file);

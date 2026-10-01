@@ -7,9 +7,9 @@ const read = path => fs.readFileSync(path, "utf8");
 test("listing form prepares images ahead of submit and caps transfer size", () => {
   const config = read("assets/js/marketplace-config.js");
   const form = read("assets/js/marketplace-form.js");
-  assert.match(config, /targetImageBytes:\s*650 \* 1024/);
-  assert.match(config, /targetImageMaxDimension:\s*1600/);
-  assert.match(config, /targetImageQuality:\s*0\.78/);
+  assert.match(config, /targetImageBytes:\s*230 \* 1024/);
+  assert.match(config, /targetImageMaxDimension:\s*1280/);
+  assert.match(config, /targetImageQuality:\s*0\.70/);
   assert.match(form, /prewarmSelectedImages/);
   assert.match(form, /getPreparedFiles\(selectedFiles\)/);
   assert.match(form, /targetImageBytes/);
@@ -20,7 +20,7 @@ test("listing form prepares images ahead of submit and caps transfer size", () =
 test("listing images upload with bounded concurrency instead of a serial upload loop", () => {
   const config = read("assets/js/marketplace-config.js");
   const form = read("assets/js/marketplace-form.js");
-  assert.match(config, /imageUploadConcurrency:\s*4/);
+  assert.match(config, /imageUploadConcurrency:\s*6/);
   assert.match(form, /mapWithConcurrency\(files,uploadConcurrency/);
   assert.match(form, /navigator\.connection\?\.saveData/);
   assert.doesNotMatch(form, /for\(let index=0;index<files\.length;index\+\+\)[\s\S]{0,300}uploadImage/);
