@@ -44,12 +44,73 @@
   const summaryLocation=document.querySelector("[data-summary-location]");
   const summaryPrice=document.querySelector("[data-summary-price]");
   const summaryImages=document.querySelector("[data-summary-images]");
+  const uploadProgressViews=[];
 
   const setSubmitState=(label,disabled=isSubmitting)=>{
     submitButtons.forEach(button=>{
       button.disabled=disabled;
       const isMobile=Boolean(button.closest("[data-mobile-submit]"));
       button.textContent=!disabled&&isMobile&&wizardStep<4?"Tiếp tục":label;
+    });
+  };
+  const buildUploadProgress=(host,compact=false)=>{
+    if(!host)return;
+    let root=host.querySelector("[data-upload-progress]");
+    if(!root){
+      root=document.createElement("div");
+      root.className=`image-upload-progress${compact?" image-upload-progress--mobile":""}`;
+      root.dataset.uploadProgress="";
+      root.hidden=true;
+      root.setAttribute("role","progressbar");
+      root.setAttribute("aria-valuemin","0");
+      root.setAttribute("aria-valuemax","100");
+      root.setAttribute("aria-valuenow","0");
+
+      const copy=document.createElement("div");
+      copy.className="image-upload-progress__copy";
+      const label=document.createElement("strong");
+      label.dataset.uploadProgressLabel="";
+      label.textContent="Chuẩn bị ảnh…";
+      const percent=document.createElement("span");
+      percent.dataset.uploadProgressPercent="";
+      percent.textContent="0%";
+      copy.append(label,percent);
+
+      const track=document.createElement("div");
+      track.className="image-upload-progress__track";
+      track.setAttribute("aria-hidden","true");
+      const bar=document.createElement("span");
+      bar.dataset.uploadProgressBar="";
+      track.append(bar);
+
+      root.append(copy,track);
+      if(compact)host.insertBefore(root,host.firstChild);
+      else{
+        const button=host.querySelector('[type="submit"]');
+        host.insertBefore(root,button||host.firstChild);
+      }
+    }
+    uploadProgressViews.push({
+      root,
+      label:root.querySelector("[data-upload-progress-label]"),
+      percent:root.querySelector("[data-upload-progress-percent]"),
+      bar:root.querySelector("[data-upload-progress-bar]")
+    });
+  };
+  const initUploadProgress=()=>{
+    buildUploadProgress(form.querySelector(".form-submit--premium"));
+    buildUploadProgress(mobileSubmitBar,true);
+  };
+  const setImageProgress=(percent,label,visible=true)=>{
+    const safe=Math.max(0,Math.min(100,Number(percent)||0));
+    const rounded=Math.round(safe);
+    uploadProgressViews.forEach(view=>{
+      view.root.hidden=!visible;
+      view.root.setAttribute("aria-valuenow",String(rounded));
+      view.root.setAttribute("aria-label",`${label||"Tiến độ tải ảnh"} ${rounded}%`);
+      if(view.label)view.label.textContent=label||"Đang xử lý ảnh…";
+      if(view.percent)view.percent.textContent=`${rounded}%`;
+      if(view.bar)view.bar.style.width=`${safe}%`;
     });
   };
   const showStatus=(message,type="",scroll=true)=>{
@@ -165,6 +226,7 @@
     again.className="btn btn-primary";
     again.textContent="Đăng thêm tin";
     again.addEventListener("click",()=>{
+      setImageProgress(0,"",false);
       form.classList.remove("is-submitted");
       formShell?.classList.remove("is-submitted");
       clearStatus();
@@ -184,6 +246,11 @@
   };
   const listingType=()=>form.querySelector('[name="listing_type"]:checked')?.value||"sale";
   const formatNumber=value=>new Intl.NumberFormat("vi-VN",{maximumFractionDigits:2}).format(value);
+  const formatBytes=bytes=>{
+    const value=Math.max(0,Number(bytes)||0);
+    if(value>=1024*1024)return `${new Intl.NumberFormat("vi-VN",{maximumFractionDigits:1}).format(value/(1024*1024))} MB`;
+    return `${Math.max(1,Math.round(value/1024))} KB`;
+  };
   const parseLocalizedNumber=raw=>{
     const normalized=String(raw||"").trim().toLowerCase()
       .replace(/tỷ|ty|triệu|trieu|\/tháng|\/thang|tháng|thang|đồng|dong|vnđ|vnd|đ/g,"")
@@ -487,9 +554,9 @@
       const sourceWidth=image.naturalWidth||image.width;
       const sourceHeight=image.naturalHeight||image.height;
       if(!sourceWidth||!sourceHeight)throw new Error(`Không đọc được kích thước ảnh “${file.name}”.`);
-      let maxDimension=Number(api.config.targetImageMaxDimension||1920);
-      let quality=.82;
-      for(let attempt=0;attempt<5;attempt++){
+      let maxDimension=Number(api.config.targetImageMaxDimension||1600);
+      let quality=Math.min(.84,Math.max(.55,Number(api.config.targetImageQuality||.78)));
+      for(let attempt=0;attempt<6;attempt++){
         const scale=Math.min(1,maxDimension/Math.max(sourceWidth,sourceHeight));
         const width=Math.max(1,Math.round(sourceWidth*scale));
         const height=Math.max(1,Math.round(sourceHeight*scale));
@@ -501,13 +568,13 @@
         context.drawImage(image,0,0,width,height);
         const blob=await blobFromCanvas(canvas,quality);
         canvas.width=1;canvas.height=1;
-        if(blob.size<=maxBytes||attempt===4){
+        if(blob.size<=maxBytes||attempt===5){
           if(blob.size>maxBytes)throw new Error(`Ảnh “${file.name}” vẫn quá lớn sau khi tối ưu. Hãy chọn ảnh nhỏ hơn.`);
           const base=(file.name||"anh-can-ho").replace(/\.[^.]+$/,"").slice(0,80)||"anh-can-ho";
           return new File([blob],`${base}.jpg`,{type:"image/jpeg",lastModified:file.lastModified||Date.now()});
         }
-        maxDimension=Math.max(1280,Math.round(maxDimension*.86));
-        quality=Math.max(.68,quality-.05);
+        maxDimension=Math.max(1080,Math.round(maxDimension*.88));
+        quality=Math.max(.58,quality-.06);
       }
       throw new Error(`Không thể tối ưu ảnh “${file.name}”.`);
     }finally{
@@ -516,7 +583,7 @@
   };
   const prepareFiles=async(files,onProgress)=>{
     const bucketMaxBytes=Number(api.config.maxImageBytes||5*1024*1024);
-    const targetBytes=Math.min(bucketMaxBytes,Number(api.config.targetImageBytes||1.4*1024*1024));
+    const targetBytes=Math.min(bucketMaxBytes,Number(api.config.targetImageBytes||650*1024));
     const concurrency=Number(api.config.imagePrepareConcurrency||2);
     return mapWithConcurrency(files,concurrency,async file=>{
       const kind=fileKind(file);
@@ -726,14 +793,21 @@
     const submissionType=listingType();
 
     isSubmitting=true;
+    setImageProgress(3,"Đang chuẩn bị ảnh…",true);
     setSubmitState("Đang chuẩn bị ảnh…",true);
     try{
+      setImageProgress(8,`Đang tối ưu ${selectedFiles.length} ảnh…`,true);
       setSubmitState("Đang tối ưu ảnh…",true);
       const files=await getPreparedFiles(selectedFiles);
+      const originalBytes=selectedFiles.reduce((sum,file)=>sum+Number(file.size||0),0);
+      const optimizedBytes=files.reduce((sum,file)=>sum+Number(file.size||0),0);
+      setImageProgress(18,`Đã tối ưu: ${formatBytes(originalBytes)} → ${formatBytes(optimizedBytes)}`,true);
       setSubmitState("Đang tạo tin…",true);
+      setImageProgress(22,"Đang tạo tin đăng…",true);
       const listing=await api.createListing(payload());
       const uploadConcurrency=navigator.connection?.saveData||/^(slow-2g|2g)$/.test(navigator.connection?.effectiveType||"")
         ?2:Number(api.config.imageUploadConcurrency||3);
+      setImageProgress(25,`Bắt đầu tải ${files.length} ảnh…`,true);
       const uploadedItems=await mapWithConcurrency(files,uploadConcurrency,async(file,index)=>{
         try{
           const path=await api.uploadImage(listing.id,file,index);
@@ -742,10 +816,15 @@
           console.warn("Image upload failed",error);
           return null;
         }
-      },(completed,total)=>setSubmitState(`Đang tải ảnh ${completed}/${total}…`,true));
+      },(completed,total)=>{
+        const percent=25+(completed/Math.max(1,total))*68;
+        setImageProgress(percent,`Đang tải ảnh ${completed}/${total}…`,true);
+        setSubmitState(`Đang tải ảnh ${completed}/${total}…`,true);
+      });
       const successful=uploadedItems.filter(Boolean);
       let uploaded=0;
       if(successful.length){
+        setImageProgress(96,"Đang hoàn tất ảnh…",true);
         setSubmitState("Đang hoàn tất ảnh…",true);
         try{
           await api.addListingImages(listing.id,successful);
@@ -760,6 +839,7 @@
           }
         }
       }
+      setImageProgress(100,"Hoàn tất tải ảnh",true);
       const imageNote=files.length&&uploaded<files.length?`Đã tải ${uploaded}/${files.length} ảnh. Quản trị viên sẽ liên hệ nếu cần bổ sung.`:"";
       clearDraft();
       window.LumiAnalytics?.track?.("form_submit_dang_tin",{
@@ -778,6 +858,7 @@
       updateSummary();
       showSuccessBox(submissionType,imageNote,listing);
     }catch(error){
+      setImageProgress(0,"",false);
       showStatus(error.status===429?"Yêu cầu đang được gửi liên tiếp. Vui lòng đợi trong giây lát trước khi gửi lại.":`Chưa gửi được tin: ${error.message}`,"error");
     }finally{
       isSubmitting=false;
@@ -826,5 +907,6 @@
   syncSuggestedTitle();
   updateSummary();
   renderPreviews();
+  initUploadProgress();
   initWizard();
 })();
