@@ -15,8 +15,9 @@ from __future__ import annotations
 import html
 import json
 import re
-from datetime import date
+from datetime import date, datetime
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
 import generate_rent_category_seo as rent
 
@@ -30,6 +31,7 @@ FRESHNESS_START = "<!-- RENT-HUB-FRESHNESS:START -->"
 FRESHNESS_END = "<!-- RENT-HUB-FRESHNESS:END -->"
 GUIDE_CTA_START = "<!-- RENT-PHASE-GUIDE-CTA:START -->"
 GUIDE_CTA_END = "<!-- RENT-PHASE-GUIDE-CTA:END -->"
+HANOI_TZ = ZoneInfo("Asia/Ho_Chi_Minh")
 
 PHASES = [
     {
@@ -93,8 +95,20 @@ def inventory_count(raw: str) -> int:
     return int(match.group(1)) if match else 0
 
 
+def current_hanoi_date() -> date:
+    """Use the project's local calendar date, not the GitHub runner's UTC date."""
+    return datetime.now(HANOI_TZ).date()
+
+
 def period(today: date) -> str:
     return f"T{today.month}/{today.year}"
+
+
+def period_modified_date(listings: list[dict], today: date) -> str:
+    """Month text is visible SEO content, so a month rollover is a real modification."""
+    inventory_modified = rent.modified_date(listings, today)
+    month_start = today.replace(day=1).isoformat()
+    return max(inventory_modified, month_start)
 
 
 def strengthen_hub(listings: list[dict], today: date) -> str:
@@ -121,7 +135,7 @@ def strengthen_hub(listings: list[dict], today: date) -> str:
         )
 
     raw = re.sub(r'"headline":"[^"]*"', f'"headline":"{title}"', raw, count=1)
-    hub_modified = rent.modified_date(listings, today)
+    hub_modified = period_modified_date(listings, today)
     raw = re.sub(r'"dateModified":"\d{4}-\d{2}-\d{2}"', f'"dateModified":"{hub_modified}"', raw, count=1)
 
     count = inventory_count(raw)
@@ -171,7 +185,7 @@ def render_phase_page(item: dict, rows: list[dict], today: date) -> str:
         "Xem giá rao, diện tích, ảnh và liên hệ trực tiếp người đăng."
     )
     canonical = f"{SITE}/{item['slug']}/"
-    modified = rent.modified_date(rows, today)
+    modified = period_modified_date(rows, today)
     count = len(rows)
     cards = "\n".join(rent.render_card(row) for row in rows)
     if not cards:
@@ -282,7 +296,7 @@ def sync_phase_pages(listings: list[dict], today: date) -> dict[str, str]:
         old = target.read_text(encoding="utf-8") if target.exists() else ""
         if old != content:
             target.write_text(content, encoding="utf-8")
-        modified[item["slug"]] = rent.modified_date(rows, today)
+        modified[item["slug"]] = period_modified_date(rows, today)
     return modified
 
 
@@ -320,7 +334,7 @@ def sync_sitemap(modified: dict[str, str], hub_modified: str) -> None:
 
 
 def main() -> None:
-    today = date.today()
+    today = current_hanoi_date()
     listings = rent.fetch_approved()
     hub_modified = strengthen_hub(listings, today)
     phase_modified = sync_phase_pages(listings, today)
