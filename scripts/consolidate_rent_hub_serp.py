@@ -14,14 +14,21 @@ This script is intentionally idempotent and runs after the rental generators.
 from __future__ import annotations
 
 import re
-from datetime import date
+from datetime import date, datetime
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
 ROOT = Path(__file__).resolve().parents[1]
 SITE = "https://lumi-hanoi.com"
 HUB = ROOT / "cho-thue-lumi-hanoi" / "index.html"
 SIGNATURE = ROOT / "cho-thue-lumi-signature" / "index.html"
 SITEMAP = ROOT / "sitemap.xml"
+HANOI_TZ = ZoneInfo("Asia/Ho_Chi_Minh")
+
+
+def current_hanoi_date() -> date:
+    """Use Hanoi time so T<month>/<year> rolls over at local midnight."""
+    return datetime.now(HANOI_TZ).date()
 
 
 def period(today: date) -> str:
@@ -137,7 +144,7 @@ def remove_signature_from_sitemap() -> None:
 
 
 def main() -> None:
-    today = date.today()
+    today = current_hanoi_date()
     update_hub(today)
     deindex_signature_fallback()
     remove_signature_from_sitemap()
