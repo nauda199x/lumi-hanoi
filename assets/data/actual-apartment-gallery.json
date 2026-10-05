@@ -1,5 +1,5 @@
 {
-  "version": "2026-10-05",
+  "version": "2026-10-06",
   "source": "Google Drive / Lumi hanoi",
   "description": "Verified Drive IDs used for the real-apartment photo library. Only clearly named source folders are included.",
   "items": [
@@ -116,6 +116,56 @@
     {
       "driveId": "1CPYfCALmN1SAC4k1UMMgQPlvqMo8R7NT",
       "group": "2pn-74",
+      "state": "nguyen-ban"
+    },
+    {
+      "driveId": "1uadJUcNGaVRrOgbaiZigmWIUKPrUXUhk",
+      "group": "3pn-117",
+      "state": "nguyen-ban"
+    },
+    {
+      "driveId": "1tAIZzhjC4P6UGm_vWBFPZuanqhyrDJ1j",
+      "group": "3pn-117",
+      "state": "nguyen-ban"
+    },
+    {
+      "driveId": "1CkuL34Wx9WgSKY2qLsAJqwXEuYbAsVGN",
+      "group": "3pn-117",
+      "state": "nguyen-ban"
+    },
+    {
+      "driveId": "14HszqtSw4nk5ZSRUK-9-kEygxAJvnw57",
+      "group": "3pn-117",
+      "state": "nguyen-ban"
+    },
+    {
+      "driveId": "1Fu_fijqHi0Y5ADUC5_cBokLZfb_IzKvK",
+      "group": "3pn-117",
+      "state": "nguyen-ban"
+    },
+    {
+      "driveId": "1BrRVM0--vEuMRWjLY0j3S6g3MI0k0YOM",
+      "group": "3pn-117",
+      "state": "nguyen-ban"
+    },
+    {
+      "driveId": "1E3QR3n6xmCZhaW-8ThbuP0JxYYERKmTi",
+      "group": "3pn-117",
+      "state": "nguyen-ban"
+    },
+    {
+      "driveId": "19Arc4DBDz9zatRYNM0Tj9j-niRdPC5sE",
+      "group": "3pn-117",
+      "state": "nguyen-ban"
+    },
+    {
+      "driveId": "1RubXFXslKa9jyz6q9iInishdBkeeZZqm",
+      "group": "3pn-117",
+      "state": "nguyen-ban"
+    },
+    {
+      "driveId": "1J4cTfSdZuwsIRzdBoEbOtgDYKNe89z-A",
+      "group": "3pn-117",
       "state": "nguyen-ban"
     }
   ]
