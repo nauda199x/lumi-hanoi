@@ -39,9 +39,9 @@
 
 
 /* TWO-PATH-GATEWAY:START */
-.hub-jump--two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.75rem;max-width:920px}
-.hub-jump--two .hub-route{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:.8rem;min-height:76px;padding:.85rem 1rem;border-radius:16px;background:rgba(18,22,18,.42);text-align:left}
-.hub-jump--two .hub-route--primary{background:rgba(255,255,255,.95);color:#1c201d;border-color:rgba(255,255,255,.95)}
+.hub-jump--two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.75rem;max-width:920px}.hub-jump--three{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.75rem;max-width:1120px}
+.hub-jump--two .hub-route,.hub-jump--three .hub-route{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:.8rem;min-height:76px;padding:.85rem 1rem;border-radius:16px;background:rgba(18,22,18,.42);text-align:left}
+.hub-jump--two .hub-route--primary,.hub-jump--three .hub-route--primary{background:rgba(255,255,255,.95);color:#1c201d;border-color:rgba(255,255,255,.95)}.hub-jump--three .hub-route--photos{background:rgba(215,176,116,.95);color:#10261f;border-color:rgba(215,176,116,.95)}
 .hub-route-index{display:grid;place-items:center;width:34px;height:34px;border:1px solid currentColor;border-radius:50%;font-size:.72rem;font-weight:800;opacity:.8}
 .hub-route strong{display:block;font-size:1rem;line-height:1.2}.hub-route small{display:block;margin-top:.25rem;font-size:.72rem;line-height:1.3;opacity:.78}.hub-route-arrow{font-size:1.3rem}
 .floor-hub-gateway{padding-top:clamp(2.4rem,5vw,4.8rem);padding-bottom:clamp(2.8rem,6vw,5.5rem);background:#f8f6f1}
@@ -54,8 +54,8 @@
 .route-chip-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:.4rem;margin-bottom:1rem}.route-chip-grid a{display:grid;place-items:center;min-height:42px;padding:.45rem .35rem;border:1px solid var(--line,#d8d1c5);border-radius:10px;color:var(--ink,#1c201d);font-size:.74rem;font-weight:800;text-align:center;text-decoration:none;background:#fbfaf7}.route-chip-grid a:last-child{grid-column:span 2}.route-chip-grid a:hover{background:#f0ece3}
 .route-main-cta{display:flex;width:100%;min-height:50px;align-items:center;justify-content:space-between;margin-top:auto;padding-inline:1rem}
 .tower-picker{display:grid;gap:.65rem;margin-bottom:1rem}.tower-picker-phase{display:grid;grid-template-columns:90px 1fr;align-items:center;gap:.65rem}.tower-picker-phase>strong{font-size:.76rem;letter-spacing:.04em;color:#d7d4cc}.tower-picker-phase nav{display:flex;flex-wrap:wrap;gap:.35rem}.tower-picker-phase a{display:grid;place-items:center;min-width:42px;height:38px;padding:0 .5rem;border:1px solid #646b63;border-radius:9px;color:#fff;font-size:.78rem;font-weight:800;text-decoration:none;background:#2a302a}.tower-picker-phase a:hover,.tower-picker-phase a:focus-visible{background:#fff;color:#1f241f}
-@media(max-width:900px){.hub-jump--two,.floor-route-grid{grid-template-columns:1fr}.floor-route-desc{min-height:0}.route-chip-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.route-chip-grid a:last-child{grid-column:span 2}}
-@media(max-width:560px){.floor-hub-gateway{padding-top:2rem}.gateway-intro h2{font-size:2rem}.floor-route-card{border-radius:18px;padding:1rem}.floor-route-head h3{font-size:1.7rem}.route-layout-visual,.route-tower-visual{aspect-ratio:4/3}.route-chip-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.route-chip-grid a:last-child{grid-column:1/-1}.tower-picker-phase{grid-template-columns:1fr}.tower-picker-phase>strong{margin-top:.2rem}.hub-jump--two .hub-route{min-height:70px}.hub-route small{font-size:.68rem}}
+@media(max-width:900px){.hub-jump--two,.hub-jump--three,.floor-route-grid{grid-template-columns:1fr}.floor-route-desc{min-height:0}.route-chip-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.route-chip-grid a:last-child{grid-column:span 2}}
+@media(max-width:560px){.floor-hub-gateway{padding-top:2rem}.gateway-intro h2{font-size:2rem}.floor-route-card{border-radius:18px;padding:1rem}.floor-route-head h3{font-size:1.7rem}.route-layout-visual,.route-tower-visual{aspect-ratio:4/3}.route-chip-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.route-chip-grid a:last-child{grid-column:1/-1}.tower-picker-phase{grid-template-columns:1fr}.tower-picker-phase>strong{margin-top:.2rem}.hub-jump--two .hub-route,.hub-jump--three .hub-route{min-height:70px}.hub-route small{font-size:.68rem}}
 /* TWO-PATH-GATEWAY:END */
 
 
