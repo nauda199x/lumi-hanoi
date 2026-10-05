@@ -1,0 +1,122 @@
+{
+  "version": "2026-10-05",
+  "source": "Google Drive / Lumi hanoi",
+  "description": "Verified Drive IDs used for the real-apartment photo library. Only clearly named source folders are included.",
+  "items": [
+    {
+      "driveId": "1zJCgDVwYt0Y535MiG8-mqUquSAOjxcWr",
+      "group": "1pn",
+      "state": "nguyen-ban"
+    },
+    {
+      "driveId": "1zXXgR8QdadbBmWyxzai1jF30622gyUxr",
+      "group": "1pn",
+      "state": "nguyen-ban"
+    },
+    {
+      "driveId": "1YVqbem-rcgNQQr7RqnrZw9g6IBKbHW-P",
+      "group": "1pn",
+      "state": "nguyen-ban"
+    },
+    {
+      "driveId": "1KDYhJMZNLXyNqwskVhE_ZvjIRVTceCif",
+      "group": "1pn",
+      "state": "nguyen-ban"
+    },
+    {
+      "driveId": "14tHFQCb2aNO72RIcmVbV3I6ORtxGYaAx",
+      "group": "1pn",
+      "state": "nguyen-ban"
+    },
+    {
+      "driveId": "1Mds-KVgLcMHNefNL183Zr3sJwVSrIb5s",
+      "group": "2pn-54",
+      "state": "nguyen-ban"
+    },
+    {
+      "driveId": "11GVfnKNmbQnX_NZJiofWGldua3jIMVBg",
+      "group": "2pn-54",
+      "state": "nguyen-ban"
+    },
+    {
+      "driveId": "1nFLekPR9Lzj02ASb6YKx0hrpImo6hupO",
+      "group": "2pn-54",
+      "state": "nguyen-ban"
+    },
+    {
+      "driveId": "11ae3bnJWMHi4i7E6pgWGy65o48JoIMJD",
+      "group": "2pn-54",
+      "state": "nguyen-ban"
+    },
+    {
+      "driveId": "1KoNsrt_hkro6_wRbCfjRmZ36JeXarLoA",
+      "group": "2pn-54",
+      "state": "nguyen-ban"
+    },
+    {
+      "driveId": "1QShusoX9NYeG0f-QGtlQbITIOXMDGr-q",
+      "group": "2pn-64",
+      "state": "thuc-te"
+    },
+    {
+      "driveId": "1Ujn5EGhY7BeH7ZqUTelbZk8BSkLh5az2",
+      "group": "2pn-64",
+      "state": "thuc-te"
+    },
+    {
+      "driveId": "1fEC_7ayoLRI-dFB1yZdPL5usIepgtb23",
+      "group": "2pn-64",
+      "state": "thuc-te"
+    },
+    {
+      "driveId": "1efrm67irh2d4xsMt0esIbfd413IgG035",
+      "group": "2pn-64",
+      "state": "thuc-te"
+    },
+    {
+      "driveId": "1fWiSFQTUHOrH8sgZFvect3GWppUsV45f",
+      "group": "2pn-64",
+      "state": "thuc-te"
+    },
+    {
+      "driveId": "1UMysxEgM3jTH4GKxsGrWgwt2STniFwGh",
+      "group": "2pn-64",
+      "state": "thuc-te"
+    },
+    {
+      "driveId": "1Mf84dw9iXPz0Cs6zKDI1uZ2kujsCDh9Y",
+      "group": "2pn-64",
+      "state": "thuc-te"
+    },
+    {
+      "driveId": "1JGt7YC7ODZgkFQHvdBqeyjCHDgtW0skc",
+      "group": "2pn-74",
+      "state": "nguyen-ban"
+    },
+    {
+      "driveId": "1q7E95TbgSpfsrBUeHtwQkEx_M71YR-RK",
+      "group": "2pn-74",
+      "state": "nguyen-ban"
+    },
+    {
+      "driveId": "1PoiBmBItMGLvMBy6xDdaqsk7eh1snN5e",
+      "group": "2pn-74",
+      "state": "nguyen-ban"
+    },
+    {
+      "driveId": "17x1MZWnES6bpvaRVnBn4PdF30Hp58wjD",
+      "group": "2pn-74",
+      "state": "nguyen-ban"
+    },
+    {
+      "driveId": "10q1-BNFbBgU9QNatFytD-t_3QtW8fTZI",
+      "group": "2pn-74",
+      "state": "nguyen-ban"
+    },
+    {
+      "driveId": "1CPYfCALmN1SAC4k1UMMgQPlvqMo8R7NT",
+      "group": "2pn-74",
+      "state": "nguyen-ban"
+    }
+  ]
+}
