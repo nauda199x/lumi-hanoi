@@ -74,6 +74,7 @@
   <url><loc>https://lumi-hanoi.com/chinh-sach-bao-mat/</loc><lastmod>2026-09-02</lastmod><priority>0.5</priority></url>
   <url><loc>https://lumi-hanoi.com/dieu-khoan-su-dung/</loc><lastmod>2026-09-02</lastmod><priority>0.5</priority></url>
   <url><loc>https://lumi-hanoi.com/tin-tuc/mat-bang-3d-can-ho-lumi-hanoi/</loc><lastmod>2026-09-06</lastmod><priority>0.7</priority></url>
+  <url><loc>https://lumi-hanoi.com/anh-thuc-te-can-ho-lumi-hanoi/</loc><lastmod>2026-10-05</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
 
   <url><loc>https://lumi-hanoi.com/mua-ban-lumi-signature/</loc><lastmod>2026-10-03</lastmod><changefreq>daily</changefreq><priority>0.8</priority></url>
   <url><loc>https://lumi-hanoi.com/mua-ban-lumi-prestige/</loc><lastmod>2026-09-29</lastmod><changefreq>daily</changefreq><priority>0.8</priority></url>
@@ -100,5 +101,4 @@
   <url><loc>https://lumi-hanoi.com/cho-thue-can-ho-2-phong-ngu-lumi-hanoi/</loc><lastmod>2026-10-01</lastmod><changefreq>daily</changefreq><priority>0.8</priority></url>
 
   <url><loc>https://lumi-hanoi.com/cho-thue-can-ho-3-phong-ngu-lumi-hanoi/</loc><lastmod>2026-09-30</lastmod><changefreq>daily</changefreq><priority>0.8</priority></url>
-  <url><loc>https://lumi-hanoi.com/anh-thuc-te-can-ho-lumi-hanoi/</loc><lastmod>2026-10-05</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
 </urlset>
