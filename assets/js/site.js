@@ -61,7 +61,7 @@
   if(!document.querySelector('link[data-market-nav-priority]')){
     const marketNavStyles=document.createElement('link');
     marketNavStyles.rel='stylesheet';
-    marketNavStyles.href='/assets/css/nav-marketplace-priority.css?v=20260908-1';
+    marketNavStyles.href='/assets/css/nav-marketplace-priority.css?v=20261006-mobilefixed1';
     marketNavStyles.dataset.marketNavPriority='true';
     document.head.append(marketNavStyles);
   }
