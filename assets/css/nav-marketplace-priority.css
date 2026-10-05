@@ -512,3 +512,39 @@ body.lumi-premium-portal{
   .lumi-premium-portal .collection-media img,
   .lumi-premium-portal .visual-tile img{transition:none!important}
 }
+
+
+/* Mobile menu viewport lock — 2026-10-06
+   Keep the hamburger panel and Close button attached to the viewport on iOS/WebKit
+   even when the page underneath tries to move. The menu itself remains scrollable. */
+@media(max-width:1000px){
+  body.nav-menu-open .site-header{
+    position:fixed!important;
+    top:0!important;
+    left:0!important;
+    right:0!important;
+    width:100%!important;
+    z-index:120!important;
+  }
+  body.nav-menu-open .nav-links[data-open="true"]{
+    position:fixed!important;
+    top:68px!important;
+    left:12px!important;
+    right:12px!important;
+    max-height:calc(100dvh - 84px)!important;
+    overflow-x:hidden!important;
+    overflow-y:auto!important;
+    overscroll-behavior:contain;
+    -webkit-overflow-scrolling:touch;
+    z-index:122!important;
+  }
+  body.nav-menu-open .nav-toggle{
+    position:relative!important;
+    z-index:123!important;
+  }
+  body.nav-menu-open .mobile-menu-backdrop:not([hidden]){
+    position:fixed!important;
+    inset:68px 0 0!important;
+    z-index:119!important;
+  }
+}
