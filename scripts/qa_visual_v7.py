@@ -94,6 +94,13 @@ def trusted_drive_ids() -> set[str]:
             if item.get("driveId"):
                 ids.add(item["driveId"])
 
+    actual_apartment_manifest = ROOT / "assets/data/actual-apartment-gallery.json"
+    if actual_apartment_manifest.is_file():
+        data = json.loads(actual_apartment_manifest.read_text(encoding="utf-8"))
+        for item in data.get("items", []):
+            if item.get("driveId"):
+                ids.add(item["driveId"])
+
     return ids
 
 
