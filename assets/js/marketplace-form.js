@@ -327,6 +327,18 @@
         :"Vui lòng kiểm tra lại số điện thoại (9–15 chữ số).";
     return valid;
   };
+  let titleValidationMessage="";
+  const updateTitleValidity=()=>{
+    if(!titleInput)return true;
+    const normalized=titleInput.value.trim().replace(/[\s()+.-]/g,"");
+    const phoneOnly=/^\d{9,15}$/.test(normalized);
+    titleValidationMessage=phoneOnly
+      ?"Tiêu đề cần mô tả căn hộ, không chỉ ghi số điện thoại."
+      :"";
+    titleInput.setCustomValidity(titleValidationMessage);
+    titleInput.setAttribute("aria-invalid",titleValidationMessage?"true":"false");
+    return !titleValidationMessage;
+  };
   const refreshType=(clearPrice=false)=>{
     const rent=listingType()==="rent";
     if(priceLabel)priceLabel.textContent=rent?"Giá cho thuê (triệu/tháng) *":"Giá bán mong muốn (tỷ) *";
@@ -369,6 +381,7 @@
   const validateStep=step=>{
     updatePriceHelp();
     updatePhoneHelp();
+    updateTitleValidity();
     const section=sections.find(item=>Number(item.dataset.formStep)===Number(step));
     if(!section)return true;
     const invalid=[...section.querySelectorAll("input,select,textarea")].find(element=>
@@ -378,7 +391,9 @@
       invalid.setAttribute?.("aria-invalid","true");
       const message=invalid===priceInput&&priceValidationMessage
         ?priceValidationMessage
-        :`Vui lòng kiểm tra lại mục “${stepLabel(invalid)}”.`;
+        :invalid===titleInput&&titleValidationMessage
+          ?titleValidationMessage
+          :`Vui lòng kiểm tra lại mục “${stepLabel(invalid)}”.`;
       showStatus(message,"error");
       try{invalid.focus({preventScroll:true});}catch{}
       invalid.scrollIntoView({behavior:"smooth",block:"center"});
@@ -661,6 +676,7 @@
   const validateFormFields=()=>{
     updatePriceHelp();
     updatePhoneHelp();
+    updateTitleValidity();
     const invalid=[...form.elements].find(element=>
       !element.disabled&&element!==filesInput&&typeof element.checkValidity==="function"&&!element.checkValidity()
     );
@@ -668,7 +684,9 @@
     invalid.setAttribute?.("aria-invalid","true");
     const message=invalid===priceInput&&priceValidationMessage
       ?priceValidationMessage
-      :`Vui lòng kiểm tra lại mục “${fieldLabel(invalid)}”.`;
+      :invalid===titleInput&&titleValidationMessage
+        ?titleValidationMessage
+        :`Vui lòng kiểm tra lại mục “${fieldLabel(invalid)}”.`;
     showStatus(message,"error");
     try{invalid.focus({preventScroll:true});}catch{}
     invalid.scrollIntoView({behavior:"smooth",block:"center"});
@@ -762,9 +780,9 @@
     updateSummary();
   });
   phoneInput?.addEventListener("input",updatePhoneHelp);
-  titleInput?.addEventListener("input",()=>{titleManuallyEdited=true;});
+  titleInput?.addEventListener("input",()=>{titleManuallyEdited=true;updateTitleValidity();});
   form.addEventListener("input",event=>{
-    if(event.target!==priceInput&&event.target!==phoneInput)event.target?.removeAttribute?.("aria-invalid");
+    if(event.target!==priceInput&&event.target!==phoneInput&&event.target!==titleInput)event.target?.removeAttribute?.("aria-invalid");
     if(["area_sqm","floor_label","furnishing"].includes(event.target?.name))syncSuggestedTitle();
     updateSummary();
     scheduleDraft();
