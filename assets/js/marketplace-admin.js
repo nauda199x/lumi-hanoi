@@ -12,6 +12,7 @@
   const loginPanel=$('[data-admin-login]'),loginForm=$('[data-admin-login-form]'),loginStatus=$('[data-admin-login-status]');
   const dashboard=$('[data-admin-dashboard]'),filters=$('[data-admin-filters]'),list=$('[data-admin-list]');
   const dialog=$('[data-admin-dialog]'),editForm=$('[data-admin-edit-form]'),confirmDialog=$('[data-admin-confirm]');
+  const areaBinding=window.LumiAreaPresets?.mount?.(editForm)||null;
   const tableWrap=$('[data-admin-table-wrap]'),empty=$('[data-admin-empty]'),pagination=$('[data-admin-pagination]');
   const selectPage=$('[data-admin-select-page]'),bulk=$('[data-admin-bulk]');
   const preferenceKey='lumi_admin_view_v2';
@@ -244,7 +245,9 @@
     try{
       const full=await api.getAdminListing(row.id);if(id!==editRequestId||!dialog.open||!loggedIn)return;
       editing=full;
-      ['id','title','phase','unit_type','area_sqm','floor_label','furnishing','poster_name','contact_phone','description'].forEach(key=>editForm.elements[key].value=key==='furnishing'?normalizeFurnishing(full[key]):(full[key]||''));
+      ['id','title','phase','unit_type','floor_label','furnishing','poster_name','contact_phone','description'].forEach(key=>editForm.elements[key].value=key==='furnishing'?normalizeFurnishing(full[key]):(full[key]||''));
+      if(areaBinding)areaBinding.sync(full.area_sqm);
+      else editForm.elements.area_sqm.value=full.area_sqm||'';
       updateTowers(editForm,full.tower);editForm.elements.price.value=String(Number(full.price_vnd)/(full.listing_type==='rent'?1e6:1e9));
       editForm.elements.price.min=full.listing_type==='rent'?'1':'0.001';editForm.elements.price.step=full.listing_type==='rent'?'0.001':'0.000001';
       $('[data-price-label]').textContent=full.listing_type==='rent'?'Giá thuê (triệu / tháng)':'Giá bán (tỷ đồng)';updatePricePreview();
@@ -260,7 +263,7 @@
     event.preventDefault();if(saving||!editing)return;
     const fields=editForm.elements;
     const patch={title:api.cleanText(fields.title.value,180),price_vnd:Math.round(Number(fields.price.value)*(editing.listing_type==='rent'?1e6:1e9)),phase:fields.phase.value,tower:fields.tower.value,unit_type:fields.unit_type.value,bedroom_count:/^[1-4]PN$/.test(fields.unit_type.value)?Number(fields.unit_type.value[0]):null,area_sqm:Number(fields.area_sqm.value),floor_label:fields.floor_label.value||null,furnishing:normalizeFurnishing(fields.furnishing.value),poster_name:api.cleanText(fields.poster_name.value,120),contact_phone:api.cleanText(fields.contact_phone.value,30),description:api.cleanText(fields.description.value,3000)};
-    if(!patch.furnishing||!patch.description||patch.title.length<10||patch.poster_name.length<2||patch.contact_phone.length<8||!Number.isSafeInteger(patch.price_vnd)||patch.price_vnd<1e6||!phases[patch.phase]?.includes(patch.tower)){show($('[data-dialog-status]'),'Kiểm tra lại tiêu đề, giá, tòa, người đăng, điện thoại và mô tả.',true);return;}
+    if((areaBinding&&!areaBinding.valid())||!patch.furnishing||!patch.description||patch.title.length<10||patch.poster_name.length<2||patch.contact_phone.length<8||!Number.isSafeInteger(patch.price_vnd)||patch.price_vnd<1e6||!phases[patch.phase]?.includes(patch.tower)){show($('[data-dialog-status]'),'Kiểm tra lại tiêu đề, giá, tòa, người đăng, điện thoại và mô tả.',true);return;}
     saving=true;setEditBusy(true);show($('[data-dialog-status]'),'Đang lưu chỉnh sửa…');let saved=false;
     try{await api.updateListing(editing.id,patch,editing.updated_at);saved=true;saving=false;dialog.close();await load(true);status('Đã lưu nội dung tin đăng.');}
     catch(error){show($('[data-dialog-status]'),`${error.message} Nội dung đang nhập vẫn được giữ trong cửa sổ này.`,true);}
