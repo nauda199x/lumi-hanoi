@@ -2,6 +2,7 @@
   const form=document.querySelector("[data-marketplace-submit]");
   if(!form||!window.LumiMarketplace)return;
   const api=window.LumiMarketplace;
+  const areaBinding=window.LumiAreaPresets?.mount?.(form)||null;
   const normalizeFurnishing=value=>{
     const raw=String(value||"").toLowerCase();
     if(raw.includes("nguyên bản")||raw.includes("cơ bản"))return "Đồ cơ bản";
@@ -491,13 +492,14 @@
       }
       const savedTower=draft.values.tower||"";
       draftElements().forEach(element=>{
-        if(element.name==="tower")return;
+        if(element.name==="tower"||element.name==="area_sqm")return;
         if(!(element.name in draft.values))return;
         const saved=draft.values[element.name];
         if(element.type==="radio")element.checked=saved===element.value;
         else if(element.type==="checkbox")element.checked=Boolean(saved);
         else element.value=element.name==="furnishing"?normalizeFurnishing(saved):(saved??"");
       });
+      areaBinding?.sync(draft.values.area_sqm||"");
       refreshType(false);
       refreshTowers();
       if(savedTower&&[...tower.options].some(option=>option.value===savedTower))tower.value=savedTower;
@@ -793,6 +795,7 @@
     if(form.elements.website?.value){showStatus("Tin của anh/chị đã được tiếp nhận.","success");return;}
     if(wizardStep<4){nextStep();return;}
     if(!validateFormFields())return;
+    if(areaBinding&&!areaBinding.valid()){showStatus("Vui lòng chọn đúng nhóm diện tích thông thủy trong danh sách.","error");return;}
     if(!api.configured()){showStatus("Dữ liệu giao dịch đang được cập nhật. Vui lòng quay lại sau ít phút.","error");return;}
     const selectedFiles=[...(filesInput?.files||[])];
     try{validateFileSelection(selectedFiles);}catch(error){showStatus(error.message,"error");return;}
