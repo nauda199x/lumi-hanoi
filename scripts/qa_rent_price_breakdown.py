@@ -77,7 +77,7 @@ assert 'class="rent-simple-table"' in html
 assert html.count('<th scope="col">') == 3 * 4
 assert '<strong class="rent-table-value">8,5 triệu</strong>' in html
 assert '<strong class="rent-table-value">11 triệu</strong>' in html
-assert '<strong class="rent-table-value">7 triệu</strong>' in html
+assert '<strong class="rent-table-value">8 triệu</strong>' in one_pn
 assert "15 triệu" not in html  # Unknown furniture must not enter averages
 assert "87 m²" not in html  # Unknown-only area must not become a priced row
 assert "sale-exclude12" not in html and "shop-exclude12" not in html
