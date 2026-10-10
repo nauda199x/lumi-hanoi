@@ -132,7 +132,7 @@
     form.elements.unit_type.value=listing.unit_type||"";
     form.elements.area_sqm.value=listing.area_sqm??"";
     form.elements.floor_label.value=listing.floor_label||"";
-    form.elements.furnishing.value=listing.furnishing||"";
+    form.elements.furnishing.value=normalizeFurnishing(listing.furnishing);
     form.elements.available_from.value=listing.available_from||"";
     form.elements.legal_status.value=listing.legal_status||"";
     form.elements.poster_name.value=listing.poster_name||"";
