@@ -18,6 +18,10 @@ on:
       - "scripts/marketplace_inventory.py"
       - "scripts/marketplace_thumbnails.py"
       - "scripts/generate_marketplace_seo_average.py"
+      - "scripts/rent_price_breakdown.py"
+      - "scripts/qa_rent_price_breakdown.py"
+      - "assets/css/market-price.css"
+      - "assets/js/rent-price.js"
       - "scripts/enhance_market_index.py"
       - "scripts/generate_sale_phase_seo.py"
       - "scripts/generate_sale_tower_seo.py"
@@ -84,6 +88,9 @@ jobs:
       - name: Validate marketplace SEO generator syntax
         run: |
           python -m py_compile scripts/generate_marketplace_seo_average.py
+          python -m py_compile scripts/rent_price_breakdown.py
+          python -m py_compile scripts/qa_rent_price_breakdown.py
+          python scripts/qa_rent_price_breakdown.py
           python -m py_compile scripts/enhance_market_index.py
           python -m py_compile scripts/generate_sale_phase_seo.py
           python -m py_compile scripts/generate_sale_tower_seo.py
@@ -105,6 +112,14 @@ jobs:
           node --check assets/js/marketplace-entity-loop.js
           node --check assets/js/marketplace-conversion.js
           node --check assets/js/saved-listings.js
+          node --check assets/js/rent-price.js
+          python - <<'PY'
+          from pathlib import Path
+          raw = Path("gia-can-ho-lumi-hanoi/index.html").read_text(encoding="utf-8")
+          assert 'class="rent-price-matrix"' in raw, "Missing data-driven rental matrix"
+          assert "Giá thuê theo diện tích" in raw, "Missing rental comparison heading"
+          assert '<h3>Giá rao thuê theo loại căn</h3>' not in raw, "Old rental table survived"
+          PY
       - name: Commit generated SEO pages
         run: |
           set -euo pipefail

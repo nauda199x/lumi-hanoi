@@ -29,13 +29,6 @@
 .market-table-card thead th{background:#f2eee5;color:#4d4c47;font-size:.72rem;letter-spacing:.04em;text-transform:uppercase}
 .market-table-card tbody th{font-weight:800}
 .market-table-card tbody tr:last-child th,.market-table-card tbody tr:last-child td{border-bottom:0}
-/* Rental prices are presented as total monthly rent, not price per m². */
-.market-table-card:has(.market-table-head a[href="/cho-thue-lumi-hanoi/"]) table{min-width:0;table-layout:fixed}
-.market-table-card:has(.market-table-head a[href="/cho-thue-lumi-hanoi/"]) th:nth-child(1),.market-table-card:has(.market-table-head a[href="/cho-thue-lumi-hanoi/"]) td:nth-child(1){width:18%}
-.market-table-card:has(.market-table-head a[href="/cho-thue-lumi-hanoi/"]) th:nth-child(2),.market-table-card:has(.market-table-head a[href="/cho-thue-lumi-hanoi/"]) td:nth-child(2){width:14%}
-.market-table-card:has(.market-table-head a[href="/cho-thue-lumi-hanoi/"]) th:nth-child(3),.market-table-card:has(.market-table-head a[href="/cho-thue-lumi-hanoi/"]) td:nth-child(3){width:38%}
-.market-table-card:has(.market-table-head a[href="/cho-thue-lumi-hanoi/"]) th:nth-child(4),.market-table-card:has(.market-table-head a[href="/cho-thue-lumi-hanoi/"]) td:nth-child(4){width:30%}
-.market-table-card:has(.market-table-head a[href="/cho-thue-lumi-hanoi/"]) th:nth-child(5),.market-table-card:has(.market-table-head a[href="/cho-thue-lumi-hanoi/"]) td:nth-child(5){display:none}
 .shop-market-box{display:grid;grid-template-columns:1fr 1fr;gap:42px;margin-top:28px;padding:28px;border:1px solid #2b332f;background:#171a18;color:#fff}
 .shop-market-box p{color:#c9c6bf}
 .shop-market-box dl{margin:0}
@@ -85,8 +78,6 @@
   .market-data-warning,.shop-market-box{grid-template-columns:1fr}
   .shop-market-box{gap:16px;padding:22px}
   .price-factor-grid,.price-unit-grid{grid-template-columns:1fr}
-  .market-table-card:has(.market-table-head a[href="/cho-thue-lumi-hanoi/"]) th,.market-table-card:has(.market-table-head a[href="/cho-thue-lumi-hanoi/"]) td{padding:13px 10px;font-size:.8rem;overflow-wrap:anywhere}
-  .market-table-card:has(.market-table-head a[href="/cho-thue-lumi-hanoi/"]) thead th{font-size:.64rem}
 }
 @media(max-width:430px){
   .market-kpis{grid-template-columns:1fr}
@@ -119,4 +110,72 @@
     margin-top:32px;
     margin-bottom:18px;
   }
+}
+
+
+/* Price matrix: real approved rents, separated by rounded area and declared furnishing. */
+.rent-market-card{scroll-margin-top:100px}
+.rent-market-card .market-table-head{border-bottom:0;padding-bottom:10px}
+.rent-price-intro{margin:0;padding:0 26px 18px;color:var(--muted);font-size:.93rem;line-height:1.6}
+.rent-price-pills{display:flex;flex-wrap:wrap;gap:9px;padding:0 26px 22px}
+.rent-price-pills a{display:inline-flex;align-items:center;gap:8px;border:1px solid #d6dfd8;border-radius:999px;padding:9px 13px;text-decoration:none;color:#1c342b;background:#f7faf7;font-size:.86rem;font-weight:800}
+.rent-price-pills a:hover,.rent-price-pills a:focus-visible{background:#e5eee7;border-color:#789684}
+.rent-price-pills span{font-weight:600;color:#65766b;font-size:.77rem}
+.rent-price-groups{border-top:1px solid var(--line)}
+.rent-price-category{border-bottom:1px solid var(--line);scroll-margin-top:96px}
+.rent-price-category>summary{list-style:none;display:flex;align-items:center;gap:15px;padding:20px 26px;cursor:pointer;background:#fafaf7}
+.rent-price-category>summary::-webkit-details-marker{display:none}
+.rent-price-category[open]>summary{background:#edf2ee}
+.rent-price-category-name{font-size:1.25rem;font-weight:800;min-width:80px;color:#17352b}
+.rent-price-category-info{color:#485b50;font-size:.87rem;line-height:1.4}
+.rent-price-category-chevron{margin-left:auto;font-size:1.65rem;line-height:1;transition:transform .15s ease}
+.rent-price-category[open] .rent-price-category-chevron{transform:rotate(180deg)}
+.rent-market-card .rent-price-matrix-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.rent-market-card .rent-price-matrix{width:100%;min-width:880px;border-collapse:collapse;table-layout:fixed}
+.rent-market-card .rent-price-matrix th,.rent-market-card .rent-price-matrix td{padding:15px 13px;border-right:1px solid #e9eee9;border-bottom:1px solid #e9eee9;vertical-align:top;text-align:left;overflow-wrap:break-word}
+.rent-market-card .rent-price-matrix th:last-child,.rent-market-card .rent-price-matrix td:last-child{border-right:0}
+.rent-market-card .rent-price-matrix thead th{background:#f5f5f1;color:#4d5a52;font-size:.77rem;font-weight:800;letter-spacing:0;text-transform:none}
+.rent-market-card .rent-price-matrix thead th:first-child{width:120px}
+.rent-market-card .rent-price-matrix tbody th{font-size:1.05rem;background:#fbfbf9}
+.rent-market-card .rent-price-matrix tbody th strong{display:block;color:#19382c}
+.rent-market-card .rent-price-matrix tbody th small{display:block;font-weight:600;font-size:.76rem;color:#65756c;margin-top:6px}
+.rent-price-cell{font-size:.84rem}
+.rent-price-amount{display:block;font-size:.93rem;color:#17382c;line-height:1.45;font-weight:800}
+.rent-price-meta{display:block;color:#6b766f;margin-top:6px;font-size:.77rem}
+.rent-price-empty{color:#9ca79e;background:#fafbf9}
+.rent-price-sources{margin-top:10px}
+.rent-price-sources>summary{cursor:pointer;font-size:.78rem;font-weight:800;color:#276049;text-decoration:underline;text-underline-offset:3px}
+.rent-price-source-links{display:grid;gap:7px;margin-top:9px}
+.rent-price-source-links a{color:#27543e;font-size:.78rem;line-height:1.45;text-decoration:none;border-left:2px solid #bacfc0;padding-left:8px}
+.rent-price-source-links a:hover{text-decoration:underline}
+.rent-price-no-data{padding:22px 26px;margin:0;color:var(--muted);font-size:.9rem}
+.rent-price-note{padding:20px 26px;margin:0;background:#fbf9f2;color:#5e675e;line-height:1.6;font-size:.79rem}
+.rent-price-note strong{color:#334639}
+.rent-market-card .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+@media(max-width:800px){
+  .rent-market-card .rent-price-matrix-wrap{overflow:visible}
+  .rent-market-card .rent-price-matrix,.rent-market-card .rent-price-matrix tbody,.rent-market-card .rent-price-matrix tr{display:block;width:100%;min-width:0}
+  .rent-market-card .rent-price-matrix thead{display:none}
+  .rent-market-card .rent-price-matrix tr{padding:14px 15px 10px;border-bottom:1px solid #e2e9e2;background:#fff}
+  .rent-market-card .rent-price-matrix tbody th{display:flex;justify-content:space-between;align-items:center;width:100%;padding:4px 0 12px;border:0;background:none;font-size:1.1rem}
+  .rent-market-card .rent-price-matrix tbody th small{margin:0}
+  .rent-market-card .rent-price-matrix td{display:grid;grid-template-columns:minmax(100px,.75fr) minmax(0,1.5fr);gap:0 12px;align-items:baseline;width:100%;padding:10px 0;border:0;border-top:1px solid #edf1ec}
+  .rent-market-card .rent-price-matrix td:before{content:attr(data-label);grid-row:1 / 4;color:#52645a;font-size:.84rem;font-weight:700}
+  .rent-market-card .rent-price-matrix td.rent-price-empty{display:none}
+  .rent-market-card .rent-price-matrix .rent-price-amount{font-size:.96rem}
+  .rent-market-card .rent-price-matrix .rent-price-sources{margin-top:7px}
+}
+@media(max-width:700px){
+  .rent-market-card .market-table-head{gap:12px}
+  .rent-price-intro{padding:0 17px 15px}
+  .rent-price-pills{padding:0 17px 18px;gap:7px}
+  .rent-price-pills a{padding:8px 11px}
+  .rent-price-category>summary{padding:16px 17px;flex-wrap:wrap;gap:7px 12px}
+  .rent-price-category-name{min-width:56px;font-size:1.15rem}
+  .rent-price-category-info{flex:1;font-size:.8rem}
+  .rent-price-category-chevron{font-size:1.35rem}
+  .rent-price-no-data,.rent-price-note{padding:18px 17px}
+}
+@media(max-width:380px){
+  .rent-market-card .rent-price-matrix td{grid-template-columns:92px minmax(0,1fr);gap:8px}
 }

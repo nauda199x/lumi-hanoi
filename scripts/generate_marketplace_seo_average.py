@@ -346,9 +346,11 @@ def main() -> None:
     normalize_generated_listing_metadata(approved_rows)
     update_price_methodology_copy()
     remove_rental_ppsm_display()
+    from rent_price_breakdown import sync_rent_breakdown
+    sync_rent_breakdown(approved_rows)
     from optimize_responsive_photos import apply_markup
     apply_markup()
-    print("Market price page: arithmetic-average methodology applied; rental price/m² hidden")
+    print("Market price page: arithmetic means, rental comparison by size and furnishing")
 
 
 if __name__ == "__main__":
