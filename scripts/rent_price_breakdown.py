@@ -43,11 +43,24 @@ def furnishing_group(value) -> str:
 
 
 def area_bucket(value) -> int:
-    """53.8 and 54 m² belong in the same ~54 m² comparison group."""
+    """Group nearby advertised areas at the nearest whole square metre."""
     area = gen.numeric(value)
     if not area:
         raise ValueError("Positive area required")
     return math.floor(area + 0.5)
+
+
+def normalized_rental_area(unit: str, value) -> int | None:
+    """Only 1PN is a known 43 m² layout: merge 42–43 m², reject outliers.
+
+    A 1PN reported as 54 m² is a potential unit-type mistake, not evidence
+    for a second 1PN layout. Never move it to 2PN or rewrite the source ad.
+    Excluded listings remain unchanged for admin review.
+    """
+    rounded = area_bucket(value)
+    if unit == "1PN":
+        return 43 if rounded in (42, 43) else None
+    return rounded
 
 
 def rental_groups(listings: list[dict]) -> dict[str, dict[int, dict[str, list[dict]]]]:
@@ -57,7 +70,11 @@ def rental_groups(listings: list[dict]) -> dict[str, dict[int, dict[str, list[di
         # Keep counts consistent with records generated on the public website.
         if not re.fullmatch(r"[a-z0-9-]{8,120}", gen.clean(row.get("slug"))):
             continue
-        groups[gen.clean(row["unit_type"])][area_bucket(row["area_sqm"])][
+        unit = gen.clean(row["unit_type"])
+        normalized_area = normalized_rental_area(unit, row["area_sqm"])
+        if normalized_area is None:
+            continue
+        groups[unit][normalized_area][
             furnishing_group(row.get("furnishing"))
         ].append(row)
     return groups
@@ -87,7 +104,11 @@ def render_unit(unit: str, sizes: dict[int, dict[str, list[dict]]]) -> str:
         # Avoid presenting a 53.8m² listing as exactly 54m².
         approximate = any(abs(float(row["area_sqm"]) - size) > 0.049
                           for row in classified_rows)
-        area = ("≈" if approximate else "") + f"{size} m²"
+        # 1PN is intentionally presented as one canonical 43 m² layout,
+        # including listings reporting 42 m² due to rounding/entry errors.
+        area = "43 m²" if unit == "1PN" else (
+            ("≈" if approximate else "") + f"{size} m²"
+        )
         cells = "".join(render_cell(groups.get(key, []))
                         for key, _ in FURNISHINGS)
         display_rows.append(
@@ -141,7 +162,9 @@ def render_breakdown(listings: list[dict]) -> str:
         f'{empty_note}'
         '<p class="rent-price-note">Giá rao thuê trung bình được tự động tính từ '
         'các tin đã duyệt, có đủ giá, diện tích và tình trạng nội thất; không tính '
-        'shop chân đế. Dấu ≈ chỉ diện tích được làm tròn đến m² gần nhất. '
+        'shop chân đế. Nhóm 1PN 43m² đã gộp tin khai 42–43m²; '
+        'tin 1PN có diện tích lệch lớn không tính vào nhóm này để tránh sai giá. '
+        'Dấu ≈ chỉ diện tích được làm tròn đến m² gần nhất ở loại căn khác. '
         'Căn chưa rõ nội thất không được tự gán vào nhóm khác. '
         'Đây là giá chào tham khảo, không phải giá chốt giao dịch.</p>'
         '</div>'
