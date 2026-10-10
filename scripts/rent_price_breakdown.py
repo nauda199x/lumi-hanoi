@@ -68,111 +68,84 @@ def million(value: float, places: int = 1) -> str:
     return f"{value / 1_000_000:.{places}f}".rstrip("0").rstrip(".").replace(".", ",")
 
 
-def short_range(rows: list[dict]) -> str:
-    if not rows:
-        return "—"
-    amounts = [gen.numeric(r["price_vnd"]) for r in rows]
-    low, high = min(amounts), max(amounts)
-    if low == high:
-        return million(low, 2)
-    return f"{million(low, 2)}–{million(high, 2)}"
-
-
 def render_cell(rows: list[dict]) -> str:
+    """One compact average price per furnishing/area; no ranges or sample counts."""
     if not rows:
         return '<td class="rent-price-empty" aria-label="Chưa có dữ liệu">—</td>'
     average = million(mean(gen.numeric(r["price_vnd"]) for r in rows))
-    band = short_range(rows)
-    count = f"{len(rows)} tin"
-    detail = count if len(rows) == 1 else f"{band} · {count}"
-    return (f'<td><strong class="rent-table-value">{gen.esc(average)}</strong>'
-            f'<small>{gen.esc(detail)}</small></td>')
-
+    return f'<td><strong class="rent-table-value">{gen.esc(average)} triệu</strong></td>'
 
 def render_unit(unit: str, sizes: dict[int, dict[str, list[dict]]]) -> str:
     display_rows = []
-    known_count = 0
-    unknown_count = 0
-    unknown_areas = []
     for size in sorted(sizes):
         groups = sizes[size]
-        classified = sum(len(groups.get(key, [])) for key, _ in FURNISHINGS)
-        unknown = len(groups.get("unknown", []))
-        unknown_count += unknown
-        if unknown:
-            unknown_areas.append(f"{size} m² ({unknown} tin)")
-        if not classified:
+        if not any(groups.get(key) for key, _ in FURNISHINGS):
             continue
-        known_count += classified
-        all_rows = [r for part in groups.values() for r in part]
-        approximate = any(abs(float(r["area_sqm"]) - size) > 0.049 for r in all_rows)
+        classified_rows = [
+            row for key, _ in FURNISHINGS for row in groups.get(key, [])
+        ]
+        # Avoid presenting a 53.8m² listing as exactly 54m².
+        approximate = any(abs(float(row["area_sqm"]) - size) > 0.049
+                          for row in classified_rows)
         area = ("≈" if approximate else "") + f"{size} m²"
-        cells = "".join(render_cell(groups.get(key, [])) for key, _ in FURNISHINGS)
+        cells = "".join(render_cell(groups.get(key, []))
+                        for key, _ in FURNISHINGS)
         display_rows.append(
-            f'<tr><th scope="row">{gen.esc(area)}'
-            f'<small>{classified} tin</small></th>{cells}</tr>'
+            f'<tr><th scope="row">{gen.esc(area)}</th>{cells}</tr>'
         )
 
-    if not known_count:
+    if not display_rows:
         return ""
     table = (
         '<div class="rent-simple-table-wrap"><table class="rent-simple-table">'
-        f'<caption class="rent-visually-hidden">Bảng giá thuê căn {gen.esc(unit)}'
+        f'<caption class="rent-visually-hidden">Giá thuê trung bình căn {gen.esc(unit)}'
         ' theo diện tích và nội thất; đơn vị triệu đồng mỗi tháng.</caption>'
+        '<colgroup><col class="rent-col-area"><col span="3" class="rent-col-price"></colgroup>'
         '<thead><tr><th scope="col">Diện tích</th>'
-        + "".join(f'<th scope="col">{gen.esc(label)}</th>' for _, label in FURNISHINGS)
+        + "".join(f'<th scope="col">{gen.esc(label)}</th>'
+                  for _, label in FURNISHINGS)
         + '</tr></thead><tbody>' + "".join(display_rows)
         + '</tbody></table></div>'
     )
-    warning = (
-        f'<p class="rent-simple-unknown">{unknown_count} tin chưa ghi rõ nội thất'
-        f' ({gen.esc(", ".join(unknown_areas))}); không tính vào giá các cột.</p>'
-        if unknown_count else ""
-    )
     return (
-        f'<section class="rent-simple-unit" aria-label="Bảng giá thuê {gen.esc(unit)}">'
-        f'<div class="rent-simple-unit-title"><h4>{gen.esc(unit)}</h4>'
-        f'<span>{known_count} tin đủ thông tin nội thất</span></div>'
-        f'{table}{warning}</section>'
+        f'<section class="rent-simple-unit" aria-label="Giá thuê trung bình {gen.esc(unit)}">'
+        f'<div class="rent-simple-unit-title"><h4>{gen.esc(unit)}</h4></div>'
+        f'{table}</section>'
     )
-
 
 def render_breakdown(listings: list[dict]) -> str:
     groups = rental_groups(listings)
-    sections = [render_unit(unit, groups[unit]) for unit in gen.APARTMENT_UNIT_TYPES]
-    sections = [section for section in sections if section]
+    sections = [
+        section for unit in gen.APARTMENT_UNIT_TYPES
+        if (section := render_unit(unit, groups[unit]))
+    ]
     unavailable = [
         unit for unit in gen.APARTMENT_UNIT_TYPES
-        if not any(
-            groups[unit][size].get(key)
-            for size in groups[unit]
-            for key, _ in FURNISHINGS
-        )
+        if not any(groups[unit][size].get(key)
+                   for size in groups[unit] for key, _ in FURNISHINGS)
     ]
     empty_note = (
-        '<p class="rent-simple-empty">Chưa có số liệu đủ điều kiện cho: '
+        '<p class="rent-simple-empty">Chưa có dữ liệu giá cho: '
         + gen.esc(", ".join(unavailable)) + '.</p>'
         if unavailable else ""
     )
-    table = "".join(sections) if sections else (
-        '<p class="rent-simple-empty">Chưa có tin thuê đủ giá, diện tích '
-        'và tình trạng nội thất để lập bảng.</p>'
+    tables = "".join(sections) if sections else (
+        '<p class="rent-simple-empty">Chưa đủ dữ liệu để lập bảng giá thuê.</p>'
     )
     return (
         '<div class="market-table-card rent-market-card" id="bang-gia-thue-chi-tiet">'
         '<div class="rent-simple-head"><div><p class="eyebrow">Bảng giá thị trường</p>'
         '<h3>Bảng giá thuê theo diện tích và nội thất</h3></div>'
-        '<p><strong>Giá trung bình</strong><span>Đơn vị: triệu đồng/tháng</span></p></div>'
-        f'<div class="rent-simple-sections">{table}</div>'
+        '<p>Giá thuê trung bình <span>Đơn vị: triệu đồng/tháng</span></p></div>'
+        f'<div class="rent-simple-sections">{tables}</div>'
         f'{empty_note}'
-        '<p class="rent-price-note">Số liệu lấy từ tin thuê đang công khai, đã duyệt '
-        'và đủ giá, diện tích; không tính shop chân đế. Mỗi ô là giá rao trung bình; '
-        'dòng nhỏ thể hiện khoảng giá rao và số tin. Dấu ≈ chỉ diện tích làm tròn '
-        'đến m² gần nhất. Tin chưa rõ nội thất không bị tự gán vào nhóm khác. '
-        'Đây không phải giá chốt giao dịch.</p>'
+        '<p class="rent-price-note">Giá rao thuê trung bình được tự động tính từ '
+        'các tin đã duyệt, có đủ giá, diện tích và tình trạng nội thất; không tính '
+        'shop chân đế. Dấu ≈ chỉ diện tích được làm tròn đến m² gần nhất. '
+        'Căn chưa rõ nội thất không được tự gán vào nhóm khác. '
+        'Đây là giá chào tham khảo, không phải giá chốt giao dịch.</p>'
         '</div>'
     )
-
 
 def sync_rent_breakdown(listings: list[dict], path: Path | None = None) -> None:
     path = path or gen.PRICE_PAGE
@@ -187,7 +160,7 @@ def sync_rent_breakdown(listings: list[dict], path: Path | None = None) -> None:
     updated = raw[:start] + "    " + render_breakdown(listings) + "\n\n" + raw[end:]
     updated = re.sub(
         r"/assets/css/market-price\.css\?v=[^\"']+",
-        "/assets/css/market-price.css?v=20261010-rent-table2",
+        "/assets/css/market-price.css?v=20261010-rent-average3",
         updated,
         count=1,
     )
