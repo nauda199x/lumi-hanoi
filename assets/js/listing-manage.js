@@ -13,6 +13,7 @@
   const errorText=root.querySelector("[data-manage-error-text]");
   const content=root.querySelector("[data-manage-content]");
   const form=root.querySelector("[data-manage-form]");
+  const areaBinding=window.LumiAreaPresets?.mount?.(form)||null;
   const statusLine=root.querySelector("[data-manage-status]");
   const statusBadge=root.querySelector("[data-manage-status-badge]");
   const codeEl=root.querySelector("[data-manage-code]");
@@ -136,7 +137,8 @@
     form.elements.phase.value=listing.phase||"";
     refreshTowers(listing.tower||"");
     form.elements.unit_type.value=listing.unit_type||"";
-    form.elements.area_sqm.value=listing.area_sqm??"";
+    if(areaBinding)areaBinding.sync(listing.area_sqm??"");
+    else form.elements.area_sqm.value=listing.area_sqm??"";
     form.elements.floor_label.value=listing.floor_label||"";
     form.elements.furnishing.value=normalizeFurnishing(listing.furnishing);
     form.elements.available_from.value=listing.available_from||"";
@@ -186,6 +188,7 @@
     const priceValue=Number(fd.get("price_display"));
     if(!Number.isFinite(priceValue)||priceValue<=0){setMessage("Vui lòng kiểm tra lại mức giá.","error");return;}
     if(!normalizeFurnishing(fd.get("furnishing"))){setMessage("Vui lòng chọn Đồ cơ bản hoặc Full nội thất.","error");return;}
+    if(areaBinding&&!areaBinding.valid()){setMessage("Chọn nhóm diện tích thông thủy trong danh sách trước khi lưu.","error");return;}
     const patch={
       listing_type:listingType,
       title:String(fd.get("title")||"").trim(),
