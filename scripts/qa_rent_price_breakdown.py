@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
-"""Regression QA for the public, four-column rental price tables."""
+"""Regression checks: average-only rental tables without visible sample statistics."""
 from __future__ import annotations
 
+import re
 import tempfile
 from pathlib import Path
 
@@ -53,17 +54,20 @@ assert "≈54 m²" in html
 assert "62 m²" in html and "74 m²" in html and "81 m²" in html
 assert 'class="rent-simple-table"' in html
 assert html.count('<th scope="col">') == 3 * 4
-assert '<strong class="rent-table-value">8,5</strong>' in html
-assert '<strong class="rent-table-value">11</strong>' in html
-assert "15–" not in html   # Unknown furniture must not contaminate the averages/ranges
-assert "1 tin chưa ghi rõ nội thất" in html
-assert "87 m² (1 tin)" in html
+assert '<strong class="rent-table-value">8,5 triệu</strong>' in html
+assert '<strong class="rent-table-value">11 triệu</strong>' in html
+assert '<strong class="rent-table-value">7 triệu</strong>' in html
+assert "15 triệu" not in html  # Unknown furniture must not enter averages
+assert "87 m²" not in html  # Unknown-only area must not become a priced row
 assert "sale-exclude12" not in html and "shop-exclude12" not in html
 assert "invalid slug" not in html
 assert "<details" not in html and "<a " not in html
+assert "<small" not in html and "tin đủ" not in html
 assert "Xem tin gốc" not in html and "Xem quỹ thuê" not in html
 assert "rent-price.js" not in html
+assert not re.search(r"\b\d+\s+tin\b", html)
 assert "Giá/m²/tháng" not in html
+assert '<colgroup><col class="rent-col-area">' in html
 
 with tempfile.TemporaryDirectory() as tmp:
     file = Path(tmp) / "index.html"
@@ -80,9 +84,13 @@ with tempfile.TemporaryDirectory() as tmp:
     output = file.read_text(encoding="utf-8")
     assert "Bảng giá thuê theo diện tích" in output
     assert "Other stats stay" in output
-    assert "v=20261010-rent-table2" in output
+    assert "v=20261010-rent-average3" in output
     assert output.count('class="rent-simple-table"') == 3
     assert "Xem tin gốc" not in output
     assert "rent-price.js" not in output
 
-print("Rental market table QA passed")
+css = (Path(__file__).resolve().parents[1] / "assets/css/market-price.css").read_text(encoding="utf-8")
+assert ".rent-col-area" in css and ".rent-col-price" in css
+assert "table-layout:fixed" in css
+assert ".rent-market-card" in css and "overflow:hidden" in css
+print("Rental average-only price tables QA passed")
