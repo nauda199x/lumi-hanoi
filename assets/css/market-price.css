@@ -112,57 +112,88 @@
   }
 }
 
-/* Compact, static rental market tables. No card accordions or listing links. */
-.rent-market-card{scroll-margin-top:96px}
-.rent-simple-head{display:flex;gap:20px;align-items:flex-end;justify-content:space-between;padding:24px 26px 20px;border-bottom:1px solid var(--line)}
-.rent-simple-head .eyebrow{margin:0 0 7px}
-.rent-simple-head h3{margin:0;font-size:clamp(1.45rem,2.5vw,2.1rem);line-height:1.2}
-.rent-simple-head>p{margin:0;color:#3b5246;white-space:nowrap;text-align:right;font-size:.9rem;line-height:1.5}
-.rent-simple-head>p strong,.rent-simple-head>p span{display:block}
-.rent-simple-head>p span{font-size:.77rem;color:#68796e}
-.rent-simple-unit{border-bottom:1px solid #d9e2dc}
-.rent-simple-unit-title{display:flex;align-items:center;gap:16px;padding:14px 26px;background:#edf3ee;border-bottom:1px solid #d9e2dc}
-.rent-simple-unit-title h4{margin:0;color:#15382a;font-size:1.23rem;font-weight:900;line-height:1.3}
-.rent-simple-unit-title span{color:#617268;font-size:.8rem;font-weight:600}
-.rent-simple-table-wrap{width:100%}
-.rent-market-card .rent-simple-table{width:100%;min-width:0;table-layout:fixed;border-collapse:collapse}
-.rent-simple-table th,.rent-simple-table td{box-sizing:border-box;border-right:1px solid #e7ece8;border-bottom:1px solid #e7ece8;padding:16px 13px;text-align:center;vertical-align:middle}
-.rent-simple-table th:last-child,.rent-simple-table td:last-child{border-right:0}
-.rent-simple-table tbody tr:last-child th,.rent-simple-table tbody tr:last-child td{border-bottom:0}
-.rent-simple-table thead th{background:#f9faf8;color:#536257;font-weight:800;font-size:.82rem;line-height:1.3;letter-spacing:0;text-transform:none}
-.rent-simple-table thead th:first-child{width:19%;text-align:left}
-.rent-simple-table tbody th{background:#fbfcfb;color:#17372b;text-align:left;font-size:1rem;font-weight:850;white-space:normal}
-.rent-simple-table tbody th small{display:block;margin-top:5px;color:#78867b;font-size:.74rem;font-weight:500}
-.rent-simple-table td{font-variant-numeric:tabular-nums}
-.rent-table-value{display:block;color:#143e2b;font-size:clamp(1.05rem,1.9vw,1.3rem);font-weight:850;line-height:1.25;white-space:nowrap}
-.rent-simple-table td small{display:block;margin-top:6px;font-size:.74rem;line-height:1.4;color:#677a6d}
-.rent-simple-table td.rent-price-empty{background:#fcfdfc;color:#a5afa8;font-size:1.15rem}
-.rent-simple-unknown{margin:0;padding:10px 26px 13px;background:#fffdf7;color:#6b685f;font-size:.78rem;line-height:1.5}
-.rent-simple-empty{padding:15px 26px;margin:0;font-size:.83rem;color:#727f75}
-.rent-price-note{margin:0;padding:17px 26px;background:#faf8f2;color:#5e685f;font-size:.8rem;line-height:1.65}
-.rent-visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
-@media(max-width:700px){
-  .rent-simple-head{display:block;padding:20px 17px 16px}
-  .rent-simple-head h3{font-size:1.65rem}
-  .rent-simple-head>p{display:flex;justify-content:space-between;gap:10px;text-align:left;margin-top:13px;white-space:normal;font-size:.82rem}
-  .rent-simple-head>p span{font-size:.77rem;text-align:right}
-  .rent-simple-unit-title{padding:12px 14px}
-  .rent-simple-unit-title h4{font-size:1.15rem}
-  .rent-simple-unit-title span{font-size:.75rem}
-  .rent-simple-table th,.rent-simple-table td{padding:12px 6px}
-  .rent-simple-table thead th{font-size:.72rem}
-  .rent-simple-table thead th:first-child{width:22%}
-  .rent-simple-table tbody th{font-size:.83rem}
-  .rent-simple-table tbody th small,.rent-simple-table td small{font-size:.68rem;line-height:1.35}
-  .rent-table-value{font-size:1rem}
-  .rent-simple-unknown{padding:10px 14px;font-size:.74rem}
-  .rent-simple-empty,.rent-price-note{padding:14px 16px;font-size:.75rem}
+/* Rental price tables: compact 4-column comparison, no scrolling or sample counts. */
+.rent-market-card{
+  width:100%;max-width:100%;min-width:0;box-sizing:border-box;
+  scroll-margin-top:96px;overflow:hidden
 }
-@media(max-width:380px){
-  .rent-simple-head h3{font-size:1.48rem}
-  .rent-simple-table th,.rent-simple-table td{padding:11px 4px}
-  .rent-simple-table thead th{font-size:.67rem}
-  .rent-simple-table tbody th{font-size:.76rem}
-  .rent-simple-table tbody th small,.rent-simple-table td small{font-size:.62rem}
-  .rent-table-value{font-size:.9rem}
+.rent-simple-sections,.rent-simple-unit,.rent-simple-table-wrap{
+  width:100%;max-width:100%;min-width:0;box-sizing:border-box
+}
+.rent-simple-head{
+  display:flex;gap:24px;align-items:flex-end;justify-content:space-between;
+  padding:24px 26px 22px;border-bottom:1px solid var(--line)
+}
+.rent-simple-head>div{min-width:0}
+.rent-simple-head .eyebrow{margin:0 0 7px}
+.rent-simple-head h3{margin:0;font-size:clamp(1.4rem,2.5vw,2rem);line-height:1.2}
+.rent-simple-head>p{margin:0;color:#274738;text-align:right;font-size:.94rem;font-weight:800;white-space:nowrap}
+.rent-simple-head>p span{display:block;margin-top:5px;font-size:.77rem;font-weight:500;color:#617167}
+.rent-simple-unit{border-bottom:1px solid #d9e2dc}
+.rent-simple-unit-title{
+  display:flex;align-items:center;padding:13px 24px;background:#edf3ee;
+  border-bottom:1px solid #d9e2dc
+}
+.rent-simple-unit-title h4{margin:0;color:#15382a;font-size:1.25rem;font-weight:850}
+.rent-simple-table-wrap{overflow:hidden}
+.rent-market-card .rent-simple-table{
+  display:table;width:100%;max-width:100%;min-width:0;table-layout:fixed;
+  border-collapse:collapse;margin:0
+}
+.rent-market-card .rent-simple-table .rent-col-area{width:22%}
+.rent-market-card .rent-simple-table .rent-col-price{width:26%}
+.rent-market-card .rent-simple-table th,.rent-market-card .rent-simple-table td{
+  box-sizing:border-box;min-width:0;padding:19px 8px;
+  border-right:1px solid #e7ece8;border-bottom:1px solid #e7ece8;
+  text-align:center;vertical-align:middle;overflow-wrap:normal
+}
+.rent-market-card .rent-simple-table tr>*:last-child{border-right:0}
+.rent-market-card .rent-simple-table tbody tr:last-child>*{border-bottom:0}
+.rent-market-card .rent-simple-table thead th{
+  background:#f9faf8;color:#506156;font-weight:800;font-size:.9rem;
+  line-height:1.32;letter-spacing:0;text-transform:none;white-space:normal
+}
+.rent-market-card .rent-simple-table thead th:first-child{text-align:left;width:auto}
+.rent-market-card .rent-simple-table tbody th{
+  background:#fbfcfb;color:#17372b;text-align:left;font-size:1.08rem;
+  font-weight:850;white-space:nowrap
+}
+.rent-market-card .rent-simple-table td{font-variant-numeric:tabular-nums}
+.rent-table-value{
+  display:block;color:#143e2b;font-size:clamp(.95rem,1.8vw,1.3rem);
+  font-weight:850;line-height:1.3;white-space:nowrap
+}
+.rent-market-card .rent-simple-table td.rent-price-empty{
+  background:#fcfdfc;color:#a5afa8;font-size:1.15rem
+}
+.rent-simple-empty{padding:15px 24px;margin:0;font-size:.82rem;color:#727f75}
+.rent-price-note{
+  margin:0;padding:16px 24px;background:#faf8f2;
+  color:#5e685f;font-size:.8rem;line-height:1.65
+}
+.rent-visually-hidden{
+  position:absolute;width:1px;height:1px;padding:0;margin:-1px;
+  overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0
+}
+@media(max-width:700px){
+  .rent-simple-head{display:block;padding:20px 14px 16px}
+  .rent-simple-head h3{font-size:clamp(1.32rem,5.5vw,1.65rem)}
+  .rent-simple-head>p{margin-top:11px;text-align:left;white-space:normal;font-size:.85rem}
+  .rent-simple-head>p span{display:inline;margin-left:6px;font-size:.76rem}
+  .rent-simple-unit-title{padding:11px 13px}
+  .rent-simple-unit-title h4{font-size:1.15rem}
+  .rent-market-card .rent-simple-table .rent-col-area{width:23%}
+  .rent-market-card .rent-simple-table .rent-col-price{width:25.6666%}
+  .rent-market-card .rent-simple-table th,.rent-market-card .rent-simple-table td{padding:13px 3px}
+  .rent-market-card .rent-simple-table thead th{font-size:clamp(.66rem,2.8vw,.77rem);line-height:1.25}
+  .rent-market-card .rent-simple-table tbody th{font-size:clamp(.74rem,3vw,.95rem)}
+  .rent-table-value{font-size:clamp(.7rem,2.9vw,.98rem);letter-spacing:-.02em}
+  .rent-simple-empty,.rent-price-note{padding:13px 14px;font-size:.75rem}
+}
+@media(max-width:355px){
+  .rent-market-card .rent-simple-table .rent-col-area{width:24%}
+  .rent-market-card .rent-simple-table .rent-col-price{width:25.3333%}
+  .rent-market-card .rent-simple-table th,.rent-market-card .rent-simple-table td{padding:12px 2px}
+  .rent-market-card .rent-simple-table tbody th{font-size:.72rem}
+  .rent-table-value{font-size:.69rem}
 }
