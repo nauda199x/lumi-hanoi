@@ -8,7 +8,7 @@ from pathlib import Path
 
 from rent_price_breakdown import (
     RENT_HEAD, furnishing_group, rental_groups, render_breakdown,
-    sync_rent_breakdown, million,
+    sync_rent_breakdown, normalized_rental_area, million,
 )
 
 
@@ -23,6 +23,10 @@ def listing(slug, unit, area, price, furnishing, kind="rent", title=""):
 
 rows = [
     listing("basic-one-1234", "1PN", 43, 7_000_000, "Nội thất cơ bản"),
+    listing("basic-one-42x", "1PN", 42, 9_000_000, "Nội thất cơ bản"),
+    listing("original-one42", "1PN", 42, 8_000_000, "Bàn giao nguyên bản"),
+    listing("original-one43", "1PN", 43, 10_000_000, "Bàn giao nguyên bản"),
+    listing("invalid-one54x", "1PN", 54, 40_000_000, "Đầy đủ nội thất"),
     listing("full-two-12345", "2PN", 53.8, 11_000_000, "Đầy đủ nội thất"),
     listing("basic-two-1234", "2PN", 54, 8_500_000, "Nội thất cơ bản"),
     listing("sixtytwo-1234", "2PN", 62, 12_000_000, "Full nội thất"),
@@ -35,6 +39,14 @@ rows = [
     listing("shop-exclude12", "Shop chân đế", 54, 40_000_000, "Full nội thất"),
 ]
 groups = rental_groups(rows)
+assert list(groups["1PN"].keys()) == [43], "42m² and 43m² must be one 1PN size"
+assert len(groups["1PN"][43]["basic"]) == 2
+assert len(groups["1PN"][43]["original"]) == 2
+assert not groups["1PN"].get(54), "Out-of-layout 1PN 54m² must not affect the price"
+assert normalized_rental_area("1PN", 42) == 43
+assert normalized_rental_area("1PN", 43.4) == 43
+assert normalized_rental_area("1PN", 54) is None
+assert normalized_rental_area("2PN", 54) == 54
 assert sum(len(rs) for by_area in groups["2PN"].values() for rs in by_area.values()) == 5
 assert len(groups["2PN"][54]["full"]) == 1
 assert len(groups["2PN"][54]["basic"]) == 1
@@ -50,13 +62,22 @@ assert million(9_666_666.666) == "9,7"
 assert million(8_000_000) == "8"
 
 html = render_breakdown(rows)
+# One canonical 1PN area with means recalculated across 42m² + 43m² source ads.
+one_pn = html.split('aria-label="Giá thuê trung bình 1PN">', 1)[1].split("</section>", 1)[0]
+assert one_pn.count('<tr><th scope="row">43 m²</th>') == 1
+assert '<th scope="row">42 m²</th>' not in one_pn
+assert '<th scope="row">54 m²</th>' not in one_pn
+assert '<strong class="rent-table-value">8 triệu</strong>' in one_pn  # (7 + 9)/2
+assert '<strong class="rent-table-value">9 triệu</strong>' in one_pn  # (8 + 10)/2
+assert "40 triệu" not in html
+assert "tin khai 42–43m²" in html
 assert "≈54 m²" in html
 assert "62 m²" in html and "74 m²" in html and "81 m²" in html
 assert 'class="rent-simple-table"' in html
 assert html.count('<th scope="col">') == 3 * 4
 assert '<strong class="rent-table-value">8,5 triệu</strong>' in html
 assert '<strong class="rent-table-value">11 triệu</strong>' in html
-assert '<strong class="rent-table-value">7 triệu</strong>' in html
+assert '<strong class="rent-table-value">8 triệu</strong>' in one_pn
 assert "15 triệu" not in html  # Unknown furniture must not enter averages
 assert "87 m²" not in html  # Unknown-only area must not become a priced row
 assert "sale-exclude12" not in html and "shop-exclude12" not in html
