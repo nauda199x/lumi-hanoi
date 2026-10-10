@@ -20,6 +20,7 @@ on:
       - "scripts/generate_marketplace_seo_average.py"
       - "scripts/rent_price_breakdown.py"
       - "scripts/qa_rent_price_breakdown.py"
+      - "scripts/qa_furnishing_options.py"
       - "assets/css/market-price.css"
       - "assets/js/rent-price.js"
       - "scripts/enhance_market_index.py"
@@ -91,6 +92,7 @@ jobs:
           python -m py_compile scripts/rent_price_breakdown.py
           python -m py_compile scripts/qa_rent_price_breakdown.py
           python scripts/qa_rent_price_breakdown.py
+          python scripts/qa_furnishing_options.py
           python -m py_compile scripts/enhance_market_index.py
           python -m py_compile scripts/generate_sale_phase_seo.py
           python -m py_compile scripts/generate_sale_tower_seo.py
