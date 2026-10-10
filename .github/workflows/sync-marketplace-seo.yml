@@ -116,8 +116,10 @@ jobs:
           python - <<'PY'
           from pathlib import Path
           raw = Path("gia-can-ho-lumi-hanoi/index.html").read_text(encoding="utf-8")
-          assert 'class="rent-price-matrix"' in raw, "Missing data-driven rental matrix"
-          assert "Giá thuê theo diện tích" in raw, "Missing rental comparison heading"
+          assert 'class="rent-simple-table"' in raw, "Missing data-driven rental price table"
+          assert "Bảng giá thuê theo diện tích" in raw, "Missing rental price table heading"
+          assert "Xem tin gốc" not in raw, "Rental market pricing must not link individual listings"
+          assert "rent-price.js" not in raw, "Rental prices should not require accordion JavaScript"
           assert '<h3>Giá rao thuê theo loại căn</h3>' not in raw, "Old rental table survived"
           PY
       - name: Commit generated SEO pages
