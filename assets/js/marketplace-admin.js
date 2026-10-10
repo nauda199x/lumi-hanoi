@@ -238,7 +238,7 @@
     try{
       const full=await api.getAdminListing(row.id);if(id!==editRequestId||!dialog.open||!loggedIn)return;
       editing=full;
-      ['id','title','phase','unit_type','area_sqm','floor_label','furnishing','poster_name','contact_phone','description'].forEach(key=>editForm.elements[key].value=full[key]||'');
+      ['id','title','phase','unit_type','area_sqm','floor_label','furnishing','poster_name','contact_phone','description'].forEach(key=>editForm.elements[key].value=key==='furnishing'?normalizeFurnishing(full[key]):(full[key]||''));
       updateTowers(editForm,full.tower);editForm.elements.price.value=String(Number(full.price_vnd)/(full.listing_type==='rent'?1e6:1e9));
       editForm.elements.price.min=full.listing_type==='rent'?'1':'0.001';editForm.elements.price.step=full.listing_type==='rent'?'0.001':'0.000001';
       $('[data-price-label]').textContent=full.listing_type==='rent'?'Giá thuê (triệu / tháng)':'Giá bán (tỷ đồng)';updatePricePreview();
