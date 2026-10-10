@@ -57,6 +57,9 @@ def rental_groups(listings: list[dict]) -> dict[str, dict[int, dict[str, list[di
         for unit in gen.APARTMENT_UNIT_TYPES
     }
     for listing in gen.market_rows(listings, "rent"):
+        # Match the generated inventory; never create a source link to a missing page.
+        if not re.fullmatch(r"[a-z0-9-]{8,120}", gen.clean(listing.get("slug"))):
+            continue
         unit = gen.clean(listing.get("unit_type"))
         grouped[unit][area_bucket(listing["area_sqm"])][
             furnishing_group(listing.get("furnishing"))
@@ -188,7 +191,7 @@ def render_breakdown(listings: list[dict]) -> str:
         'nhấn “Xem tin gốc” để biết số m² chính xác. '
         'Nội thất chỉ phân loại theo thông tin người đăng chọn, không tự suy đoán. '
         'Đây là giá rao tham khảo, không phải giá giao dịch chốt.</p>'
-        '</div>'
+        '</div><script src="/assets/js/rent-price.js?v=20261010-1" defer></script>'
     )
 
 
@@ -203,6 +206,10 @@ def sync_rent_breakdown(listings: list[dict], path: Path | None = None) -> None:
     if start < 0 or end < 0:
         raise RuntimeError("Could not isolate the rental price card")
     updated = raw[:start] + "    " + render_breakdown(listings) + "\n\n" + raw[end:]
+    updated = updated.replace(
+        "/assets/css/market-price.css?v=20260830-price1",
+        "/assets/css/market-price.css?v=20261010-rent-detail1",
+    )
     path.write_text(updated, encoding="utf-8")
     count = sum(len(group) for sizes in rental_groups(listings).values()
                 for fields in sizes.values() for group in fields.values())
