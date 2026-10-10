@@ -40,8 +40,8 @@ rows = [
 ]
 groups = rental_groups(rows)
 assert list(groups["1PN"].keys()) == [43], "42m² and 43m² must be one 1PN size"
-assert len(groups["1PN"][43]["basic"]) == 2
-assert len(groups["1PN"][43]["original"]) == 2
+assert len(groups["1PN"][43]["basic"]) == 4
+assert "original" not in groups["1PN"][43]
 assert not groups["1PN"].get(54), "Out-of-layout 1PN 54m² must not affect the price"
 assert normalized_rental_area("1PN", 42) == 43
 assert normalized_rental_area("1PN", 43.4) == 43
@@ -52,11 +52,13 @@ assert len(groups["2PN"][54]["full"]) == 1
 assert len(groups["2PN"][54]["basic"]) == 1
 assert len(groups["2PN"][54]["unknown"]) == 1
 assert len(groups["2PN"][62]["full"]) == 1
-assert len(groups["2PN"][74]["original"]) == 1
+assert len(groups["2PN"][74]["basic"]) == 1
 assert len(groups["3PN"][87]["unknown"]) == 1
 assert furnishing_group("Đầy đủ nội thất") == "full"
 assert furnishing_group("Nội thất cơ bản") == "basic"
-assert furnishing_group("Bàn giao nguyên bản") == "original"
+assert furnishing_group("Bàn giao nguyên bản") == "basic"
+assert furnishing_group("Đồ cơ bản") == "basic"
+assert furnishing_group("Full nội thất") == "full"
 assert furnishing_group("") == "unknown"
 assert million(9_666_666.666) == "9,7"
 assert million(8_000_000) == "8"
@@ -67,17 +69,15 @@ one_pn = html.split('aria-label="Giá thuê trung bình 1PN">', 1)[1].split("</s
 assert one_pn.count('<tr><th scope="row">43 m²</th>') == 1
 assert '<th scope="row">42 m²</th>' not in one_pn
 assert '<th scope="row">54 m²</th>' not in one_pn
-assert '<strong class="rent-table-value">8 triệu</strong>' in one_pn  # (7 + 9)/2
-assert '<strong class="rent-table-value">9 triệu</strong>' in one_pn  # (8 + 10)/2
+assert '<strong class="rent-table-value">8,5 triệu</strong>' in one_pn  # (7+9+8+10)/4
 assert "40 triệu" not in html
 assert "tin khai 42–43m²" in html
 assert "≈54 m²" in html
 assert "62 m²" in html and "74 m²" in html and "81 m²" in html
 assert 'class="rent-simple-table"' in html
-assert html.count('<th scope="col">') == 3 * 4
+assert html.count('<th scope="col">') == 3 * 3
 assert '<strong class="rent-table-value">8,5 triệu</strong>' in html
 assert '<strong class="rent-table-value">11 triệu</strong>' in html
-assert '<strong class="rent-table-value">8 triệu</strong>' in one_pn
 assert "15 triệu" not in html  # Unknown furniture must not enter averages
 assert "87 m²" not in html  # Unknown-only area must not become a priced row
 assert "sale-exclude12" not in html and "shop-exclude12" not in html
@@ -105,8 +105,12 @@ with tempfile.TemporaryDirectory() as tmp:
     output = file.read_text(encoding="utf-8")
     assert "Bảng giá thuê theo diện tích" in output
     assert "Other stats stay" in output
-    assert "v=20261010-rent-average3" in output
+    assert "v=20261010-two-furnishings" in output
     assert output.count('class="rent-simple-table"') == 3
+    assert output.count('<th scope="col">') == 9
+    assert ">Nguyên bản</th>" not in output
+    assert ">Đồ cơ bản</th>" in output
+    assert ">Full nội thất</th>" in output
     assert "Xem tin gốc" not in output
     assert "rent-price.js" not in output
 

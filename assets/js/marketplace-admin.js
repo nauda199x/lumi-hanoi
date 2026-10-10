@@ -2,6 +2,12 @@
   const root=document.querySelector('[data-marketplace-admin]');
   if(!root||!window.LumiMarketplace)return;
   const api=window.LumiMarketplace;
+  const normalizeFurnishing=value=>{
+    const raw=String(value||"").toLowerCase();
+    if(raw.includes("nguyên bản")||raw.includes("cơ bản"))return "Đồ cơ bản";
+    if(raw.includes("full")||raw.includes("đầy đủ"))return "Full nội thất";
+    return "";
+  };
   const $=selector=>root.querySelector(selector);
   const loginPanel=$('[data-admin-login]'),loginForm=$('[data-admin-login-form]'),loginStatus=$('[data-admin-login-status]');
   const dashboard=$('[data-admin-dashboard]'),filters=$('[data-admin-filters]'),list=$('[data-admin-list]');
@@ -238,7 +244,7 @@
     try{
       const full=await api.getAdminListing(row.id);if(id!==editRequestId||!dialog.open||!loggedIn)return;
       editing=full;
-      ['id','title','phase','unit_type','area_sqm','floor_label','furnishing','poster_name','contact_phone','description'].forEach(key=>editForm.elements[key].value=full[key]||'');
+      ['id','title','phase','unit_type','area_sqm','floor_label','furnishing','poster_name','contact_phone','description'].forEach(key=>editForm.elements[key].value=key==='furnishing'?normalizeFurnishing(full[key]):(full[key]||''));
       updateTowers(editForm,full.tower);editForm.elements.price.value=String(Number(full.price_vnd)/(full.listing_type==='rent'?1e6:1e9));
       editForm.elements.price.min=full.listing_type==='rent'?'1':'0.001';editForm.elements.price.step=full.listing_type==='rent'?'0.001':'0.000001';
       $('[data-price-label]').textContent=full.listing_type==='rent'?'Giá thuê (triệu / tháng)':'Giá bán (tỷ đồng)';updatePricePreview();
@@ -253,8 +259,8 @@
   editForm.addEventListener('submit',async event=>{
     event.preventDefault();if(saving||!editing)return;
     const fields=editForm.elements;
-    const patch={title:api.cleanText(fields.title.value,180),price_vnd:Math.round(Number(fields.price.value)*(editing.listing_type==='rent'?1e6:1e9)),phase:fields.phase.value,tower:fields.tower.value,unit_type:fields.unit_type.value,bedroom_count:/^[1-4]PN$/.test(fields.unit_type.value)?Number(fields.unit_type.value[0]):null,area_sqm:Number(fields.area_sqm.value),floor_label:fields.floor_label.value||null,furnishing:api.cleanText(fields.furnishing.value,80)||null,poster_name:api.cleanText(fields.poster_name.value,120),contact_phone:api.cleanText(fields.contact_phone.value,30),description:api.cleanText(fields.description.value,3000)};
-    if(!patch.description||patch.title.length<10||patch.poster_name.length<2||patch.contact_phone.length<8||!Number.isSafeInteger(patch.price_vnd)||patch.price_vnd<1e6||!phases[patch.phase]?.includes(patch.tower)){show($('[data-dialog-status]'),'Kiểm tra lại tiêu đề, giá, tòa, người đăng, điện thoại và mô tả.',true);return;}
+    const patch={title:api.cleanText(fields.title.value,180),price_vnd:Math.round(Number(fields.price.value)*(editing.listing_type==='rent'?1e6:1e9)),phase:fields.phase.value,tower:fields.tower.value,unit_type:fields.unit_type.value,bedroom_count:/^[1-4]PN$/.test(fields.unit_type.value)?Number(fields.unit_type.value[0]):null,area_sqm:Number(fields.area_sqm.value),floor_label:fields.floor_label.value||null,furnishing:normalizeFurnishing(fields.furnishing.value),poster_name:api.cleanText(fields.poster_name.value,120),contact_phone:api.cleanText(fields.contact_phone.value,30),description:api.cleanText(fields.description.value,3000)};
+    if(!patch.furnishing||!patch.description||patch.title.length<10||patch.poster_name.length<2||patch.contact_phone.length<8||!Number.isSafeInteger(patch.price_vnd)||patch.price_vnd<1e6||!phases[patch.phase]?.includes(patch.tower)){show($('[data-dialog-status]'),'Kiểm tra lại tiêu đề, giá, tòa, người đăng, điện thoại và mô tả.',true);return;}
     saving=true;setEditBusy(true);show($('[data-dialog-status]'),'Đang lưu chỉnh sửa…');let saved=false;
     try{await api.updateListing(editing.id,patch,editing.updated_at);saved=true;saving=false;dialog.close();await load(true);status('Đã lưu nội dung tin đăng.');}
     catch(error){show($('[data-dialog-status]'),`${error.message} Nội dung đang nhập vẫn được giữ trong cửa sổ này.`,true);}

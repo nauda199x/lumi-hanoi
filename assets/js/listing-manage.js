@@ -2,6 +2,12 @@
   const root=document.querySelector("[data-listing-manage]");
   if(!root||!window.LumiMarketplace)return;
   const api=window.LumiMarketplace;
+  const normalizeFurnishing=value=>{
+    const raw=String(value||"").toLowerCase();
+    if(raw.includes("nguyên bản")||raw.includes("cơ bản"))return "Đồ cơ bản";
+    if(raw.includes("full")||raw.includes("đầy đủ"))return "Full nội thất";
+    return "";
+  };
   const loading=root.querySelector("[data-manage-loading]");
   const errorBox=root.querySelector("[data-manage-error]");
   const errorText=root.querySelector("[data-manage-error-text]");
@@ -132,7 +138,7 @@
     form.elements.unit_type.value=listing.unit_type||"";
     form.elements.area_sqm.value=listing.area_sqm??"";
     form.elements.floor_label.value=listing.floor_label||"";
-    form.elements.furnishing.value=listing.furnishing||"";
+    form.elements.furnishing.value=normalizeFurnishing(listing.furnishing);
     form.elements.available_from.value=listing.available_from||"";
     form.elements.legal_status.value=listing.legal_status||"";
     form.elements.poster_name.value=listing.poster_name||"";
@@ -179,6 +185,7 @@
     const listingType=String(fd.get("listing_type")||"sale");
     const priceValue=Number(fd.get("price_display"));
     if(!Number.isFinite(priceValue)||priceValue<=0){setMessage("Vui lòng kiểm tra lại mức giá.","error");return;}
+    if(!normalizeFurnishing(fd.get("furnishing"))){setMessage("Vui lòng chọn Đồ cơ bản hoặc Full nội thất.","error");return;}
     const patch={
       listing_type:listingType,
       title:String(fd.get("title")||"").trim(),
@@ -188,7 +195,7 @@
       unit_type:String(fd.get("unit_type")||""),
       area_sqm:Number(fd.get("area_sqm")),
       floor_label:String(fd.get("floor_label")||""),
-      furnishing:String(fd.get("furnishing")||""),
+      furnishing:normalizeFurnishing(fd.get("furnishing")),
       available_from:String(fd.get("available_from")||""),
       legal_status:String(fd.get("legal_status")||""),
       poster_name:String(fd.get("poster_name")||"").trim(),

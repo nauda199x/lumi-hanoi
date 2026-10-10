@@ -56,8 +56,9 @@ jobs:
         run: python scripts/qa_market_price_v10_4.py
       - name: Rental price matrix QA
         run: |
-          python -m py_compile scripts/rent_price_breakdown.py scripts/qa_rent_price_breakdown.py
+          python -m py_compile scripts/rent_price_breakdown.py scripts/qa_rent_price_breakdown.py scripts/qa_furnishing_options.py
           python scripts/qa_rent_price_breakdown.py
+          python scripts/qa_furnishing_options.py
           node --check assets/js/rent-price.js
       - name: Sitelink architecture QA
         run: python scripts/qa_sitelink_architecture_v10_5.py

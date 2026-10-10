@@ -2,6 +2,12 @@
   const form=document.querySelector("[data-marketplace-submit]");
   if(!form||!window.LumiMarketplace)return;
   const api=window.LumiMarketplace;
+  const normalizeFurnishing=value=>{
+    const raw=String(value||"").toLowerCase();
+    if(raw.includes("nguyên bản")||raw.includes("cơ bản"))return "Đồ cơ bản";
+    if(raw.includes("full")||raw.includes("đầy đủ"))return "Full nội thất";
+    return "";
+  };
   const submitButtons=[...form.querySelectorAll('[type="submit"]')];
   const status=form.querySelector("[data-form-status]");
   const filesInput=form.querySelector('[name="images"]');
@@ -490,7 +496,7 @@
         const saved=draft.values[element.name];
         if(element.type==="radio")element.checked=saved===element.value;
         else if(element.type==="checkbox")element.checked=Boolean(saved);
-        else element.value=saved??"";
+        else element.value=element.name==="furnishing"?normalizeFurnishing(saved):(saved??"");
       });
       refreshType(false);
       refreshTowers();
@@ -685,7 +691,7 @@
     return {
       listing_type:listingType(),poster_name:value("poster_name"),contact_phone:value("contact_phone"),
       phase:value("phase"),tower:value("tower"),unit_type:unitType,bedroom_count:bedroomMatch?Number(bedroomMatch[1]):null,area_sqm:numeric("area_sqm"),floor_label:value("floor_label")||null,
-      price_vnd:priceVnd(),furnishing:value("furnishing")||null,available_from:listingType()==="rent"?(value("available_from")||null):null,legal_status:listingType()==="sale"?(value("legal_status")||null):null,
+      price_vnd:priceVnd(),furnishing:value("furnishing"),available_from:listingType()==="rent"?(value("available_from")||null):null,legal_status:listingType()==="sale"?(value("legal_status")||null):null,
       title:value("title"),description:value("description"),contact_public:Boolean(form.elements.contact_public?.checked)
     };
   };

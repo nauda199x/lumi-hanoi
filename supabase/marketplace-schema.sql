@@ -83,7 +83,7 @@ create table if not exists public.listings (
   floor_label text,
   unit_code text check (unit_code is null or char_length(unit_code) <= 40),
   price_vnd bigint not null check (price_vnd >= 1000000),
-  furnishing text check (furnishing is null or char_length(furnishing) <= 80),
+  furnishing text check (furnishing is null or furnishing in ('Đồ cơ bản','Full nội thất')),
   direction text check (direction is null or char_length(direction) <= 40),
   view_text text check (view_text is null or char_length(view_text) <= 120),
   available_from date,

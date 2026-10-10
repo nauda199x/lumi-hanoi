@@ -140,8 +140,8 @@
   display:table;width:100%;max-width:100%;min-width:0;table-layout:fixed;
   border-collapse:collapse;margin:0
 }
-.rent-market-card .rent-simple-table .rent-col-area{width:22%}
-.rent-market-card .rent-simple-table .rent-col-price{width:26%}
+.rent-market-card .rent-simple-table .rent-col-area{width:30%}
+.rent-market-card .rent-simple-table .rent-col-price{width:35%}
 .rent-market-card .rent-simple-table th,.rent-market-card .rent-simple-table td{
   box-sizing:border-box;min-width:0;padding:19px 8px;
   border-right:1px solid #e7ece8;border-bottom:1px solid #e7ece8;
@@ -182,8 +182,8 @@
   .rent-simple-head>p span{display:inline;margin-left:6px;font-size:.76rem}
   .rent-simple-unit-title{padding:11px 13px}
   .rent-simple-unit-title h4{font-size:1.15rem}
-  .rent-market-card .rent-simple-table .rent-col-area{width:23%}
-  .rent-market-card .rent-simple-table .rent-col-price{width:25.6666%}
+  .rent-market-card .rent-simple-table .rent-col-area{width:28%}
+  .rent-market-card .rent-simple-table .rent-col-price{width:36%}
   .rent-market-card .rent-simple-table th,.rent-market-card .rent-simple-table td{padding:13px 3px}
   .rent-market-card .rent-simple-table thead th{font-size:clamp(.66rem,2.8vw,.77rem);line-height:1.25}
   .rent-market-card .rent-simple-table tbody th{font-size:clamp(.74rem,3vw,.95rem)}
@@ -191,8 +191,8 @@
   .rent-simple-empty,.rent-price-note{padding:13px 14px;font-size:.75rem}
 }
 @media(max-width:355px){
-  .rent-market-card .rent-simple-table .rent-col-area{width:24%}
-  .rent-market-card .rent-simple-table .rent-col-price{width:25.3333%}
+  .rent-market-card .rent-simple-table .rent-col-area{width:28%}
+  .rent-market-card .rent-simple-table .rent-col-price{width:36%}
   .rent-market-card .rent-simple-table th,.rent-market-card .rent-simple-table td{padding:12px 2px}
   .rent-market-card .rent-simple-table tbody th{font-size:.72rem}
   .rent-table-value{font-size:.69rem}

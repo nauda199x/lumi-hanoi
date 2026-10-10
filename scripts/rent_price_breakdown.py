@@ -17,7 +17,6 @@ import generate_marketplace_seo as gen
 
 
 FURNISHINGS = (
-    ("original", "Nguyên bản"),
     ("basic", "Đồ cơ bản"),
     ("full", "Full nội thất"),
 )
@@ -33,9 +32,7 @@ def furnishing_group(value) -> str:
     text = unicodedata.normalize("NFD", gen.clean(value).lower())
     text = "".join(char for char in text if not unicodedata.combining(char))
     text = re.sub(r"\s+", " ", text.replace("đ", "d")).strip()
-    if "nguyen ban" in text or "ban giao" in text:
-        return "original"
-    if "co ban" in text:
+    if "nguyen ban" in text or "ban giao" in text or "co ban" in text:
         return "basic"
     if "full" in text or "day du" in text:
         return "full"
@@ -121,7 +118,7 @@ def render_unit(unit: str, sizes: dict[int, dict[str, list[dict]]]) -> str:
         '<div class="rent-simple-table-wrap"><table class="rent-simple-table">'
         f'<caption class="rent-visually-hidden">Giá thuê trung bình căn {gen.esc(unit)}'
         ' theo diện tích và nội thất; đơn vị triệu đồng mỗi tháng.</caption>'
-        '<colgroup><col class="rent-col-area"><col span="3" class="rent-col-price"></colgroup>'
+        '<colgroup><col class="rent-col-area"><col span="2" class="rent-col-price"></colgroup>'
         '<thead><tr><th scope="col">Diện tích</th>'
         + "".join(f'<th scope="col">{gen.esc(label)}</th>'
                   for _, label in FURNISHINGS)
@@ -165,7 +162,7 @@ def render_breakdown(listings: list[dict]) -> str:
         'shop chân đế. Nhóm 1PN 43m² đã gộp tin khai 42–43m²; '
         'tin 1PN có diện tích lệch lớn không tính vào nhóm này để tránh sai giá. '
         'Dấu ≈ chỉ diện tích được làm tròn đến m² gần nhất ở loại căn khác. '
-        'Căn chưa rõ nội thất không được tự gán vào nhóm khác. '
+        'Căn chưa khai nội thất không được tự gán vào nhóm khác. '
         'Đây là giá chào tham khảo, không phải giá chốt giao dịch.</p>'
         '</div>'
     )
@@ -183,7 +180,7 @@ def sync_rent_breakdown(listings: list[dict], path: Path | None = None) -> None:
     updated = raw[:start] + "    " + render_breakdown(listings) + "\n\n" + raw[end:]
     updated = re.sub(
         r"/assets/css/market-price\.css\?v=[^\"']+",
-        "/assets/css/market-price.css?v=20261010-rent-average3",
+        "/assets/css/market-price.css?v=20261010-two-furnishings",
         updated,
         count=1,
     )
