@@ -23,7 +23,7 @@ class Node {
 }
 function deferred(){let resolve,reject;const promise=new Promise((a,b)=>{resolve=a;reject=b;});return {promise,resolve,reject};}
 const tick=()=>new Promise(resolve=>setImmediate(resolve));
-const row=(id='row-a')=>({id,title:'Căn hộ Lumi Hanoi cần cho thuê',listing_code:'LH-12345678',listing_type:'rent',status:'approved',phase:'Signature',tower:'S3',unit_type:'2PN',area_sqm:54,price_vnd:10000000,poster_name:'Chủ nhà',contact_phone:'0901234567',description:'Mô tả gốc của tin',listing_images:[],open_reports:[],listing_reports:[],created_at:'2026-09-01',updated_at:'2026-09-01',expires_at:'2027-01-01'});
+const row=(id='row-a')=>({id,title:'Căn hộ Lumi Hanoi cần cho thuê',listing_code:'LH-12345678',listing_type:'rent',status:'approved',phase:'Signature',tower:'S3',unit_type:'2PN',area_sqm:54,price_vnd:10000000,furnishing:'Đồ cơ bản',poster_name:'Chủ nhà',contact_phone:'0901234567',description:'Mô tả gốc của tin',listing_images:[],open_reports:[],listing_reports:[],created_at:'2026-09-01',updated_at:'2026-09-01',expires_at:'2027-01-01'});
 function fixture({savedView,failSave=false}={}){
   const nodes=new Map(),timers=new Map(),requests=[],storage=new Map();let timerId=0;
   if(savedView)storage.set('lumi_admin_view_v2',JSON.stringify(savedView));
