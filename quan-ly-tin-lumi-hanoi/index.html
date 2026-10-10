@@ -62,7 +62,7 @@
                 <div class="field"><label for="manage-phase">Phân khu</label><select id="manage-phase" name="phase" required><option value="">Chọn phân khu</option><option>Signature</option><option>Prestige</option><option>Elite</option></select></div>
                 <div class="field"><label for="manage-tower">Tòa</label><select id="manage-tower" name="tower" required><option value="">Chọn tòa</option></select></div>
                 <div class="field"><label for="manage-unit">Loại căn</label><select id="manage-unit" name="unit_type" required><option>1PN</option><option>2PN</option><option>3PN</option><option>4PN</option><option>Duplex</option><option>Penthouse</option><option>Shop chân đế</option></select></div>
-                <div class="field"><label for="manage-area">Diện tích (m²)</label><input id="manage-area" name="area_sqm" type="number" min="20" max="1000" step="0.1" required></div>
+                <div class="field"><label for="manage-area">Nhóm diện tích thông thủy (m²)</label><select id="manage-area" name="area_sqm" required><option value="">Chọn loại căn trước</option></select><small data-area-help>Chọn diện tích có sẵn, không dùng diện tích tim tường.</small></div>
                 <div class="field"><label for="manage-floor">Tầng</label><select id="manage-floor" name="floor_label"><option value="">Chưa cập nhật</option><option>Thấp</option><option>Trung</option><option>Cao</option></select></div>
                 <div class="field"><label for="manage-price" data-manage-price-label>Giá bán (tỷ đồng)</label><input id="manage-price" name="price_display" type="number" min="0.1" step="0.01" required></div>
                 <div class="field"><label for="manage-furnishing">Nội thất</label><select id="manage-furnishing" name="furnishing" required><option value="" disabled>Chọn tình trạng nội thất</option><option value="Đồ cơ bản">Đồ cơ bản</option><option value="Full nội thất">Full nội thất</option></select></div>
@@ -109,6 +109,6 @@
   <script src="/assets/js/site.js?v=20260907-performance1" defer></script>
   <script src="/assets/js/marketplace-config.js"></script>
   <script src="/assets/js/marketplace-api.js?v=20260924-manage1"></script>
-  <script src="/assets/js/listing-manage.js?v=20261010-two-furnish" defer></script>
+  <script src="/assets/js/lumi-area-presets.js?v=20261010-a1"></script><script src="/assets/js/listing-manage.js?v=20261010-area1" defer></script>
 </body>
 </html>
