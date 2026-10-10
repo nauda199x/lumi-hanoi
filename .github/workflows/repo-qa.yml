@@ -72,6 +72,10 @@ jobs:
         run: python scripts/qa_floorplan_marketplace_bridge.py
       - name: Marketplace QA
         run: python scripts/qa_marketplace_v1.py
+      - name: NFA area preset dropdown QA
+        run: |
+          node --check assets/js/lumi-area-presets.js
+          node --test scripts/qa_area_presets.cjs
       - name: Sale inventory pagination and API QA
         run: |
           python scripts/qa_inventory.py
