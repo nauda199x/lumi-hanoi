@@ -2,6 +2,12 @@
   const form=document.querySelector("[data-marketplace-submit]");
   if(!form||!window.LumiMarketplace)return;
   const api=window.LumiMarketplace;
+  const normalizeFurnishing=value=>{
+    const raw=String(value||"").toLowerCase();
+    if(raw.includes("nguyên bản")||raw.includes("cơ bản"))return "Đồ cơ bản";
+    if(raw.includes("full")||raw.includes("đầy đủ"))return "Full nội thất";
+    return "";
+  };
   const submitButtons=[...form.querySelectorAll('[type="submit"]')];
   const status=form.querySelector("[data-form-status]");
   const filesInput=form.querySelector('[name="images"]');
@@ -490,7 +496,7 @@
         const saved=draft.values[element.name];
         if(element.type==="radio")element.checked=saved===element.value;
         else if(element.type==="checkbox")element.checked=Boolean(saved);
-        else element.value=saved??"";
+        else element.value=element.name==="furnishing"?normalizeFurnishing(saved):(saved??"");
       });
       refreshType(false);
       refreshTowers();
