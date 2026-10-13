@@ -1,7 +1,7 @@
 {
-  "version": "2026-10-06",
+  "version": "2026-10-13",
   "source": "Google Drive / Lumi hanoi",
-  "description": "Verified Drive IDs used for the real-apartment photo library. Only clearly named source folders are included.",
+  "description": "Verified Google Drive image IDs for real Lumi Hanoi apartment photographs. 101m² and 106m² source folders were inspected on 2026-10-13 and all 17 image files have public reader permission.",
   "items": [
     {
       "driveId": "1zJCgDVwYt0Y535MiG8-mqUquSAOjxcWr",
@@ -167,6 +167,108 @@
       "driveId": "1J4cTfSdZuwsIRzdBoEbOtgDYKNe89z-A",
       "group": "3pn-117",
       "state": "nguyen-ban"
+    },
+    {
+      "driveId": "1Nwa7VuqNw72-8ASoIC-AWKnYjgDgF_8p",
+      "group": "3pn-101",
+      "state": "do-co-ban",
+      "sourceFolderId": "1Ff1ExnDjLtPQgCnKiS5TaWcZPLw5-0Eh"
+    },
+    {
+      "driveId": "1LNTFotM2AZ4dPL-dSlyzbz9RlMCiCKsT",
+      "group": "3pn-101",
+      "state": "do-co-ban",
+      "sourceFolderId": "1Ff1ExnDjLtPQgCnKiS5TaWcZPLw5-0Eh"
+    },
+    {
+      "driveId": "1UoAxbOxm1XP8qTN5bSnlrn9TOq98YCOS",
+      "group": "3pn-101",
+      "state": "do-co-ban",
+      "sourceFolderId": "1Ff1ExnDjLtPQgCnKiS5TaWcZPLw5-0Eh"
+    },
+    {
+      "driveId": "1ZrQ_rpxomrVmiV0WLFdzhNYCo7d_QmKy",
+      "group": "3pn-101",
+      "state": "do-co-ban",
+      "sourceFolderId": "1Ff1ExnDjLtPQgCnKiS5TaWcZPLw5-0Eh"
+    },
+    {
+      "driveId": "141WQtLhYp6n-LU-vxxbjvR-7OlrOJQPP",
+      "group": "3pn-101",
+      "state": "do-co-ban",
+      "sourceFolderId": "1Ff1ExnDjLtPQgCnKiS5TaWcZPLw5-0Eh"
+    },
+    {
+      "driveId": "1KhTAl2o8iQWkR543MxofCzMJSEaBjREs",
+      "group": "3pn-101",
+      "state": "do-co-ban",
+      "sourceFolderId": "1Ff1ExnDjLtPQgCnKiS5TaWcZPLw5-0Eh"
+    },
+    {
+      "driveId": "1HQBCFFuOABkz_vQtdyinxQPCDK_CWH0X",
+      "group": "3pn-101",
+      "state": "do-co-ban",
+      "sourceFolderId": "1Ff1ExnDjLtPQgCnKiS5TaWcZPLw5-0Eh"
+    },
+    {
+      "driveId": "1c9W9vhN_JLDkuzcW-GSfgpfOtenrbPby",
+      "group": "3pn-101",
+      "state": "do-co-ban",
+      "sourceFolderId": "1Ff1ExnDjLtPQgCnKiS5TaWcZPLw5-0Eh"
+    },
+    {
+      "driveId": "1eE85bOr9CifI8yQvUH5cAK5zYer3hik-",
+      "group": "3pn-106",
+      "state": "do-co-ban",
+      "sourceFolderId": "1wMloXKb2dRaEHtFBJ08UBPJQf8gI35Mw"
+    },
+    {
+      "driveId": "19zwxnSqlH0i6e0XDlyCPbSMMOlO_lia4",
+      "group": "3pn-106",
+      "state": "do-co-ban",
+      "sourceFolderId": "1wMloXKb2dRaEHtFBJ08UBPJQf8gI35Mw"
+    },
+    {
+      "driveId": "18wsLdCRETmYsPM_UoeI4oHFUx0mLvS82",
+      "group": "3pn-106",
+      "state": "do-co-ban",
+      "sourceFolderId": "1wMloXKb2dRaEHtFBJ08UBPJQf8gI35Mw"
+    },
+    {
+      "driveId": "1cbJ4OKukyOqM3OtVox5ZVuGhOlBswrwU",
+      "group": "3pn-106",
+      "state": "do-co-ban",
+      "sourceFolderId": "1wMloXKb2dRaEHtFBJ08UBPJQf8gI35Mw"
+    },
+    {
+      "driveId": "1eMVmqJYJXU-5QHDPCkVKsijpxrUXGsLO",
+      "group": "3pn-106",
+      "state": "do-co-ban",
+      "sourceFolderId": "1wMloXKb2dRaEHtFBJ08UBPJQf8gI35Mw"
+    },
+    {
+      "driveId": "1FQIpR4dI-BdKzH_0FPH2C6oY2CHneDII",
+      "group": "3pn-106",
+      "state": "do-co-ban",
+      "sourceFolderId": "1wMloXKb2dRaEHtFBJ08UBPJQf8gI35Mw"
+    },
+    {
+      "driveId": "109pTaPK7xncXTdIumhZtMEq3lZRpkwez",
+      "group": "3pn-106",
+      "state": "do-co-ban",
+      "sourceFolderId": "1wMloXKb2dRaEHtFBJ08UBPJQf8gI35Mw"
+    },
+    {
+      "driveId": "1b-HwQ86J3xImNX0FolAKP-UoiYJZj94Z",
+      "group": "3pn-106",
+      "state": "do-co-ban",
+      "sourceFolderId": "1wMloXKb2dRaEHtFBJ08UBPJQf8gI35Mw"
+    },
+    {
+      "driveId": "12cvTsJE5SHJw0rDDsR9PmqXXZtLx9uID",
+      "group": "3pn-106",
+      "state": "do-co-ban",
+      "sourceFolderId": "1wMloXKb2dRaEHtFBJ08UBPJQf8gI35Mw"
     }
   ]
 }
