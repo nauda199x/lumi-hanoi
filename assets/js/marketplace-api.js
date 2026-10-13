@@ -351,6 +351,35 @@
     const changed=await request(restPath("listing_reports",{listing_id:`eq.${listingId}`,id:`in.(${ids.join(",")})`,resolved_at:"is.null",select:"id"}),{method:"PATCH",body:{resolved_at:new Date().toISOString(),resolved_by:session.user.id},token:session.access_token,headers:{Prefer:"return=representation"}});
     return changed?.length||0;
   };
+  // Remove one photo only. Updating the parent first provides an optimistic
+  // concurrency check and makes the listing's updated_at reflect the edit.
+  const deleteListingImage=async(listingId,imageId,expectedUpdatedAt)=>{
+    const session=await requireAdmin();
+    if(!session)throw new MarketplaceError("Phiên quản trị đã hết hạn.",401);
+    const id=cleanText(listingId,50);
+    const numericImageId=Number(imageId);
+    if(!/^[0-9a-f]{8}-[0-9a-f-]{27,}$/i.test(id)||!Number.isSafeInteger(numericImageId)||numericImageId<=0||!expectedUpdatedAt){
+      throw new MarketplaceError("Thông tin ảnh cần xóa không hợp lệ. Vui lòng mở lại tin.",400);
+    }
+    const touched=await request(restPath("listings",{id:`eq.${id}`,updated_at:`eq.${expectedUpdatedAt}`,select:"id,updated_at"}),{
+      method:"PATCH",body:{updated_at:new Date().toISOString()},token:session.access_token,headers:{Prefer:"return=representation"}
+    });
+    if(!Array.isArray(touched)||touched.length!==1)throw new MarketplaceError("Tin đã thay đổi. Hãy mở lại tin và kiểm tra ảnh trước khi xóa.",409);
+    const removed=await request(restPath("listing_images",{
+      id:`eq.${numericImageId}`,listing_id:`eq.${id}`,select:"id,storage_path"
+    }),{method:"DELETE",token:session.access_token,headers:{Prefer:"return=representation"}});
+    if(!Array.isArray(removed)||removed.length!==1)throw new MarketplaceError("Ảnh đã bị xóa hoặc không thuộc tin này. Danh sách ảnh sẽ được làm mới.",404);
+    // DB first: never leave a public listing pointing to an intentionally
+    // deleted Storage object if a database operation fails.
+    let storageCleaned=true;
+    try{
+      await request(`/storage/v1/object/${encodeURIComponent(config.storageBucket||"listing-images")}`,{
+        method:"DELETE",body:{prefixes:[removed[0].storage_path]},token:session.access_token
+      });
+    }catch{storageCleaned=false;}
+    return {imageId:numericImageId,updated_at:touched[0].updated_at,storageCleaned};
+  };
+
   const deleteListing=async listing=>{
     const session=await requireAdmin();
     if(!session)throw new MarketplaceError("Phiên quản trị đã hết hạn.",401);
@@ -382,7 +411,7 @@
   window.LumiMarketplace={
     config,configured,MarketplaceError,cleanText,slugify,formatCurrency,imageUrl,listingUrl,
     listPublic,listPublicPage,getPublicListing,createListing,manageListing,uploadImage,addListingImage,addListingImages,createReport,
-    signIn,signOut,requireAdmin,listAdmin,updateListing,deleteListing,requestSeoSync,
+    signIn,signOut,requireAdmin,listAdmin,updateListing,deleteListing,deleteListingImage,requestSeoSync,
     listAdminPage,adminCounts,getAdminListing,applyAdminAction,resolveAdminReports
   };
 })();
