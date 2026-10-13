@@ -200,6 +200,7 @@
 
 
 /* Price catalogue 2026-10-13: canonical usable-area matrix for sale and rent. */
+.sale-area-card{margin-top:26px}
 .area-price-card{max-width:100%;border-radius:14px;overflow:hidden;border-color:#d7e3d9;box-shadow:0 12px 34px rgba(22,46,33,.05)}
 .area-price-card .rent-simple-head{align-items:flex-start;background:linear-gradient(120deg,#edf4ed,#fffdf7);padding:27px 28px}
 .area-price-card .rent-simple-head>div{max-width:640px}
