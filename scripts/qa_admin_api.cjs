@@ -100,3 +100,48 @@ test('parallel admin loads share a single token refresh',async()=>{
   f.memory.set(sessionKey,JSON.stringify({access_token:'old',refresh_token:'refresh',expires_at:1,user:{id:'admin-id'}}));
   await Promise.all([f.api.listAdminPage(),f.api.adminCounts()]);assert.equal(refreshes,1);assert.ok(JSON.parse(f.memory.get(sessionKey)).expires_at>Date.now()/1000);
 });
+
+test('single-photo removal verifies admin, listing version and ownership before storage deletion',async()=>{
+  const id='f33e73e5-3772-4e5d-92c7-210dd28b8b93';
+  const expected='2026-10-13T04:00:00Z';
+  const f=fixture({handler:({url})=>{
+    if(url.pathname.endsWith('/listings'))return {rows:[{id,updated_at:'2026-10-13T04:01:00Z'}]};
+    if(url.pathname.endsWith('/listing_images'))return {rows:[{id:7,storage_path:`pending/${id}/photo-7.jpg`}]};
+    if(url.pathname.includes('/storage/v1/object/'))return {rows:[]};
+    throw new Error('Unexpected URL '+url.pathname);
+  }});
+  const outcome=await f.api.deleteListingImage(id,7,expected);
+  assert.equal(outcome.storageCleaned,true);
+  assert.equal(outcome.updated_at,'2026-10-13T04:01:00Z');
+  const actions=f.calls.filter(x=>x.options.method==='PATCH'||x.options.method==='DELETE');
+  assert.equal(actions.length,3);
+  assert.equal(actions[0].url.searchParams.get('updated_at'),`eq.${expected}`);
+  assert.equal(actions[0].url.pathname,'/rest/v1/listings');
+  assert.equal(actions[1].url.pathname,'/rest/v1/listing_images');
+  assert.equal(actions[1].url.searchParams.get('listing_id'),`eq.${id}`);
+  assert.equal(actions[1].url.searchParams.get('id'),'eq.7');
+  assert.equal(actions[2].url.pathname,'/storage/v1/object/listing-images');
+  assert.equal(JSON.parse(actions[2].options.body).prefixes[0],`pending/${id}/photo-7.jpg`);
+  for(const action of actions)assert.equal(action.options.headers.Authorization,'Bearer test-admin-token');
+});
+test('single-photo removal rejects unauthorized and stale operations without touching images',async()=>{
+  const id='f33e73e5-3772-4e5d-92c7-210dd28b8b93';
+  for(const options of [{session:false},{admin:false}]){
+    const f=fixture(options);
+    await assert.rejects(()=>f.api.deleteListingImage(id,7,'2026-10-13T00:00:00Z'),{status:401});
+    assert.equal(f.calls.filter(x=>x.options.method==='DELETE'||x.options.method==='PATCH').length,0);
+  }
+  const stale=fixture({handler:()=>({rows:[]})});
+  await assert.rejects(()=>stale.api.deleteListingImage(id,7,'2026-10-13T00:00:00Z'),{status:409});
+  assert.equal(stale.calls.filter(x=>x.options.method==='DELETE').length,0);
+});
+test('failed Storage cleanup does not restore deleted image record',async()=>{
+  const id='f33e73e5-3772-4e5d-92c7-210dd28b8b93';
+  const f=fixture({handler:({url})=>{
+    if(url.pathname.endsWith('/listings'))return {rows:[{id,updated_at:'2026-10-13T04:01:00Z'}]};
+    if(url.pathname.endsWith('/listing_images'))return {rows:[{id:7,storage_path:`pending/${id}/photo-7.jpg`}]};
+    return {status:403,rows:{message:'permission denied'}};
+  }});
+  const result=await f.api.deleteListingImage(id,7,'2026-10-13T04:00:00Z');
+  assert.equal(result.storageCleaned,false);
+});
