@@ -239,6 +239,51 @@
     },'btn btn-small'));
   };
   const setEditBusy=value=>dialog.querySelectorAll('input,select,textarea,button').forEach(node=>node.disabled=value);
+  const renderListingImages=()=>{
+    const gallery=$('[data-dialog-images]');gallery.replaceChildren();
+    const images=editing?.listing_images||[];
+    if(!images.length){gallery.append(el('span','muted','Tin chưa có ảnh đính kèm.'));return;}
+    images.forEach((image,index)=>{
+      const card=el('div','admin-image-card');
+      const link=el('a');link.href=api.imageUrl(image.storage_path);link.target='_blank';link.rel='noopener';
+      link.setAttribute('aria-label',`Mở ảnh gốc ${index+1}`);
+      const photo=el('img');photo.src=link.href;photo.alt=image.alt_text||`Ảnh tin đăng ${index+1}`;
+      photo.loading='lazy';photo.width=145;photo.height=108;link.append(photo);
+      const remove=button('Xóa ảnh',()=>removeListingImage(image),'admin-image-delete');
+      remove.setAttribute('aria-label',`Xóa ảnh số ${index+1} của tin ${editing.listing_code}`);
+      card.append(link,el('small','admin-image-label',`Ảnh ${index+1}`),remove);gallery.append(card);
+    });
+  };
+  const removeListingImage=async image=>{
+    if(saving||!editing||!loggedIn)return;
+    const listingId=editing.id,code=editing.listing_code;
+    const index=editing.listing_images?.findIndex(item=>String(item.id)===String(image.id));
+    if(index<0)return;
+    const confirmed=await ask({
+      title:'Xóa ảnh khỏi tin đăng?',
+      message:`Xóa vĩnh viễn ảnh số ${index+1} của tin ${code}? Các ảnh còn lại và nội dung tin sẽ được giữ nguyên. Không thể hoàn tác.`,
+      codes:[code],danger:true,submit:'Xóa ảnh'
+    });
+    if(!confirmed||!dialog.open||!editing||editing.id!==listingId||saving||!loggedIn)return;
+    saving=true;setEditBusy(true);show($('[data-dialog-status]'),'Đang xóa ảnh đã chọn…');
+    try{
+      const result=await api.deleteListingImage(listingId,image.id,editing.updated_at);
+      editing.updated_at=result.updated_at;
+      editing.listing_images=editing.listing_images.filter(item=>String(item.id)!==String(image.id));
+      renderListingImages();
+      show($('[data-dialog-status]'),result.storageCleaned?
+        'Đã xóa ảnh khỏi tin đăng. Các ảnh khác vẫn giữ nguyên.':
+        'Đã gỡ ảnh khỏi tin đăng nhưng chưa xóa được file lưu trữ. Hãy liên hệ kỹ thuật để dọn file.',!result.storageCleaned);
+      void load(true);void syncSeo('listing_image_deleted');
+    }catch(error){
+      // Keep the entered form fields; only refresh image/version metadata.
+      try{
+        const latest=await api.getAdminListing(listingId);
+        if(editing?.id===listingId){editing.updated_at=latest.updated_at;editing.listing_images=latest.listing_images||[];renderListingImages();}
+      }catch{}
+      show($('[data-dialog-status]'),`Không xóa được ảnh: ${error.message}`,true);
+    }finally{saving=false;setEditBusy(false);}
+  };
   const openEdit=async row=>{
     if(busy||loading)return;const id=++editRequestId;editing=null;editForm.reset();$('[data-dialog-content]').hidden=true;
     $('[data-dialog-code]').textContent=row.listing_code;show($('[data-dialog-status]'),'Đang tải đầy đủ nội dung tin…');dialog.showModal();
@@ -252,9 +297,7 @@
       editForm.elements.price.min=full.listing_type==='rent'?'1':'0.001';editForm.elements.price.step=full.listing_type==='rent'?'0.001':'0.000001';
       $('[data-price-label]').textContent=full.listing_type==='rent'?'Giá thuê (triệu / tháng)':'Giá bán (tỷ đồng)';updatePricePreview();
       const meta=$('[data-dialog-meta]');meta.replaceChildren(pill(statuses[currentStatus(full)],currentStatus(full)),el('span','',`Đăng ${date(full.created_at,true)}`),el('span','',`Cập nhật ${date(full.updated_at,true)}`));
-      const images=$('[data-dialog-images]');images.replaceChildren();
-      (full.listing_images||[]).forEach((image,index)=>{const link=el('a');link.href=api.imageUrl(image.storage_path);link.target='_blank';link.rel='noopener';link.setAttribute('aria-label',`Mở ảnh gốc ${index+1}`);const img=el('img');img.src=link.href;img.alt=image.alt_text||`Ảnh tin đăng ${index+1}`;img.loading='lazy';img.width=145;img.height=108;link.append(img);images.append(link);});
-      if(!full.listing_images?.length)images.append(el('span','muted','Tin chưa có ảnh đính kèm.'));
+      renderListingImages();
       renderModeration(full);renderReports(full);$('[data-dialog-content]').hidden=false;show($('[data-dialog-status]'),'');
     }catch(error){if(id===editRequestId&&dialog.open)show($('[data-dialog-status]'),error.message,true);}
   };
