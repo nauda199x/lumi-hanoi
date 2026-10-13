@@ -24,8 +24,9 @@ class Node {
 function deferred(){let resolve,reject;const promise=new Promise((a,b)=>{resolve=a;reject=b;});return {promise,resolve,reject};}
 const tick=()=>new Promise(resolve=>setImmediate(resolve));
 const row=(id='row-a')=>({id,title:'Căn hộ Lumi Hanoi cần cho thuê',listing_code:'LH-12345678',listing_type:'rent',status:'approved',phase:'Signature',tower:'S3',unit_type:'2PN',area_sqm:54,price_vnd:10000000,furnishing:'Đồ cơ bản',poster_name:'Chủ nhà',contact_phone:'0901234567',description:'Mô tả gốc của tin',listing_images:[],open_reports:[],listing_reports:[],created_at:'2026-09-01',updated_at:'2026-09-01',expires_at:'2027-01-01'});
-function fixture({savedView,failSave=false}={}){
-  const nodes=new Map(),timers=new Map(),requests=[],storage=new Map();let timerId=0;
+function fixture({savedView,failSave=false,withImage=false}={}){
+  const nodes=new Map(),timers=new Map(),requests=[],storage=new Map(),deleted=[];let timerId=0;
+  const fixtureRow=id=>({...row(id),listing_images:withImage?[{id:7,storage_path:"pending/photo-7.jpg",sort_order:0}]:[]});
   if(savedView)storage.set('lumi_admin_view_v2',JSON.stringify(savedView));
   const get=selector=>{if(!nodes.has(selector))nodes.set(selector,new Node());return nodes.get(selector);};
   const root=new Node();root.querySelector=get;root.querySelectorAll=()=>[];
@@ -36,14 +37,14 @@ function fixture({savedView,failSave=false}={}){
   const dialog=get('[data-admin-dialog]');dialog.append(edit);
   const api={config:{listingLifetimeDays:45},configured:()=>true,requireAdmin:async()=>({user:{id:'admin'}}),adminCounts:async()=>({all:625,pending:10,approved:600,expiring:5,reported:2}),
     listAdminPage:(filters,page,options)=>{const d=deferred();requests.push({filters:{...filters},page,options,...d});return d.promise;},
-    getAdminListing:async id=>row(id),updateListing:async()=>{if(failSave)throw new Error('Mất kết nối');return row();},requestSeoSync:async()=>({dispatched:true}),signOut:async()=>{},
+    getAdminListing:async id=>fixtureRow(id),deleteListingImage:async(...args)=>{deleted.push(args);return {imageId:7,updated_at:'2026-10-13',storageCleaned:true};},updateListing:async()=>{if(failSave)throw new Error('Mất kết nối');return row();},requestSeoSync:async()=>({dispatched:true}),signOut:async()=>{},
     formatCurrency:value=>String(value),listingUrl:item=>'/tin/'+item.id,cleanText:(value,max)=>String(value??'').trim().slice(0,max),imageUrl:path=>path};
   const document={querySelector:()=>root,createElement:tag=>new Node(tag),addEventListener(){},hidden:false};
   const sandbox={document,window:{LumiMarketplace:api},sessionStorage:{getItem:key=>storage.get(key),setItem:(key,value)=>storage.set(key,value),removeItem:key=>storage.delete(key)},AbortController,console,
     FormData:class{constructor(form){this.form=form;}entries(){return Object.entries(this.form.elements).map(([key,node])=>[key,node.value]);}},
     setTimeout:fn=>{const id=++timerId;timers.set(id,fn);return id;},clearTimeout:id=>timers.delete(id),setInterval:()=>1,clearInterval(){} };
   vm.createContext(sandbox);vm.runInContext(fs.readFileSync(path.join(__dirname,'../assets/js/marketplace-admin.js'),'utf8'),sandbox);
-  return {get,requests,filters,edit,dialog,storage,runTimers:()=>{for(const [id,fn] of timers){timers.delete(id);fn();}}};
+  return {get,requests,filters,edit,dialog,storage,deleted,runTimers:()=>{for(const [id,fn] of timers){timers.delete(id);fn();}}};
 }
 test('late responses cannot overwrite a newer filter result; selection is cleared on filter change',async()=>{
   const f=fixture();await tick();f.requests[0].resolve({rows:[row('initial')],total:625});await tick();
@@ -71,4 +72,27 @@ test('failed edits keep the dialog and typed content intact and re-enable contro
 test('logout clears private rendered content and ignores an in-flight listing response',async()=>{
   const f=fixture();await tick();await f.get('[data-admin-logout]').emit('click');f.requests[0].resolve({rows:[row('private')],total:1});await tick();
   assert.equal(f.get('[data-admin-dashboard]').hidden,true);assert.equal(f.get('[data-admin-login]').hidden,false);assert.equal(f.get('[data-admin-list]').children.length,0);assert.equal(f.storage.has('lumi_admin_view_v2'),false);
+});
+
+test('photo deletion requires confirmation and does not discard other unsaved listing edits',async()=>{
+  const f=fixture({withImage:true});await tick();
+  f.requests[0].resolve({rows:[row()],total:1});await tick();
+  const title=f.get('[data-admin-list]').all().find(n=>n.className==='admin-title');
+  await title.emit('click');await tick();
+  const gallery=f.get('[data-dialog-images]');
+  assert.equal(gallery.children.length,1);
+  const remove=gallery.all().find(n=>n.className==='admin-image-delete');
+  assert.ok(remove,'single image delete button should be visible');
+  f.edit.elements.description.value='Nội dung người đăng được giữ khi xóa ảnh';
+  void remove.emit('click');await tick();
+  const confirm=f.get('[data-admin-confirm]');
+  assert.equal(confirm.open,true);
+  assert.equal(f.deleted.length,0,'must never delete before confirmation');
+  confirm.returnValue='confirm';confirm.close();await tick();await tick();
+  assert.equal(f.deleted.length,1);
+  assert.equal(f.deleted[0][1],7);
+  assert.equal(gallery.children.length,1);
+  assert.match(gallery.textContent,/Tin chưa có ảnh/);
+  assert.equal(f.edit.elements.description.value,'Nội dung người đăng được giữ khi xóa ảnh');
+  assert.equal(f.dialog.open,true);
 });
