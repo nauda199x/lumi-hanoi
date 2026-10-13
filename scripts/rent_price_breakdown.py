@@ -6,10 +6,11 @@ monthly asking price, and furnishing. No inferred furniture or fabricated prices
 """
 from __future__ import annotations
 
-import math
+import json
 import re
 import unicodedata
 from collections import defaultdict
+from functools import lru_cache
 from pathlib import Path
 from statistics import mean
 
@@ -27,6 +28,22 @@ RENT_HEAD = (
 )
 
 
+
+@lru_cache(maxsize=1)
+def area_catalog():
+    """Read the precise same NFA selection and legacy aliases as the listing form."""
+    source = (gen.ROOT / "assets/js/lumi-area-presets.js").read_text(encoding="utf-8")
+    def get(name):
+        found = re.search(r"const\s+" + name + r"\s*=\s*Object\.freeze\((\{.*?\})\);", source, re.S)
+        if not found:
+            raise RuntimeError("Lumi NFA catalogue not found: " + name)
+        return json.loads(found.group(1))
+    groups, aliases = get("groups"), get("aliases")
+    if tuple(groups) != gen.APARTMENT_UNIT_TYPES:
+        raise RuntimeError("Lumi NFA catalogue diverges from listing types")
+    return groups, aliases
+
+
 def furnishing_group(value) -> str:
     """Accept only the furnishing field, not claims made in titles/descriptions."""
     text = unicodedata.normalize("NFD", gen.clean(value).lower())
@@ -39,25 +56,19 @@ def furnishing_group(value) -> str:
     return "unknown"
 
 
-def area_bucket(value) -> int:
-    """Group nearby advertised areas at the nearest whole square metre."""
-    area = gen.numeric(value)
-    if not area:
-        raise ValueError("Positive area required")
-    return math.floor(area + 0.5)
-
-
 def normalized_rental_area(unit: str, value) -> int | None:
-    """Only 1PN is a known 43 m² layout: merge 42–43 m², reject outliers.
-
-    A 1PN reported as 54 m² is a potential unit-type mistake, not evidence
-    for a second 1PN layout. Never move it to 2PN or rewrite the source ad.
-    Excluded listings remain unchanged for admin review.
-    """
-    rounded = area_bucket(value)
-    if unit == "1PN":
-        return 43 if rounded in (42, 43) else None
-    return rounded
+    """Accept only the form's canonical NFA or individually verified legacy NFA."""
+    area = gen.numeric(value)
+    groups, aliases = area_catalog()
+    if not area or unit not in groups:
+        return None
+    for size in groups[unit]:
+        if abs(area - size) < 0.049:
+            return size
+    for size, actual in aliases.get(unit, {}).items():
+        if any(abs(area - float(v)) < 0.049 for v in actual):
+            return int(size)
+    return None
 
 
 def rental_groups(listings: list[dict]) -> dict[str, dict[int, dict[str, list[dict]]]]:
@@ -90,82 +101,106 @@ def render_cell(rows: list[dict]) -> str:
     return f'<td><strong class="rent-table-value">{gen.esc(average)} triệu</strong></td>'
 
 def render_unit(unit: str, sizes: dict[int, dict[str, list[dict]]]) -> str:
+    """Show ALL form-approved NFA groups, including those with no approved price."""
     display_rows = []
-    for size in sorted(sizes):
-        groups = sizes[size]
-        if not any(groups.get(key) for key, _ in FURNISHINGS):
-            continue
-        classified_rows = [
-            row for key, _ in FURNISHINGS for row in groups.get(key, [])
-        ]
-        # Avoid presenting a 53.8m² listing as exactly 54m².
-        approximate = any(abs(float(row["area_sqm"]) - size) > 0.049
-                          for row in classified_rows)
-        # 1PN is intentionally presented as one canonical 43 m² layout,
-        # including listings reporting 42 m² due to rounding/entry errors.
-        area = "43 m²" if unit == "1PN" else (
-            ("≈" if approximate else "") + f"{size} m²"
-        )
-        cells = "".join(render_cell(groups.get(key, []))
-                        for key, _ in FURNISHINGS)
-        display_rows.append(
-            f'<tr><th scope="row">{gen.esc(area)}</th>{cells}</tr>'
-        )
-
-    if not display_rows:
-        return ""
+    for size in area_catalog()[0][unit]:
+        groups = sizes.get(size, {})
+        cells = "".join(render_cell(groups.get(key, [])) for key, _ in FURNISHINGS)
+        display_rows.append(f'<tr><th scope="row">{size} m²</th>{cells}</tr>')
     table = (
         '<div class="rent-simple-table-wrap"><table class="rent-simple-table">'
-        f'<caption class="rent-visually-hidden">Giá thuê trung bình căn {gen.esc(unit)}'
-        ' theo diện tích và nội thất; đơn vị triệu đồng mỗi tháng.</caption>'
+        f'<caption class="rent-visually-hidden">Giá thuê {gen.esc(unit)} theo diện tích thông thủy</caption>'
         '<colgroup><col class="rent-col-area"><col span="2" class="rent-col-price"></colgroup>'
         '<thead><tr><th scope="col">Diện tích</th>'
-        + "".join(f'<th scope="col">{gen.esc(label)}</th>'
-                  for _, label in FURNISHINGS)
-        + '</tr></thead><tbody>' + "".join(display_rows)
-        + '</tbody></table></div>'
+        + "".join(f'<th scope="col">{gen.esc(label)}</th>' for _, label in FURNISHINGS)
+        + '</tr></thead><tbody>' + "".join(display_rows) + '</tbody></table></div>'
     )
     return (
-        f'<section class="rent-simple-unit" aria-label="Giá thuê trung bình {gen.esc(unit)}">'
-        f'<div class="rent-simple-unit-title"><h4>{gen.esc(unit)}</h4></div>'
+        f'<section class="rent-simple-unit" id="rent-area-{gen.esc(unit.lower())}" '
+        f'aria-label="Giá thuê {gen.esc(unit)} theo diện tích thông thủy">'
+        f'<div class="rent-simple-unit-title"><h4>{gen.esc(unit)}</h4>'
+        f'<span>{len(area_catalog()[0][unit])} nhóm diện tích</span></div>'
         f'{table}</section>'
     )
 
+
+def render_area_nav(prefix: str) -> str:
+    links = "".join(
+        f'<a href="#{prefix}-area-{gen.esc(unit.lower())}">{gen.esc(unit)}</a>'
+        for unit in gen.APARTMENT_UNIT_TYPES
+    )
+    return f'<nav class="area-price-links" aria-label="Chọn loại căn">{links}</nav>'
+
+
+def render_sale_breakdown(listings: list[dict]) -> str:
+    """Sale matrix is normalized by the same canonical NFA, not bedroom count alone."""
+    groups = {unit: defaultdict(list) for unit in gen.APARTMENT_UNIT_TYPES}
+    for row in gen.market_rows(listings, "sale"):
+        if not re.fullmatch(r"[a-z0-9-]{8,120}", gen.clean(row.get("slug"))):
+            continue
+        unit = gen.clean(row.get("unit_type"))
+        area = normalized_rental_area(unit, row.get("area_sqm"))
+        if area is not None:
+            groups[unit][area].append(row)
+    sections = []
+    for unit, by_area in groups.items():
+        rows = []
+        for size in area_catalog()[0][unit]:
+            matches = by_area.get(size, [])
+            if matches:
+                avg = mean(gen.numeric(r["price_vnd"]) for r in matches)
+                ppsm = mean(gen.numeric(r["price_vnd"]) / gen.numeric(r["area_sqm"]) for r in matches)
+                cells = (f'<td><strong class="rent-table-value">{str(round(avg / 1_000_000_000, 2)).replace(".", ",")} tỷ</strong></td>'
+                         f'<td><strong class="rent-table-value">{million(ppsm)} tr/m²</strong></td>')
+            else:
+                cells = '<td class="rent-price-empty">—</td><td class="rent-price-empty">—</td>'
+            rows.append(f'<tr><th scope="row">{size} m²</th>{cells}</tr>')
+        sections.append(
+            f'<section class="rent-simple-unit" id="sale-area-{gen.esc(unit.lower())}">'
+            f'<div class="rent-simple-unit-title"><h4>{gen.esc(unit)}</h4>'
+            f'<span>{len(area_catalog()[0][unit])} nhóm diện tích</span></div>'
+            '<div class="rent-simple-table-wrap"><table class="rent-simple-table">'
+            '<colgroup><col class="rent-col-area"><col span="2" class="rent-col-price"></colgroup>'
+            '<thead><tr><th scope="col">Diện tích</th><th scope="col">Giá bán TB</th><th scope="col">Giá/m² TB</th></tr></thead>'
+            + '<tbody>' + "".join(rows) + '</tbody></table></div></section>'
+        )
+    return (
+        '<div class="market-table-card rent-market-card area-price-card sale-area-card" id="bang-gia-ban-theo-dien-tich">'
+        '<div class="rent-simple-head"><div><p class="eyebrow">Mua bán · tra cứu chi tiết</p>'
+        '<h3>Bảng giá bán theo diện tích thông thủy</h3>'
+        '<p class="area-price-lead">Giá trung bình theo từng nhóm diện tích chuẩn, '
+        'không gộp căn nhỏ và căn lớn cùng số phòng ngủ.</p></div>'
+        '<p>Giá rao trung bình <span>tỷ đồng · triệu đồng/m²</span></p></div>'
+        + render_area_nav("sale")
+        + '<div class="rent-simple-sections">' + "".join(sections) + '</div>'
+        '<p class="rent-price-note">Dữ liệu từ tin bán đã duyệt, có đủ giá và diện tích thông thủy '
+        'đối chiếu được với danh mục chuẩn. Giá/m² dùng diện tích thực tế trong tin, '
+        'không thay bằng diện tích làm tròn của nhóm. Dấu — là chưa có dữ liệu, '
+        'không phải giá bằng 0; giá rao không phải giá giao dịch.</p></div>'
+    )
+
+
 def render_breakdown(listings: list[dict]) -> str:
     groups = rental_groups(listings)
-    sections = [
-        section for unit in gen.APARTMENT_UNIT_TYPES
-        if (section := render_unit(unit, groups[unit]))
-    ]
-    unavailable = [
-        unit for unit in gen.APARTMENT_UNIT_TYPES
-        if not any(groups[unit][size].get(key)
-                   for size in groups[unit] for key, _ in FURNISHINGS)
-    ]
-    empty_note = (
-        '<p class="rent-simple-empty">Chưa có dữ liệu giá cho: '
-        + gen.esc(", ".join(unavailable)) + '.</p>'
-        if unavailable else ""
-    )
-    tables = "".join(sections) if sections else (
-        '<p class="rent-simple-empty">Chưa đủ dữ liệu để lập bảng giá thuê.</p>'
-    )
+    tables = "".join(render_unit(unit, groups[unit]) for unit in gen.APARTMENT_UNIT_TYPES)
     return (
-        '<div class="market-table-card rent-market-card" id="bang-gia-thue-chi-tiet">'
-        '<div class="rent-simple-head"><div><p class="eyebrow">Bảng giá thị trường</p>'
-        '<h3>Bảng giá thuê theo diện tích và nội thất</h3></div>'
-        '<p>Giá thuê trung bình <span>Đơn vị: triệu đồng/tháng</span></p></div>'
-        f'<div class="rent-simple-sections">{tables}</div>'
-        f'{empty_note}'
-        '<p class="rent-price-note">Giá rao thuê trung bình được tự động tính từ '
-        'các tin đã duyệt, có đủ giá, diện tích và tình trạng nội thất; không tính '
-        'shop chân đế. Nhóm 1PN 43m² đã gộp tin khai 42–43m²; '
-        'tin 1PN có diện tích lệch lớn không tính vào nhóm này để tránh sai giá. '
-        'Dấu ≈ chỉ diện tích được làm tròn đến m² gần nhất ở loại căn khác. '
-        'Căn chưa khai nội thất không được tự gán vào nhóm khác. '
-        'Đây là giá chào tham khảo, không phải giá chốt giao dịch.</p>'
-        '</div>'
+        '<div class="market-table-card rent-market-card area-price-card" id="bang-gia-thue-chi-tiet">'
+        '<div class="rent-simple-head"><div><p class="eyebrow">Cho thuê · tra cứu chi tiết</p>'
+        '<h3>Bảng giá thuê theo diện tích thông thủy</h3>'
+        '<p class="area-price-lead">So sánh từng nhóm căn theo hai trạng thái nội thất. '
+        'Diện tích chuẩn đồng bộ với form đăng tin.</p></div>'
+        '<p>Giá thuê trung bình <span>triệu đồng/tháng</span></p></div>'
+        + render_area_nav("rent")
+        + f'<div class="rent-simple-sections">{tables}</div>'
+        '<p class="rent-price-note"><strong>Lưu ý:</strong> Mỗi dòng là nhóm diện tích '
+        'thông thủy chuẩn (không phải tim tường hay số đo chính xác của mọi layout). '
+        'Chỉ lấy tin thuê đã duyệt, có đủ giá và nội thất. Dữ liệu cũ “Nguyên bản” '
+        'được gộp vào “Đồ cơ bản”; nội thất chưa khai không bị tự gán. '
+        'Chỉ đối chiếu các diện tích cũ đã được xác minh trong form, '
+        'không làm tròn tùy ý. Dấu — là chưa có dữ liệu, không phải giá bằng 0. '
+        'Giá rao tham khảo, không phải giá chốt.</p></div>'
     )
+
 
 def sync_rent_breakdown(listings: list[dict], path: Path | None = None) -> None:
     path = path or gen.PRICE_PAGE
@@ -177,10 +212,10 @@ def sync_rent_breakdown(listings: list[dict], path: Path | None = None) -> None:
     end = raw.find('    <div class="market-table-card">', anchor + len(RENT_HEAD))
     if start < 0 or end < 0:
         raise RuntimeError("Unable to isolate rental price card")
-    updated = raw[:start] + "    " + render_breakdown(listings) + "\n\n" + raw[end:]
+    updated = raw[:start] + "    " + render_sale_breakdown(listings) + "\n\n    " + render_breakdown(listings) + "\n\n" + raw[end:]
     updated = re.sub(
         r"/assets/css/market-price\.css\?v=[^\"']+",
-        "/assets/css/market-price.css?v=20261010-two-furnishings",
+        "/assets/css/market-price.css?v=20261013-area-price-v2",
         updated,
         count=1,
     )
