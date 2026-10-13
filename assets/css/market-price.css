@@ -197,3 +197,45 @@
   .rent-market-card .rent-simple-table tbody th{font-size:.72rem}
   .rent-table-value{font-size:.69rem}
 }
+
+
+/* Price catalogue 2026-10-13: canonical usable-area matrix for sale and rent. */
+.sale-area-card{margin-top:26px}
+.area-price-card{max-width:100%;border-radius:14px;overflow:hidden;border-color:#d7e3d9;box-shadow:0 12px 34px rgba(22,46,33,.05)}
+.area-price-card .rent-simple-head{align-items:flex-start;background:linear-gradient(120deg,#edf4ed,#fffdf7);padding:27px 28px}
+.area-price-card .rent-simple-head>div{max-width:640px}
+.area-price-card .rent-simple-head h3{line-height:1.2;color:#193d29}
+.area-price-card .rent-simple-head>p{padding-top:11px;color:#285e3f}
+.area-price-card .area-price-lead{margin:10px 0 0;max-width:65ch;font-weight:450;color:#5b6c60;font-size:.87rem;line-height:1.5}
+.area-price-links{display:flex;gap:9px;overflow-x:auto;padding:14px 22px;scrollbar-width:thin;background:#fff;border-bottom:1px solid #e3ece5;scroll-snap-type:x proximity}
+.area-price-links a{display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;padding:8px 15px;border:1px solid #d4e1d8;border-radius:100px;background:#f5f9f5;color:#27533c;text-decoration:none;font-size:.8rem;font-weight:750;scroll-snap-align:start}
+.area-price-links a:hover,.area-price-links a:focus-visible{border-color:#7da38a;background:#eaf4ec;outline-offset:3px}
+.area-price-card .rent-simple-sections{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0;background:#fff}
+.area-price-card .rent-simple-unit{min-width:0;border:0;border-bottom:1px solid #dce7df;scroll-margin-top:115px}
+.area-price-card .rent-simple-unit:nth-child(odd){border-right:1px solid #dce7df}
+.area-price-card .rent-simple-unit-title{display:flex;justify-content:space-between;gap:10px;padding:13px 17px;background:#edf5ef}
+.area-price-card .rent-simple-unit-title h4{font-size:1.12rem}
+.area-price-card .rent-simple-unit-title span{font-size:.67rem;color:#617e6d;white-space:nowrap}
+.area-price-card .rent-simple-table th,.area-price-card .rent-simple-table td{padding:12px 7px;border-color:#e9efeb}
+.area-price-card .rent-simple-table thead th{background:#f8faf8;font-size:.77rem;color:#53685b}
+.area-price-card .rent-simple-table tbody th{font-size:.9rem;background:#fff}
+.area-price-card .rent-simple-table tbody tr:nth-child(even)>*{background:#f9fbf9}
+.area-price-card .rent-table-value{font-size:clamp(.8rem,1.55vw,1.06rem);font-weight:850}
+.area-price-card .rent-simple-table td.rent-price-empty{color:#b4bfb7;font-size:1rem}
+.area-price-card .rent-price-note{background:#f9fbf8;padding:18px 24px;border-top:1px solid #e3ece5}
+@media(max-width:820px){
+ .area-price-card .rent-simple-sections{grid-template-columns:1fr}
+ .area-price-card .rent-simple-unit:nth-child(odd){border-right:0}
+ .area-price-card .rent-simple-head{padding:22px 17px}
+ .area-price-links{padding:12px 15px}
+}
+@media(max-width:700px){
+ .area-price-card .rent-simple-head>p{margin:10px 0 0;padding:0}
+ .area-price-card .area-price-lead{font-size:.8rem}
+ .area-price-card .rent-simple-unit-title{padding:12px 13px}
+ .area-price-card .rent-simple-table th,.area-price-card .rent-simple-table td{padding:12px 4px}
+ .area-price-card .rent-simple-table thead th{font-size:clamp(.68rem,2.8vw,.78rem)}
+ .area-price-card .rent-simple-table tbody th{font-size:.82rem}
+ .area-price-card .rent-table-value{font-size:clamp(.76rem,3vw,.96rem)}
+ .area-price-card .rent-price-note{padding:14px;font-size:.76rem}
+}
