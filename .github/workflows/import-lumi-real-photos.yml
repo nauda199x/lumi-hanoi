@@ -1,0 +1,42 @@
+name: Import optimized Lumi Hanoi real photos
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - ".github/workflows/import-lumi-real-photos.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: import-lumi-real-photos
+  cancel-in-progress: false
+
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout site
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Python environment
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install image processing
+        run: python -m pip install --disable-pip-version-check 'Pillow>=10,<13' 'requests>=2.31,<3'
+      - name: Download, optimize and localize photos
+        run: python scripts/import_lumi_real_photos.py
+      - name: Commit optimized photos and HTML paths
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/media/real-2026 index.html tien-ich-lumi-hanoi/index.html tong-quan-lumi-hanoi/index.html hinh-anh-thuc-te-lumi-hanoi/index.html
+          if git diff --cached --quiet; then
+            echo "All photos already synchronized."
+          else
+            git commit -m "assets: self-host optimized Lumi Hanoi real photos"
+            git push origin HEAD:main
+          fi
