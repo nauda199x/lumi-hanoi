@@ -1,5 +1,12 @@
 {
   "items": {
+    "https://salsyqatlzapnzbcnnsr.supabase.co/storage/v1/object/public/listing-images/pending/01d59e9e-934b-41a8-88f9-8bf2f19228da/01-e1211e0b-2331-42dc-b989-1e8aba2ea7b3.jpg": {
+      "bytes": 56914,
+      "height": 600,
+      "source_bytes": 189686,
+      "src": "/assets/media/listing-thumbnails/a6bea4fe305a03818b0335d6f8578662.webp",
+      "width": 800
+    },
     "https://salsyqatlzapnzbcnnsr.supabase.co/storage/v1/object/public/listing-images/pending/03303526-fa25-4ed5-ba2a-f81751e8d2cb/01-9175e778-5d99-4973-8f5d-8dcbbdc9684b.jpg": {
       "bytes": 116174,
       "height": 446,
