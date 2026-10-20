@@ -405,4 +405,55 @@
       <image:loc>https://lumi-hanoi.com/assets/media/layouts/lumi-hanoi-layout-overview-1200x630.webp</image:loc>
     </image:image>
   </url>
+  <url>
+    <loc>https://lumi-hanoi.com/hinh-anh-thuc-te-lumi-hanoi/</loc>
+    <image:image>
+      <image:loc>https://lumi-hanoi.com/assets/media/real-2026/lumi-ho-boi-canh-quan-1200.webp</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://lumi-hanoi.com/assets/media/real-2026/lumi-ho-boi-ghe-nghi-1200.webp</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://lumi-hanoi.com/assets/media/real-2026/lumi-duong-dao-canh-quan-1200.webp</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://lumi-hanoi.com/assets/media/real-2026/lumi-thap-can-ho-ngoai-that-1200.webp</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://lumi-hanoi.com/assets/media/real-2026/lumi-signature-buoi-toi-1200.webp</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://lumi-hanoi.com/assets/media/real-2026/lumi-san-the-thao-1200.webp</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://lumi-hanoi.com/assets/media/real-2026/lumi-phong-sinh-hoat-sofa-1200.webp</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://lumi-hanoi.com/assets/media/real-2026/lumi-ban-an-cong-dong-1200.webp</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://lumi-hanoi.com/assets/media/real-2026/lumi-phong-sinh-hoat-chung-1200.webp</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://lumi-hanoi.com/assets/media/real-2026/lumi-phong-khach-sinh-hoat-1200.webp</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://lumi-hanoi.com/assets/media/real-2026/lumi-khu-vui-choi-tre-em-1200.webp</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://lumi-hanoi.com/assets/media/real-2026/lumi-phong-gym-1200.webp</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://lumi-hanoi.com/assets/media/real-2026/lumi-phong-billiards-1200.webp</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://lumi-hanoi.com/assets/media/real-2026/lumi-phong-billiards-toan-canh-1200.webp</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://lumi-hanoi.com/assets/media/real-2026/lumi-ban-billiards-1200.webp</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://lumi-hanoi.com/assets/media/real-2026/lumi-billiards-thuc-te-1200.webp</image:loc>
+    </image:image>
+  </url>
 </urlset>
