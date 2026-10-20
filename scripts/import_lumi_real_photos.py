@@ -41,7 +41,7 @@ HTMLS = (
     ROOT / "hinh-anh-thuc-te-lumi-hanoi" / "index.html",
 )
 PHOTO_URL_RE = re.compile(
-    r"https://drive\\.google\\.com/thumbnail\\?id=([A-Za-z0-9_-]+)(?:&amp;|&)sz=w(\\d+)"
+    r"https://drive\.google\.com/thumbnail\?id=([A-Za-z0-9_-]+)(?:&amp;|&)sz=w(\d+)"
 )
 
 
