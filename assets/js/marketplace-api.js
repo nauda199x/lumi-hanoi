@@ -130,7 +130,7 @@
       area_desc:"area_sqm.desc.nullslast,approved_at.desc,id.desc"
     };
     const params={
-      select:"id,slug,listing_type,title,poster_name,contact_phone,phase,tower,unit_type,area_sqm,price_vnd,floor_label,is_featured,approved_at,created_at,listing_images(storage_path,sort_order,alt_text)",
+      select:"id,slug,listing_type,title,poster_name,contact_phone,phase,tower,unit_type,area_sqm,price_vnd,furnishing,floor_label,is_featured,approved_at,created_at,listing_images(storage_path,sort_order,alt_text)",
       listing_type:`eq.${type==="rent"?"rent":"sale"}`,status:"eq.approved",
       order:orders[filters.sort]||orders.newest,limit:"10",
       offset:String((Math.max(1,Math.min(100000,Math.floor(Number(page)||1)))-1)*10)
@@ -138,9 +138,14 @@
     if(filters.phase)params.phase=`eq.${cleanText(filters.phase,40)}`;
     if(filters.tower)params.tower=`eq.${cleanText(filters.tower,40)}`;
     if(filters.bedroom)params.unit_type=`eq.${cleanText(filters.bedroom,40)}`;
+    if(["Đồ cơ bản","Full nội thất"].includes(filters.furnishing))params.furnishing=`eq.${filters.furnishing}`;
     if(Number(filters.maxPrice)>0)params.price_vnd=`lte.${Number(filters.maxPrice)}`;
     const areas={"0-50":"(area_sqm.gt.0,area_sqm.lt.50)","50-70":"(area_sqm.gte.50,area_sqm.lt.70)","70-90":"(area_sqm.gte.70,area_sqm.lt.90)","90-120":"(area_sqm.gte.90,area_sqm.lte.120)","120-9999":"(area_sqm.gt.120)"};
-    if(areas[filters.area])params.and=areas[filters.area];
+    const exactArea=String(filters.exact_area||"").trim().replace(",",".");
+    // Accept an exact NFA only as a sane decimal; never interpolate arbitrary query syntax.
+    if(/^(?:[2-9]\d|[1-9]\d{2}|1000)(?:\.\d{1,2})?$/.test(exactArea)&&Number(exactArea)<=1000){
+      params.area_sqm=`eq.${Number(exactArea)}`;
+    }else if(areas[filters.area])params.and=areas[filters.area];
     const keyword=cleanText(filters.keyword,80);
     if(keyword){
       // Quoted PostgREST values keep punctuation out of the query grammar.
