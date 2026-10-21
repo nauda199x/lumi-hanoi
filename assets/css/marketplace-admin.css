@@ -23,3 +23,6 @@
 .admin-image-delete{display:block;min-height:38px;padding:7px;border:1px solid #f0c7c2;background:#fff8f7;color:var(--danger);font-weight:650;font-size:.8125rem;border-radius:8px}
 .admin-image-delete:hover:not(:disabled){background:#ffefeb;border-color:#cb6c62}
 @media(max-width:800px){.admin-gallery .admin-image-card{flex-basis:132px}.admin-gallery .admin-image-card img{width:132px;height:104px}}
+
+/* Phase 1: clear data-quality warnings in the moderation queue. */
+.admin-quality-notes{display:block;margin-top:6px;padding:5px 8px;border-left:3px solid #b9843b;border-radius:3px;background:#fff7e9;color:#754713;font-size:.75rem;line-height:1.4;max-width:420px;white-space:normal;}
