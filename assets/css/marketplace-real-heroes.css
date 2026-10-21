@@ -5,7 +5,7 @@
   background-image:
     linear-gradient(90deg,rgba(10,31,27,.94) 0%,rgba(10,31,27,.83) 40%,rgba(10,31,27,.48) 70%,rgba(10,31,27,.25) 100%),
     linear-gradient(0deg,rgba(10,31,27,.48),transparent 65%),
-    url("/assets/media/handover-2026/lumi-hanoi-toa-thap-duong-dao-thuc-te.webp");
+    url("/assets/media/handover-2026/lumi-hanoi-toa-thap-duong-dao-thuc-te-hero-lite.webp");
   background-size:cover;
   background-position:center,center,center 53%;
 }
@@ -32,7 +32,7 @@
     background-image:
       linear-gradient(90deg,rgba(10,31,27,.86),rgba(10,31,27,.68)),
       linear-gradient(0deg,rgba(10,31,27,.76),transparent 75%),
-      url("/assets/media/handover-2026/lumi-hanoi-toa-thap-duong-dao-thuc-te-640.webp");
+      url("/assets/media/handover-2026/lumi-hanoi-toa-thap-duong-dao-thuc-te-hero-lite-640.webp");
     background-position:center,center,58% center;
   }
   .submit-landing .submit-hero-grid{padding-top:42px;padding-bottom:38px}
@@ -45,3 +45,7 @@
   .marketplace-discovery .marketplace-hero--sale,
   .marketplace-discovery .marketplace-hero--rent{padding-top:3rem;padding-bottom:3rem}
 }
+
+/* MARKETPLACE-HERO-PERF-20261021 */
+.marketplace-discovery .marketplace-hero--sale .article-hero-media,.marketplace-discovery .marketplace-hero--rent .article-hero-media{filter:none}
+.submit-landing .submit-hero-card{backdrop-filter:none;-webkit-backdrop-filter:none}
