@@ -26,7 +26,7 @@ def optimize(path: Path, limit_width: int, max_bytes: int, original_bytes: int) 
         original = ImageOps.exif_transpose(raw).convert("RGB")
     target_bytes = min(max_bytes, int(original_bytes * .79))
     smallest = None
-    for width in (limit_width, int(limit_width * .90), int(limit_width * .80)):
+    for width in (limit_width, int(limit_width * .85), int(limit_width * .70), int(limit_width * .56), int(limit_width * .48)):
         resized = original.copy()
         if resized.width > width:
             height = round(resized.height * width / resized.width)
@@ -72,8 +72,9 @@ def main() -> None:
         base = "/assets/media/handover-2026/" + stem
         lite = base + "-hero-lite"
         # Replacing the mobile variant first prevents accidental double replacements.
-        css = swap_one(css, base + "-640.webp", lite + "-640.webp", stem + " CSS mobile")
-        css = swap_one(css, base + ".webp", lite + ".webp", stem + " CSS desktop")
+        if page == "dang-tin-lumi-hanoi/index.html":
+            css = swap_one(css, base + "-640.webp", lite + "-640.webp", stem + " CSS mobile")
+            css = swap_one(css, base + ".webp", lite + ".webp", stem + " CSS desktop")
         htmlfile = ROOT / page
         html = htmlfile.read_text(encoding="utf-8")
         if page != "dang-tin-lumi-hanoi/index.html":

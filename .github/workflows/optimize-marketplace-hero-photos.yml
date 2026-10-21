@@ -5,6 +5,7 @@ on:
   push:
     paths:
       - ".github/workflows/optimize-marketplace-hero-photos.yml"
+      - "scripts/optimize_marketplace_heroes.py"
 
 permissions:
   contents: write
