@@ -15,7 +15,7 @@
     if(document.querySelector('link[data-floor-explorer-css]'))return;
     const link=document.createElement('link');
     link.rel='stylesheet';
-    link.href='/assets/css/floor-plan-explorer.css?v=20260910-1';
+    link.href='/assets/css/floor-plan-explorer.css?v=20261021-ux1';
     link.dataset.floorExplorerCss='true';
     document.head.append(link);
   };
@@ -48,7 +48,7 @@
       dialog.className='lightbox';
       dialog.dataset.dynamicFloorLightbox='true';
       dialog.setAttribute('aria-label','Xem bản vẽ kích thước lớn');
-      dialog.innerHTML='<div class="lightbox-toolbar"><button type="button" data-zoom-out>Zoom −</button><button type="button" data-zoom-in>Zoom +</button><button type="button" data-zoom-fit>Fit / Reset</button><button type="button" class="lightbox-close">Close ×</button></div><div class="lightbox-stage"><img alt=""></div><p class="lightbox-caption"></p>';
+      dialog.innerHTML='<div class="lightbox-toolbar"><button type="button" data-zoom-out>Zoom −</button><button type="button" data-zoom-in>Zoom +</button><button type="button" data-zoom-fit>Vừa màn hình</button><button type="button" class="lightbox-close">Đóng ×</button></div><div class="lightbox-stage"><img alt=""></div><p class="lightbox-caption"></p>';
       document.body.append(dialog);
       const stage=dialog.querySelector('.lightbox-stage');
       const img=dialog.querySelector('img');
@@ -74,6 +74,12 @@
       dialog.querySelector('[data-zoom-in]').addEventListener('click',()=>{zoom=Math.min(4,zoom+.25);render()});
       dialog.querySelector('[data-zoom-out]').addEventListener('click',()=>{zoom=Math.max(1,zoom-.25);render()});
       dialog.querySelector('[data-zoom-fit]').addEventListener('click',fit);
+      img.addEventListener('dblclick',()=>{zoom=zoom>1?1:2;render();});
+      dialog.addEventListener('keydown',event=>{
+        if(event.key==='+'||event.key==='='){event.preventDefault();zoom=Math.min(4,zoom+.25);render();}
+        else if(event.key==='-'){event.preventDefault();zoom=Math.max(1,zoom-.25);render();}
+        else if(event.key==='0'){event.preventDefault();fit();}
+      });
       close.addEventListener('click',()=>dialog.close());
       dialog.addEventListener('click',e=>{if(e.target===dialog)dialog.close()});
       dialog.addEventListener('close',()=>{img.removeAttribute('src');zoom=1;fw=fh=0;opener?.focus()});
@@ -140,7 +146,7 @@
         return `<section class="floor-plan-section" id="${esc(p.anchor)}" data-tower="${esc(tower)}" data-floor-label="${esc(p.label)}" data-plan-index="${index}"><div class="plan-section-head"><div><p class="eyebrow">${esc(phase)} · ${esc(tower)}</p><h2>${esc(tower)} — ${esc(p.label)}</h2></div></div><figure class="figure floor-plan-figure"><a href="${esc(src)}" data-lightbox data-lightbox-alt="Mặt bằng tòa ${esc(tower)} Lumi Hanoi — ${esc(p.label)}" data-lightbox-caption="Tòa ${esc(tower)} — ${esc(p.label)}"><img class="figure-image floor-plan-image" src="${esc(src)}" width="${esc(p.width||2400)}" height="${esc(p.height||3200)}" alt="Mặt bằng tòa ${esc(tower)} Lumi Hanoi — ${esc(p.label)}" loading="lazy" decoding="async"></a><figcaption class="figure-caption">Mặt bằng ${esc(tower)} — ${esc(p.label)}.</figcaption></figure></section>`;
       }).join('');
 
-      app.innerHTML=`<nav class="floor-plan-index tower-floor-index sticky-floor-index" aria-label="Chọn nhóm tầng tòa ${esc(tower)}"><strong>Nhóm tầng</strong>${nav}</nav><div class="floor-viewer-status" data-floor-viewer-status><div><span>Đang xem</span><strong></strong></div><div class="floor-viewer-actions"><button type="button" data-floor-prev aria-label="Nhóm tầng trước">← Trước</button><button type="button" data-floor-next aria-label="Nhóm tầng sau">Sau →</button></div></div>${plans}`;
+      app.innerHTML=`<nav class="floor-plan-index tower-floor-index sticky-floor-index" aria-label="Chọn nhóm tầng tòa ${esc(tower)}"><strong>Nhóm tầng</strong>${nav}</nav><div class="floor-viewer-status" data-floor-viewer-status><div><span>Đang xem</span><strong></strong><label class="floor-viewer-jump"><span>Chuyển nhanh nhóm tầng</span><select data-floor-group-select aria-label="Chọn nhóm tầng tòa ${esc(tower)}">${item.plans.map(p=>`<option value="${esc(p.anchor)}">${esc(p.label)}</option>`).join('')}</select></label></div><div class="floor-viewer-actions"><button type="button" data-floor-open aria-label="Xem lớn mặt bằng đang chọn">⤢ Xem lớn</button><button type="button" data-floor-prev aria-label="Nhóm tầng trước">← Trước</button><button type="button" data-floor-next aria-label="Nhóm tầng sau">Sau →</button></div></div>${plans}`;
       app.prepend(explorer);
 
       if(primaryPlan){
@@ -157,6 +163,8 @@
       const sections=item.plans.map(plan=>sectionNodes.find(node=>node.id===plan.anchor)).filter(Boolean);
       const navLinks=[...app.querySelectorAll('[data-floor-target]')];
       const status=app.querySelector('[data-floor-viewer-status] strong');
+      const groupSelect=app.querySelector('[data-floor-group-select]');
+      const openLarge=app.querySelector('[data-floor-open]');
       const prev=app.querySelector('[data-floor-prev]');
       const next=app.querySelector('[data-floor-next]');
       const lookup=app.querySelector('[data-floor-lookup]');
@@ -166,7 +174,12 @@
         const section=sections.find(node=>node.id===anchor)||sections[0];
         if(!section)return;
         sections.forEach(node=>node.classList.toggle('is-active',node===section));
-        navLinks.forEach(link=>link.classList.toggle('is-current',link.dataset.floorTarget===section.id));
+        navLinks.forEach(link=>{
+          const current=link.dataset.floorTarget===section.id;
+          link.classList.toggle('is-current',current);
+          if(current)link.setAttribute('aria-current','true');else link.removeAttribute('aria-current');
+        });
+        if(groupSelect)groupSelect.value=section.id;
         const label=section.dataset.floorLabel||section.querySelector('h2')?.textContent||'';
         if(status)status.textContent=`${tower} · ${label}`;
         const index=sections.indexOf(section);
@@ -184,6 +197,17 @@
         event.preventDefault();
         activate(link.dataset.floorTarget,{scroll:true,source:'group_selector'});
       }));
+      groupSelect?.addEventListener('change',()=>activate(groupSelect.value,{scroll:true,source:'mobile_group_select'}));
+      openLarge?.addEventListener('click',()=>{
+        const active=sections.find(node=>node.classList.contains('is-active'));
+        const link=active?.querySelector('[data-lightbox]');
+        if(link){link.click();track('floor_plan_viewer_open_large',{floor_group:active.dataset.floorLabel||''});}
+      });
+      app.querySelector('[data-floor-viewer-status]')?.addEventListener('keydown',event=>{
+        if(['INPUT','TEXTAREA','SELECT','BUTTON'].includes(event.target.tagName))return;
+        if(event.key==='ArrowLeft'&& !prev.disabled){event.preventDefault();prev.click();}
+        if(event.key==='ArrowRight'&& !next.disabled){event.preventDefault();next.click();}
+      });
       prev?.addEventListener('click',()=>{
         const current=sections.findIndex(node=>node.classList.contains('is-active'));
         if(current>0)activate(sections[current-1].id,{scroll:true,source:'previous'});
@@ -200,7 +224,7 @@
       lookup?.addEventListener('submit',event=>{
         event.preventDefault();
         const value=Number(new FormData(lookup).get('floor'));
-        if(!Number.isFinite(value)||value<1){
+        if(!Number.isInteger(value)||value<1||value>60){
           lookupResult.textContent='Nhập số tầng cần xem, ví dụ 27.';
           return;
         }
@@ -217,6 +241,8 @@
 
       const hashAnchor=location.hash.replace(/^#/,'');
       const initial=item.plans.some(p=>p.anchor===hashAnchor)?hashAnchor:item.plans[0]?.anchor;
+      // Only hide inactive drawings after successful data hydration. Static HTML remains visible on failure.
+      app.classList.add('floor-explorer-ready');
       activate(initial,{updateHash:false,source:'initial'});
       window.addEventListener('hashchange',()=>{
         const anchor=location.hash.replace(/^#/,'');
