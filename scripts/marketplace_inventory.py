@@ -40,7 +40,7 @@ def render_row(g, listing, index=0):
     url = esc(g.listing_url(listing))
     title = esc(listing.get("title") or "Xem căn hộ")
     images = sorted((i for i in listing.get("listing_images", []) if i.get("storage_path")), key=lambda i: i.get("sort_order") or 0)
-    media = '<span class="inventory-placeholder">Chưa có ảnh</span>'
+    media = '<span class="inventory-placeholder">Đang tải ảnh…</span>' if images else '<span class="inventory-placeholder">Chưa có ảnh</span>'
     if images:
         original = g.storage_url(images[0]["storage_path"])
         thumbnail = getattr(g, "INVENTORY_THUMBNAILS", {}).get(original, original)
@@ -54,9 +54,10 @@ def render_row(g, listing, index=0):
     info += f'<h3><a href="{url}" title="{title}">{title}</a></h3>'
     specs = [("area", f'{g.format_area(listing["area_sqm"])} m²' if g.numeric(listing.get("area_sqm")) else ""),
              ("bed", g.clean(listing.get("unit_type"))),
-             ("floor", f'Tầng {g.clean(listing["floor_label"]).lower()}' if listing.get("floor_label") else "")]
+             ("floor", f'Tầng {g.clean(listing["floor_label"]).lower()}' if listing.get("floor_label") else ""),
+             ("", g.clean(listing.get("furnishing")) if listing.get("furnishing") in ("Đồ cơ bản", "Full nội thất") else "")]
     specs = [(name, value) for name, value in specs if value]
-    spec_html = "".join(f'<span>{icon(name)}{esc(value)}{", " if i < len(specs) - 1 else ""}</span>' for i, (name, value) in enumerate(specs))
+    spec_html = "".join(f'<span>{icon(name) if name else ""}{esc(value)}{", " if i < len(specs) - 1 else ""}</span>' for i, (name, value) in enumerate(specs))
     if spec_html:
         info += f'<p class="inventory-specs">{spec_html}</p>'
     amount = g.numeric(listing.get("price_vnd"))

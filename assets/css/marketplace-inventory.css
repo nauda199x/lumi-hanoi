@@ -206,3 +206,11 @@
  [data-inventory] .inventory-tabs a[data-navigation-pending]:after{animation:none}
  [data-inventory] :is(.inventory-row,.inventory-tabs a,.inventory-quick button,.inventory-actions a,.inventory-pagination a){transition:none;transform:none}
 }
+
+/* Phase 1: readable search controls on the rent and sale inventory hubs. */
+@media(min-width:1200px){
+  [data-inventory] .inventory-filters{grid-template-columns:minmax(180px,1.5fr) repeat(4,minmax(110px,1fr));}
+  [data-inventory] .inventory-filters>.btn{min-height:44px;}
+}
+[data-inventory] .inventory-placeholder[hidden]{display:none!important;}
+[data-inventory] .inventory-filters input[type="number"]{font-variant-numeric:tabular-nums;}

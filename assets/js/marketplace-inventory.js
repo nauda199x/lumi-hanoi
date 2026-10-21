@@ -16,7 +16,7 @@
   const homeTitle=/\/page\/\d+\/$/.test(location.pathname)?root.dataset.inventoryHomeTitle||document.title:document.title;
   const quick=root.querySelector("[data-inventory-quick]");
   const towers={Signature:["S1","S2","S3","S5","S6"],Prestige:["P1","P2"],Elite:["E1","E2"]};
-  const keys=["keyword","phase","tower","bedroom","max_price","area","sort"];
+  const keys=["keyword","phase","tower","bedroom","max_price","area","exact_area","furnishing","sort"];
   const staticPage=Number(location.pathname.match(/\/page\/(\d+)\//)?.[1]||1);
   let page=1,version=0,timer,controller,total=0;
   let lastGood=null;
@@ -61,7 +61,7 @@
     const candidate=params.get("page")||location.pathname.match(/\/page\/(\d+)\//)?.[1]||1;
     page=Math.max(1,Math.min(100000,Math.floor(Number(candidate)||1)));
     for(const key of keys){
-      if(key!=="tower")form.elements[key].value=params.get(key)||(key==="bedroom"?hashParams.get("bedroom"):"")||(key==="sort"?"newest":"");
+      if(key!=="tower"&&form.elements[key])form.elements[key].value=params.get(key)||(key==="bedroom"?hashParams.get("bedroom"):"")||(key==="sort"?"newest":"");
     }
     const tower=(params.get("tower")||hashParams.get("tower")||"").toUpperCase();
     if(tower&&!form.elements.phase.value)form.elements.phase.value=Object.entries(towers).find(([,list])=>list.includes(tower))?.[0]||"";
@@ -103,11 +103,14 @@
     const url=api.listingUrl(listing);
     const media=el("a","inventory-media");media.href=url;media.setAttribute("aria-label",`Xem ${listing.title||"căn hộ"}`);
     const images=[...(listing.listing_images||[])].filter(i=>i.storage_path).sort((a,b)=>Number(a.sort_order)-Number(b.sort_order));
-    media.append(el("span","inventory-placeholder","Chưa có ảnh"));
+    const placeholder=el("span","inventory-placeholder",images.length?"Đang tải ảnh…":"Chưa có ảnh");
+    media.append(placeholder);
     if(images.length){
       const image=el("img");const original=api.imageUrl(images[0].storage_path);
       image.src=imageSource(original);image.alt=images[0].alt_text||listing.title||"Ảnh căn hộ Lumi Hanoi";
       image.width=560;image.height=420;image.loading=index===0?"eager":"lazy";image.decoding="async";
+      image.addEventListener("load",()=>{placeholder.hidden=true;},{once:true});
+      image.addEventListener("error",()=>{placeholder.textContent="Ảnh chưa tải được";},{once:true});
       protectImage(image,original);media.append(image);
       const counter=el("span","inventory-image-count");counter.append(icon("image"),document.createTextNode(`${images.length} ảnh`));media.append(counter);
     }
@@ -116,8 +119,8 @@
     if(place){const location=el("p","inventory-location");location.title=place;location.append(icon("pin"),el("span","",place));info.append(location);}
     const heading=el("h3");const title=el("a","",listing.title||"Xem căn hộ");title.href=url;title.title=listing.title||"";heading.append(title);info.append(heading);
     const specs=el("p","inventory-specs");
-    const facts=[["area",area(listing.area_sqm)],["bed",listing.unit_type],["floor",listing.floor_label?`Tầng ${String(listing.floor_label).toLocaleLowerCase("vi")}`:""]].filter(([,value])=>value);
-    facts.forEach(([name,value],i)=>{const item=el("span");item.append(icon(name),document.createTextNode(value+(i<facts.length-1?", ":"")));specs.append(item);});
+    const facts=[["area",area(listing.area_sqm)],["bed",listing.unit_type],["floor",listing.floor_label?`Tầng ${String(listing.floor_label).toLocaleLowerCase("vi")}`:""],["",["Đồ cơ bản","Full nội thất"].includes(listing.furnishing)?listing.furnishing:""]].filter(([,value])=>value);
+    facts.forEach(([name,value],i)=>{const item=el("span");if(name)item.append(icon(name));item.append(document.createTextNode(value+(i<facts.length-1?", ":"")));specs.append(item);});
     if(specs.childElementCount)info.append(specs);
     const price=el("div","inventory-price");price.append(el("span","inventory-price-label",type==="rent"?"Giá thuê":"Giá bán"));
     const formatted=api.formatCurrency(listing.price_vnd,type),parts=formatted.match(/^(.*?) (tỷ|triệu\/tháng|triệu)$/);
@@ -238,7 +241,7 @@
     timer=setTimeout(()=>load(),delay);
   };
   quick?.addEventListener("click",e=>{const button=e.target.closest("[data-unit-filter]");if(button){form.elements.bedroom.value=button.dataset.unitFilter;changed();}});
-  form.addEventListener("input",e=>{if(e.target.name==="keyword")changed(320);});
+  form.addEventListener("input",e=>{if(e.target.name==="keyword"||e.target.name==="exact_area")changed(320);});
   form.addEventListener("change",e=>{if(e.target.name==="phase")refreshTowers();if(e.target.name!=="keyword")changed();});
   sort.addEventListener("change",()=>changed());
   form.addEventListener("submit",e=>{e.preventDefault();changed();});
