@@ -37,6 +37,11 @@ jobs:
         run: python scripts/qa_prestige_v8_1d.py
       - name: Floorplans V8.2 QA
         run: python scripts/qa_floorplans_v8_2.py
+      - name: Floorplan UX and indexing regression QA
+        run: |
+          python scripts/qa_floorplan_experience.py
+          node --check assets/js/floor-plan-tower.js
+          node --check assets/js/elite-floor-viewer.js
       - name: Handover V8.6 QA
         run: python scripts/qa_handover_v8_6.py
       - name: Visual library V8.7 QA

@@ -64,3 +64,55 @@
 .tower-hero .tower-serp-plan{object-fit:contain;object-position:center;background:#f7f4ed;opacity:.42}
 @media(max-width:700px){.tower-hero .tower-serp-plan{object-fit:contain;opacity:.38}}
 /* TOWER-SERP-PLAN:END */
+
+
+/* Floorplan UX 2026-10-21: compact decision-first hub; SEO-bearing sections remain in DOM. */
+.floor-hub-hero{padding-block:clamp(1.5rem,3.2vw,3rem)}
+.floor-hub-hero .container{position:relative}
+.floor-hub-hero h1{max-width:18ch;line-height:1.08}
+.floor-hub-hero .lead{max-width:64ch;margin-bottom:0}
+.floor-hub-gateway{padding-block:clamp(1.4rem,3vw,2.8rem)}
+.floor-hub-gateway .gateway-intro{margin-bottom:1rem}
+.floor-hub-gateway .gateway-intro h2{font-size:clamp(1.35rem,2.7vw,2.15rem);line-height:1.2}
+.floor-hub-gateway .gateway-intro>p:last-child{max-width:65ch;line-height:1.5}
+.floor-hub-gateway .floor-route-card{padding:clamp(.95rem,1.9vw,1.25rem);border-radius:17px}
+.floor-hub-gateway .floor-route-desc{margin:.65rem 0 .85rem;min-height:0;line-height:1.5}
+.floor-hub-gateway .floor-route-head h3{font-size:clamp(1.35rem,2.4vw,1.8rem);line-height:1.15}
+.floor-hub-gateway .floor-route-number{width:34px;height:34px}
+.floor-hub-gateway .route-visual{max-height:180px;margin-bottom:.8rem}
+.floor-hub-gateway .route-layout-visual,.floor-hub-gateway .route-tower-visual{aspect-ratio:16/6}
+.floor-hub-gateway .route-chip-grid{gap:.4rem}
+.floor-hub-gateway .route-main-cta{margin-top:auto}
+.floor-hub-hero + .customer-lookup{display:none}
+.phase-section{padding-block:clamp(1.35rem,3vw,2.8rem)}
+.phase-section .phase-head{margin-bottom:1.1rem}
+.phase-section .tower-card-grid{gap:.9rem}
+.phase-section .tower-card{border-radius:15px;box-shadow:0 6px 20px rgba(25,29,25,.045)}
+.phase-section .tower-card-media{aspect-ratio:16/8}
+.phase-section .tower-card-body{padding:.85rem 1rem 1rem}
+.phase-section .tower-card h3{font-size:1.35rem}
+.phase-section .floor-chip-list{min-height:0}
+.phase-layout-library{padding-block:clamp(1.5rem,3vw,2.8rem)}
+.floor-hub-intro{padding-top:1.8rem}
+@media(max-width:900px){
+ .floor-hub-gateway .route-layout-visual,.floor-hub-gateway .route-tower-visual{aspect-ratio:16/7}
+ .floor-hub-gateway .route-visual{max-height:160px}
+ .phase-section .tower-card-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:600px){
+ .floor-hub-hero{padding-block:1.25rem}
+ .floor-hub-hero .lead{font-size:.96rem;line-height:1.48}
+ .floor-hub-gateway .floor-route-grid{gap:.85rem}
+ .floor-hub-gateway .floor-route-card{padding:1rem}
+ .floor-hub-gateway .route-visual{max-height:128px}
+ .floor-hub-gateway .tower-picker-phase{grid-template-columns:75px 1fr}
+ .floor-hub-gateway .tower-picker-phase a{min-width:42px;min-height:42px}
+ .phase-section .tower-card-grid,.phase-section .tower-card-grid-two{grid-template-columns:1fr 1fr;gap:.65rem}
+ .phase-section .tower-card-media{aspect-ratio:4/3}
+ .phase-section .tower-card-body{padding:.65rem}
+ .phase-section .tower-card h3{font-size:1.1rem;margin:.15rem 0 .4rem}
+ .phase-section .tower-card-cta{min-height:40px;padding-inline:.2rem;font-size:.78rem}
+ .phase-section .floor-chip-list{display:none}
+ .phase-section .tower-count{font-size:.68rem}
+ .phase-section .tower-card-kicker{font-size:.65rem}
+}
