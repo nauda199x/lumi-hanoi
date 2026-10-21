@@ -28,6 +28,16 @@
   const status=(message,error=false)=>show($('[data-admin-status]'),message,error);
   const date=(value,withYear=false)=>{if(!value||!Number.isFinite(new Date(value).getTime()))return 'Chưa có';return new Intl.DateTimeFormat('vi-VN',{day:'2-digit',month:'2-digit',...(withYear?{year:'numeric'}:{}),timeZone:'Asia/Ho_Chi_Minh'}).format(new Date(value));};
   const currentStatus=row=>row.status==='approved'&&row.expires_at&&new Date(row.expires_at)<=new Date()?'expired':row.status;
+  // Flag inconsistent submissions for human review; never guess bedroom count or furnishing.
+  const qualityNotes=row=>{
+    const notes=[],title=String(row.title||"");
+    if(!row.listing_images?.length)notes.push("Thiếu ảnh");
+    if(!["Đồ cơ bản","Full nội thất"].includes(row.furnishing))notes.push("Chưa rõ nội thất");
+    if(/^\\s*[0-9+().\\s-]{8,}\\s*$/.test(title))notes.push("Tiêu đề chỉ có SĐT");
+    const bedrooms=title.match(/(?:^|[^0-9])([1-4])\\s*(?:PN|phòng\\s*ngủ|ngủ)(?![\\p{L}\\p{N}])/iu);
+    if(bedrooms&&row.unit_type!==bedrooms[1]+"PN")notes.push("Sai lệch loại căn");
+    return notes;
+  };
   const pill=(label,key)=>el('span',`status-pill status-${key}`,label);
   const getFilters=()=>Object.fromEntries(new FormData(filters).entries());
   const saveView=()=>{try{sessionStorage.setItem(preferenceKey,JSON.stringify({filters:getFilters(),page,pageSize}));}catch{}};
@@ -122,7 +132,9 @@
     const count=items.length;
     const labels={approve:['Duyệt / gia hạn tin',`Công khai ${count} tin và đặt thời hạn mới ${Number(api.config.listingLifetimeDays||45)} ngày kể từ hôm nay.`, 'Duyệt / gia hạn'],hide:['Ẩn tin đăng',`Ẩn ${count} tin khỏi danh sách công khai. Có thể duyệt lại khi cần.`, 'Ẩn tin'],reject:['Từ chối tin đăng',`Chuyển ${count} tin sang trạng thái từ chối.`, 'Từ chối'],done:['Đánh dấu đã giao dịch',`${count} tin sẽ được chuyển sang Đã bán hoặc Đã cho thuê theo loại giao dịch và ngừng hiển thị.`, 'Đã giao dịch'],feature:['Ghim tin',`Ưu tiên ${count} tin đang hiển thị.`, 'Ghim tin'],unfeature:['Bỏ ghim tin',`Bỏ ưu tiên ${count} tin đã chọn.`, 'Bỏ ghim']};
     const [title,message,submit]=labels[action];
-    const confirmation=await ask({title,message,submit,codes:items.map(row=>row.listing_code),reasonPicker:action==='reject'});
+    const flagged=action==='approve'?items.filter(row=>qualityNotes(row).length):[];
+    const warnings=flagged.length?` Có ${flagged.length} tin cần xác minh ảnh, nội thất hoặc tiêu đề trước khi công khai. Vui lòng mở tin để kiểm tra và chỉnh sửa nếu cần.`:"";
+    const confirmation=await ask({title,message:message+warnings,submit,codes:items.map(row=>row.listing_code),reasonPicker:action==='reject'});
     if(!confirmation)return;
     if(busy||loading||!loggedIn)return;
     setBusy(true);status(`Đang xử lý 0/${count} tin…`);
@@ -157,7 +169,10 @@
     const cover=row.listing_images?.[0];
     if(cover){const img=el('img','admin-thumb');img.src=api.imageUrl(cover.storage_path);img.alt='';img.width=66;img.height=58;img.loading='lazy';img.decoding='async';img.addEventListener('error',()=>{img.replaceWith(el('span','admin-thumb admin-thumb-placeholder',row.tower));},{once:true});property.append(img);}
     else property.append(el('span','admin-thumb admin-thumb-placeholder',row.tower));
-    const copy=el('div');copy.append(button(row.title,()=>openEdit(row),'admin-title'),el('div','admin-meta',`${row.listing_type==='rent'?'Cho thuê':'Mua bán'} · ${row.phase} · ${row.tower} · ${row.unit_type}`),el('div','admin-code',row.listing_code));property.append(copy);propertyCell.append(property);
+    const copy=el('div');copy.append(button(row.title,()=>openEdit(row),'admin-title'),el('div','admin-meta',`${row.listing_type==='rent'?'Cho thuê':'Mua bán'} · ${row.phase} · ${row.tower} · ${row.unit_type}`),el('div','admin-code',row.listing_code));
+    const issues=qualityNotes(row);
+    if(issues.length){const note=el('div','admin-quality-notes',`Cần kiểm tra: ${issues.join(' · ')}`);note.setAttribute('role','note');copy.append(note);}
+    property.append(copy);propertyCell.append(property);
     const priceCell=el('td');priceCell.append(el('strong','admin-price',api.formatCurrency(row.price_vnd,row.listing_type)),el('span','admin-meta',`${Number(row.area_sqm).toLocaleString('vi-VN')} m²`));
     const contactCell=el('td');contactCell.append(el('span','admin-person',row.poster_name));
     const phone=el('a','admin-phone',row.contact_phone);phone.href=`tel:${String(row.contact_phone||'').replace(/[^+0-9]/g,'')}`;contactCell.append(phone);
