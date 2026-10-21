@@ -48,3 +48,34 @@ test('abort signal is forwarded and legacy rental ranking remains unchanged',asy
   assert.equal(p.get('listing_type'),'eq.rent');assert.equal(p.get('order'),'is_featured.desc,sort_priority.desc,approved_at.desc');
   assert.equal(c.request().options.signal,signal);
 });
+
+test('exact usable area and two furnishings filter on the server before pagination',async()=>{
+  const c=client();
+  await c.api.listPublicPage('rent',{area:'50-70',exact_area:'53.8',furnishing:'Full nội thất'},1);
+  const p=c.request().url.searchParams;
+  assert.equal(p.get('area_sqm'),'eq.53.8');
+  assert.equal(p.get('and'),null,'exact area takes priority over broad area ranges');
+  assert.equal(p.get('furnishing'),'eq.Full nội thất');
+  assert.ok(p.get('select').includes('furnishing'),'cards should receive the furnishing field');
+  await c.api.listPublicPage('sale',{exact_area:'54',furnishing:'Đồ cơ bản'},2);
+  assert.equal(c.request().url.searchParams.get('area_sqm'),'eq.54');
+  assert.equal(c.request().url.searchParams.get('furnishing'),'eq.Đồ cơ bản');
+});
+test('untrusted area and furnishing filters cannot inject PostgREST query clauses',async()=>{
+  const c=client();
+  await c.api.listPublicPage('sale',{area:'50-70',exact_area:'54&status=eq.pending',furnishing:'Nguyên bản'},1);
+  const p=c.request().url.searchParams;
+  assert.equal(p.get('area_sqm'),null);
+  assert.equal(p.get('and'),'(area_sqm.gte.50,area_sqm.lt.70)');
+  assert.equal(p.get('furnishing'),null);
+  assert.equal(p.get('status'),'eq.approved');
+});
+test('both public inventory homepages expose the exact-area and two-state furnishing selectors',()=>{
+  for(const segment of ['cho-thue-lumi-hanoi','mua-ban-lumi-hanoi']){
+    const html=fs.readFileSync(path.join(__dirname,'..',segment,'index.html'),'utf8');
+    assert.match(html,/name="exact_area" type="number"/);
+    assert.match(html,/name="furnishing"/);
+    assert.match(html,/<option value="Đồ cơ bản">Đồ cơ bản<\/option>/);
+    assert.match(html,/<option value="Full nội thất">Full nội thất<\/option>/);
+  }
+});
