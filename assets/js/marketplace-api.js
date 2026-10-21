@@ -299,7 +299,7 @@
     const size=[20,50,100].includes(Number(pageSize))?Number(pageSize):20;
     const orders={newest:"created_at.desc,id.desc",oldest:"created_at.asc,id.asc",updated:"updated_at.desc,id.desc",expiry:"expires_at.asc.nullslast,id.desc"};
     const params={...adminParams(filters),
-      select:"id,listing_code,slug,listing_type,status,title,phase,tower,unit_type,area_sqm,price_vnd,poster_name,contact_phone,contact_public,is_featured,sort_priority,approved_at,expires_at,moderation_reason,moderation_note,rejected_at,created_at,updated_at,listing_images(storage_path,sort_order),open_reports:listing_reports(id)",
+      select:"id,listing_code,slug,listing_type,status,title,phase,tower,unit_type,area_sqm,furnishing,price_vnd,poster_name,contact_phone,contact_public,is_featured,sort_priority,approved_at,expires_at,moderation_reason,moderation_note,rejected_at,created_at,updated_at,listing_images(storage_path,sort_order),open_reports:listing_reports(id)",
       order:orders[filters.sort]||orders.newest,limit:String(size),offset:String((Math.max(1,Math.min(100000,Math.floor(Number(page)||1)))-1)*size),
       "listing_images.order":"sort_order.asc,id.asc","listing_images.limit":"1","open_reports.resolved_at":"is.null","open_reports.limit":"1"
     };
