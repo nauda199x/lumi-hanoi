@@ -1,0 +1,47 @@
+/* Three Lumi Hanoi marketplace landings — actual self-hosted photos.
+   Scoped to avoid impacting floor plans, detail pages, forms, or SEO content. */
+.submit-landing .submit-hero-premium {
+  background-color:#15302b;
+  background-image:
+    linear-gradient(90deg,rgba(10,31,27,.94) 0%,rgba(10,31,27,.83) 40%,rgba(10,31,27,.48) 70%,rgba(10,31,27,.25) 100%),
+    linear-gradient(0deg,rgba(10,31,27,.48),transparent 65%),
+    url("/assets/media/handover-2026/lumi-hanoi-toa-thap-duong-dao-thuc-te.webp");
+  background-size:cover;
+  background-position:center,center,center 53%;
+}
+.submit-landing .submit-hero-premium::before{display:none}
+.submit-landing .submit-hero-copy .lead{color:#f0f2ec}
+.submit-landing .submit-hero-pills span{background:rgba(9,29,25,.28);border-color:rgba(255,255,255,.34);color:#fff}
+.submit-landing .submit-hero-card{background:rgba(13,33,28,.76);border-color:rgba(255,255,255,.24)}
+.submit-landing .submit-hero-stat{border-color:rgba(255,255,255,.22)}
+.submit-landing .submit-hero-stat span,.submit-landing .submit-hero-note{color:#e4e8e0}
+.marketplace-discovery .marketplace-hero--sale .article-hero-media,
+.marketplace-discovery .marketplace-hero--rent .article-hero-media{opacity:.9;filter:saturate(1.04)}
+.marketplace-discovery .marketplace-hero--sale .article-hero-media{object-position:center 53%}
+.marketplace-discovery .marketplace-hero--rent .article-hero-media{object-position:center 55%}
+.marketplace-discovery .marketplace-hero--sale::after,
+.marketplace-discovery .marketplace-hero--rent::after{
+  background:
+    linear-gradient(90deg,rgba(9,28,24,.88) 0%,rgba(9,28,24,.72) 42%,rgba(9,28,24,.3) 100%),
+    linear-gradient(0deg,rgba(9,28,24,.62),transparent 60%);
+}
+.marketplace-discovery .marketplace-hero--sale .lead,
+.marketplace-discovery .marketplace-hero--rent .lead{color:#f0f1ec}
+@media(max-width:700px){
+  .submit-landing .submit-hero-premium{
+    background-image:
+      linear-gradient(90deg,rgba(10,31,27,.86),rgba(10,31,27,.68)),
+      linear-gradient(0deg,rgba(10,31,27,.76),transparent 75%),
+      url("/assets/media/handover-2026/lumi-hanoi-toa-thap-duong-dao-thuc-te-640.webp");
+    background-position:center,center,58% center;
+  }
+  .submit-landing .submit-hero-grid{padding-top:42px;padding-bottom:38px}
+  .marketplace-discovery .marketplace-hero--sale .article-hero-media{object-position:55% center}
+  .marketplace-discovery .marketplace-hero--rent .article-hero-media{object-position:52% center}
+  .marketplace-discovery .marketplace-hero--sale::after,
+  .marketplace-discovery .marketplace-hero--rent::after{
+    background:linear-gradient(0deg,rgba(9,28,24,.90) 0%,rgba(9,28,24,.63) 56%,rgba(9,28,24,.36) 100%);
+  }
+  .marketplace-discovery .marketplace-hero--sale,
+  .marketplace-discovery .marketplace-hero--rent{padding-top:3rem;padding-bottom:3rem}
+}
