@@ -344,6 +344,9 @@ def main() -> None:
         gen.fetch_approved = original_fetch
 
     normalize_generated_listing_metadata(approved_rows)
+    # Homepage HTML must expose real, indexable links without waiting for JS.
+    from render_home_marketplace import main as render_homepage_listings
+    render_homepage_listings(approved_rows)
     update_price_methodology_copy()
     remove_rental_ppsm_display()
     from rent_price_breakdown import sync_rent_breakdown
