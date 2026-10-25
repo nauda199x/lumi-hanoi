@@ -124,7 +124,7 @@ def render(page: str, listings: list[dict], *, now: datetime | None = None) -> s
         cards = "\n".join(card(row) for row in rows[:3])
         recent = recent_links(rows[3:11])
         grid = f'<div class="home-live-grid" data-home-grid="{kind}" aria-live="polite"></div>'
-        if CARD_START + "-" + kind not in page:
+        if f"<!-- HOME-LIVE-SEO:START-{kind} -->" not in page:
             if grid not in page:
                 raise ValueError(f"Homepage card container {kind} not found")
             page = page.replace(
@@ -144,8 +144,9 @@ def render(page: str, listings: list[dict], *, now: datetime | None = None) -> s
     return page
 
 
-def main() -> None:
-    rows = gen.fetch_approved()
+def main(rows: list[dict] | None = None) -> None:
+    if rows is None:
+        rows = gen.fetch_approved()
     before = HOME.read_text(encoding="utf-8")
     after = render(before, rows)
     if after != before:
