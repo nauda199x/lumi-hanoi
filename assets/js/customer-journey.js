@@ -14,6 +14,14 @@
       .customer-lookup-group nav{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}.customer-lookup-group nav::-webkit-scrollbar{display:none}
       .customer-lookup-group a{display:inline-flex;min-height:34px;align-items:center;justify-content:center;flex:0 0 auto;padding:0 10px;border:1px solid var(--line,#d7d0c3);border-radius:999px;background:#fff;color:var(--ink,#171916);font-size:.77rem;font-weight:750;text-decoration:none}
       .customer-lookup-group a:hover,.customer-lookup-group a:focus-visible{border-color:var(--ink,#171916);background:var(--ink,#171916);color:#fff}.customer-lookup-market a:first-child{border-color:var(--night,#171a18);background:var(--night,#171a18);color:#fff}
+      .tower-market-bridge{border-bottom:1px solid #d9ded7;background:#eaf3ec}
+      .tower-market-inner{display:flex;align-items:center;justify-content:space-between;gap:18px;padding-block:16px}
+      .tower-market-inner strong{display:block;color:#133c26;font-size:1.03rem}
+      .tower-market-inner p{margin:5px 0 0;font-size:.87rem;color:#46634e;line-height:1.4}
+      .tower-market-actions{display:flex;flex-wrap:wrap;gap:9px}
+      .tower-market-actions a{display:inline-flex;align-items:center;justify-content:center;min-height:42px;border-radius:9px;padding:9px 13px;background:#153a2c;color:#fff;text-decoration:none;font-size:.84rem;font-weight:800}
+      .tower-market-actions a:last-child{background:#fff;color:#16372a;border:1px solid #b2c6b8}
+      @media(max-width:760px){.tower-market-inner{display:block}.tower-market-actions{margin-top:12px;display:grid;grid-template-columns:1fr 1fr}.tower-market-actions a{padding-inline:6px;font-size:.76rem;text-align:center}}
       .price-quick-answer{margin:0 0 24px;padding:26px;border:1px solid var(--line,#d7d0c3);border-radius:18px;background:var(--paper,#fbf9f3)}
       .price-quick-head{display:flex;align-items:end;justify-content:space-between;gap:28px;margin-bottom:20px}.price-quick-head h2{margin:.15rem 0 .45rem;max-width:18ch;font-size:clamp(2rem,4vw,3rem)}.price-quick-head p:last-child{max-width:650px;margin:0;color:var(--muted,#64645e);line-height:1.65}
       .price-quick-jumps{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:8px}.price-quick-jumps a{padding:8px 11px;border:1px solid var(--line,#d7d0c3);border-radius:999px;font-size:.75rem;font-weight:750;text-decoration:none}
@@ -115,6 +123,35 @@
     if(hero)hero.insertAdjacentElement('afterend',lookup);
     else if(breadcrumb)breadcrumb.insertAdjacentElement('afterend',lookup);
     else main?.prepend(lookup);
+
+    // Turn high-traffic floor-plan searches into actual tower-scoped property discovery.
+    const towerMatch=path.match(/^\/mat-bang-lumi-hanoi\/(?:lumi-signature|lumi-prestige|lumi-elite)\/(s[12356]|p[12]|e[12])\/$/);
+    if(towerMatch){
+      const tower=towerMatch[1].toUpperCase();
+      const bridge=document.createElement('div');
+      bridge.className='tower-market-bridge';
+      const inner=document.createElement('div');
+      inner.className='container tower-market-inner';
+      const info=document.createElement('div');
+      const heading=document.createElement('strong');
+      heading.textContent='Xem mặt bằng '+tower+' xong, tìm căn thật tại tòa này';
+      const detail=document.createElement('p');
+      detail.textContent='So sánh căn có ảnh, giá rao và liên hệ người đăng. Tin cần qua kiểm duyệt trước khi công khai.';
+      info.append(heading,detail);
+      const actions=document.createElement('nav');
+      actions.className='tower-market-actions';
+      actions.setAttribute('aria-label','Giao dịch căn hộ tòa '+tower);
+      [
+        ['/cho-thue-lumi-hanoi/?tower='+tower,'Căn '+tower+' cho thuê →'],
+        ['/mua-ban-lumi-hanoi/?tower='+tower,'Căn '+tower+' đang bán →']
+      ].forEach(([href,label])=>actions.append(makeLink(href,label)));
+      inner.append(info,actions);bridge.append(inner);
+      lookup.insertAdjacentElement('afterend',bridge);
+      actions.addEventListener('click',event=>{
+        const link=event.target.closest('a[href]');
+        if(link)window.LumiAnalytics?.track?.('floorplan_to_marketplace',{tower,destination:new URL(link.href,location.origin).pathname});
+      });
+    }
 
     lookup.addEventListener('click',event=>{
       const link=event.target.closest('a[href]');
