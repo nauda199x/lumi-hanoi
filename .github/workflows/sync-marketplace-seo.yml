@@ -18,6 +18,8 @@ on:
       - "scripts/marketplace_inventory.py"
       - "scripts/marketplace_thumbnails.py"
       - "scripts/generate_marketplace_seo_average.py"
+      - "scripts/render_home_marketplace.py"
+      - "scripts/qa_home_marketplace.py"
       - "scripts/rent_price_breakdown.py"
       - "scripts/qa_rent_price_breakdown.py"
       - "scripts/qa_furnishing_options.py"
@@ -89,6 +91,8 @@ jobs:
       - name: Validate marketplace SEO generator syntax
         run: |
           python -m py_compile scripts/generate_marketplace_seo_average.py
+          python -m py_compile scripts/render_home_marketplace.py
+          python scripts/qa_home_marketplace.py
           python -m py_compile scripts/rent_price_breakdown.py
           python -m py_compile scripts/qa_rent_price_breakdown.py
           python scripts/qa_rent_price_breakdown.py
