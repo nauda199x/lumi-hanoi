@@ -100,6 +100,8 @@
 
       /* Transaction-first homepage: light static shell, live cards loaded after first paint. */
       .home-hero h1{font-size:clamp(3.35rem,7vw,6.6rem);line-height:1.04;text-wrap:balance;letter-spacing:-.052em}
+      @media(min-width:901px){.home-hero{min-height:clamp(520px,72svh,650px)}.home-hero .container{padding-block:80px 76px}}
+
       .home-exchange{background:#fffdf8;padding-top:46px;padding-bottom:64px}
       .home-find-panel{display:grid;grid-template-columns:.85fr 1.65fr;gap:22px;align-items:center;background:#10261f;color:#fff;border-radius:20px;padding:26px 28px}
       .home-find-panel h2{font-size:clamp(1.65rem,3vw,2.6rem);line-height:1.14;margin:6px 0 10px;color:#fff}
@@ -108,7 +110,7 @@
       .home-find-form{display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:10px;align-items:end}
       .home-find-form label{display:grid;gap:7px;font-size:.76rem;font-weight:800;color:#edf2ef}
       .home-find-form select{width:100%;height:48px;min-width:0;border:1px solid #d6d9d4;border-radius:9px;background:#fff;color:#10261f;padding:0 11px;font:inherit;font-size:.91rem}
-      .home-find-form button{height:48px;border:0;border-radius:9px;background:#d7b074;color:#10261f;font:800 .91rem/1.1 inherit;padding:0 16px;cursor:pointer}
+      .home-find-form button{height:48px;border:0;border-radius:9px;background:#d7b074;color:#10261f;font-size:.91rem;font-weight:800;font-family:inherit;padding:0 16px;cursor:pointer}
       .home-find-form button:hover{background:#efcd91}
       .home-live-heading{display:flex;align-items:end;justify-content:space-between;gap:20px;margin:44px 0 18px}
       .home-live-heading h2{font-size:clamp(1.65rem,3.4vw,2.65rem);line-height:1.14;margin:5px 0}
@@ -130,6 +132,8 @@
       .home-post-strip strong{display:block;font-size:1.18rem;color:#10261f}.home-post-strip span{display:block;line-height:1.5;color:#54675a;margin-top:7px}
       @media(max-width:1050px){.home-find-panel{grid-template-columns:1fr}.home-find-form{grid-template-columns:repeat(3,1fr)}.home-find-form button{grid-column:1/-1}}
       @media(max-width:700px){
+        .home-hero{min-height:clamp(565px,80svh,660px)}
+        .home-hero .container{padding-top:50px;padding-bottom:calc(80px + env(safe-area-inset-bottom,0px))}
         .home-hero h1{font-size:clamp(2.8rem,11.3vw,4.2rem);line-height:1.06}
         .home-exchange{padding-top:26px;padding-bottom:34px}
         .home-find-panel{padding:20px 16px;gap:20px;border-radius:15px}
