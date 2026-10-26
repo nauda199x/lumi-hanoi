@@ -70,10 +70,15 @@ test('untrusted area and furnishing filters cannot inject PostgREST query clause
   assert.equal(p.get('furnishing'),null);
   assert.equal(p.get('status'),'eq.approved');
 });
-test('both public inventory homepages expose the exact-area and two-state furnishing selectors',()=>{
-  for(const segment of ['cho-thue-lumi-hanoi','mua-ban-lumi-hanoi']){
-    const html=fs.readFileSync(path.join(__dirname,'..',segment,'index.html'),'utf8');
-    assert.match(html,/name="exact_area" type="number"/);
+test('sale keeps exact-area; rent offers compact tower, bedroom and furnishing selectors',()=>{
+  const sale=fs.readFileSync(path.join(__dirname,'..','mua-ban-lumi-hanoi','index.html'),'utf8');
+  const rent=fs.readFileSync(path.join(__dirname,'..','cho-thue-lumi-hanoi','index.html'),'utf8');
+  assert.match(sale,/name="exact_area" type="number"/);
+  assert.doesNotMatch(rent,/name="exact_area"|name="area"|name="keyword"|name="phase"|name="max_price"/);
+  assert.match(rent,/name="tower"/);
+  assert.match(rent,/type="hidden" name="bedroom"/);
+  assert.match(rent,/data-unit-filter="2PN"/);
+  for(const html of [sale,rent]){
     assert.match(html,/name="furnishing"/);
     assert.match(html,/<option value="Đồ cơ bản">Đồ cơ bản<\/option>/);
     assert.match(html,/<option value="Full nội thất">Full nội thất<\/option>/);
