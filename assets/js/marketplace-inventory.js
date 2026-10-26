@@ -51,7 +51,7 @@
   };
   grid.querySelectorAll("img[data-inventory-original]").forEach(image=>protectImage(image,image.dataset.inventoryOriginal));
   const refreshTowers=(selected=form.elements.tower.value)=>{
-    const options=towers[form.elements.phase.value]||Object.values(towers).flat();
+    const options=towers[form.elements.phase?.value]||Object.values(towers).flat();
     form.elements.tower.replaceChildren(new Option("Tất cả tòa",""),...options.map(v=>new Option(v,v)));
     if(options.includes(selected))form.elements.tower.value=selected;
   };
@@ -64,7 +64,7 @@
       if(key!=="tower"&&form.elements[key])form.elements[key].value=params.get(key)||(key==="bedroom"?hashParams.get("bedroom"):"")||(key==="sort"?"newest":"");
     }
     const tower=(params.get("tower")||hashParams.get("tower")||"").toUpperCase();
-    if(tower&&!form.elements.phase.value)form.elements.phase.value=Object.entries(towers).find(([,list])=>list.includes(tower))?.[0]||"";
+    if(tower&&form.elements.phase&&!form.elements.phase.value)form.elements.phase.value=Object.entries(towers).find(([,list])=>list.includes(tower))?.[0]||"";
     refreshTowers(tower);
     if(!sort.value)sort.value="newest";
   };

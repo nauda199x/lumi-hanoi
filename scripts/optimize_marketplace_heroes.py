@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Generate lightweight, self-hosted WebP heroes for the three marketplace pages.
+"""Generate lightweight, self-hosted WebP heroes for the submit and sale pages.
 
 Run from repo root in GitHub Actions. Never modifies the original source images.
-Only changes three hero image references and their dedicated CSS file.
+Only changes the submit/sale hero references and their dedicated CSS file.
 """
 from __future__ import annotations
 import io
@@ -15,7 +15,8 @@ CSS = ROOT / "assets/css/marketplace-real-heroes.css"
 SPECS = (
     ("dang-tin-lumi-hanoi/index.html", "lumi-hanoi-toa-thap-duong-dao-thuc-te", 700),
     ("mua-ban-lumi-hanoi/index.html", "lumi-hanoi-canh-quan-mat-nuoc-thuc-te", 640),
-    ("cho-thue-lumi-hanoi/index.html", "lumi-hanoi-goc-sofa-sanh-thuc-te", 640),
+    # Rental hub uses existing quality-optimized 1600px/640px WebP assets under real-2026.
+    # Do not replace its new real photo with an older aggressive hero-lite compression.
 )
 OLD_CSS_LINK = '<link rel="stylesheet" href="/assets/css/marketplace-real-heroes.css?v=20261021-real-heroes1">'
 NEW_CSS_LINK = '<link rel="stylesheet" href="/assets/css/marketplace-real-heroes.css?v=20261021-heroes-perf1">'
@@ -104,7 +105,7 @@ def main() -> None:
         html = (ROOT / page).read_text(encoding="utf-8")
         if NEW_CSS_LINK not in html or (stem + "-hero-lite") not in html:
             raise RuntimeError(f"Failed final verification for {page}")
-    print("Verified all three pages use locally optimized hero images and versioned CSS.")
+    print("Verified submit/sale pages use optimized hero images and versioned CSS.")
 
 
 if __name__ == "__main__":

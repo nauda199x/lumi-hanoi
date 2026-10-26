@@ -214,3 +214,17 @@
 }
 [data-inventory] .inventory-placeholder[hidden]{display:none!important;}
 [data-inventory] .inventory-filters input[type="number"]{font-variant-numeric:tabular-nums;}
+
+/* RENT-HUB-COMPACT-FILTER-20261026: sale marketplace and other pages unchanged. */
+[data-inventory][data-listing-type="rent"] .inventory-filters{
+  grid-template-columns:minmax(170px,250px) minmax(185px,250px) auto;
+  justify-content:start;align-items:end;gap:14px;padding:16px;
+}
+[data-inventory][data-listing-type="rent"] .inventory-filters>.btn{min-width:100px}
+@media(max-width:767px){
+  [data-inventory][data-listing-type="rent"] .inventory-filters{
+    grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;
+  }
+  [data-inventory][data-listing-type="rent"] .inventory-filters .field:first-child{grid-column:auto}
+  [data-inventory][data-listing-type="rent"] .inventory-filters>.btn{grid-column:1/-1;justify-self:stretch}
+}
