@@ -77,6 +77,13 @@
       "src": "/assets/media/listing-thumbnails/8234466046cea42fee56c3786c42a17d.webp",
       "width": 800
     },
+    "https://salsyqatlzapnzbcnnsr.supabase.co/storage/v1/object/public/listing-images/pending/2ad5c47d-f283-47e2-bb37-949c1f7e4bbb/01-308b6bfa-db03-4ce1-beec-aea803fa5fbe.jpg": {
+      "bytes": 17264,
+      "height": 463,
+      "source_bytes": 124249,
+      "src": "/assets/media/listing-thumbnails/0a5efda47a1a541b3e7030d0294c3367.webp",
+      "width": 800
+    },
     "https://salsyqatlzapnzbcnnsr.supabase.co/storage/v1/object/public/listing-images/pending/2ee9826e-36da-4acc-b35a-f36c506fc749/01-4b68c4b3-9512-4cfe-a3b5-cd2a475d90ad.jpg": {
       "bytes": 95750,
       "height": 599,
@@ -145,6 +152,13 @@
       "height": 600,
       "source_bytes": 1188829,
       "src": "/assets/media/listing-thumbnails/ff9c124e6a9d0f7cf68911c80b9f501e.webp",
+      "width": 800
+    },
+    "https://salsyqatlzapnzbcnnsr.supabase.co/storage/v1/object/public/listing-images/pending/69b0b55f-5633-49fd-9522-c6c1e3170b3c/01-68729fd5-f942-46ea-81e4-bcd510492b4f.jpg": {
+      "bytes": 105892,
+      "height": 800,
+      "source_bytes": 161023,
+      "src": "/assets/media/listing-thumbnails/f88c012f5f19679e651188139fcb3625.webp",
       "width": 800
     },
     "https://salsyqatlzapnzbcnnsr.supabase.co/storage/v1/object/public/listing-images/pending/6d83b089-914b-4c87-a9dd-aaf89e9195ca/01-68abb77a-1939-47e0-8293-ffb4e0788d09.jpg": {
