@@ -8,6 +8,9 @@ sync with that methodology.
 
 Approved listing pages are also post-processed so user-written promotional headlines
 stay visible on-page without becoming the SEO title/meta shown to search engines.
+
+On each workflow run, newly approved Supabase rental listings are rendered into
+crawable static detail pages before the GitHub Pages deployment.
 """
 import html as html_lib
 import json
