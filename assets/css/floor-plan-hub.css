@@ -116,3 +116,13 @@
  .phase-section .tower-count{font-size:.68rem}
  .phase-section .tower-card-kicker{font-size:.65rem}
 }
+
+/* Homepage-to-floorplan photo discovery, 2026-10-30. Compact, zero added image requests. */
+.floor-photo-discovery{display:flex;align-items:center;justify-content:space-between;gap:22px;margin:0 0 1.1rem;padding:18px 22px;border:1px solid #dcc6a5;border-radius:16px;background:#eee5d6;color:#173027}
+.floor-photo-discovery-copy{display:grid;gap:4px;min-width:0}
+.floor-photo-discovery-copy>span{font-size:.67rem;letter-spacing:.12em;font-weight:800;color:#906b42}
+.floor-photo-discovery-copy strong{font:500 clamp(1.22rem,2.1vw,1.65rem)/1.2 Georgia,"Times New Roman",serif}
+.floor-photo-discovery-copy small{color:#5d665c;font-size:.82rem;line-height:1.5}
+.floor-photo-discovery-link{display:inline-flex;align-items:center;justify-content:space-between;gap:14px;flex:0 0 auto;min-height:46px;padding:10px 16px;border-radius:999px;background:#173027;color:#fff;text-decoration:none;font-size:.83rem;font-weight:800}
+.floor-photo-discovery-link:hover,.floor-photo-discovery-link:focus-visible{background:#365043;color:#fff}
+@media(max-width:700px){.floor-photo-discovery{flex-direction:column;align-items:stretch;gap:14px;padding:17px}.floor-photo-discovery-link{width:100%}}
