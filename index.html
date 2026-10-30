@@ -148,6 +148,17 @@
         .home-live-card{scroll-snap-align:start}
         .home-post-strip{display:block;padding:19px}.home-post-strip .btn{margin-top:16px;width:100%;text-align:center;justify-content:center}
       }
+
+      /* Easy access to real apartment photos without adding image/network weight. */
+      .home-real-photo-hero{position:relative;z-index:3;display:inline-flex;align-items:center;gap:12px;max-width:520px;min-height:66px;margin-top:18px;padding:11px 15px;border:1px solid rgba(255,255,255,.46);border-radius:15px;background:rgba(10,29,23,.60);backdrop-filter:blur(5px);color:#fff;text-decoration:none;transition:background .2s,border-color .2s}
+      .home-real-photo-hero:hover,.home-real-photo-hero:focus-visible{background:rgba(10,29,23,.9);border-color:#e5c691;color:#fff}
+      .home-real-photo-symbol{display:grid;place-items:center;width:40px;height:40px;flex:0 0 auto;border-radius:10px;background:rgba(225,187,124,.18);color:#efd6a7;font-size:1.7rem}
+      .home-real-photo-copy{display:grid;gap:3px}.home-real-photo-copy strong{font-size:.95rem;line-height:1.25}.home-real-photo-copy small{color:#e6dfd1;font-size:.76rem;line-height:1.35}.home-real-photo-arrow{margin-left:auto;color:#edce98;font-size:1.25rem}
+      .home-photo-discovery{display:flex;align-items:center;justify-content:space-between;gap:24px;margin-top:15px;padding:20px 24px;border:1px solid #d7c4a7;border-radius:16px;background:#eee5d6;color:#183229;text-decoration:none;transition:background .2s,border-color .2s}
+      .home-photo-discovery:hover,.home-photo-discovery:focus-visible{background:#e8dac4;border-color:#ae905c;color:#183229}
+      .home-photo-discovery-copy{display:grid;gap:5px}.home-photo-discovery-tag{color:#88633f;font-size:.69rem;font-weight:800;letter-spacing:.12em}.home-photo-discovery-copy strong{font:500 clamp(1.23rem,2vw,1.65rem)/1.18 Georgia,"Times New Roman",serif}.home-photo-discovery-copy small{color:#5d675e;font-size:.83rem;line-height:1.45}
+      .home-photo-discovery-action{display:inline-flex;align-items:center;justify-content:center;gap:20px;flex:0 0 auto;min-height:46px;padding:9px 16px;border-radius:999px;background:#183229;color:#fff;font-size:.86rem;font-weight:800}
+      @media(max-width:700px){.home-real-photo-hero{box-sizing:border-box;display:flex;width:100%;max-width:none;margin-top:12px;min-height:60px;padding:9px 12px}.home-real-photo-copy strong{font-size:.87rem}.home-real-photo-copy small{font-size:.7rem}.home-real-photo-symbol{width:35px;height:35px}.home-photo-discovery{flex-direction:column;align-items:stretch;gap:14px;padding:18px}.home-photo-discovery-action{justify-content:space-between;width:100%}}
     </style>
     <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://lumi-hanoi.com/#organization","name":"Lumi Hanoi","url":"https://lumi-hanoi.com/","logo":{"@type":"ImageObject","url":"https://lumi-hanoi.com/apple-touch-icon.png"},"description":"Cổng thông tin và giao dịch độc lập về dự án Lumi Hanoi; không phải website chính thức của CapitaLand Development."},{"@type":"WebSite","@id":"https://lumi-hanoi.com/#website","name":"Lumi Hanoi","url":"https://lumi-hanoi.com/","inLanguage":"vi-VN","description":"Nền tảng độc lập tra cứu, mua bán, cho thuê và đăng tin căn hộ Lumi Hà Nội; kèm mặt bằng, vị trí và thông tin dự án.","publisher":{"@id":"https://lumi-hanoi.com/#organization"}}]}</script>
   </head>
@@ -201,6 +212,11 @@
           <h1>Lumi Hà Nội</h1>
           <p class="lead">Tìm căn hộ Lumi Hanoi đang bán hoặc cho thuê, xem giá và ảnh thực tế, liên hệ trực tiếp người đăng. Chủ nhà và môi giới có thể đăng tin miễn phí để quản trị viên kiểm duyệt.</p>
           <div class="hero-actions home-market-actions"><a class="btn btn-market-post home-market-post" href="/dang-tin-lumi-hanoi/">+ Đăng tin miễn phí</a><div class="home-market-secondary"><a class="btn btn-primary home-market-buy" href="/mua-ban-lumi-hanoi/">Tìm căn mua</a><a class="btn home-market-rent" href="/cho-thue-lumi-hanoi/">Tìm căn thuê</a></div></div>
+          <a class="home-real-photo-hero" href="/anh-thuc-te-can-ho-lumi-hanoi/">
+            <span class="home-real-photo-symbol" aria-hidden="true">▧</span>
+            <span class="home-real-photo-copy"><strong>Xem ảnh thực tế bên trong căn hộ</strong><small>50 ảnh thật · 7 bộ căn 1PN, 2PN, 3PN</small></span>
+            <span class="home-real-photo-arrow" aria-hidden="true">↗</span>
+          </a>
         </div>
       </section>
 
@@ -215,6 +231,10 @@
             <a class="market-card market-card-post" href="/dang-tin-lumi-hanoi/"><span class="market-tag">Dành cho chủ căn &amp; người đăng</span><div><strong>Đăng tin căn hộ</strong><span>Đăng căn cần bán hoặc cho thuê để xuất hiện trên marketplace Lumi Hanoi →</span></div></a>
             <a class="market-card market-card-rent" href="/cho-thue-lumi-hanoi/"><span class="market-tag">Cho thuê</span><div><strong>Tìm căn đang cho thuê</strong><span>Xem quỹ tin cho thuê và mở chi tiết căn phù hợp →</span></div></a>
           </div>
+          <a class="home-photo-discovery" href="/anh-thuc-te-can-ho-lumi-hanoi/" aria-label="Khám phá thư viện 50 ảnh thực tế căn hộ Lumi Hanoi">
+            <span class="home-photo-discovery-copy"><span class="home-photo-discovery-tag">THƯ VIỆN ẢNH THẬT</span><strong>Muốn xem căn hộ Lumi ngoài đời thực?</strong><small>Phòng khách · Bếp · Phòng ngủ · Ban công — 7 mẫu căn thực tế</small></span>
+            <span class="home-photo-discovery-action">Xem 50 ảnh <span aria-hidden="true">→</span></span>
+          </a>
         </div>
       </section>
 
