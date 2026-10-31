@@ -31,7 +31,9 @@ REDIRECTS = {
     "tien-do/index.html": "/tien-do-lumi-hanoi/",
     "giai-doan-1/index.html": "/lumi-signature/",
     "giai-doan-3/index.html": "/lumi-elite/",
-    "chu-dau-tu/index.html": "/chu-dau-tu-capitaland/"
+    "chu-dau-tu/index.html": "/chu-dau-tu-capitaland/",
+    "mat-bang/index.html": "/mat-bang-lumi-hanoi/",
+    "cho-thue-lumi-hanoi/cho-thue-shop-chan-de-toa-prestige-lh-71274f35/index.html": "/cho-thue-shop-chan-de-lumi-hanoi/"
 }
 
 errors = []
