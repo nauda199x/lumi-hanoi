@@ -42,9 +42,9 @@ def replace_once(raw: str, pattern: str, replacement: str) -> str:
 def update_hub(today: date) -> None:
     raw = HUB.read_text(encoding="utf-8")
     current_period = period(today)
-    title = f"Cho Thuê Căn Hộ Chung Cư Lumi Hanoi Giá Tốt {current_period}"
+    title = f"Cho Thuê Căn Hộ Chung Cư Lumi Hà Nội Giá Tốt {current_period}"
     description = (
-        f"Cho thuê căn hộ chung cư Lumi Hanoi giá tốt {current_period}: quỹ căn đang cho thuê "
+        f"Cho thuê căn hộ chung cư Lumi Hà Nội (Lumi Hanoi) giá tốt {current_period}: quỹ căn đang cho thuê "
         "theo phân khu, tòa và loại căn. Xem giá rao, diện tích, hình ảnh và liên hệ trực tiếp người đăng."
     )
 
@@ -78,8 +78,8 @@ def update_hub(today: date) -> None:
     # Align visible heading and structured-data headline with the SERP target.
     raw = replace_once(
         raw,
-        r"<h1>Cho thuê chung cư Lumi Hanoi</h1>",
-        "<h1>Cho thuê căn hộ chung cư Lumi Hanoi giá tốt</h1>",
+        r"<h1>Cho thuê (?:căn hộ )?chung cư Lumi (?:Hanoi|Hà Nội)(?: giá tốt)?</h1>",
+        "<h1>Cho thuê căn hộ chung cư Lumi Hà Nội giá tốt</h1>",
     )
     raw = replace_once(raw, r'"headline":"[^"]*"', f'"headline":"{title}"')
     raw = re.sub(
@@ -151,7 +151,7 @@ def main() -> None:
     print(
         "Consolidated rental SERP target: "
         f"{SITE}/cho-thue-lumi-hanoi/ — "
-        f"Cho Thuê Căn Hộ Chung Cư Lumi Hanoi Giá Tốt {period(today)}"
+        f"Cho Thuê Căn Hộ Chung Cư Lumi Hà Nội Giá Tốt {period(today)}"
     )
 
 

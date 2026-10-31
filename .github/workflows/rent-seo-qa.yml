@@ -41,7 +41,7 @@ jobs:
           python - <<'PY'
           from pathlib import Path
           hub=Path('cho-thue-lumi-hanoi/index.html').read_text(encoding='utf-8')
-          for token in ('<title>Cho Thuê Căn Hộ Chung Cư Lumi Hanoi Giá Tốt ','RENT-SEO-CLUSTER:START','RENT-PHASE-CLUSTER:START','RENT-TOWER-CLUSTER:START','<meta name="robots" content="index,follow,max-image-preview:large">'):
+          for token in ('<title>Cho Thuê Căn Hộ Chung Cư Lumi Hà Nội Giá Tốt ','RENT-SEO-CLUSTER:START','RENT-PHASE-CLUSTER:START','RENT-TOWER-CLUSTER:START','<meta name="robots" content="index,follow,max-image-preview:large">'):
               if token not in hub:
                   raise SystemExit(f'rental hub regression: {token}')
           print('Primary rental hub intent: OK')

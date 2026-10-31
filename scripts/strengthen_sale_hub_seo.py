@@ -41,9 +41,9 @@ def inventory_count(raw: str) -> int:
 def main() -> None:
     raw = HUB.read_text(encoding="utf-8")
     current_period = period(date.today())
-    title = f"Mua Bán Căn Hộ Chung Cư Lumi Hanoi Giá Tốt {current_period}"
+    title = f"Mua Bán Căn Hộ Chung Cư Lumi Hà Nội Giá Tốt {current_period}"
     description = (
-        f"Mua bán căn hộ chung cư Lumi Hanoi giá tốt {current_period}: quỹ căn đang bán và chuyển nhượng "
+        f"Mua bán căn hộ chung cư Lumi Hà Nội (Lumi Hanoi) giá tốt {current_period}: quỹ căn đang bán và chuyển nhượng "
         "theo phân khu, tòa và loại căn. Xem giá, diện tích, hình ảnh và liên hệ trực tiếp người đăng."
     )
 
