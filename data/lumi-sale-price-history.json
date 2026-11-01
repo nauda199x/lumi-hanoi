@@ -16,7 +16,14 @@
       "average_price": 4565000000,
       "listing_count": 12,
       "captured_at": "2026-10-31"
+    },
+    {
+      "month": "2026-11",
+      "average_ppsm": 73272056,
+      "average_price": 4565000000,
+      "listing_count": 12,
+      "captured_at": "2026-11-01"
     }
   ],
-  "updated_at": "2026-10-31"
+  "updated_at": "2026-11-01"
 }
