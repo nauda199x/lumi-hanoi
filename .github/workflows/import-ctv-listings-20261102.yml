@@ -1,0 +1,94 @@
+name: Import CTV apartment photos (2026-11-02)
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - ".github/workflows/import-ctv-listings-20261102.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  import-photos:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download verified CTV photos and upload to listing storage
+        env:
+          PYTHONUNBUFFERED: "1"
+        run: |
+          python - <<'PY'
+          import re, time, urllib.request, urllib.error
+          from pathlib import Path
+
+          raw = Path('assets/js/marketplace-config.js').read_text()
+          base = re.search(r'supabaseUrl:\s*"([^"]+)"', raw).group(1).rstrip('/')
+          key = re.search(r'supabasePublishableKey:\s*"([^"]+)"', raw).group(1)
+          # Verified row numbers on source tabs, NOT the STT column.
+          source = [
+            ('LH-T3N57', '3b7ef3ff-763f-496f-81a2-c7d788cb5f7b', [
+              '1Y_mgQP3HOvHoNdcCkTpMCNU4bILeqqWb',
+              '1S1FQnjYmKNvqgQWcVFr4w0nrLXRVJJX3',
+              '1SWG5wGjneYbDmC8XG6Nyv6EiDXGNrDYi',
+              '1hl7MoW9H-rmkfgDASK9jCRvC3b4-Ssqi',
+              '1RsV_eaD0s38aC93tOs2RwxVW8zH2ptTr',
+            ]),
+            ('LH-T2N87', '80e1cc5a-fb44-4083-9034-112aed5aadfd', [
+              '1t4VuIudaThOnNfBFivG4FGJlPWfz0dzm',
+              '17ESyISksylnITFSp32_Cdb-ABK02V3BG',
+              '1vqoV3D6I35okQ5SgmGv18SR_eow3y489',
+              '19wM74rTvSonsxTnWQVe1jqS6VV5DLBf9',
+              '1NuDgNYT2c0MmA-zL8vMzMuduVa2gq0mQ',
+            ])
+          ]
+
+          def jpg(data):
+              return len(data) >= 12000 and data[:3] == b'\xff\xd8\xff'
+
+          def download(fid):
+              urls = [
+                f'https://drive.google.com/uc?export=download&id={fid}',
+                f'https://drive.google.com/thumbnail?id={fid}&sz=w1600',
+              ]
+              for url in urls:
+                  try:
+                      request = urllib.request.Request(url, headers={'User-Agent':'Mozilla/5.0'})
+                      with urllib.request.urlopen(request, timeout=35) as response:
+                          data = response.read(5 * 1024 * 1024 + 1)
+                      if jpg(data) and len(data) <= 5 * 1024 * 1024:
+                          return data
+                      print('Non-JPEG or empty Google response for image', fid, len(data))
+                  except Exception as e:
+                      print('Download retry using alternate Google URL:', fid, str(e)[:150])
+              raise RuntimeError('Cannot download verified photo '+fid)
+
+          uploaded = 0
+          for code, listing_id, file_ids in source:
+              for position, fid in enumerate(file_ids, 1):
+                  data = download(fid)
+                  path = f'pending/{listing_id}/{position:02d}.jpg'
+                  url = f'{base}/storage/v1/object/listing-images/{path}'
+                  req = urllib.request.Request(url, data=data, method='POST', headers={
+                      'apikey': key,
+                      'Content-Type': 'image/jpeg',
+                      'x-upsert': 'false'
+                  })
+                  for attempt in range(3):
+                      try:
+                          with urllib.request.urlopen(req, timeout=40) as response:
+                              if response.status not in (200, 201):
+                                  raise RuntimeError('unexpected status: '+str(response.status))
+                          break
+                      except urllib.error.HTTPError as e:
+                          detail = e.read().decode('utf-8', errors='replace')[:260]
+                          if e.code == 409 and 'already exists' in detail.lower():
+                              break
+                          if attempt == 2:
+                              raise RuntimeError(f'{code} #{position}: upload HTTP {e.code}: {detail}')
+                          time.sleep(2)
+                  uploaded += 1
+                  print(f'OK {code} image {position}/{len(file_ids)} bytes={len(data)} path={path}')
+          print(f'Finished: {uploaded} real CTV photos; no reference images used')
+          PY
