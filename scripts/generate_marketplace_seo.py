@@ -703,7 +703,7 @@ def render_page(listing: dict) -> str:
   <meta name="twitter:card" content="summary_large_image">
   <link rel="stylesheet" href="/assets/css/site.css?v=20260907-layoutfix1">
   <link rel="stylesheet" href="/assets/css/marketplace.css?v=20260829-detail5">
-  <link rel="stylesheet" href="/assets/css/listing-detail.css?v=20260908-detail1">
+  <link rel="stylesheet" href="/assets/css/listing-detail.css?v=20261102-reference1">
   <script type="application/ld+json">{schema_json}</script>
 </head>
 <body class="listing-detail-page">
@@ -717,7 +717,7 @@ def render_page(listing: dict) -> str:
   <script src="/assets/js/marketplace-config.js"></script>
   <script src="/assets/js/marketplace-api.js?v=20260829-poster"></script>
   <script src="/assets/js/marketplace-lightbox.js?v=20260908-detail1" defer></script>
-  <script src="/assets/js/listing-detail-ui.js?v=20260908-detail1" defer></script>
+  <script src="/assets/js/listing-detail-ui.js?v=20261102-reference1" defer></script>
   <script src="/assets/js/marketplace-static-status.js?v=20260908-detail1" defer></script>
 </body>
 </html>
