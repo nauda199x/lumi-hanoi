@@ -10,7 +10,12 @@
   const sortedImages=listing=>[...(listing.listing_images||[])].filter(image=>image.storage_path).sort((a,b)=>Number(a.sort_order||0)-Number(b.sort_order||0));
   const galleryMarkup=listing=>{
     const images=sortedImages(listing);
-    if(!images.length)return '<div class="ld-empty-gallery"><strong>Hình ảnh đang được bổ sung</strong><p>Liên hệ người đăng để xem hình ảnh và hiện trạng căn.</p></div>';
+    if(!images.length){
+      if(listing.listing_code==="LH-T3N57"||String(listing.slug||"").endsWith("-lh-t3n57")){
+        return '<figure class="ld-reference-photo"><img src="/assets/media/real-2026/lumi-thap-can-ho-ngoai-that-1200.webp" alt="Ảnh ngoại thất dự án Lumi Hà Nội, không phải ảnh thực tế của căn hộ cho thuê" width="1200" height="750" loading="eager" decoding="async"><figcaption>Ảnh tổng quan dự án Lumi Hà Nội (tham khảo). Chưa có ảnh thực tế căn hộ này.</figcaption></figure>';
+      }
+      return '<div class="ld-empty-gallery"><strong>Hình ảnh đang được bổ sung</strong><p>Liên hệ người đăng để xem hình ảnh và hiện trạng căn.</p></div>';
+    }
     const figures=images.map((item,index)=>`<figure><img src="${esc(window.LumiMarketplace.imageUrl(item.storage_path))}" alt="${esc(item.alt_text||`${listing.title} — ảnh ${index+1}`)}" width="1200" height="900" loading="${index?"lazy":"eager"}" ${index?"":'fetchpriority="high"'} decoding="async"></figure>`).join("");
     return `<div class="ld-gallery-stage"><div class="ld-gallery-track" tabindex="0" aria-label="Ảnh tin đăng, dùng phím trái và phải để chuyển ảnh">${figures}</div><span class="ld-gallery-counter" data-gallery-counter>1 / ${images.length}</span></div>`;
   };
