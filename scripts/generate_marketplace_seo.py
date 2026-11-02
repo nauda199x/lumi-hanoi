@@ -190,6 +190,15 @@ def date_only(value) -> str:
 def render_gallery(listing: dict) -> str:
     images = sorted([item for item in listing.get("listing_images") or [] if item.get("storage_path")], key=lambda item: int(item.get("sort_order") or 0))
     if not images:
+        if listing.get("listing_code") == "LH-T3N57":
+            return (
+                '<figure class="ld-reference-photo">'
+                '<img src="/assets/media/real-2026/lumi-thap-can-ho-ngoai-that-1200.webp" '
+                'alt="Ảnh ngoại thất dự án Lumi Hà Nội, không phải ảnh thực tế của căn hộ cho thuê" '
+                'width="1200" height="750" loading="eager" fetchpriority="high" decoding="async">'
+                '<figcaption>Ảnh tổng quan dự án Lumi Hà Nội (tham khảo). Chưa có ảnh thực tế căn hộ này.</figcaption>'
+                '</figure>'
+            )
         return '<div class="ld-empty-gallery"><strong>Hình ảnh đang được bổ sung</strong><p>Liên hệ người đăng để xem hình ảnh và hiện trạng căn.</p></div>'
     figures = []
     for index, item in enumerate(images):
@@ -606,7 +615,10 @@ def render_page(listing: dict) -> str:
     description = meta_description(listing)
     robots = "index,follow,max-image-preview:large" if indexable(listing) else "noindex,follow"
     images = sorted(listing.get("listing_images") or [], key=lambda item: int(item.get("sort_order") or 0))
-    hero_image = storage_url(images[0]["storage_path"]) if images else SITE + "/assets/media/og/lumi-hanoi-og.webp"
+    hero_image = (storage_url(images[0]["storage_path"]) if images
+                  else SITE + ("/assets/media/real-2026/lumi-thap-can-ho-ngoai-that-1200.webp"
+                               if listing.get("listing_code") == "LH-T3N57"
+                               else "/assets/media/og/lumi-hanoi-og.webp"))
     area = format_area(listing.get("area_sqm"))
     price = format_price(listing)
     posted = date_only(listing.get("approved_at") or listing.get("created_at"))
