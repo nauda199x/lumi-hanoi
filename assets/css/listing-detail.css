@@ -64,6 +64,10 @@
 .ld-empty-gallery{display:grid;place-content:center;justify-items:center;gap:12px;aspect-ratio:16/10;border-radius:14px;background:var(--ld-soft);text-align:center;padding:32px;color:var(--ld-muted)}
 .ld-empty-gallery strong{font-size:1.2rem;color:var(--ld-ink)}
 .ld-empty-gallery p{max-width:360px;margin:0}
+.ld-reference-photo{margin:0;border-radius:14px;overflow:hidden;background:#edf0ec}
+.ld-reference-photo img{display:block;width:100%;aspect-ratio:16/10;object-fit:cover}
+.ld-reference-photo figcaption{margin:0;padding:12px 16px;color:#3b4b40;background:#f5f7f5;font-size:.875rem;line-height:1.5}
+@media(max-width:640px){.ld-reference-photo{border-radius:0}.ld-reference-photo img{aspect-ratio:4/3}}
 .ld-facts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));margin:23px 0 0;padding:0 0 25px;gap:0;border-bottom:1px solid var(--ld-line)}
 .ld-facts>div{padding:0 20px;border-left:1px solid var(--ld-line)}
 .ld-facts>div:first-child{border-left:0;padding-left:0}
