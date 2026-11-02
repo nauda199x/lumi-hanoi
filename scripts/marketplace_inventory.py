@@ -40,7 +40,9 @@ def render_row(g, listing, index=0):
     url = esc(g.listing_url(listing))
     title = esc(listing.get("title") or "Xem căn hộ")
     images = sorted((i for i in listing.get("listing_images", []) if i.get("storage_path")), key=lambda i: i.get("sort_order") or 0)
-    media = '<span class="inventory-placeholder">Đang tải ảnh…</span>' if images else '<span class="inventory-placeholder">Chưa có ảnh</span>'
+    reference_only = not images and listing.get("listing_code") == "LH-T3N57"
+    media = ('<span class="inventory-placeholder">Đang tải ảnh…</span>' if images
+             else ("" if reference_only else '<span class="inventory-placeholder">Chưa có ảnh</span>'))
     if images:
         original = g.storage_url(images[0]["storage_path"])
         thumbnail = getattr(g, "INVENTORY_THUMBNAILS", {}).get(original, original)
@@ -48,6 +50,11 @@ def render_row(g, listing, index=0):
                   f'alt="{esc(images[0].get("alt_text") or listing.get("title") or "Ảnh căn hộ Lumi Hanoi")}" width="560" height="420" '
                   f'loading="{"eager" if index == 0 else "lazy"}" decoding="async">')
         media += f'<span class="inventory-image-count">{icon("image")}{len(images)} ảnh</span>'
+    elif reference_only:
+        media += ('<img src="/assets/media/real-2026/lumi-thap-can-ho-ngoai-that-640.webp" '
+                  'alt="Ảnh ngoại thất dự án Lumi Hà Nội, chưa phải ảnh căn hộ cho thuê" '
+                  'width="560" height="420" loading="lazy" decoding="async">'
+                  '<span class="inventory-image-count">Ảnh dự án (tham khảo)</span>')
     media += '<span class="inventory-status">' + ("CHO THUÊ" if rental else "MUA BÁN") + '</span>'
     place = " · ".join(str(listing[k]) for k in ("phase", "tower") if listing.get(k))
     info = f'<p class="inventory-location" title="{esc(place)}">{icon("pin")}<span>{esc(place)}</span></p>' if place else ""
