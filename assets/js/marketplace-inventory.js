@@ -103,7 +103,8 @@
     const url=api.listingUrl(listing);
     const media=el("a","inventory-media");media.href=url;media.setAttribute("aria-label",`Xem ${listing.title||"căn hộ"}`);
     const images=[...(listing.listing_images||[])].filter(i=>i.storage_path).sort((a,b)=>Number(a.sort_order)-Number(b.sort_order));
-    const placeholder=el("span","inventory-placeholder",images.length?"Đang tải ảnh…":"Chưa có ảnh");
+    const referenceOnly=!images.length&&(listing.listing_code==="LH-T3N57"||String(listing.slug||"").endsWith("-lh-t3n57"));
+    const placeholder=el("span","inventory-placeholder",images.length?"Đang tải ảnh…":referenceOnly?"Đang tải ảnh dự án…":"Chưa có ảnh");
     media.append(placeholder);
     if(images.length){
       const image=el("img");const original=api.imageUrl(images[0].storage_path);
@@ -113,6 +114,14 @@
       image.addEventListener("error",()=>{placeholder.textContent="Ảnh chưa tải được";},{once:true});
       protectImage(image,original);media.append(image);
       const counter=el("span","inventory-image-count");counter.append(icon("image"),document.createTextNode(`${images.length} ảnh`));media.append(counter);
+    }else if(referenceOnly){
+      const image=el("img");
+      image.src="/assets/media/real-2026/lumi-thap-can-ho-ngoai-that-640.webp";
+      image.alt="Ảnh ngoại thất dự án Lumi Hà Nội, không phải ảnh thực tế của căn hộ cho thuê";
+      image.width=560;image.height=420;image.loading="lazy";image.decoding="async";
+      image.addEventListener("load",()=>{placeholder.hidden=true;},{once:true});
+      image.addEventListener("error",()=>{placeholder.textContent="Chưa có ảnh thực tế";},{once:true});
+      media.append(image,el("span","inventory-image-count","Ảnh dự án (tham khảo)"));
     }
     const info=el("div","inventory-info");
     const place=[listing.phase,listing.tower].filter(Boolean).join(" · ");
