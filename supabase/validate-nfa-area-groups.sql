@@ -12,7 +12,7 @@ BEGIN
   CASE NEW.unit_type
     WHEN '1PN' THEN accepted := ARRAY[43,47,54]::numeric[];
     WHEN '2PN' THEN accepted := ARRAY[54,62,74,85,97]::numeric[];
-    WHEN '3PN' THEN accepted := ARRAY[85,95,101,107,112,117,130,137]::numeric[];
+    WHEN '3PN' THEN accepted := ARRAY[81,85,95,101,107,112,117,130,137]::numeric[];
     WHEN '4PN' THEN accepted := ARRAY[128,136]::numeric[];
     WHEN 'Duplex' THEN accepted := ARRAY[115,134,143,194,200,212]::numeric[];
     WHEN 'Penthouse' THEN accepted := ARRAY[346,368,377,402]::numeric[];
