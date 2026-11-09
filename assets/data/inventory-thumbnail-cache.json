@@ -35,13 +35,6 @@
       "src": "/assets/media/listing-thumbnails/7fc94bd69c3077b82913f24776251c74.webp",
       "width": 800
     },
-    "https://salsyqatlzapnzbcnnsr.supabase.co/storage/v1/object/public/listing-images/pending/0e4f6070-05e7-4930-ab37-fd800359ba8e/01-7b73985a-30e2-47ef-9cfd-fa0f49a468cf.jpg": {
-      "bytes": 147226,
-      "height": 800,
-      "source_bytes": 1059869,
-      "src": "/assets/media/listing-thumbnails/288b906eef1b570586b34a3893f65b0d.webp",
-      "width": 600
-    },
     "https://salsyqatlzapnzbcnnsr.supabase.co/storage/v1/object/public/listing-images/pending/125bbc57-f3bc-43b6-a2b1-a962ab90ba0d/01-282ad034-5c63-41ac-8176-80e8fef3d271.jpeg": {
       "bytes": 31050,
       "height": 800,
@@ -231,6 +224,13 @@
       "src": "/assets/media/listing-thumbnails/c838e4d7461a82a117570b668c01611f.webp",
       "width": 600
     },
+    "https://salsyqatlzapnzbcnnsr.supabase.co/storage/v1/object/public/listing-images/pending/565611db-afa1-4cb0-8fd9-c21076de1ed5/01-4604404b-3bbb-4366-ade0-5174ce72001a.jpg": {
+      "bytes": 28224,
+      "height": 800,
+      "source_bytes": 82576,
+      "src": "/assets/media/listing-thumbnails/17bc38c84dc89fa39db6479ac40c5b53.webp",
+      "width": 600
+    },
     "https://salsyqatlzapnzbcnnsr.supabase.co/storage/v1/object/public/listing-images/pending/591e0a2a-1ea8-414b-a981-044b221ab49c/01-67ee0e15-a2e6-4773-9b2f-08d39d18d7dc.jpg": {
       "bytes": 32478,
       "height": 800,
@@ -293,13 +293,6 @@
       "source_bytes": 226110,
       "src": "/assets/media/listing-thumbnails/fcdf19b31105028018bcbf7a788ab07d.webp",
       "width": 640
-    },
-    "https://salsyqatlzapnzbcnnsr.supabase.co/storage/v1/object/public/listing-images/pending/6d83b089-914b-4c87-a9dd-aaf89e9195ca/01-68abb77a-1939-47e0-8293-ffb4e0788d09.jpg": {
-      "bytes": 147226,
-      "height": 800,
-      "source_bytes": 1059869,
-      "src": "/assets/media/listing-thumbnails/def651528e0fefa7e58254699d473e1c.webp",
-      "width": 600
     },
     "https://salsyqatlzapnzbcnnsr.supabase.co/storage/v1/object/public/listing-images/pending/6e73246f-ae93-400d-96d0-e44e3c3406ae/01-136b5eb2-b049-46e5-a8db-abf03b4e9255.jpg": {
       "bytes": 50778,
