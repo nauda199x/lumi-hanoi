@@ -15,13 +15,19 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install image optimizer
+        run: python -m pip install --quiet Pillow==11.3.0
       - name: Upload verified per-unit images to pending marketplace listings
         env:
           PYTHONUNBUFFERED: "1"
         run: |
           python - <<'PY'
-          import re, time, json, urllib.request, urllib.error
+          import re, time, json, io, urllib.request, urllib.error
           from pathlib import Path
+          from PIL import Image, ImageOps
 
           cfg=Path("assets/js/marketplace-config.js").read_text(encoding="utf-8")
           base=re.search(r'supabaseUrl:\s*"([^"]+)"',cfg).group(1).rstrip("/")
@@ -62,7 +68,7 @@ jobs:
             urls=[
               f"https://drive.google.com/thumbnail?id={file_id}&sz=w1600",
               f"https://drive.google.com/thumbnail?id={file_id}&sz=w1200",
-              f"https://drive.google.com/uc?export=download&id={file_id}"
+              f"https://drive.google.com/uc?export=download&id={file_id}",
             ]
             errors=[]
             for url in urls:
@@ -70,9 +76,25 @@ jobs:
                 req=urllib.request.Request(url,headers={"User-Agent":"Mozilla/5.0"})
                 with urllib.request.urlopen(req,timeout=32) as response:
                   data=response.read(5*1024*1024+1)
-                if 12000<len(data)<=5*1024*1024 and data[:3]==b"\xff\xd8\xff":
+                if not 10000<len(data)<=5*1024*1024:
+                  errors.append(f"invalid size {len(data)}")
+                  continue
+                if data[:3]==b"\\xff\\xd8\\xff" and len(data)<400000:
                   return data
-                errors.append(f"not JPEG or wrong size ({len(data)})")
+                if data[:3] not in (b"\\xff\\xd8\\xff", b"\\x89PN"):
+                  errors.append(f"unsupported format {data[:8]!r}")
+                  continue
+                with Image.open(io.BytesIO(data)) as orig:
+                  pic=ImageOps.exif_transpose(orig)
+                  pic.thumbnail((1600,1600),Image.Resampling.LANCZOS)
+                  if pic.mode!="RGB":
+                    pic=pic.convert("RGB")
+                  buf=io.BytesIO()
+                  pic.save(buf,format="JPEG",quality=82,optimize=True)
+                  result=buf.getvalue()
+                  if 12000<len(result)<5*1024*1024:
+                    return result
+                errors.append("Image conversion output invalid")
               except Exception as ex:
                 errors.append(str(ex)[:160])
             raise RuntimeError(f"Download failed for {file_id}: {errors}")
