@@ -79,9 +79,9 @@ jobs:
                 if not 10000<len(data)<=5*1024*1024:
                   errors.append(f"invalid size {len(data)}")
                   continue
-                if data[:3]==b"\\xff\\xd8\\xff" and len(data)<400000:
+                if data.startswith(bytes.fromhex("ffd8ff")) and len(data)<400000:
                   return data
-                if data[:3] not in (b"\\xff\\xd8\\xff", b"\\x89PN"):
+                if not (data.startswith(bytes.fromhex("ffd8ff")) or data.startswith(bytes.fromhex("89504e"))):
                   errors.append(f"unsupported format {data[:8]!r}")
                   continue
                 with Image.open(io.BytesIO(data)) as orig:
