@@ -1,0 +1,119 @@
+name: Import selected Lumi rental photos (2026-11-12)
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - ".github/workflows/import-selected-lumi-rent-photos-20261112.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Upload verified per-unit images to pending marketplace listings
+        env:
+          PYTHONUNBUFFERED: "1"
+        run: |
+          python - <<'PY'
+          import re, time, json, urllib.request, urllib.error
+          from pathlib import Path
+
+          cfg=Path("assets/js/marketplace-config.js").read_text(encoding="utf-8")
+          base=re.search(r'supabaseUrl:\s*"([^"]+)"',cfg).group(1).rstrip("/")
+          key=re.search(r'supabasePublishableKey:\s*"([^"]+)"',cfg).group(1)
+
+          # Google Drive file IDs are taken from exact corresponding CTV Sheet
+          # row album; never reuse a gallery from a different apartment.
+          photos={
+            "LH-T3N76":("a6c3b6d8-f3d8-4772-8ecd-145fd1d8f5d0",[
+              "1xwhbuMtoA14L9qBsk_Gz-z5EwZnTV5Mv",
+              "1dc0yfYxGM0W6X6fc7ozLqtl6eKTwppKv",
+              "1Z906QsL6kik4zyXhwwiJj-xlYI0DmkEJ",
+              "11JKNBpbYKcDeWTQqKEXJp35pySXl9GL1",
+              "1bTm0xTwt5J7qmwHX2qbGuSnHCsepGuQw",
+              "1jDzK1wXeezIVRAUDynxjVkauQiY4OUl_",
+              "1e5ZswEP_L15k2VRsyr9VDgJcIQkipbKS",
+              "13ELpRuCx8xbqTByS--Q1oQ6FARell1vm"
+            ]),
+            "LH-T2N126":("4c2f4b6d-47b5-4b6e-8c81-fbd7058cd74c",[
+              "1OlxXogGFF_iExWTn814L_8Tbxdts39-M",
+              "1p_Qt-bnGkVIWFQmwkhsMevToLeaZdVnU",
+              "1F2AIsBz42baid16UlKiVJRETyqA52Fpv",
+              "1YZ-3xOw1EOqAqnB0wqWBg03bGoiGftd3",
+              "1gIFgSIE8CJFL9oVer7Lg-rZHZ4uTfWM3",
+              "1iFtqbnBBKC_KicgeCf3oSX4OQYGVfFTj",
+              "1C-bm9fuzk2Ct2aeWJjMQ6Ed35h6de1zu"
+            ]),
+            "LH-T2N134":("b63f2576-3f37-45c6-ad36-41b7bf860149",[
+              "1gclLAH0aoWg9cKK306FHjpiI6BWwaArZ",
+              "1KJlmGTc36Crwo72JzCCRIlspOh0SOJh-",
+              "1IzDhtiykkUmfpwVCB18i39U1dzWzpVzv",
+              "17ELPPArwR55_tP2K_nKRIXGnchUD4uGC",
+              "1gKCL6ZDMbuEYTr2ixp71azZtz9QL5IFs"
+            ]),
+          }
+
+          def get_jpeg(file_id):
+            urls=[
+              f"https://drive.google.com/thumbnail?id={file_id}&sz=w1600",
+              f"https://drive.google.com/thumbnail?id={file_id}&sz=w1200",
+              f"https://drive.google.com/uc?export=download&id={file_id}"
+            ]
+            errors=[]
+            for url in urls:
+              try:
+                req=urllib.request.Request(url,headers={"User-Agent":"Mozilla/5.0"})
+                with urllib.request.urlopen(req,timeout=32) as response:
+                  data=response.read(5*1024*1024+1)
+                if 12000<len(data)<=5*1024*1024 and data[:3]==b"\xff\xd8\xff":
+                  return data
+                errors.append(f"not JPEG or wrong size ({len(data)})")
+              except Exception as ex:
+                errors.append(str(ex)[:160])
+            raise RuntimeError(f"Download failed for {file_id}: {errors}")
+
+          report={}
+          for code,(listing_id,ids) in photos.items():
+            report[code]=[]
+            for position,fid in enumerate(ids,1):
+              image=get_jpeg(fid)
+              path=f"pending/{listing_id}/{position:02d}.jpg"
+              url=f"{base}/storage/v1/object/listing-images/{path}"
+              req=urllib.request.Request(url,method="POST",data=image,headers={
+                "apikey":key,"Content-Type":"image/jpeg","x-upsert":"false",
+              })
+              ok=False
+              for attempt in range(3):
+                try:
+                  with urllib.request.urlopen(req,timeout=45) as res:
+                    if res.status not in (200,201):
+                      raise RuntimeError(f"Unexpected upload status {res.status}")
+                  ok=True
+                  break
+                except urllib.error.HTTPError as err:
+                  detail=err.read().decode("utf-8",errors="replace")[:300]
+                  if err.code==409 and ("already exists" in detail.lower() or "duplicate" in detail.lower()):
+                    ok=True
+                    break
+                  if attempt==2:
+                    raise RuntimeError(f"{code} image {position}: HTTP {err.code} {detail}")
+                  time.sleep(2)
+              if not ok:
+                raise RuntimeError(f"Upload not confirmed {code} image {position}")
+              report[code].append(path)
+              print(f"OK {code} {position}/{len(ids)} ({len(image)} bytes)")
+          print("UPLOAD_REPORT="+json.dumps(report))
+          with open("photo-import-report.json","w") as out:
+            json.dump(report,out,indent=2)
+          PY
+      - name: Store import report
+        uses: actions/upload-artifact@v4
+        with:
+          name: selected-rent-photo-import
+          path: photo-import-report.json
+          retention-days: 3
