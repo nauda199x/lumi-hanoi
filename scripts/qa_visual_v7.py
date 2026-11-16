@@ -23,6 +23,8 @@ COMPETITORS = ("vinhomes.vn", "batdongsan.com.vn", "onehousing.vn")
 PROHIBITED = ("đăng ký ngay", "nhận bảng giá sốc", "chỉ còn ")
 INTENTIONAL_NOINDEX = {
     Path("admin/index.html"),
+    Path("admin/khach-thue/index.html"),
+    Path("tim-can-thue-lumi/index.html"),
     Path("tin-dang-lumi-hanoi/index.html"),
     Path("tin-dang-khong-con-hien-thi/index.html"),
     Path("tin-da-luu-lumi-hanoi/index.html"),
