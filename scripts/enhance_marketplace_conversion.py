@@ -2,13 +2,14 @@
 """3F: add a lightweight conversion layer to marketplace SEO surfaces."""
 from __future__ import annotations
 import re
+from urllib.parse import urlencode
 from datetime import date, timedelta
 from pathlib import Path
 import generate_marketplace_seo as gen
 import generate_sale_tower_seo as sale
 
 CSS='<link rel="stylesheet" href="/assets/css/marketplace-conversion.css?v=20260910-3f">'
-JS='<script src="/assets/js/marketplace-conversion.js?v=20260910-3f" defer></script>'
+JS='<script src="/assets/js/marketplace-conversion.js?v=20261116-rental1" defer></script>'
 START='<!-- MARKETPLACE-CONVERSION:START -->'; END='<!-- MARKETPLACE-CONVERSION:END -->'
 DETAIL_START='<!-- MARKETPLACE-CONVERSION:DETAIL-START -->'; DETAIL_END='<!-- MARKETPLACE-CONVERSION:DETAIL-END -->'
 FLOOR_START='<!-- MARKETPLACE-CONVERSION:FLOOR-START -->'; FLOOR_END='<!-- MARKETPLACE-CONVERSION:FLOOR-END -->'
@@ -26,19 +27,30 @@ def marked(raw,start,end,body):
 
 def assets(raw):
     if CSS not in raw: raw=raw.replace('</head>',CSS+'\n</head>',1)
+    raw=re.sub(r'<script src="/assets/js/marketplace-conversion\.js\?v=[^"<>]+" defer></script>', JS, raw, count=1)
     if JS not in raw: raw=raw.replace('</body>',JS+'\n</body>',1)
     return raw
 
 def listing_type(raw):
     return 'rent' if ('data-listing-type="rent"' in raw or '<span data-detail-type>Cho thuê</span>' in raw) else 'sale'
 
-def strip(kind):
+RENTAL_HUB = 'cho-thue-lumi-hanoi'
+RENTAL_CATEGORY = {f'cho-thue-can-ho-{n}-phong-ngu-lumi-hanoi': f'{n}PN' for n in range(1, 5)}
+
+def renter_link(slug):
+    if slug not in ('cho-thue-lumi-hanoi', *RENTAL_CATEGORY):
+        return ''
+    query = '?' + urlencode({'loai': RENTAL_CATEGORY[slug]}) if slug in RENTAL_CATEGORY else ''
+    return f'<a class="mp-conversion-link mp-conversion-link--primary" href="/tim-can-thue-lumi/{query}" data-rental-agent-link data-conversion-action="rental_agent_open">Tìm căn theo nhu cầu</a>'
+
+def strip(kind, slug):
     post='/dang-tin-lumi-hanoi/#cho-thue' if kind=='rent' else '/dang-tin-lumi-hanoi/#mua-ban'
-    return f'<section class="mp-conversion-strip" data-conversion-surface="landing" aria-label="Hành động nhanh"><div class="mp-conversion-copy"><strong>So sánh căn rồi quay lại khi cần</strong><span>Lưu các tin quan tâm trên thiết bị này, hoặc đăng quỹ căn của anh/chị miễn phí.</span></div><div class="mp-conversion-actions"><a class="mp-conversion-link" href="/tin-da-luu-lumi-hanoi/" data-conversion-action="open_saved_list">Tin đã lưu <span class="mp-saved-count" data-saved-count>0</span></a><a class="mp-conversion-link mp-conversion-link--primary" href="{post}" data-conversion-action="owner_post">Đăng tin miễn phí</a></div></section>'
+    renter = renter_link(slug)
+    return f'<section class="mp-conversion-strip" data-conversion-surface="landing" aria-label="Hành động nhanh"><div class="mp-conversion-copy"><strong>So sánh căn rồi quay lại khi cần</strong><span>Lưu các tin quan tâm trên thiết bị này, hoặc đăng quỹ căn của anh/chị miễn phí.</span></div><div class="mp-conversion-actions">{renter}<a class="mp-conversion-link" href="/tin-da-luu-lumi-hanoi/" data-conversion-action="open_saved_list">Tin đã lưu <span class="mp-saved-count" data-saved-count>0</span></a><a class="mp-conversion-link mp-conversion-link--primary" href="{post}" data-conversion-action="owner_post">Đăng tin miễn phí</a></div></section>'
 
 def enhance_landing(path):
     if not path.is_file():return False
-    raw=path.read_text(encoding='utf-8'); raw=assets(raw); body=strip(listing_type(raw)); block=START+'\n'+body+'\n'+END
+    raw=path.read_text(encoding='utf-8'); raw=assets(raw); body=strip(listing_type(raw), path.parent.name); block=START+'\n'+body+'\n'+END
     if START in raw and END in raw: raw=marked(raw,START,END,body)
     else:
         m=re.search(r'<main\b.*?>.*?</header>',raw,flags=re.S)
@@ -56,6 +68,12 @@ def enhance_details():
             tower_match=re.search(r'<span data-detail-tower>([^<]+)</span>',raw); tower=gen.clean(tower_match.group(1)) if tower_match else ''
             label=f'Có căn {tower} tương tự? Đăng tin miễn phí' if tower else 'Có căn tương tự? Đăng tin miễn phí'
             body=f'<div class="mp-conversion-detail" data-conversion-surface="detail"><a class="mp-conversion-link" href="/tin-da-luu-lumi-hanoi/" data-conversion-action="open_saved_list">Tin đã lưu <span class="mp-saved-count" data-saved-count>0</span></a><a class="mp-conversion-link" data-detail-owner-post href="{post}" data-conversion-action="owner_post">{gen.esc(label)}</a></div>'
+            phone_match=re.search(r'data-detail-phone href="tel:([^"]+)"', raw)
+            phone=re.sub(r'[^0-9]', '', phone_match.group(1)) if phone_match else ''
+            if root_name == RENTAL_HUB and phone in {'0977923284', '84977923284', '0084977923284'}:
+                query=gen.esc(urlencode({'can': path.parent.name}))
+                cta=f'<a class="mp-conversion-link mp-conversion-link--primary" href="/tim-can-thue-lumi/?{query}" data-rental-agent-link data-conversion-action="rental_agent_viewing">Yêu cầu hẹn xem</a>'
+                body=body.replace('</div>', cta+'</div>')
             block=DETAIL_START+'\n'+body+'\n'+DETAIL_END
             if DETAIL_START in raw and DETAIL_END in raw:raw=marked(raw,DETAIL_START,DETAIL_END,body)
             else:

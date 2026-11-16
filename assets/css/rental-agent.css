@@ -1,0 +1,52 @@
+:root{color-scheme:light;--bg:#f7f5ef;--ink:#162721;--forest:#174436;--pale:#edf4ed;--muted:#4a5d54;--line:#d8e0d8;font-family:"Instrument Sans",system-ui,sans-serif;color:var(--ink);background:var(--bg)}
+*{box-sizing:border-box}
+body{margin:0;line-height:1.53}
+[hidden]{display:none!important}
+a{color:var(--forest);text-underline-offset:.22em}
+button,input,textarea,select{font:inherit}
+:focus-visible{outline:3px solid #80752e;outline-offset:3px}
+.wrap{width:min(1120px,calc(100% - 40px));margin-inline:auto}
+.bar{display:flex;justify-content:space-between;align-items:center;gap:12px;padding-block:17px;font-size:.91rem}
+.brand{display:inline-flex;align-items:center;gap:10px;color:var(--ink);font-weight:750;text-decoration:none}
+.brand span{display:grid;place-items:center;background:var(--forest);color:#fff;border-radius:7px;width:38px;height:38px;font-size:.78rem;letter-spacing:.05em}
+.hero{display:grid;grid-template-columns:1fr 1fr;border-radius:22px;background:#153b30;color:#fff;overflow:hidden}
+.hero>div{padding:clamp(25px,5vw,60px)}
+.hero picture{display:block;position:relative;min-height:255px}
+.hero img{position:absolute;width:100%;height:100%;object-fit:cover;object-position:50% 57%}
+.hero h1{font-family:"DM Serif Text",Georgia,serif;font-size:clamp(2.55rem,5.3vw,4.55rem);line-height:1.02;font-weight:400;margin:0 0 16px;letter-spacing:-.035em}
+.hero p{max-width:40ch;margin:0;color:#e0ece3}
+.hero .eyebrow{font-size:.88rem;font-weight:650;margin-bottom:13px}
+.columns{display:grid;grid-template-columns:1.3fr 1fr;align-items:start;gap:18px;margin:20px 0 0}
+.panel{border:1px solid var(--line);border-radius:17px;background:#fff;padding:clamp(17px,3vw,27px);min-width:0}
+.panel h1,.panel h2{line-height:1.22;margin:0 0 14px}
+.panel h2{font-size:clamp(1.2rem,2.5vw,1.62rem)}
+label{display:block;font-size:.88rem;font-weight:680;margin-bottom:4px}
+label span,.muted{color:var(--muted);font-weight:420}
+.muted{margin:0 0 14px}
+input:not([type=checkbox]),select,textarea{width:100%;min-width:0;min-height:44px;padding:8px 10px;color:inherit;background:#fcfdfa;border:1px solid #aabbb0;border-radius:8px;font-size:16px}
+textarea{display:block;resize:vertical}
+.fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px;margin:12px 0}
+.check{display:flex;align-items:flex-start;gap:8px;margin:11px 0;font-weight:520}
+.check input{width:18px;height:18px;margin:2px 0;flex:none;accent-color:var(--forest)}
+button{cursor:pointer;min-height:42px;padding:7px 13px;border-radius:8px;border:1px solid var(--forest);background:var(--forest);color:#fff;font-weight:700}
+button:disabled{opacity:.6;cursor:wait}
+.secondary{background:var(--pale);color:var(--forest)}
+.small{min-height:37px;margin-top:8px;font-size:.86rem}
+.wide{width:100%}
+.link{border:0;border-radius:0;padding:0;background:none;color:var(--forest);min-height:auto;font:inherit;text-decoration:underline;text-underline-offset:.2em}
+.feedback{color:var(--muted);font-size:.9rem;margin:8px 0 0}
+.feedback:empty{display:none}
+.feedback[data-error]{color:#98321e}
+.zalo{border-top:1px solid var(--line);margin:15px 0 0;padding-top:13px;font-size:.9rem}
+.picked{background:var(--pale);margin:0 0 11px;padding:8px;border-radius:8px;font-size:.87rem}
+#results,#inbox-list{display:grid;gap:10px;margin-block:11px 0}
+.match,.lead{padding:11px;border:1px solid var(--line);border-radius:9px;min-width:0;overflow-wrap:anywhere}
+.match{display:flex;gap:10px}
+.match img{width:82px;height:78px;object-fit:cover;border-radius:7px}
+.match h3,.lead h2{font-size:1rem;margin:0 0 4px}
+.match p,.lead p{font-size:.88rem;margin:3px 0 6px;color:var(--muted)}
+.actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:10px}
+.actions select{max-width:175px}
+.lead .hot{color:#97311d;font-weight:700}
+@media(max-width:740px){.columns{grid-template-columns:1fr;gap:12px;margin-top:14px}}
+@media(max-width:525px){.wrap{width:calc(100% - 24px)}.hero{grid-template-columns:1fr}.hero picture{min-height:135px}.hero h1{margin-bottom:11px}.hero h1 br{display:none}.hero>div{padding:23px}.hero p{font-size:.9rem}.bar{font-size:.82rem;padding-block:13px}}

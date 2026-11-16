@@ -23,12 +23,31 @@
     const hash=type.includes("thuê")?"#cho-thue":type.includes("bán")?"#mua-ban":"";
     document.querySelectorAll("[data-detail-owner-post]").forEach(link=>{link.href="/dang-tin-lumi-hanoi/"+hash;const label=tower&&tower!=="Chưa cập nhật"?`Có căn ${tower} tương tự? Đăng tin miễn phí`:"Có căn tương tự? Đăng tin miễn phí";link.textContent=label;});
   };
+  const attributeRentalLinks=()=>{
+    const source=new URLSearchParams(location.search);
+    if(!source.has("utm_source")&&!source.has("gclid")&&!source.has("gbraid")&&!source.has("wbraid")){
+      try{
+        if(/(^|\.)google\./i.test(new URL(document.referrer).hostname)){
+          source.set("utm_source","google");
+          source.set("utm_medium","organic");
+        }
+      }catch{}
+    }
+    document.querySelectorAll("[data-rental-agent-link]").forEach(link=>{
+      const url=new URL(link.href);
+      for(const key of ["utm_source","utm_medium","utm_campaign","utm_content","gclid","gbraid","wbraid"]){
+        const value=source.get(key);
+        if(value&&/^[\p{L}0-9_./~ -]{1,130}$/u.test(value))url.searchParams.set(key,value);
+      }
+      link.href=url.pathname+url.search;
+    });
+  };
   document.addEventListener("click",event=>{
     const conversion=event.target.closest?.("[data-conversion-action]");if(conversion)track(conversion.dataset.conversionAction||"click",conversion);
     const save=event.target.closest?.("[data-detail-save]");if(save)setTimeout(()=>{const storage=safeStorage(),item=snapshotCurrentListing();if(!storage||!item)return;const key=PREFIX+item.slug;if(storage.getItem(key)==="1")try{storage.setItem(key,JSON.stringify(item));}catch{}refreshSavedCount();window.dispatchEvent(new CustomEvent("lumi:saved-listings-changed"));track(save.getAttribute("aria-pressed")==="true"?"save_listing":"unsave_listing",save);},0);
   });
   window.addEventListener("storage",refreshSavedCount);window.addEventListener("lumi:saved-listings-changed",refreshSavedCount);
-  const init=()=>{migrateCurrentSave();hydrateOwnerPost();refreshSavedCount();};
+  const init=()=>{migrateCurrentSave();hydrateOwnerPost();refreshSavedCount();attributeRentalLinks();};
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init,{once:true});else init();
   window.LumiMarketplaceConversion={savedCount,refreshSavedCount,track};
 })();

@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,follow">
+  <meta name="description" content="Tìm căn hộ Lumi Hà Nội theo ngân sách, nội thất và ngày nhận nhà. Gửi nhu cầu để Đức xác nhận căn và giờ xem.">
+  <meta name="theme-color" content="#f7f5ef">
+  <title>Tìm căn thuê và hẹn xem nhà | Lumi Hà Nội</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/css/rental-agent.css?v=1">
+  <script src="/assets/js/marketplace-config.js" defer></script>
+  <script src="/assets/js/rental-agent.js?v=1" defer></script>
+</head>
+<body>
+  <header class="wrap bar"><a class="brand" href="/"><span aria-hidden="true">LH</span> Lumi Hà Nội</a><a href="/cho-thue-lumi-hanoi/">Quỹ căn cho thuê ↗</a></header>
+  <main class="wrap">
+    <section class="hero">
+      <div><p class="eyebrow">Lumi Hà Nội · Tây Mỗ</p><h1>Tìm căn thuê<br>đúng nhu cầu</h1><p>Lọc căn theo ngân sách, nội thất và ngày nhận nhà. Đức sẽ xác nhận căn còn trống và hẹn giờ xem.</p></div>
+      <picture><source media="(max-width: 600px)" srcset="/assets/media/real-2026/lumi-phong-khach-sinh-hoat-640.webp"><img src="/assets/media/real-2026/lumi-phong-khach-sinh-hoat-1200.webp" alt="Phòng khách thực tế tại Lumi Hà Nội" width="640" height="853" fetchpriority="high"></picture>
+    </section>
+    <div class="columns">
+      <section class="panel" aria-labelledby="needs-title">
+        <h2 id="needs-title">Anh/chị đang tìm căn thế nào?</h2>
+        <form id="search" autocomplete="off">
+          <label for="note">Mô tả nhu cầu <span>(không bắt buộc)</span></label>
+          <textarea id="note" name="note" maxlength="500" rows="2" placeholder="2 ngủ full nội thất, tối đa 12 triệu, có chỗ ô tô, vào ở 1/12"></textarea>
+          <button class="secondary small" type="button" id="interpret">Điền tiêu chí từ mô tả</button>
+          <p class="feedback" id="interpret-status" role="status"></p>
+          <div class="fields">
+            <div><label for="unit">Loại căn</label><select id="unit" name="unit_type"><option value="any">Linh hoạt</option><option>1PN</option><option>2PN</option><option>3PN</option><option>4PN</option><option>Duplex</option><option>Penthouse</option></select></div>
+            <div><label for="budget">Ngân sách tối đa <span>(triệu/tháng)</span></label><input id="budget" name="budget" type="number" min="1" max="200" step="0.1" inputmode="decimal" placeholder="12"></div>
+            <div><label for="furnishing">Nội thất</label><select id="furnishing" name="furnishing"><option value="any">Linh hoạt</option><option>Đồ cơ bản</option><option>Full nội thất</option></select></div>
+            <div><label for="move-in">Ngày nhận nhà dự kiến</label><input id="move-in" name="move_in" type="date"></div>
+          </div>
+          <label class="check"><input type="checkbox" name="parking"> Cần chỗ đỗ ô tô</label>
+          <button type="submit" class="secondary" id="find">Xem căn phù hợp</button>
+        </form>
+        <p class="feedback" id="search-status" role="status"></p>
+        <div id="results" aria-label="Căn gợi ý"></div>
+      </section>
+      <section class="panel" aria-labelledby="request-title">
+        <h2 id="request-title">Gửi nhu cầu hoặc hẹn xem</h2>
+        <p class="muted">Đức sẽ liên hệ theo số anh/chị để lại.</p>
+        <form id="request" autocomplete="off">
+          <p id="picked" class="picked" hidden><span></span> <button type="button" class="link">Bỏ chọn</button></p>
+          <label for="phone">Số điện thoại / Zalo</label>
+          <input id="phone" type="tel" name="phone" autocomplete="tel" maxlength="45" placeholder="09xx xxx xxx" required>
+          <div class="fields">
+            <div><label for="view-date">Ngày muốn xem</label><input id="view-date" name="viewing_date" type="date"></div>
+            <div><label for="view-period">Buổi muốn xem</label><select id="view-period" name="viewing_period"><option value="">Linh hoạt</option><option value="morning">Sáng</option><option value="afternoon">Chiều</option><option value="evening">Tối</option></select></div>
+          </div>
+          <div hidden><label>Website<input name="website" tabindex="-1" autocomplete="off"></label></div>
+          <label class="check"><input type="checkbox" name="consent" required><span>Tôi đồng ý để Đức liên hệ về nhu cầu thuê. <a href="/chinh-sach-bao-mat/#yeu-cau-thue">Chính sách bảo mật</a></span></label>
+          <button type="submit" id="send" class="wide">Gửi cho Đức</button>
+          <p class="feedback" id="request-status" role="status"></p>
+        </form>
+        <p class="zalo">Muốn trao đổi ngay? <a href="https://zalo.me/0977923284" id="zalo">Nhắn Zalo cho Đức</a></p>
+      </section>
+    </div>
+    <noscript><p>Bật JavaScript để gửi yêu cầu hoặc <a href="https://zalo.me/0977923284">nhắn Zalo cho Đức</a>.</p></noscript>
+  </main>
+  <footer class="wrap bar"><a href="/cho-thue-lumi-hanoi/">Quỹ căn cho thuê</a><a href="/chinh-sach-bao-mat/">Chính sách bảo mật</a></footer>
+</body>
+</html>
