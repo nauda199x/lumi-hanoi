@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="referrer" content="no-referrer">
+  <title>Khách thuê Lumi Hà Nội | Quản trị</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/css/rental-agent.css?v=1">
+  <script src="/assets/js/marketplace-config.js" defer></script>
+  <script src="/assets/js/marketplace-api.js?v=20261021-phase1" defer></script>
+  <script src="/assets/js/rental-inbox.js?v=1" defer></script>
+</head>
+<body>
+  <header class="wrap bar"><a class="brand" href="/admin/"><span aria-hidden="true">LH</span> Quản trị Lumi Hà Nội</a><a href="/admin/">Quản lý tin đăng</a></header>
+  <main class="wrap panel">
+    <h1>Khách tìm thuê Lumi</h1>
+    <p id="auth" role="status">Đang kiểm tra phiên đăng nhập…</p>
+    <section id="inbox" hidden aria-label="Danh sách khách thuê">
+      <div class="actions">
+        <div><label for="filter">Trạng thái</label><select id="filter"><option value="">Tất cả</option><option value="new">Mới</option><option value="contacted">Đã liên hệ</option><option value="scheduled">Đã hẹn</option><option value="viewed">Đã xem</option><option value="signed">Đã thuê</option><option value="closed">Đã đóng</option></select></div>
+        <label class="check"><input type="checkbox" id="hot"> Khách cần xử lý sớm</label>
+        <button class="secondary" type="button" id="reload">Tải lại</button>
+      </div>
+      <p id="counts"></p>
+      <p class="feedback" id="message" role="status"></p>
+      <div id="inbox-list"></div>
+      <button class="secondary" id="more" type="button" hidden>Xem khách cũ hơn</button>
+    </section>
+  </main>
+</body>
+</html>
