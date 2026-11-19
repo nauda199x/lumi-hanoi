@@ -16,7 +16,7 @@ test('page 2 reads exactly ten records with an exact total and stable order',asy
   const c=client();const result=await c.api.listPublicPage('sale',{},2);const r=c.request();
   assert.equal(result.total,56);assert.equal(r.url.searchParams.get('limit'),'10');assert.equal(r.url.searchParams.get('offset'),'10');
   assert.equal(r.options.headers.Prefer,'count=exact');assert.equal(r.url.searchParams.get('status'),'eq.approved');
-  assert.equal(r.url.searchParams.get('order'),'approved_at.desc.nullslast,created_at.desc,id.desc');
+  assert.equal(r.url.searchParams.get('order'),'feed_at.desc,created_at.desc,id.desc');
   assert.ok(!r.url.searchParams.get('select').includes('description'));
 });
 test('all filters reach the server before pagination, including exact 4PN',async()=>{
@@ -27,7 +27,7 @@ test('all filters reach the server before pagination, including exact 4PN',async
   assert.match(p.get('or'),/title\.ilike\."%căn S3%"/);assert.equal(p.get('offset'),'20');
 });
 test('five sort choices use deterministic database ordering; untrusted order ignored',async()=>{
-  for(const [sort,first] of Object.entries({newest:'approved_at.desc',price_asc:'price_vnd.asc',price_desc:'price_vnd.desc',area_asc:'area_sqm.asc',area_desc:'area_sqm.desc',injection:'approved_at.desc'})){
+  for(const [sort,first] of Object.entries({newest:'feed_at.desc',price_asc:'price_vnd.asc',price_desc:'price_vnd.desc',area_asc:'area_sqm.asc',area_desc:'area_sqm.desc',injection:'feed_at.desc'})){
     const c=client();await c.api.listPublicPage('sale',{sort});const order=c.request().url.searchParams.get('order');
     assert.ok(order.startsWith(first));assert.ok(order.endsWith('id.desc'));
   }

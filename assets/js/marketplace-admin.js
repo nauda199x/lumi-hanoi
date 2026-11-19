@@ -131,10 +131,10 @@
     if(busy||loading||!items.length)return;
     const count=items.length;
     const labels={approve:['Duyệt / gia hạn tin',`Công khai ${count} tin và đặt thời hạn mới ${Number(api.config.listingLifetimeDays||45)} ngày kể từ hôm nay.`, 'Duyệt / gia hạn'],hide:['Ẩn tin đăng',`Ẩn ${count} tin khỏi danh sách công khai. Có thể duyệt lại khi cần.`, 'Ẩn tin'],reject:['Từ chối tin đăng',`Chuyển ${count} tin sang trạng thái từ chối.`, 'Từ chối'],done:['Đánh dấu đã giao dịch',`${count} tin sẽ được chuyển sang Đã bán hoặc Đã cho thuê theo loại giao dịch và ngừng hiển thị.`, 'Đã giao dịch'],feature:['Ghim tin',`Ưu tiên ${count} tin đang hiển thị.`, 'Ghim tin'],unfeature:['Bỏ ghim tin',`Bỏ ưu tiên ${count} tin đã chọn.`, 'Bỏ ghim']};
-    const [title,message,submit]=labels[action];
+    const [title,message,submit]=labels[action]||[];
     const flagged=action==='approve'?items.filter(row=>qualityNotes(row).length):[];
     const warnings=flagged.length?` Có ${flagged.length} tin cần xác minh ảnh, nội thất hoặc tiêu đề trước khi công khai. Vui lòng mở tin để kiểm tra và chỉnh sửa nếu cần.`:"";
-    const confirmation=await ask({title,message:message+warnings,submit,codes:items.map(row=>row.listing_code),reasonPicker:action==='reject'});
+    const confirmation=action==='bump'||await ask({title,message:message+warnings,submit,codes:items.map(row=>row.listing_code),reasonPicker:action==='reject'});
     if(!confirmation)return;
     if(busy||loading||!loggedIn)return;
     setBusy(true);status(`Đang xử lý 0/${count} tin…`);
@@ -146,8 +146,9 @@
       if(result.failed.length){
         const details=result.failed.slice(0,4).map(item=>`${item.code||'Tin đăng'}: ${item.message}`).join(' ');
         status(`Đã xử lý ${result.success.length}/${count} tin. ${result.failed.length} tin chưa thay đổi. ${details}${result.failed.length>4?' Kiểm tra lại các tin còn lại trước khi thử tiếp.':''}`,true);
-      }else status(`Đã xử lý ${count} tin thành công.`);
-    }catch(error){status(error.message,true);}finally{setBusy(false);if(changed)void syncSeo('admin_bulk_'+action);}
+      }else if(action==='bump')status('Đã đẩy tin lên đầu mục Mới nhất trên trang công khai.');
+      else status(`Đã xử lý ${count} tin thành công.`);
+    }catch(error){status(error.message,true);}finally{setBusy(false);if(changed)void syncSeo(action==='bump'?'listing_bumped':'admin_bulk_'+action);}
   };
   const deleteAndReload=async row=>{
     if(busy||loading)return;
@@ -184,7 +185,9 @@
     if(state==='approved'&&row.expires_at&&new Date(row.expires_at)-Date.now()<=7*86400000)stack.append(pill('Sắp hết hạn','expiring'));
     stateCell.append(stack);
     const timeCell=el('td'),time=el('div','admin-date',date(row.created_at,true));time.title='Ngày đăng';time.append(el('span','',`Hạn: ${row.expires_at?date(row.expires_at,true):'Chưa đặt'}`));timeCell.append(time);
+    if(row.bumped_at)time.append(el('span','',`Đẩy top: ${date(row.bumped_at,true)}`));
     const actionCell=el('td'),actions=el('div','admin-row-actions');actions.append(button('Xem / sửa',()=>openEdit(row),'btn btn-small'));
+    if(state==='approved'&&row.contact_public)actions.append(button('↑ Đẩy lên top',()=>perform([row],'bump'),'btn btn-small'));
     if(state==='pending')actions.append(button('Duyệt',()=>perform([row],'approve'),'btn btn-small btn-primary'));
     const menu=el('details','admin-menu'),summary=el('summary','','⋯');summary.setAttribute('aria-label',`Thao tác tin ${row.listing_code}`);
     summary.addEventListener('click',event=>{if(busy||loading){event.preventDefault();return;}root.querySelectorAll('.admin-menu[open]').forEach(other=>{if(other!==menu)other.open=false;});});

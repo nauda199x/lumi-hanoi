@@ -7,6 +7,7 @@ import json
 import math
 import re
 import shutil
+from datetime import datetime, timezone
 from pathlib import Path
 
 PAGE_SIZE = 10
@@ -184,7 +185,17 @@ def sync_inventory(g, rows, listing_type="sale"):
     template = path.read_text(encoding="utf-8")
     if "data-inventory" not in template:
         raise RuntimeError("Inventory template is missing")
-    rows = sorted(rows, key=lambda r: (r.get("approved_at") or "", r.get("created_at") or "", r.get("id") or ""), reverse=True)
+    def newest_key(row):
+        created = row.get("created_at")
+        feed = row.get("feed_at") or row.get("approved_at") or created
+        earliest = datetime.min.replace(tzinfo=timezone.utc)
+        return (
+            datetime.fromisoformat(feed) if feed else earliest,
+            datetime.fromisoformat(created) if created else earliest,
+            row.get("id") or "",
+        )
+
+    rows = sorted(rows, key=newest_key, reverse=True)
     pages = max(1, math.ceil(len(rows) / PAGE_SIZE))
     path.write_text(render_inventory_page(g, template, rows, 1, pages, listing_type), encoding="utf-8")
     directory = g.ROOT / segment / "page"
