@@ -22,8 +22,8 @@ language plpgsql
 set search_path = ''
 as $$
 begin
-  if (to_jsonb(new) - 'updated_at' - 'view_count') is distinct from
-     (to_jsonb(old) - 'updated_at' - 'view_count') then
+  if (to_jsonb(new) - 'updated_at' - 'view_count' - 'feed_at') is distinct from
+     (to_jsonb(old) - 'updated_at' - 'view_count' - 'feed_at') then
     new.updated_at = now();
   else
     new.updated_at = old.updated_at;

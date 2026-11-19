@@ -23,9 +23,9 @@ class Node {
 }
 function deferred(){let resolve,reject;const promise=new Promise((a,b)=>{resolve=a;reject=b;});return {promise,resolve,reject};}
 const tick=()=>new Promise(resolve=>setImmediate(resolve));
-const row=(id='row-a')=>({id,title:'Căn hộ Lumi Hanoi cần cho thuê',listing_code:'LH-12345678',listing_type:'rent',status:'approved',phase:'Signature',tower:'S3',unit_type:'2PN',area_sqm:54,price_vnd:10000000,furnishing:'Đồ cơ bản',poster_name:'Chủ nhà',contact_phone:'0901234567',description:'Mô tả gốc của tin',listing_images:[],open_reports:[],listing_reports:[],created_at:'2026-09-01',updated_at:'2026-09-01',expires_at:'2027-01-01'});
+const row=(id='row-a')=>({id,title:'Căn hộ Lumi Hanoi cần cho thuê',listing_code:'LH-12345678',listing_type:'rent',status:'approved',contact_public:true,phase:'Signature',tower:'S3',unit_type:'2PN',area_sqm:54,price_vnd:10000000,furnishing:'Đồ cơ bản',poster_name:'Chủ nhà',contact_phone:'0901234567',description:'Mô tả gốc của tin',listing_images:[],open_reports:[],listing_reports:[],created_at:'2026-09-01',updated_at:'2026-09-01',expires_at:'2027-01-01'});
 function fixture({savedView,failSave=false,withImage=false}={}){
-  const nodes=new Map(),timers=new Map(),requests=[],storage=new Map(),deleted=[];let timerId=0;
+  const nodes=new Map(),timers=new Map(),requests=[],storage=new Map(),deleted=[],actions=[],syncs=[];let timerId=0;
   const fixtureRow=id=>({...row(id),listing_images:withImage?[{id:7,storage_path:"pending/photo-7.jpg",sort_order:0}]:[]});
   if(savedView)storage.set('lumi_admin_view_v2',JSON.stringify(savedView));
   const get=selector=>{if(!nodes.has(selector))nodes.set(selector,new Node());return nodes.get(selector);};
@@ -37,14 +37,14 @@ function fixture({savedView,failSave=false,withImage=false}={}){
   const dialog=get('[data-admin-dialog]');dialog.append(edit);
   const api={config:{listingLifetimeDays:45},configured:()=>true,requireAdmin:async()=>({user:{id:'admin'}}),adminCounts:async()=>({all:625,pending:10,approved:600,expiring:5,reported:2}),
     listAdminPage:(filters,page,options)=>{const d=deferred();requests.push({filters:{...filters},page,options,...d});return d.promise;},
-    getAdminListing:async id=>fixtureRow(id),deleteListingImage:async(...args)=>{deleted.push(args);return {imageId:7,updated_at:'2026-10-13',storageCleaned:true};},updateListing:async()=>{if(failSave)throw new Error('Mất kết nối');return row();},requestSeoSync:async()=>({dispatched:true}),signOut:async()=>{},
+    getAdminListing:async id=>fixtureRow(id),deleteListingImage:async(...args)=>{deleted.push(args);return {imageId:7,updated_at:'2026-10-13',storageCleaned:true};},updateListing:async()=>{if(failSave)throw new Error('Mất kết nối');return row();},applyAdminAction:async(items,action)=>{actions.push({items,action});return {success:items.map(item=>item.id),failed:[]};},requestSeoSync:async reason=>{syncs.push(reason);return {dispatched:true};},signOut:async()=>{},
     formatCurrency:value=>String(value),listingUrl:item=>'/tin/'+item.id,cleanText:(value,max)=>String(value??'').trim().slice(0,max),imageUrl:path=>path};
   const document={querySelector:()=>root,createElement:tag=>new Node(tag),addEventListener(){},hidden:false};
   const sandbox={document,window:{LumiMarketplace:api},sessionStorage:{getItem:key=>storage.get(key),setItem:(key,value)=>storage.set(key,value),removeItem:key=>storage.delete(key)},AbortController,console,
     FormData:class{constructor(form){this.form=form;}entries(){return Object.entries(this.form.elements).map(([key,node])=>[key,node.value]);}},
     setTimeout:fn=>{const id=++timerId;timers.set(id,fn);return id;},clearTimeout:id=>timers.delete(id),setInterval:()=>1,clearInterval(){} };
   vm.createContext(sandbox);vm.runInContext(fs.readFileSync(path.join(__dirname,'../assets/js/marketplace-admin.js'),'utf8'),sandbox);
-  return {get,requests,filters,edit,dialog,storage,deleted,runTimers:()=>{for(const [id,fn] of timers){timers.delete(id);fn();}}};
+  return {get,requests,filters,edit,dialog,storage,deleted,actions,syncs,runTimers:()=>{for(const [id,fn] of timers){timers.delete(id);fn();}}};
 }
 test('late responses cannot overwrite a newer filter result; selection is cleared on filter change',async()=>{
   const f=fixture();await tick();f.requests[0].resolve({rows:[row('initial')],total:625});await tick();
@@ -95,4 +95,23 @@ test('photo deletion requires confirmation and does not discard other unsaved li
   assert.match(gallery.textContent,/Tin chưa có ảnh/);
   assert.equal(f.edit.elements.description.value,'Nội dung người đăng được giữ khi xóa ảnh');
   assert.equal(f.dialog.open,true);
+});
+
+test('bump appears only on public rows and schedules a static sync after the update',async()=>{
+  const f=fixture();await tick();
+  const live={...row('live'),expires_at:null};
+  f.requests[0].resolve({rows:[live,{...live,id:'pending',status:'pending'},{...live,id:'expired',expires_at:'2000-01-01'},{...live,id:'private',contact_public:false}],total:4});
+  await tick();
+  const buttons=f.get('[data-admin-list]').all().filter(node=>node.tagName==='button'&&node.textContent.includes('Đẩy lên top'));
+  assert.equal(buttons.length,1);
+  const clicked=buttons[0].emit('click');await tick();
+  assert.equal(f.actions[0].action,'bump');
+  assert.equal(f.actions[0].items[0].id,'live');
+  assert.equal(f.get('[data-admin-confirm]').open,false);
+  f.requests[1].resolve({rows:[{...live,bumped_at:'2026-11-19T04:20:00Z'}],total:1});
+  await tick();
+  assert.match(f.get('[data-admin-list]').textContent,/Đẩy top: 19\/11\/2026/);
+  assert.match(f.get('[data-admin-status]').textContent,/Đã đẩy tin lên đầu/);
+  await clicked;
+  assert.deepEqual(f.syncs,['listing_bumped']);
 });

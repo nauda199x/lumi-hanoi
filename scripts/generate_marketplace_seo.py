@@ -67,7 +67,7 @@ def fetch_approved() -> list[dict]:
         "select": (
             "id,slug,listing_code,listing_type,title,description,poster_name,phase,tower,"
             "bedroom_count,unit_type,area_sqm,floor_label,price_vnd,furnishing,"
-            "available_from,contact_phone,is_featured,approved_at,expires_at,created_at,"
+            "available_from,contact_phone,is_featured,approved_at,expires_at,created_at,feed_at,"
             "listing_images(id,storage_path,sort_order,alt_text)"
         ),
         "status": "eq.approved",

@@ -40,6 +40,7 @@ def main():
                      approved_at="2026-09-05T10:00:00Z", created_at="2026-09-05T09:00:00Z",
                      unit_type="2PN", phase="Signature", tower="S3", price_vnd=4280000000,
                      area_sqm=54, poster_name="QA", contact_phone="", listing_images=[]) for i in range(56)]
+        rows[0].update(approved_at="2026-08-01T10:00:00Z", feed_at="2026-09-05T17:01:00+07:00")
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             target = root / segment / "index.html"
@@ -48,6 +49,9 @@ def main():
             g = SimpleNamespace(**{k: getattr(gen, k) for k in dir(gen) if not k.startswith("__")})
             g.ROOT = root
             inv.sync_inventory(g, rows, listing_type)
+            first = Page(target.read_text())
+            assert next(link["href"] for link in first.links if "/qa-listing-" in link.get("href", "")).endswith("/qa-listing-0000/")
+            assert "Đăng 01/08/2026" in target.read_text(), "The promoted card retains its original date"
             seen = set()
             for n in range(1, 7):
                 page = root / inv.page_url(n, listing_type).lstrip("/") / "index.html"

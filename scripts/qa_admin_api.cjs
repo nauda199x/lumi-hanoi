@@ -145,3 +145,25 @@ test('failed Storage cleanup does not restore deleted image record',async()=>{
   const result=await f.api.deleteListingImage(id,7,'2026-10-13T04:00:00Z');
   assert.equal(result.storageCleaned,false);
 });
+
+test('bump uses admin RPC only for live listings, with a version check and no content patch',async()=>{
+  const id='f33e73e5-3772-4e5d-92c7-210dd28b8b93';
+  const row={id,status:'approved',contact_public:true,updated_at:'2026-09-01T00:00:00Z'};
+  const f=fixture({handler:({url})=>({rows:url.pathname.endsWith('/bump_marketplace_listing')?id:[]})});
+  const result=await f.api.applyAdminAction([
+    row,{...row,id:'pending',status:'pending'},{...row,id:'expired',expires_at:'2000-01-01'},{...row,id:'private',contact_public:false}
+  ],'bump');
+  assert.equal(result.success.length,1);
+  assert.equal(result.failed.length,3);
+  const calls=f.calls.filter(call=>call.options.method==='POST');
+  assert.equal(calls.length,1);
+  assert.equal(calls[0].url.pathname,'/rest/v1/rpc/bump_marketplace_listing');
+  assert.equal(calls[0].options.headers.Authorization,'Bearer test-admin-token');
+  assert.deepEqual(JSON.parse(calls[0].options.body),{target_listing_id:id,expected_updated_at:row.updated_at});
+  assert.equal(listingRequests(f).length,0);
+
+  const stale=fixture({handler:()=>({rows:null})});
+  const rejected=await stale.api.applyAdminAction([row],'bump');
+  assert.equal(rejected.success.length,0);
+  assert.match(rejected.failed[0].message,/Tin đã thay đổi/);
+});
