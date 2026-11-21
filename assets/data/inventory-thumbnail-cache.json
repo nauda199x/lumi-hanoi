@@ -553,13 +553,6 @@
       "src": "/assets/media/listing-thumbnails/834d4bae3047bd01734f96e2969d4217.webp",
       "width": 800
     },
-    "https://salsyqatlzapnzbcnnsr.supabase.co/storage/v1/object/public/listing-images/pending/c6d496e6-3c60-48c1-82bd-cd88749c9027/01-946d0126-d750-49f9-ae58-8a0d7f51057b.jpg": {
-      "bytes": 46694,
-      "height": 800,
-      "source_bytes": 117542,
-      "src": "/assets/media/listing-thumbnails/e54fe4ca04044f158f1716aa5fb4d436.webp",
-      "width": 640
-    },
     "https://salsyqatlzapnzbcnnsr.supabase.co/storage/v1/object/public/listing-images/pending/c7326f8d-a344-432d-8045-67e4f181f6b8/01-bb50be5c-d938-410b-af73-fdd8af98ecf7.jpg": {
       "bytes": 43262,
       "height": 600,
@@ -595,13 +588,6 @@
       "src": "/assets/media/listing-thumbnails/d9f093b0a9cbba3f06eafd1f0ab60a0c.webp",
       "width": 800
     },
-    "https://salsyqatlzapnzbcnnsr.supabase.co/storage/v1/object/public/listing-images/pending/d850afaf-6eca-4c18-b0c6-47ef58641af2/01-42c4a3e3-cd7c-48cd-94f4-8b2ed14bc96a.jpg": {
-      "bytes": 29628,
-      "height": 800,
-      "source_bytes": 186232,
-      "src": "/assets/media/listing-thumbnails/0642fbe5eb72c14999834c3261d33649.webp",
-      "width": 600
-    },
     "https://salsyqatlzapnzbcnnsr.supabase.co/storage/v1/object/public/listing-images/pending/deda47cf-c1cb-4e4d-ba2f-0ce8b40b1e6a/01-0f8713ed-d841-4c07-ab7a-08fa7ff424bf.jpg": {
       "bytes": 45956,
       "height": 800,
@@ -622,6 +608,13 @@
       "source_bytes": 195326,
       "src": "/assets/media/listing-thumbnails/7da56fc9721ae6a6d3c38a86147698c5.webp",
       "width": 640
+    },
+    "https://salsyqatlzapnzbcnnsr.supabase.co/storage/v1/object/public/listing-images/pending/e4591f85-92c8-44ee-a33e-6eaa8e8510b3/01-8609a13e-beca-52ab-99df-382518ec5cc6.jpg": {
+      "bytes": 53922,
+      "height": 600,
+      "source_bytes": 304676,
+      "src": "/assets/media/listing-thumbnails/e23f636ae65f250da4d6d831f7d1b34f.webp",
+      "width": 800
     },
     "https://salsyqatlzapnzbcnnsr.supabase.co/storage/v1/object/public/listing-images/pending/e6a0ca84-f88d-4484-a653-241eb87b5a99/01-18eed5db-babc-46b5-a962-fdf335efc1f8.jpg": {
       "bytes": 40370,
