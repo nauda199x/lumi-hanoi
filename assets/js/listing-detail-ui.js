@@ -2,6 +2,33 @@
   "use strict";
   const pages=new WeakSet(),galleries=new WeakSet();
   const esc=value=>String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  const siteLinkHost=/^(?:www\.)?(?:canholumi|lumi-hanoi)\.com$/i;
+  const descriptionLink=/(^|[\s("'[{“‘])((?:https?:\/\/|www\.|(?:canholumi|lumi-hanoi)\.com(?=$|[/?#\s.,;:!?()[\]{}"'<>“”‘’]))[^\s"'<>“”‘’\u0000-\u001f\u007f]*)/gi;
+  const closingBrackets={")":"(","]":"[","}":"{"};
+  const descriptionMarkup=value=>{
+    const source=String(value??"");
+    let markup="", cursor=0;
+    for(const match of source.matchAll(descriptionLink)){
+      const [,prefix,candidate]=match;
+      let label=candidate;
+      while(label){
+        const last=label.at(-1), opening=closingBrackets[last];
+        if(!/[.,;:!?…]/.test(last)&&!(opening&&label.split(last).length>label.split(opening).length))break;
+        label=label.slice(0,-1);
+      }
+      const explicit=/^https?:\/\//i.test(label);
+      const href=explicit?label:"https://"+label;
+      const authority=href.replace(/^https?:\/\//i,"").split(/[/?#]/,1)[0];
+      const siteLink=siteLinkHost.test(authority);
+      if(!authority||authority.includes("@")||label.includes("\\")||(!explicit&&!/^www\./i.test(label)&&!siteLink))continue;
+      try{new URL(href);}catch{continue;}
+      const start=match.index+prefix.length;
+      markup+=esc(source.slice(cursor,start));
+      markup+='<a href="'+esc(href)+'"'+(siteLink?"":' rel="ugc nofollow"')+'>'+esc(label)+'</a>';
+      cursor=start+label.length;
+    }
+    return markup+esc(source.slice(cursor));
+  };
   const text=(root,selector,value)=>root.querySelectorAll(selector).forEach(node=>node.textContent=value??"");
   const reduced=()=>window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
   const initials=name=>String(name||"Người đăng").trim().split(/\s+/).slice(-2).map(word=>word[0]).join("").toLocaleUpperCase("vi");
@@ -57,8 +84,10 @@
     const api=window.LumiMarketplace,rent=listing.listing_type==="rent",category=rent?"Cho thuê Lumi Hanoi":"Mua bán Lumi Hanoi",base=rent?"/cho-thue-lumi-hanoi/":"/mua-ban-lumi-hanoi/";
     const price=api.formatCurrency(listing.price_vnd,listing.listing_type),area=Number(listing.area_sqm)>0?`${Number(listing.area_sqm).toLocaleString("vi-VN")} m²`:"Chưa cập nhật";
     const ppsm=!rent&&Number(listing.price_vnd)>0&&Number(listing.area_sqm)>0?`~${(Number(listing.price_vnd)/Number(listing.area_sqm)/1e6).toLocaleString("vi-VN",{maximumFractionDigits:1})} tr/m²`:"";
-    const fields={title:listing.title,code:listing.listing_code,type:rent?"Cho thuê":"Mua bán",category,price,"price-label":rent?"cho thuê":"bán","price-per-sqm":ppsm,area,unit:listing.unit_type||"Chưa cập nhật",tower:listing.tower||"Chưa cập nhật",phase:listing.phase||"Chưa cập nhật",floor:listing.floor_label||"Chưa cập nhật",furnishing:listing.furnishing||"Chưa cập nhật",description:listing.description||"Người đăng chưa bổ sung mô tả."};
+    const fields={title:listing.title,code:listing.listing_code,type:rent?"Cho thuê":"Mua bán",category,price,"price-label":rent?"cho thuê":"bán","price-per-sqm":ppsm,area,unit:listing.unit_type||"Chưa cập nhật",tower:listing.tower||"Chưa cập nhật",phase:listing.phase||"Chưa cập nhật",floor:listing.floor_label||"Chưa cập nhật",furnishing:listing.furnishing||"Chưa cập nhật"};
     Object.entries(fields).forEach(([key,value])=>text(root,`[data-detail-${key}]`,value));root.dataset.listingId=listing.id||"";root.dataset.listingSlug=listing.slug||"";
+    const description=descriptionMarkup(listing.description||"Người đăng chưa bổ sung mô tả.");
+    root.querySelectorAll("[data-detail-description]").forEach(node=>node.innerHTML=description);
     const date=String(listing.approved_at||listing.created_at||"").slice(0,10),dateNode=root.querySelector("[data-detail-date]"),dateWrap=root.querySelector("[data-detail-date-wrap]");if(dateWrap)dateWrap.hidden=!/^\d{4}-\d{2}-\d{2}$/.test(date);if(dateNode){dateNode.dateTime=date;dateNode.textContent=date.split("-").reverse().join("/");}
     const links={back:base,floorplan:floorplanUrl(listing.tower),"same-tower":base+"#"+new URLSearchParams(listing.tower?{tower:listing.tower}:{}),"same-unit":base+"#"+new URLSearchParams(listing.unit_type?{bedroom:listing.unit_type}:{})};Object.entries(links).forEach(([key,value])=>root.querySelectorAll(`[data-detail-${key}]`).forEach(link=>link.href=value));
     const gallery=root.querySelector("[data-detail-gallery]");if(gallery){const urls=sortedImages(listing).map(image=>api.imageUrl(image.storage_path)),current=[...gallery.querySelectorAll(".ld-gallery-track img")].map(image=>image.getAttribute("src"));if(urls.join("\n")!==current.join("\n")||!gallery.children.length)gallery.innerHTML=galleryMarkup(listing);}

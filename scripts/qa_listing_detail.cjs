@@ -46,6 +46,17 @@ test('sale, unknown fields and missing phone never create rental ppm or fake con
   assert.equal(f.root.querySelector('[data-detail-floor]').textContent,'Chưa cập nhật');
   assert.equal(f.phone.hidden,true);assert.equal(f.zalo.hidden,true);assert.equal(f.root.querySelector('[data-detail-mobile-contact]').hidden,true);
 });
+test('description makes safe links clickable and retains punctuation, text and guest link labels',()=>{
+  const f=fixture();
+  f.ui.hydrate(f.root,{...listing,description:'Xem thêm tại (canholumi.com),\nhttps://example.org/can_(54)?t=S3&pn=2.\nwww.example.org.\n<em>Chữ gốc</em> javascript:demo https://canholumi.com@example.org/'});
+  const result=f.root.querySelector('[data-detail-description]').innerHTML;
+  assert.equal(result,'Xem thêm tại (<a href="https://canholumi.com">canholumi.com</a>),\n'
+    +'<a href="https://example.org/can_(54)?t=S3&amp;pn=2" rel="ugc nofollow">https://example.org/can_(54)?t=S3&amp;pn=2</a>.\n'
+    +'<a href="https://www.example.org" rel="ugc nofollow">www.example.org</a>.\n'
+    +'&lt;em&gt;Chữ gốc&lt;/em&gt; javascript:demo https://canholumi.com@example.org/');
+  f.ui.hydrate(f.root,{...listing,description:'Mô tả đã sửa.'});
+  assert.equal(f.root.querySelector('[data-detail-description]').innerHTML,'Mô tả đã sửa.');
+});
 test('gallery keeps every image in order, gives only hero high priority, and escapes untrusted content',()=>{
   const f=fixture();const html=f.ui.galleryMarkup({...listing,title:'<img onerror="alert(1)">',listing_images:[{storage_path:'b.jpg',sort_order:2},{storage_path:'a.jpg',sort_order:1}]});
   assert.ok(html.indexOf('a.jpg')<html.indexOf('b.jpg'));assert.equal((html.match(/fetchpriority="high"/g)||[]).length,1);assert.equal((html.match(/<figure>/g)||[]).length,2);assert.ok(html.includes('&lt;img onerror=&quot;alert(1)&quot;&gt;'));assert.ok(!html.includes('<img onerror='));

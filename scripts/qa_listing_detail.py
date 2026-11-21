@@ -60,6 +60,17 @@ unsafe='<script>alert(1)</script><img src=x onerror=alert(1)>'
 raw=gen.render_detail_content({**row,'title':unsafe,'description':unsafe,'poster_name':unsafe})
 assert not Document(raw).find('script') and '&lt;script&gt;' in raw
 
+# Approved static descriptions must expose crawlable links before JavaScript loads.
+details = gen.render_detail_content({**row, 'description': (
+    'Xem thêm tại (canholumi.com),\nhttps://example.org/can_(54)?t=S3&pn=2.\nwww.example.org.'
+    '\n<em>Chữ gốc</em> javascript:demo https://canholumi.com@example.org/'
+)})
+assert '(<a href="https://canholumi.com">canholumi.com</a>),' in details
+assert '<a href="https://example.org/can_(54)?t=S3&amp;pn=2" rel="ugc nofollow">' in details
+assert '<a href="https://www.example.org" rel="ugc nofollow">www.example.org</a>.' in details
+assert '&lt;em&gt;Chữ gốc&lt;/em&gt; javascript:demo https://canholumi.com@example.org/' in details
+assert not Document(details).find('a', href='https://canholumi.com@example.org/')
+
 # The dynamic shell is generated from the shared detail template, then finite
 # postprocessors may add the 3D Market Index anchor and the 3F conversion block.
 # Scrub only those explicitly marked enrichments before comparing with the base

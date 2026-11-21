@@ -35,6 +35,12 @@ MARKET_PRICE_END = "<!-- MARKET-PRICE-STATS:END -->"
 APARTMENT_UNIT_TYPES = ("1PN", "2PN", "3PN", "4PN", "Duplex", "Penthouse")
 MARKET_PHASES = ("Signature", "Prestige", "Elite")
 INVENTORY_THUMBNAILS = {}
+SITE_LINK_HOST = re.compile(r"(?:www\.)?(?:canholumi|lumi-hanoi)\.com", re.IGNORECASE)
+DESCRIPTION_LINK = re.compile(
+    r"""(^|[\s("'[{“‘])((?:https?://|www\.|(?:canholumi|lumi-hanoi)\.com(?=$|[/?#\s.,;:!?()[\]{}"'<>“”‘’]))[^\s"'<>“”‘’\x00-\x1f\x7f]*)""",
+    re.IGNORECASE,
+)
+CLOSING_BRACKETS = {")": "(", "]": "[", "}": "{"}
 
 CATEGORY = {
     "sale": ("mua-ban-lumi-hanoi", "Mua bán"),
@@ -96,6 +102,39 @@ def clean(value) -> str:
 
 def esc(value) -> str:
     return html.escape(clean(value), quote=True)
+
+
+def description_markup(source: str) -> str:
+    parts = []
+    cursor = 0
+    for match in DESCRIPTION_LINK.finditer(source):
+        label = match[2]
+        while label:
+            last = label[-1]
+            opening = CLOSING_BRACKETS.get(last)
+            if last not in ".,;:!?…" and not (opening and label.count(last) > label.count(opening)):
+                break
+            label = label[:-1]
+        explicit = label.lower().startswith(("http://", "https://"))
+        href = label if explicit else "https://" + label
+        if "\\" in label:
+            continue
+        try:
+            url = urllib.parse.urlsplit(href)
+            if not url.hostname or "@" in url.netloc:
+                continue
+            _ = url.port  # Reject malformed ports as the browser URL parser does.
+        except ValueError:
+            continue
+        site_link = bool(SITE_LINK_HOST.fullmatch(url.netloc))
+        if not explicit and not label.lower().startswith("www.") and not site_link:
+            continue
+        rel = "" if site_link else ' rel="ugc nofollow"'
+        parts.append(html.escape(source[cursor:match.start(2)]))
+        parts.append(f'<a href="{esc(href)}"{rel}>{esc(label)}</a>')
+        cursor = match.start(2) + len(label)
+    parts.append(html.escape(source[cursor:]))
+    return "".join(parts)
 
 
 def compact_text(value: str) -> str:
@@ -566,6 +605,7 @@ def render_detail_content(listing: dict | None = None) -> str:
     if not rent and price and area:
         ppsm = "~" + f"{price / area / 1_000_000:,.1f}".replace(",", "X").replace(".", ",").replace("X", ".") + " tr/m²"
     tower = clean(listing.get("tower"))
+    description = "\n".join(line.rstrip() for line in clean(listing.get("description")).splitlines())
     values = {
         "title": compact_text(listing.get("title")), "action": action,
         "category": action + " Lumi Hanoi", "category_url": category_url,
@@ -577,7 +617,6 @@ def render_detail_content(listing: dict | None = None) -> str:
         "price_label": "cho thuê" if rent else "bán",
         "floor": listing.get("floor_label") or "Chưa cập nhật",
         "furnishing": listing.get("furnishing") or "Chưa cập nhật",
-        "description": "\n".join(line.rstrip() for line in clean(listing.get("description")).splitlines()) or "Người đăng chưa bổ sung mô tả.",
         "poster": poster, "initials": "".join(word[0] for word in poster.split()[-2:]).upper(),
         "phone": phone, "phone_url": f"tel:{tel}" if tel else "",
         "zalo_url": f"https://zalo.me/{zalo}" if zalo else "",
@@ -588,6 +627,7 @@ def render_detail_content(listing: dict | None = None) -> str:
     }
     fields = {key: esc(value) for key, value in values.items()}
     fields.update({
+        "description": description_markup(description or "Người đăng chưa bổ sung mô tả."),
         "gallery": "" if dynamic else render_gallery(listing),
         "content_hidden": "hidden" if dynamic else "",
         "phone_hidden": "hidden" if not tel else "",
@@ -703,7 +743,7 @@ def render_page(listing: dict) -> str:
   <meta name="twitter:card" content="summary_large_image">
   <link rel="stylesheet" href="/assets/css/site.css?v=20260907-layoutfix1">
   <link rel="stylesheet" href="/assets/css/marketplace.css?v=20260829-detail5">
-  <link rel="stylesheet" href="/assets/css/listing-detail.css?v=20261102-reference1">
+  <link rel="stylesheet" href="/assets/css/listing-detail.css?v=20261121-description-links">
   <script type="application/ld+json">{schema_json}</script>
 </head>
 <body class="listing-detail-page">
@@ -717,7 +757,7 @@ def render_page(listing: dict) -> str:
   <script src="/assets/js/marketplace-config.js"></script>
   <script src="/assets/js/marketplace-api.js?v=20260829-poster"></script>
   <script src="/assets/js/marketplace-lightbox.js?v=20260908-detail1" defer></script>
-  <script src="/assets/js/listing-detail-ui.js?v=20261102-reference1" defer></script>
+  <script src="/assets/js/listing-detail-ui.js?v=20261121-description-links" defer></script>
   <script src="/assets/js/marketplace-static-status.js?v=20260908-detail1" defer></script>
 </body>
 </html>
