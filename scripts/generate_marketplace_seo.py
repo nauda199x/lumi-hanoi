@@ -185,8 +185,12 @@ def format_price(listing: dict) -> str:
 
 
 def storage_url(path: str) -> str:
+    value = clean(path)
+    # Verified local listing photos are served by this website.
+    if re.fullmatch(r"/assets/media/listings/[a-z0-9/_-]+\.(?:jpe?g|png|webp)", value, flags=re.I):
+        return "https://lumi-hanoi.com" + value
     base, _, bucket = read_public_config()
-    encoded = "/".join(urllib.parse.quote(part, safe="") for part in clean(path).split("/"))
+    encoded = "/".join(urllib.parse.quote(part, safe="") for part in value.split("/"))
     return f"{base}/storage/v1/object/public/{urllib.parse.quote(bucket, safe='')}/{encoded}"
 
 

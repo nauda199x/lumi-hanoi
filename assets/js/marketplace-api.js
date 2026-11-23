@@ -67,7 +67,13 @@
     if(amount>=1_000_000_000)return `${new Intl.NumberFormat("vi-VN",{maximumFractionDigits:2}).format(amount/1_000_000_000)} tỷ`;
     return `${new Intl.NumberFormat("vi-VN").format(amount)} đ`;
   };
-  const imageUrl=path=>path?`${base}/storage/v1/object/public/${encodeURIComponent(config.storageBucket||"listing-images")}/${String(path).split("/").map(encodeURIComponent).join("/")}`:"";
+  const imageUrl=path=>{ 
+    const value=String(path||"").trim();
+    if(!value)return "";
+    // Verified, same-origin photos imported from the owner's Drive.
+    if(/^\/assets\/media\/listings\/[a-z0-9\/_-]+\.(?:jpe?g|png|webp)$/i.test(value))return value;
+    return `${base}/storage/v1/object/public/${encodeURIComponent(config.storageBucket||"listing-images")}/${value.split("/").map(encodeURIComponent).join("/")}`;
+  };
   const listingUrl=listing=>{
     const segment=listing?.listing_type==="rent"?"cho-thue-lumi-hanoi":"mua-ban-lumi-hanoi";
     const slug=cleanText(listing?.slug,120);
