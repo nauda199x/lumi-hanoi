@@ -231,6 +231,13 @@
       "src": "/assets/media/listing-thumbnails/e664549810a6a682bc05bdb5f70fd0a3.webp",
       "width": 600
     },
+    "https://salsyqatlzapnzbcnnsr.supabase.co/storage/v1/object/public/listing-images/pending/4b5b0128-58aa-435b-98cb-09670cf295b9/01-2c29882c-da20-44d1-a0ba-32e0a865ac17.jpg": {
+      "bytes": 18956,
+      "height": 800,
+      "source_bytes": 56282,
+      "src": "/assets/media/listing-thumbnails/475ab48ef0e92c80367a46ade5939bef.webp",
+      "width": 450
+    },
     "https://salsyqatlzapnzbcnnsr.supabase.co/storage/v1/object/public/listing-images/pending/4c2f4b6d-47b5-4b6e-8c81-fbd7058cd74c/01.jpg": {
       "bytes": 31498,
       "height": 599,
@@ -336,6 +343,13 @@
       "src": "/assets/media/listing-thumbnails/fcdf19b31105028018bcbf7a788ab07d.webp",
       "width": 640
     },
+    "https://salsyqatlzapnzbcnnsr.supabase.co/storage/v1/object/public/listing-images/pending/6cee8131-e76e-4ced-911c-56f4ba5f7922/01-97960a11-8eeb-484b-a3ce-5f1beb90ed5e.jpg": {
+      "bytes": 42880,
+      "height": 600,
+      "source_bytes": 191095,
+      "src": "/assets/media/listing-thumbnails/25a24cea4c81e14ff2f1c9deaa45c571.webp",
+      "width": 800
+    },
     "https://salsyqatlzapnzbcnnsr.supabase.co/storage/v1/object/public/listing-images/pending/6e73246f-ae93-400d-96d0-e44e3c3406ae/01-136b5eb2-b049-46e5-a8db-abf03b4e9255.jpg": {
       "bytes": 50778,
       "height": 600,
@@ -432,6 +446,13 @@
       "height": 600,
       "source_bytes": 271428,
       "src": "/assets/media/listing-thumbnails/fd9625f22b33dcdc188298b287a9f4df.webp",
+      "width": 800
+    },
+    "https://salsyqatlzapnzbcnnsr.supabase.co/storage/v1/object/public/listing-images/pending/a040442b-e8d7-43cb-aead-00479a0facb3/01-538c9384-aee1-4eef-a445-fc9f19fc45cf.jpg": {
+      "bytes": 67886,
+      "height": 600,
+      "source_bytes": 147412,
+      "src": "/assets/media/listing-thumbnails/0a44623140f3fec01fd96623d801d40d.webp",
       "width": 800
     },
     "https://salsyqatlzapnzbcnnsr.supabase.co/storage/v1/object/public/listing-images/pending/a0505399-0bb9-4191-9955-c209e23b106a/01-52e54124-47ca-476c-8b37-92e64f32f8c0.jpg": {
